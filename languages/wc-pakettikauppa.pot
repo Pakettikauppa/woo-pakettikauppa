@@ -1,0 +1,211 @@
+# Copyright (C) 2017 WooCommerce Pakettikauppa.fi
+# This file is distributed under the same license as the WooCommerce Pakettikauppa.fi package.
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Pakettikauppa.fi 0.9.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woocommerce-"
+"pakettikauppa\n"
+"POT-Creation-Date: 2017-06-09 07:42:48+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: includes/class-wc-pakettikauppa-shipment-method.php:33
+msgid ""
+"All shipping methods with one contract. For more information visit <a href="
+"\"https://pakettikauppa.fi/\">Pakettikauppa.fi</a>."
+msgstr ""
+
+#: includes/class-wc-settings-pakettikauppa.php:6
+#: includes/class-wc-settings-pakettikauppa.php:41 wc-pakettikauppa.php:291
+msgid "Pakettikauppa.fi"
+msgstr ""
+
+#: includes/class-wc-settings-pakettikauppa.php:21 wc-pakettikauppa.php:60
+msgid "Settings"
+msgstr ""
+
+#: includes/class-wc-settings-pakettikauppa.php:22
+msgid "Shipping methods"
+msgstr ""
+
+#: includes/class-wc-settings-pakettikauppa.php:47
+msgid "Mode"
+msgstr ""
+
+#: includes/class-wc-settings-pakettikauppa.php:52
+msgid "Test environment"
+msgstr ""
+
+#: includes/class-wc-settings-pakettikauppa.php:53
+msgid "Production environment"
+msgstr ""
+
+#: includes/class-wc-settings-pakettikauppa.php:58
+msgid "Account number"
+msgstr ""
+
+#: includes/class-wc-settings-pakettikauppa.php:59
+msgid "Account number provided by Pakettikauppa.fi"
+msgstr ""
+
+#: includes/class-wc-settings-pakettikauppa.php:67
+msgid "Secret key"
+msgstr ""
+
+#: includes/class-wc-settings-pakettikauppa.php:68
+msgid "Secret key provided by Pakettikauppa.fi"
+msgstr ""
+
+#: includes/class-wc-settings-pakettikauppa.php:76
+msgid "Sender name"
+msgstr ""
+
+#: includes/class-wc-settings-pakettikauppa.php:83
+msgid "Sender address"
+msgstr ""
+
+#: includes/class-wc-settings-pakettikauppa.php:90
+msgid "Sender postal code"
+msgstr ""
+
+#: includes/class-wc-settings-pakettikauppa.php:97
+msgid "Sender city"
+msgstr ""
+
+#: includes/class-wc-settings-pakettikauppa.php:104
+msgid "Bank account number for Cash on Delivery (IBAN)"
+msgstr ""
+
+#: includes/class-wc-settings-pakettikauppa.php:111
+msgid "BIC code for Cash on Delivery"
+msgstr ""
+
+#: includes/class-wc-settings-pakettikauppa.php:118
+msgid "Add tracking link to the order completed email"
+msgstr ""
+
+#: includes/class-wc-settings-pakettikauppa.php:138
+msgid "Shipping Methods"
+msgstr ""
+
+#: includes/class-wc-settings-pakettikauppa.php:139
+msgid ""
+"You can link shipping methods to pakettikauppa services. By linking you "
+"don't have to select shipping service manually for order."
+msgstr ""
+
+#: wc-pakettikauppa.php:105 wc-pakettikauppa.php:114
+msgid "Pickup point"
+msgstr ""
+
+#: wc-pakettikauppa.php:109
+msgid ""
+"If you want shipping to a pickup point instead of your address, choose one "
+"of the pickup points close to your postcode %d below:"
+msgstr ""
+
+#: wc-pakettikauppa.php:127
+msgid "Requested pickup point"
+msgstr ""
+
+#: wc-pakettikauppa.php:131
+msgid "None"
+msgstr ""
+
+#: wc-pakettikauppa.php:281
+msgid "Visit Pakettikauppa.fi"
+msgstr ""
+
+#: wc-pakettikauppa.php:281
+msgid "Show site Pakettikauppa.fi"
+msgstr ""
+
+#: wc-pakettikauppa.php:361 wc-pakettikauppa.php:547
+msgid "Print document"
+msgstr ""
+
+#: wc-pakettikauppa.php:364 wc-pakettikauppa.php:548
+msgid "Track"
+msgstr ""
+
+#: wc-pakettikauppa.php:372
+msgid "Service"
+msgstr ""
+
+#: wc-pakettikauppa.php:387
+msgid "Additional services"
+msgstr ""
+
+#: wc-pakettikauppa.php:389
+msgid "Cash on Delivery"
+msgstr ""
+
+#: wc-pakettikauppa.php:392
+msgid "Amount (€):"
+msgstr ""
+
+#: wc-pakettikauppa.php:397
+msgid "Reference:"
+msgstr ""
+
+#: wc-pakettikauppa.php:402
+msgid "Pickup Point"
+msgstr ""
+
+#: wc-pakettikauppa.php:433
+msgid "Create"
+msgstr ""
+
+#: wc-pakettikauppa.php:437
+msgid "Update Status"
+msgstr ""
+
+#: wc-pakettikauppa.php:550
+msgid "Created Pakettikauppa.fi %1$s shipment.<br>%2$s<br>%1$s - %3$s"
+msgstr ""
+
+#: wc-pakettikauppa.php:554
+msgid "Failed to create Pakettikauppa.fi  shipment. Errors: %s"
+msgstr ""
+
+#: wc-pakettikauppa.php:650
+msgid "Cannot find shipment with given shipment number."
+msgstr ""
+
+#: wc-pakettikauppa.php:670
+msgid "Tracking"
+msgstr ""
+
+#: wc-pakettikauppa.php:671
+msgid "You can <a href=\"%1$s\">track your order</a> with tracking code %1$s."
+msgstr ""
+
+#: wc-pakettikauppa.php:684
+msgid "Operation failed! Please try again."
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "WooCommerce Pakettikauppa.fi"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://github.com/Seravo/woocommerce-pakettikauppa"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Pakettikauppa.fi shipping service for WooCommerce. Integrates Prinetti, "
+"Matkahuolto, DB Schenker and others."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Seravo"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://seravo.com/"
+msgstr ""
