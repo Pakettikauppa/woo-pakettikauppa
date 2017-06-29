@@ -105,7 +105,7 @@ function wc_pakettikauppa_add_pickup_point_field( $fields ) {
     $pickup_point_value = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
     $options_array[ $pickup_point_key ] = $pickup_point_value;
   }
-  
+
   $fields['shipping']['shipping_pakettikauppa_pickup_point_id'] = array(
     'label'       => __('Pickup point', 'woocommerce'),
     'required'    => 0,
@@ -148,7 +148,7 @@ function wc_pakettikauppa_get_status_text( $status_code ) {
     case 77: $status = "Item is returning to the sender"; break;
     case 91: $status = "Item is arrived to a post office"; break;
     case 99: $status = "Outbound"; break;
-    default: $status = "Unknown status" . $status_code; break;
+    default: $status = "Unknown status: " . $status_code; break;
   }
 
   return $status;
@@ -710,7 +710,7 @@ add_action( 'wp_enqueue_scripts', 'wc_pakettikauppa_frontend_enqueue_scripts' );
 function wc_pakettikauppa_ajax_get_pickup_points() {
   $pickup_point_data = '';
   $postcode = $_POST['data'];
-  
+
   try {
     $mode = get_option( 'wc_pakettikauppa_mode', null );
 
