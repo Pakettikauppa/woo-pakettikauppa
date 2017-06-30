@@ -100,10 +100,12 @@ function wc_pakettikauppa_add_pickup_point_field( $fields ) {
   $pickup_points = json_decode( $pickup_point_data );
   $options_array = array( '' => '- No pickup point selected -' );
 
-  foreach ( $pickup_points as $key => $value ) {
-    $pickup_point_key = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ')';
-    $pickup_point_value = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
-    $options_array[ $pickup_point_key ] = $pickup_point_value;
+  if ( ! empty( $pickup_points ) ) {
+    foreach ( $pickup_points as $key => $value ) {
+      $pickup_point_key = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ')';
+      $pickup_point_value = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
+      $options_array[ $pickup_point_key ] = $pickup_point_value;
+    }
   }
 
   $fields['shipping']['shipping_pakettikauppa_pickup_point_id'] = array(
@@ -604,10 +606,11 @@ class WC_Pakettikauppa {
     $all_shipping_methods = json_decode($wc_pakettikauppa_client->listShippingMethods());
 
     // List all available methods as shipping options on checkout page
-    foreach ( $all_shipping_methods as $shipping_method ) {
-      $services[$shipping_method->shipping_method_code] = sprintf( '%1$s %2$s', $shipping_method->service_provider, $shipping_method->name );
+    if ( ! empty( $all_shipping_methods ) ) {
+        foreach ( $all_shipping_methods as $shipping_method ) {
+          $services[$shipping_method->shipping_method_code] = sprintf( '%1$s %2$s', $shipping_method->service_provider, $shipping_method->name );
+        }
     }
-
     return $services;
   }
 

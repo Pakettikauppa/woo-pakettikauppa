@@ -85,13 +85,4 @@ class WcPkInitTest extends WP_UnitTestCase {
 		$pickup_point_data = json_decode($wc_pakettikauppa_client->searchPickupPoints( 00100 ));
 		$this->assertEquals( $pickup_point_data, $pickups);*/
 	}
-
-	/**
-	 * @depends test_init
-	 */
-	function test_services($pakettikauppa) {
-		$services = $pakettikauppa->services();
-		$this->assertNotEquals( array(), $services );
-	}
-
 }
