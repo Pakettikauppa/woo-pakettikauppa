@@ -124,8 +124,8 @@ add_action( 'woocommerce_checkout_fields', 'wc_pakettikauppa_add_pickup_point_fi
 
 function wc_pakettikauppa_show_pickup_point_in_admin_order_meta( $order ) {
   echo '<p><strong>' . __('Requested pickup point', 'wc-pakettikauppa') . ':</strong><br>';
-  if ( get_post_meta( $order->id, '_shipping_pakettikauppa_pickup_point_id', true ) ) {
-     echo get_post_meta( $order->id, '_shipping_pakettikauppa_pickup_point_id', true );
+  if ( $order->get_meta('pakettikauppa_pickup_point_id') ) {
+     echo $order->get_meta('pakettikauppa_pickup_point_id');
   } else {
     echo __('None');
   }
