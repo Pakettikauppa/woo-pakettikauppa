@@ -10,7 +10,7 @@ jQuery(document).ready(function($) {
   jQuery( document ).on( 'updated_checkout', function() {
     wc_pakettikauppa_get_pickup_points( jQuery('#shipping_postcode').val() );
   });
-  
+
   jQuery('#shipping_postcode').change(function() {
     wc_pakettikauppa_postcode_changed = true;
   });
@@ -25,12 +25,19 @@ function wc_pakettikauppa_get_pickup_points ( postcode ) {
 
   if ( wc_pakettikauppa_postcode_changed ) {
     jQuery('#shipping_pakettikauppa_pickup_point_id').prop( "disabled", true );
+
+    // ajaxurl is only defined when wp-admin loads, thus it must be loaded
+    // separately in the front-end
+    if (typeof ajaxurl == 'undefined') {
+      ajaxurl = wc_pakettikauppa.ajax_url;
+    }
+
     jQuery.post(
-      ajaxurl, 
+      ajaxurl,
       {
         'action': 'pakettikauppa_get_pickup_points',
         'data': jQuery('#shipping_postcode').val()
-      }, 
+      },
       function(response){
         jQuery('#shipping_pakettikauppa_pickup_point_id').empty();
         jQuery('#shipping_pakettikauppa_pickup_point_id').append('<option value="">- No pickup point selected -</option>');
@@ -44,6 +51,6 @@ function wc_pakettikauppa_get_pickup_points ( postcode ) {
         jQuery('#shipping_pakettikauppa_pickup_point_id').prop( "disabled", false );
           wc_pakettikauppa_postcode_changed = false;
       }
-    );  
+    );
   }
 }

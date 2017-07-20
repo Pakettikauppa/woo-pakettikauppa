@@ -707,6 +707,9 @@ add_action( 'admin_init', function() {
 
 function wc_pakettikauppa_frontend_enqueue_scripts() {
   wp_enqueue_script( 'wc_pakettikauppa_frontend_js', plugin_dir_url( __FILE__ ) . '/assets/js/wc-pakettikauppa_frontend.js', array( 'jquery' ) );
+
+  // Official hack from https://codex.wordpress.org/AJAX_in_Plugins#Separate_JavaScript_File to get ajaxurl defined in frontend
+  wp_localize_script( 'wc_pakettikauppa_frontend_js', 'wc_pakettikauppa',  array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
 }
 add_action( 'wp_enqueue_scripts', 'wc_pakettikauppa_frontend_enqueue_scripts' );
 
