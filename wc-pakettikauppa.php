@@ -72,6 +72,23 @@ add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), 'wc_pakettikaupp
  */
 function wc_pakettikauppa_pickup_point_field_html( ) {
 
+  $shipping_method_name = explode(':', WC()->session->get( 'chosen_shipping_methods' )[0])[0];
+  $shipping_method_id = explode(':', WC()->session->get( 'chosen_shipping_methods' )[0])[1];
+
+  // Bail out if the shipping method is not one of the pickup point services
+  if ( ! in_array(
+          $shipping_method_id,
+          array(
+            '2103',
+            '80010',
+            '90010',
+            '90080'
+          )
+        )
+      ) {
+    return;
+  }
+
   $pickup_point_data = '';
   $shipping_postcode = WC()->customer->get_shipping_postcode();
 

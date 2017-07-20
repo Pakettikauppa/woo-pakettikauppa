@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: WooCommerce Pakettikauppa.fi 0.9.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woocommerce-"
 "pakettikauppa\n"
-"POT-Creation-Date: 2017-06-09 07:42:48+00:00\n"
+"POT-Creation-Date: 2017-07-20 23:05:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 
 #: includes/class-wc-settings-pakettikauppa.php:6
-#: includes/class-wc-settings-pakettikauppa.php:41 wc-pakettikauppa.php:291
+#: includes/class-wc-settings-pakettikauppa.php:41 wc-pakettikauppa.php:366
 msgid "Pakettikauppa.fi"
 msgstr ""
 
@@ -94,97 +94,99 @@ msgstr ""
 
 #: includes/class-wc-settings-pakettikauppa.php:139
 msgid ""
-"You can link shipping methods to pakettikauppa services. By linking you "
+"You can link shipping methods to Pakettikauppa.fi services. By linking you "
 "don't have to select shipping service manually for order."
 msgstr ""
 
-#: wc-pakettikauppa.php:105 wc-pakettikauppa.php:114
+#: wc-pakettikauppa.php:116
+msgid "Select a pickup point"
+msgstr ""
+
+#: wc-pakettikauppa.php:126 wc-pakettikauppa.php:127 wc-pakettikauppa.php:195
 msgid "Pickup point"
 msgstr ""
 
-#: wc-pakettikauppa.php:109
-msgid ""
-"If you want shipping to a pickup point instead of your address, choose one "
-"of the pickup points close to your postcode %d below:"
+#: wc-pakettikauppa.php:131
+msgid "Choose one of the pickup points close to your postcode %s below:"
 msgstr ""
 
-#: wc-pakettikauppa.php:127
+#: wc-pakettikauppa.php:204
 msgid "Requested pickup point"
 msgstr ""
 
-#: wc-pakettikauppa.php:131
+#: wc-pakettikauppa.php:209
 msgid "None"
 msgstr ""
 
-#: wc-pakettikauppa.php:281
+#: wc-pakettikauppa.php:356
 msgid "Visit Pakettikauppa.fi"
 msgstr ""
 
-#: wc-pakettikauppa.php:281
+#: wc-pakettikauppa.php:356
 msgid "Show site Pakettikauppa.fi"
 msgstr ""
 
-#: wc-pakettikauppa.php:361 wc-pakettikauppa.php:547
+#: wc-pakettikauppa.php:440 wc-pakettikauppa.php:631
 msgid "Print document"
 msgstr ""
 
-#: wc-pakettikauppa.php:364 wc-pakettikauppa.php:548
+#: wc-pakettikauppa.php:443 wc-pakettikauppa.php:632
 msgid "Track"
 msgstr ""
 
-#: wc-pakettikauppa.php:372
+#: wc-pakettikauppa.php:451
 msgid "Service"
 msgstr ""
 
-#: wc-pakettikauppa.php:387
+#: wc-pakettikauppa.php:471
 msgid "Additional services"
 msgstr ""
 
-#: wc-pakettikauppa.php:389
+#: wc-pakettikauppa.php:473
 msgid "Cash on Delivery"
 msgstr ""
 
-#: wc-pakettikauppa.php:392
+#: wc-pakettikauppa.php:476
 msgid "Amount (€):"
 msgstr ""
 
-#: wc-pakettikauppa.php:397
+#: wc-pakettikauppa.php:481
 msgid "Reference:"
 msgstr ""
 
-#: wc-pakettikauppa.php:402
+#: wc-pakettikauppa.php:486
 msgid "Pickup Point"
 msgstr ""
 
-#: wc-pakettikauppa.php:433
+#: wc-pakettikauppa.php:517
 msgid "Create"
 msgstr ""
 
-#: wc-pakettikauppa.php:437
+#: wc-pakettikauppa.php:521
 msgid "Update Status"
 msgstr ""
 
-#: wc-pakettikauppa.php:550
+#: wc-pakettikauppa.php:634
 msgid "Created Pakettikauppa.fi %1$s shipment.<br>%2$s<br>%1$s - %3$s"
 msgstr ""
 
-#: wc-pakettikauppa.php:554
+#: wc-pakettikauppa.php:638
 msgid "Failed to create Pakettikauppa.fi  shipment. Errors: %s"
 msgstr ""
 
-#: wc-pakettikauppa.php:650
+#: wc-pakettikauppa.php:742
 msgid "Cannot find shipment with given shipment number."
 msgstr ""
 
-#: wc-pakettikauppa.php:670
+#: wc-pakettikauppa.php:762
 msgid "Tracking"
 msgstr ""
 
-#: wc-pakettikauppa.php:671
+#: wc-pakettikauppa.php:763
 msgid "You can <a href=\"%1$s\">track your order</a> with tracking code %1$s."
 msgstr ""
 
-#: wc-pakettikauppa.php:684
+#: wc-pakettikauppa.php:776
 msgid "Operation failed! Please try again."
 msgstr ""
 
