@@ -96,7 +96,7 @@ function wc_pakettikauppa_pickup_point_field_html( ) {
   }
 
   $pickup_points = json_decode( $pickup_point_data );
-  $options_array = array( '' => '- No pickup point selected -' );
+  $options_array = array( '' => '- '. __('Select a pickup point', 'wc-pakettikauppa') .' -' );
 
   foreach ( $pickup_points as $key => $value ) {
     $pickup_point_key = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ')';

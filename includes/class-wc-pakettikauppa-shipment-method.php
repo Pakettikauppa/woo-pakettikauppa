@@ -21,7 +21,7 @@ function wc_pakettikauppa_shipping_method_init() {
     class WC_Pakettikauppa_Shipping_Method extends WC_Shipping_Method {
 
       /**
-      * Constructor for Posti shipping class
+      * Constructor for Pakettikauppa shipping class
       *
       * @access public
       * @return void
@@ -32,7 +32,7 @@ function wc_pakettikauppa_shipping_method_init() {
         $this->method_title = 'Pakettikauppa.fi'; // Title shown in admin
         $this->method_description = __( 'All shipping methods with one contract. For more information visit <a href="https://pakettikauppa.fi/">Pakettikauppa.fi</a>.', 'wc-pakettikauppa' ); // Description shown in admin
         $this->enabled = 'yes';
-
+        $this->title = 'Pakettikauppa.fi';
         $this->init();
 
       }
@@ -46,8 +46,6 @@ function wc_pakettikauppa_shipping_method_init() {
       function init() {
         global $wc_pakettikauppa;
 
-        $services = WC_Pakettikauppa::services();
-
         // Load the settings API
         $this->init_form_fields();
         $this->init_settings();
@@ -56,6 +54,26 @@ function wc_pakettikauppa_shipping_method_init() {
         add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
 
       }
+
+      /**
+       * calculate_shipping function.
+       * @param array $package (default: array())
+       */
+      public function calculate_shipping( $package = array() ) {
+
+        foreach ( WC_Pakettikauppa::services() as $key => $value ) {
+          $this->add_rate(
+            array(
+              'id'    => $this->id .':'. $key,
+              'label' => $value,
+              'cost'  => 5
+            )
+          );
+
+        }
+
+      }
+
     }
   }
 }

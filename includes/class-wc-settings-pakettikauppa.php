@@ -136,7 +136,7 @@ class WC_Settings_pakettikauppa extends WC_Settings_Page {
 
     $settings[] = array(
       'title' => __( 'Shipping Methods', 'wc-pakettikauppa' ),
-      'desc' => __( 'You can link shipping methods to pakettikauppa services. By linking you don\'t have to select shipping service manually for order.', 'wc-pakettikauppa' ),
+      'desc' => __( 'You can link shipping methods to Pakettikauppa.fi services. By linking you don\'t have to select shipping service manually for order.', 'wc-pakettikauppa' ),
       'type' => 'title',
       'id' => 'wc_pakettikauppa_methods',
     );
