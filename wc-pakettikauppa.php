@@ -70,8 +70,10 @@ add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), 'wc_pakettikaupp
  * Also the woocommerce_checkout_fields has separate billing and shipping address
  * listings, when we want to have only one single pickup point per order.
  */
-function wc_pakettikauppa_add_pickup_point_field( $fields ) {
+function wc_pakettikauppa_pickup_point_field_html( ) {
+
   $pickup_point_data = '';
+  $shipping_postcode = WC()->customer->get_shipping_postcode();
 
   try {
     $mode = get_option( 'wc_pakettikauppa_mode', null );
@@ -84,11 +86,7 @@ function wc_pakettikauppa_add_pickup_point_field( $fields ) {
       $wc_pakettikauppa_client = new Pakettikauppa\Client( array( 'test_mode' => true ) );
     }
 
-    if ( ! empty( $fields['shipping']['postcode'] ) ) {
-      $pickup_point_data = $wc_pakettikauppa_client->searchPickupPoints( $fields['shipping']['postcode'] );
-    } else {
-      $pickup_point_data = "";
-    }
+    $pickup_point_data = $wc_pakettikauppa_client->searchPickupPoints( $shipping_postcode );
 
     if ( $pickup_point_data == 'Authentication error' ) {
       // @TODO: test if data is a proper array or throw error
@@ -100,27 +98,60 @@ function wc_pakettikauppa_add_pickup_point_field( $fields ) {
   $pickup_points = json_decode( $pickup_point_data );
   $options_array = array( '' => '- No pickup point selected -' );
 
-  if ( ! empty( $pickup_points ) ) {
-    foreach ( $pickup_points as $key => $value ) {
-      $pickup_point_key = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ')';
-      $pickup_point_value = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
-      $options_array[ $pickup_point_key ] = $pickup_point_value;
-    }
+  foreach ( $pickup_points as $key => $value ) {
+    $pickup_point_key = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ')';
+    $pickup_point_value = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
+    $options_array[ $pickup_point_key ] = $pickup_point_value;
   }
 
-  $fields['shipping']['shipping_pakettikauppa_pickup_point_id'] = array(
-    'label'       => __('Pickup point', 'woocommerce'),
-    'required'    => 0,
-    'clear'       => true,
-    'type'        => 'select',
-    'options'     => $options_array,
-    'class'       => array ('address-field', 'update_totals_on_change' )
-  );
+  echo '
+  <tr class="shipping-pickup-point">
+    <th>' . __('Pickup point', 'wc-pakettikauppa') . '</th>
+    <td data-title="' . __('Pickup point', 'wc-pakettikauppa') . '">';
 
-  return $fields;
+  echo '<p>';
+  printf(
+      esc_html__( 'Choose one of the pickup points close to your postcode %s below:', 'wc-pakettikauppa' ),
+      '<span class="shipping_postcode_for_pickup">'. $shipping_postcode .'</span>'
+  );
+  echo '</p>';
+
+  woocommerce_form_field( 'pakettikauppa_pickup_point', array(
+      'clear'       => true,
+      'type'        => 'select',
+      'custom_attributes' => array('style' => 'max-width:18em;'),
+      'options'     => $options_array,
+  ),  null );
+  // WC()->cart['pakettikauppa_pickup_point_id']
+
+  echo '</div>';
 
 }
-add_action( 'woocommerce_checkout_fields', 'wc_pakettikauppa_add_pickup_point_field' );
+add_action( 'woocommerce_review_order_after_shipping', 'wc_pakettikauppa_pickup_point_field_html' );
+
+// No need to show pickup locations on the cart page, as the price of the order does not depend
+// on the pickup location.
+// add_action( 'woocommerce_cart_totals_after_shipping', 'wc_pakettikauppa_pickup_point_field_html' );
+
+
+
+/**
+ * Update the order meta with pakettikauppa_pickup_point field value
+ * Example value from checkout page: "DB Schenker: R-KIOSKI TRE AMURI (#6681)"
+ * Prefix values with underscore is they should be hidden from the metadata fields list.
+ */
+function wc_pakettikauppa_update_order_meta_pickup_point_field( $order_id ) {
+  if ( ! empty( $_POST['pakettikauppa_pickup_point'] ) ) {
+    error_log("saving ". $_POST['pakettikauppa_pickup_point']);
+    update_post_meta( $order_id, 'pakettikauppa_pickup_point', sanitize_text_field( $_POST['pakettikauppa_pickup_point'] ) );
+    // Find string like '(#6681)'
+    preg_match( '/\(#[0-9]+\)/' , $_POST['pakettikauppa_pickup_point'], $matches);
+    // Cut the number out from a string of the form '(#6681)'
+    $pakettikauppa_pickup_point_id = intval( substr($matches[0], 2, -1) );
+    update_post_meta( $order_id, 'pakettikauppa_pickup_point_id', $pakettikauppa_pickup_point_id );
+  }
+}
+add_action( 'woocommerce_checkout_update_order_meta', 'wc_pakettikauppa_update_order_meta_pickup_point_field' );
 
 function wc_pakettikauppa_show_pickup_point_in_admin_order_meta( $order ) {
   echo '<p><strong>' . __('Requested pickup point', 'wc-pakettikauppa') . ':</strong><br>';
@@ -704,47 +735,5 @@ add_action( 'admin_init', function() {
     $wc_pakettikauppa = new WC_Pakettikauppa();
     $wc_pakettikauppa->load();
 } );
-
-function wc_pakettikauppa_frontend_enqueue_scripts() {
-  wp_enqueue_script( 'wc_pakettikauppa_frontend_js', plugin_dir_url( __FILE__ ) . '/assets/js/wc-pakettikauppa_frontend.js', array( 'jquery' ) );
-
-  // Official hack from https://codex.wordpress.org/AJAX_in_Plugins#Separate_JavaScript_File to get ajaxurl defined in frontend
-  wp_localize_script( 'wc_pakettikauppa_frontend_js', 'wc_pakettikauppa',  array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
-}
-add_action( 'wp_enqueue_scripts', 'wc_pakettikauppa_frontend_enqueue_scripts' );
-
-function wc_pakettikauppa_ajax_get_pickup_points() {
-  $pickup_point_data = '';
-  $postcode = $_POST['data'];
-
-  try {
-    $mode = get_option( 'wc_pakettikauppa_mode', null );
-
-    if ( $mode == 'production' ) {
-      $account_number = get_option( 'wc_pakettikauppa_account_number', null );
-      $secret_key = get_option( 'wc_pakettikauppa_secret_key', null );
-      $wc_pakettikauppa_client = new Pakettikauppa\Client( array( 'api_key' => $account_number, 'secret' => $secret_key ) );
-    } else {
-      $wc_pakettikauppa_client = new Pakettikauppa\Client( array( 'test_mode' => true ) );
-    }
-
-    if ( ! empty( $postcode ) ) {
-      $pickup_point_data = $wc_pakettikauppa_client->searchPickupPoints( $postcode );
-    } else {
-      $pickup_point_data = "";
-    }
-
-    if ( $pickup_point_data == 'Authentication error' ) {
-      // @TODO: test if data is a proper array or throw error
-    }
-  } catch ( Exception $e ) {
-    // @TODO: throw error
-  }
-
-  //$pickup_points = json_decode( $pickup_point_data );
-  echo $pickup_point_data;
-  wp_die();
-}
-add_action( 'wp_ajax_pakettikauppa_get_pickup_points', 'wc_pakettikauppa_ajax_get_pickup_points' );
 
 require_once( 'includes/class-wc-pakettikauppa-shipment-method.php' );
