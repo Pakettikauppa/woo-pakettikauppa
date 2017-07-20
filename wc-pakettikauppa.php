@@ -153,10 +153,26 @@ function wc_pakettikauppa_update_order_meta_pickup_point_field( $order_id ) {
 }
 add_action( 'woocommerce_checkout_update_order_meta', 'wc_pakettikauppa_update_order_meta_pickup_point_field' );
 
+/*
+ * Display pickup point to customer after order
+ */
+function wc_pakettikauppa_display_order_data( $order ) {
+
+  $pickup_point = $order->get_meta('pakettikauppa_pickup_point');
+  if ( ! empty( $pickup_point ) ) {
+    echo '
+    <h2>'. __('Pickup point', 'wc-pakettikauppa' ) .'</h2>
+    <p>'. $pickup_point .'</p>';
+  }
+
+}
+add_action( 'woocommerce_order_details_after_order_table', 'wc_pakettikauppa_display_order_data' );
+
 function wc_pakettikauppa_show_pickup_point_in_admin_order_meta( $order ) {
   echo '<p><strong>' . __('Requested pickup point', 'wc-pakettikauppa') . ':</strong><br>';
-  if ( $order->get_meta('pakettikauppa_pickup_point_id') ) {
-     echo $order->get_meta('pakettikauppa_pickup_point_id');
+  if ( $order->get_meta('pakettikauppa_pickup_point') ) {
+    echo $order->get_meta('pakettikauppa_pickup_point');
+    echo '<br>ID: '. $order->get_meta('pakettikauppa_pickup_point_id');
   } else {
     echo __('None');
   }
