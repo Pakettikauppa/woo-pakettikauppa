@@ -6,7 +6,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woocommerce-"
 "pakettikauppa\n"
 "POT-Creation-Date: 2017-07-21 02:06+0300\n"
-"PO-Revision-Date: 2017-07-21 02:07+0300\n"
+"PO-Revision-Date: 2017-07-21 09:57+0300\n"
 "Last-Translator: Otto Kekäläinen <otto@seravo.com>\n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -117,7 +117,7 @@ msgstr "Noutopiste"
 #: wc-pakettikauppa.php:131
 msgid "Choose one of the pickup points close to your postcode %s below:"
 msgstr ""
-"Valitse noutopiste alla olevista postinumeroa %d lähinnä olevista "
+"Valitse noutopiste alla olevista postinumeroa %s lähinnä olevista "
 "vaihtoehdoista:"
 
 #: wc-pakettikauppa.php:204
