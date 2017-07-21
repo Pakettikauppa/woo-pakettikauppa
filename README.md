@@ -6,7 +6,7 @@
 
 # Maturity
 
-> This software is in beta. Can be tested in production but not announced stable yet.
+> This software is alpha quality. The feature set might change and require reinstallation or reconfiguration of settings.
 
 # Installation
 
@@ -48,3 +48,7 @@ Before submitting your patch, please make sure it is of high quality:
 * Test the code on a clean WordPress/WooCommmerce installation with standard [dummy data](https://docs.woocommerce.com/document/importing-woocommerce-dummy-data/)
 * Make sure the test suite passes locally and on Travis-CI
 * Check that the code style is valid when tested with the phpcs.xml included in this project
+
+## Developer docs
+
+Please note that the official docs at https://docs.woocommerce.com/document/shipping-method-api/ contain partially outdated information. For more information, see wiki at https://github.com/woocommerce/woocommerce/wiki/Shipping-Method-API or dive directly into the source using [GitHub search](https://github.com/woocommerce/woocommerce/search?utf8=%E2%9C%93&q=extends+WC_Shipping_Method&type=) to find up-to-date examples on how to extend the shipping method class.

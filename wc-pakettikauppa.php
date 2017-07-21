@@ -285,6 +285,9 @@ function wc_pakettikauppa_tracking_url( $service_id, $tracking_code ) {
   return $tracking_url;
 }
 
+// @TODO: This should be moved to includes/class-wc-pakettikauppa and interfaced
+// nicely. Most of the orphan fuctions above should be inside of this class and
+// properly namespaced.
 class WC_Pakettikauppa {
   private $pakettikauppa = null;
   private $errors = array();
