@@ -135,44 +135,38 @@ function wc_pakettikauppa_shipping_method_init() {
             'type' => 'title',
           ),
 
-          array(
+          'sender_name' => array(
             'title'    => __( 'Sender name', 'wc-pakettikauppa' ),
-            'id'       => 'wc_pakettikauppa_sender_name',
             'type'     => 'text',
             'default'  => '',
           ),
 
-          array(
+          'sender_address' => array(
             'title'    => __( 'Sender address', 'wc-pakettikauppa' ),
-            'id'       => 'wc_pakettikauppa_sender_address',
             'type'     => 'text',
             'default'  => '',
           ),
 
-          array(
+          'sender_postal_code' => array(
             'title'    => __( 'Sender postal code', 'wc-pakettikauppa' ),
-            'id'       => 'wc_pakettikauppa_sender_postal_code',
             'type'     => 'text',
             'default'  => '',
           ),
 
-          array(
+          'sender_city' => array(
             'title'    => __( 'Sender city', 'wc-pakettikauppa' ),
-            'id'       => 'wc_pakettikauppa_sender_city',
             'type'     => 'text',
             'default'  => '',
           ),
 
-          array(
+          'cod_iban' => array(
             'title'    => __( 'Bank account number for Cash on Delivery (IBAN)', 'wc-pakettikauppa' ),
-            'id'       => 'wc_pakettikauppa_cod_iban',
             'type'     => 'text',
             'default'  => '',
           ),
 
-          array(
+          'cod_bic' => array(
             'title'    => __( 'BIC code for Cash on Delivery', 'wc-pakettikauppa' ),
-            'id'       => 'wc_pakettikauppa_cod_bic',
             'type'     => 'text',
             'default'  => '',
           ),

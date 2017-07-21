@@ -92,12 +92,15 @@ function wc_pakettikauppa_pickup_point_field_html( ) {
   $pickup_point_data = '';
   $shipping_postcode = WC()->customer->get_shipping_postcode();
 
+ // @TODO: This whole try block duplicates the WC_Pakettikauppa->get_pickup_points().
+ // Try to deduplicate code and have one clean function with good error handling
+ // and a clean API so it can be tested in PHP Unit.
   try {
-    $mode = get_option( 'wc_pakettikauppa_mode', null );
+    $mode = WC()->shipping->shipping_methods['WC_Pakettikauppa_Shipping_Method']->settings['mode'];
 
     if ( $mode == 'production' ) {
-      $account_number = get_option( 'wc_pakettikauppa_account_number', null );
-      $secret_key = get_option( 'wc_pakettikauppa_secret_key', null );
+      $account_number = WC()->shipping->shipping_methods['WC_Pakettikauppa_Shipping_Method']->settings['account_number'];
+      $secret_key = WC()->shipping->shipping_methods['WC_Pakettikauppa_Shipping_Method']->settings['secret_key'];
       $wc_pakettikauppa_client = new Pakettikauppa\Client( array( 'api_key' => $account_number, 'secret' => $secret_key ) );
     } else {
       $wc_pakettikauppa_client = new Pakettikauppa\Client( array( 'test_mode' => true ) );
@@ -301,9 +304,11 @@ class WC_Pakettikauppa {
     $this->wc_pakettikauppa_client = null;
 
     try {
-      $account_number = get_option( 'wc_pakettikauppa_account_number', null );
-      $secret_key = get_option( 'wc_pakettikauppa_secret_key', null );
-      $mode = get_option( 'wc_pakettikauppa_mode', null );
+      // Use option from database directly as WC_Pakettikauppa_Shipping_Method object is not accessible here
+      $settings = get_option( 'woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null );
+      $account_number = $settings['mode'];
+      $secret_key = $settings['secret_key'];
+      $mode = $settings['mode'];
       $is_test_mode = ($mode == 'production' ? false : true);
       $this->wc_pakettikauppa_client = new Pakettikauppa\Client( array( 'api_key' => $account_number, 'secret' => $secret_key, 'test_mode' => $is_test_mode ) );
     } catch ( Exception $e ) {
@@ -470,9 +475,11 @@ class WC_Pakettikauppa {
               <label for="wc-pakettikauppa-pickup-points"><?php _e( 'Pickup Point', 'wc-pakettikauppa' ); ?></label>
 
              <?php
-               $account_number = get_option( 'wc_pakettikauppa_account_number', null );
-               $secret_key = get_option( 'wc_pakettikauppa_secret_key', null );
-               $mode = get_option( 'wc_pakettikauppa_mode', null );
+               // Use option from database directly as WC_Pakettikauppa_Shipping_Method object is not accessible here
+               $settings = get_option( 'woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null );
+               $account_number = $settings['mode'];
+               $secret_key = $settings['secret_key'];
+               $mode = $settings['mode'];
                $is_test_mode = ($mode == 'production' ? false : true);
                $wc_pakettikauppa_client = new Pakettikauppa\Client( array( 'api_key' => $account_number, 'secret' => $secret_key, 'test_mode' => $is_test_mode ) );
                $pickup_point_data = $wc_pakettikauppa_client->searchPickupPoints( $order->get_shipping_postcode() );
@@ -530,12 +537,13 @@ class WC_Pakettikauppa {
       $shipment = new Shipment();
       $service_id = $_REQUEST['wc_pakettikauppa_service_id'];
       $shipment->setShippingMethod( $service_id );
+      $settings = WC()->shipping->shipping_methods['WC_Pakettikauppa_Shipping_Method']->settings;
 
       $sender = new Sender();
-      $sender->setName1( get_option( 'wc_pakettikauppa_sender_name', null ) );
-      $sender->setAddr1( get_option( 'wc_pakettikauppa_sender_address', null ) );
-      $sender->setPostcode( get_option( 'wc_pakettikauppa_sender_postal_code', null ) );
-      $sender->setCity( get_option( 'wc_pakettikauppa_sender_city', null ) );
+      $sender->setName1( $settings['sender_name'] );
+      $sender->setAddr1( $settings['ender_address'] );
+      $sender->setPostcode( $settings['sender_postal_code'] );
+      $sender->setCity( $settings['ender_city'] );
       $sender->setCountry( 'FI' );
 
       $shipment->setSender($sender);
@@ -564,8 +572,8 @@ class WC_Pakettikauppa {
         $cod = true;
         $cod_amount = floatval( str_replace( ',', '.', $_REQUEST['wc_pakettikauppa_cod_amount'] ) );
         $cod_reference = trim( $_REQUEST['wc_pakettikauppa_cod_reference'] );
-        $cod_iban = get_option( 'wc_pakettikauppa_cod_iban', null );
-        $cod_bic = get_option( 'wc_pakettikauppa_cod_bic', null );
+        $cod_iban = $settings['cod_iban'];
+        $cod_bic = $settings['cod_bic'];
 
         $additional_service = new AdditionalService();
         $additional_service->addSpecifier( 'amount', $cod_amount );
@@ -661,9 +669,12 @@ class WC_Pakettikauppa {
 
     // @TODO: Save shipping method list as transient for 24 hours or so to avoid doing unnecessary lookups
     // @TODO: File bug upstream about result being string instead of object by default
-    $account_number = get_option( 'wc_pakettikauppa_account_number', null );
-    $secret_key = get_option( 'wc_pakettikauppa_secret_key', null );
-    $mode = get_option( 'wc_pakettikauppa_mode', null );
+    // We cannot access the WC_Pakettikauppa_Shipping_Method here as it has not yet been initialized,
+    // so access the settings directly from database using option name.
+    $settings = get_option( 'woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null );
+    $account_number = $settings['mode'];
+    $secret_key = $settings['secret_key'];
+    $mode = $settings['mode'];
     $is_test_mode = ($mode == 'production' ? false : true);
     $wc_pakettikauppa_client = new Pakettikauppa\Client( array( 'api_key' => $account_number, 'secret' => $secret_key, 'test_mode' => $is_test_mode ) );
     $all_shipping_methods = json_decode($wc_pakettikauppa_client->listShippingMethods());
@@ -731,7 +742,8 @@ class WC_Pakettikauppa {
    * Attach tracking URL to email.
    */
   public function attach_tracking_to_email( $order, $sent_to_admin = false, $plain_text = false, $email = null ) {
-    $add_to_email = get_option( 'wc_pakettikauppa_add_tracking_to_email', false );
+
+    $add_to_email = WC()->shipping->shipping_methods['WC_Pakettikauppa_Shipping_Method']->settings['add_tracking_to_email'];
 
     if ( 'yes' === $add_to_email && isset( $email->id ) && 'customer_completed_order' === $email->id ) {
       // @TODO: WC_Pakettikauppa_Shipment or WC_Shipment is not loaded in this namespace,
