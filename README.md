@@ -33,6 +33,10 @@ The plugin requires WooCommerce to be installed, with shipping zones configured 
 * Store owners and customers get tracking code links and status information
 * Test mode available that uses the testing API
 
+# Screenshots
+
+![Screenshots](screenshot.png)
+
 # Changelog
 
 See git history.
