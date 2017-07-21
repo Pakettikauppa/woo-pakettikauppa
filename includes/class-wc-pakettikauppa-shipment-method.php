@@ -77,17 +77,106 @@ function wc_pakettikauppa_shipping_method_init() {
        */
       public function init_form_fields() {
         $this->form_fields = array(
+
+          'mode' => array(
+            'title'    => __( 'Mode', 'wc-pakettikauppa' ),
+            'type'     => 'select',
+            'default'  => 'test',
+            'options'  => array(
+              'test' => __( 'Test environment', 'wc-pakettikauppa' ),
+              'production' => __( 'Production environment', 'wc-pakettikauppa' ),
+            ),
+          ),
+
+          'account_number' => array(
+            'title'    => __( 'Account number', 'wc-pakettikauppa' ),
+            'desc'     => __( 'Account number provided by Pakettikauppa.fi', 'wc-pakettikauppa' ),
+            'type'     => 'text',
+            'default'  => '',
+            'desc_tip' => true,
+          ),
+
+          'secret_key' => array(
+            'title'    => __( 'Secret key', 'wc-pakettikauppa' ),
+            'desc'     => __( 'Secret key provided by Pakettikauppa.fi', 'wc-pakettikauppa' ),
+            'type'     => 'text',
+            'default'  => '',
+            'desc_tip' => true,
+          ),
+
+          /* Start new section */
+          array(
+            'title' => __( 'Shipping settings', 'wc-pakettikauppa' ),
+            'type' => 'title',
+          ),
+
           'active_shipping_options' => array(
             'title'   => __( 'Active shipping options', 'wc-pakettikauppa' ),
             'type'    => 'multiselect',
             'options' => WC_Pakettikauppa::services(),
           ),
+
           'fee' => array(
             'title'       => __( 'Fixed fee (€)', 'wc-pakettikauppa' ),
             'type'        => 'price',
             'description' => __( 'Default fixed price for all Pakettikauppa.fi shipping methods.', 'wc-pakettikauppa' ),
             'desc_tip'    => true,
           ),
+
+          'add_tracking_to_email' => array(
+            'title'     => __( 'Add tracking link to the order completed email', 'wc-pakettikauppa' ),
+            'type'     => 'checkbox',
+            'default'  => 'no',
+          ),
+
+          /* Start new section */
+          array(
+            'title' => __( 'Store owner information', 'wc-pakettikauppa' ),
+            'type' => 'title',
+          ),
+
+          array(
+            'title'    => __( 'Sender name', 'wc-pakettikauppa' ),
+            'id'       => 'wc_pakettikauppa_sender_name',
+            'type'     => 'text',
+            'default'  => '',
+          ),
+
+          array(
+            'title'    => __( 'Sender address', 'wc-pakettikauppa' ),
+            'id'       => 'wc_pakettikauppa_sender_address',
+            'type'     => 'text',
+            'default'  => '',
+          ),
+
+          array(
+            'title'    => __( 'Sender postal code', 'wc-pakettikauppa' ),
+            'id'       => 'wc_pakettikauppa_sender_postal_code',
+            'type'     => 'text',
+            'default'  => '',
+          ),
+
+          array(
+            'title'    => __( 'Sender city', 'wc-pakettikauppa' ),
+            'id'       => 'wc_pakettikauppa_sender_city',
+            'type'     => 'text',
+            'default'  => '',
+          ),
+
+          array(
+            'title'    => __( 'Bank account number for Cash on Delivery (IBAN)', 'wc-pakettikauppa' ),
+            'id'       => 'wc_pakettikauppa_cod_iban',
+            'type'     => 'text',
+            'default'  => '',
+          ),
+
+          array(
+            'title'    => __( 'BIC code for Cash on Delivery', 'wc-pakettikauppa' ),
+            'id'       => 'wc_pakettikauppa_cod_bic',
+            'type'     => 'text',
+            'default'  => '',
+          ),
+
         );
       }
 

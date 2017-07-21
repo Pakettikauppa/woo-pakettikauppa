@@ -56,7 +56,7 @@ register_activation_hook( __FILE__, 'wc_pakettikauppa_prepare_directory' );
  * Add settings link to the plugins page.
  */
 function wc_pakettikauppa_add_settings_link( $links ) {
-  $url = admin_url( 'admin.php?page=wc-settings&tab=wc_pakettikauppa' );
+  $url = admin_url( 'admin.php?page=wc-settings&tab=shipping&section=wc_pakettikauppa_shipping_method' );
   $link = '<a href="' . $url . '">' . __( 'Settings' ) . '</a>';
 
   return array_merge( array( $link ), $links );
@@ -292,7 +292,6 @@ class WC_Pakettikauppa {
 
   public function load() {
     add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
-    add_filter( 'woocommerce_get_settings_pages', array( $this, 'add_settings_page' ), 10, 1 );
     add_action( 'add_meta_boxes', array( $this, 'register_meta_boxes' ) );
     add_action( 'save_post', array( $this, 'save_metabox' ), 10, 2 );
     add_action( 'admin_post_show_pakettikauppa', array( $this, 'show' ), 10 );
@@ -749,11 +748,6 @@ class WC_Pakettikauppa {
         }
       }
     }
-  }
-
-  public function add_settings_page( $settings ) {
-    $settings[] = include_once( plugin_dir_path( __FILE__ ) . 'includes/class-wc-settings-pakettikauppa.php' );
-    return $settings;
   }
 
   function add_error_notice() {
