@@ -80,9 +80,8 @@ class WcPkInitTest extends WP_UnitTestCase {
 	 */
 	function test_get_pickup_points($pakettikauppa) {
 		$pickups = $pakettikauppa->get_pickup_points(00100);
-		$this->assertEquals( array(), $pickups );
-		/*$wc_pakettikauppa_client = new Pakettikauppa\Client( array( 'test_mode' => true ) );
-		$pickup_point_data = json_decode($wc_pakettikauppa_client->searchPickupPoints( 00100 ));
-		$this->assertEquals( $pickup_point_data, $pickups);*/
+		$wc_pakettikauppa_client = new Pakettikauppa\Client( array( 'test_mode' => true ) );
+		$pickup_point_data = $wc_pakettikauppa_client->searchPickupPoints( 00100 );
+		$this->assertEquals( $pickup_point_data, $pickups);
 	}
 }
