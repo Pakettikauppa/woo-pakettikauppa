@@ -25,7 +25,6 @@ class WC_Pakettikauppa {
   }
 
   public function load() {
-    add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
     add_action( 'enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
     add_action( 'woocommerce_review_order_after_shipping', array( $this, 'pickup_point_field_html') );
@@ -47,15 +46,6 @@ class WC_Pakettikauppa {
       // @TODO handle errors
       die('pakettikauppa fail');
     }
-  }
-
-  /**
-   * Load plugin textdomain
-   *
-   * @return void
-   */
-  public function load_textdomain() {
-    load_plugin_textdomain( 'wc-pakettikauppa', false, dirname( WC_PAKETTIKAUPPA_BASENAME ) . '/languages/' );
   }
 
   public function admin_enqueue_scripts() {

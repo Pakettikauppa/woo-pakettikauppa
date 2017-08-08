@@ -39,11 +39,13 @@ class WC_Pakettikauppa_Admin {
   }
 
   public function load() {
+    add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+
     add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
     add_action( 'add_meta_boxes', array( $this, 'register_meta_boxes' ) );
     add_action( 'save_post', array( $this, 'save_metabox' ), 10, 2 );
     add_action( 'admin_post_show_pakettikauppa', array( $this, 'show' ), 10 );
-    add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+
     add_action( 'woocommerce_email_order_meta', array( $this, 'attach_tracking_to_email' ), 10, 4 );
     add_action( 'woocommerce_admin_order_data_after_shipping_address', array( $this, 'show_pickup_point_in_admin_order_meta' ), 10, 1 );
 
