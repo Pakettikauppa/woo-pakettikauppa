@@ -1,20 +1,3 @@
-p.pakettikauppa-shipment {
-  border-bottom: 1px solid #dddddd;
-  padding-left: 12px;
-  padding-right: 12px;
-  margin-left: -12px;
-  margin-right: -12px;
-  margin-bottom: 10px;
-  padding-bottom: 15px;
-}
-
-.pakettikauppa-services fieldset h4 {
-  margin: 10px 0 5px;
-}
-
-.pakettikauppa-services p#wc-pakettikauppa-cod-amount-wrapper,
-.pakettikauppa-services p#wc-pakettikauppa-cod-reference-wrapper,
-.pakettikauppa-services p#wc-pakettikauppa-pickup-points-wrapper
-{
-  display: none;
-}
+/**
+* Add frontend style to this file.
+*/

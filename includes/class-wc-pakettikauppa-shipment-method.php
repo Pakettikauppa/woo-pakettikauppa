@@ -1,9 +1,11 @@
 <?php
+
 // Prevent direct access to the script
 if ( ! defined( 'ABSPATH' ) ) {
   exit;
 }
 
+require_once( plugin_dir_path( __FILE__ ) . '/class-wc-pakettikauppa.php' );
 
 /**
  * Pakettikauppa_Shipping_Method Class

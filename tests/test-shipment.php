@@ -1,12 +1,21 @@
 <?php
+
+require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Client.php');
+require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Shipment.php');
+require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Shipment/Sender.php');
+require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Shipment/Receiver.php');
+require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Shipment/Info.php');
+require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Shipment/AdditionalService.php');
+require_once( WC_PAKETTIKAUPPA_DIR . 'includes/class-wc-pakettikauppa-shipment-method.php' );
+include( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Shipment/Parcel.php' );
+include(WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Shipment/ContentLine.php' );
+
+
 /**
  * Class TestWCPakettikauppaShipment
  *
  * @package Woocommerce_Pakettikauppa
  */
-include( plugin_dir_path( __FILE__ ) . '../vendor/Pakettikauppa/Shipment/Parcel.php');
-include( plugin_dir_path( __FILE__ ) . '../vendor/Pakettikauppa/Shipment/ContentLine.php');
-
 class TestWCPakettikauppaShipment extends WP_UnitTestCase {
 
 	/**
