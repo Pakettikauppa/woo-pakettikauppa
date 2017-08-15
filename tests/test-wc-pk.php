@@ -1,20 +1,19 @@
 <?php
 /**
- * Class WcPkInitTest
+ * Class TestWCPakettikauppa
  *
  * @package Woocommerce_Pakettikauppa
+ * @version  1.0.0
+  * @since 1.0.0
+  * @package  woocommerce-pakettikauppa
+  * @author Seravo
  */
-
-/**
- * Init test case.
- */
-class WcPkInitTest extends WP_UnitTestCase {
+class TestWCPakettikauppa extends WP_UnitTestCase {
 
 	/**
-	 * A single example test.
+	 * Test that the id is set correctly and return an WC_Pakettikauppa object.
 	 */
 	function test_init() {
-		// Replace this with some actual testing code.
 		$pakettikauppa = new WC_Pakettikauppa();
 		$this->assertEquals( 'wc_pakettikauppa', $pakettikauppa->id );
 	  $pakettikauppa->load();
@@ -23,6 +22,8 @@ class WcPkInitTest extends WP_UnitTestCase {
 	}
 
 	/**
+	* Check that the shipment status texts can be set correctly.
+	*
 	 * @depends test_init
 	 */
   function test_wc_pakettikauppa_get_status_text($pakettikauppa) {
@@ -49,32 +50,6 @@ class WcPkInitTest extends WP_UnitTestCase {
 		$output = WC_Pakettikauppa::tracking_url($inputs[0], $inputs[1]);
 		$this->assertEquals( "http://www.posti.fi/yritysasiakkaat/seuranta/#/lahetys/seurantakoodi", $output);
 	}
-
-	// @TODO: Move these tests to the module that tests WC_Pakettikauppa_Admin class
-	// /**
-	//  * @depends test_init
-	//  */
-  // function test_errors_empty($pakettikauppa) {
-	// 	$this->assertEmpty($pakettikauppa->get_errors());
-	// 	return $pakettikauppa;
-	// }
-	//
-	// /**
-	//  * @depends test_errors_empty
-	//  */
-	// function test_add_error($pakettikauppa) {
-	// 	$pakettikauppa->add_error("This is just a testing error");
-	// 	$this->assertEquals( array("This is just a testing error"), $pakettikauppa->get_errors() );
-	// 	return $pakettikauppa;
-	// }
-	//
-	// /**
-	//  * @depends test_add_error
-	//  */
-	// function test_clear_errors($pakettikauppa) {
-	// 	$pakettikauppa->clear_errors();
-	// 	$this->assertEquals( array(), $pakettikauppa->get_errors() );
-	// }
 
 	/**
 	 * @depends test_init
