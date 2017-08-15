@@ -138,7 +138,7 @@ class WC_Pakettikauppa_Admin {
   }
 
   /**
-  * @TODO: Function description
+  * @TODO: Find out what the use for this function is or get rid of it.
   */
   public function get_default_service( $post, $order ) {
     $service = '2103';
@@ -151,6 +151,7 @@ class WC_Pakettikauppa_Admin {
       $ids = explode( ':', $shipping_method['method_id'] );
       $instance_id = $ids[1];
 
+      // @TODO: This option does not even exist, what is this supposed to be?
       $service = get_option( 'wc_pakettikauppa_shipping_method_' . $instance_id, '2103' );
     }
 
@@ -415,7 +416,7 @@ class WC_Pakettikauppa_Admin {
         $this->clear_errors();
 
         $document_url = admin_url( 'admin-post.php?post=' . $post_id . '&action=show_pakettikauppa&sid=' . $tracking_code );
-        $tracking_url = WC_Pakettikauppa::tracking_url( $service_id );
+        $tracking_url = WC_Pakettikauppa::tracking_url( $service_id, $tracking_code );
 
         // Add order note
         $dl_link = '<a href="' . $document_url . '">' . __( 'Print document', 'wc-pakettikauppa' ) . '</a>';
@@ -499,25 +500,27 @@ class WC_Pakettikauppa_Admin {
 
   /**
    * Attach tracking URL to email.
-   * @TODO: Make this actually work, as the class WC_Pakettikauppa_Shipment does not
-   * exist, thus creating an error when attempting to send confirmation emails.
    */
   public function attach_tracking_to_email( $order, $sent_to_admin = false, $plain_text = false, $email = null ) {
 
     $add_to_email = WC()->shipping->shipping_methods['WC_Pakettikauppa_Shipping_Method']->settings['add_tracking_to_email'];
 
     if ( 'yes' === $add_to_email && isset( $email->id ) && 'customer_completed_order' === $email->id ) {
-      // @TODO: WC_Pakettikauppa_Shipment or WC_Shipment is not loaded in this namespace,
-      // it should be loaded before used. Fix this to get confirmation emails to work.
-      $shipment = new WC_Pakettikauppa_Shipment( $order->post );
-      $shipment->set_existing();
 
-      if ( isset( $shipment->id ) && ! empty( $shipment->id ) && ! empty( $shipment->tracking_url() ) ) {
+      $shipping_methods = $order->get_shipping_methods();
+      $shipping_method = reset( $shipping_methods );
+      $ids = explode( ':', $shipping_method['method_id'] );
+      $instance_id = (int) $ids[1];
+
+      $tracking_code = get_post_meta( $order->get_ID(), 'wc_pakettikauppa_tracking_code', true );
+      $tracking_url = WC_Pakettikauppa::tracking_url( $instance_id, $tracking_code );
+
+      if ( ! empty( $tracking_code ) && ! empty( $tracking_url ) ) {
         if ( $plain_text ) {
-          echo sprintf( __( "You can track your order at %1$s.\n\n", 'wc-pakettikauppa' ), $shipment->tracking_url() );
+          echo sprintf( __( "You can track your order at %1$s.\n\n", 'wc-pakettikauppa' ), $tracking_url );
         } else {
           echo '<h2>' . __( 'Tracking', 'wc-pakettikauppa' ) . '</h2>';
-          echo '<p>' . sprintf( __( 'You can <a href="%1$s">track your order</a> with tracking code %1$s.', 'wc-pakettikauppa' ), $shipment->tracking_url(), $shipment->id ) . '</p>';
+          echo '<p>' . sprintf( __( 'You can <a href="%1$s">track your order</a> with tracking code %2$s.', 'wc-pakettikauppa' ), $tracking_url, $tracking_code ) . '</p>';
         }
       }
     }

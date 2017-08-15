@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: WooCommerce Pakettikauppa.fi 0.9.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woocommerce-"
 "pakettikauppa\n"
-"POT-Creation-Date: 2017-08-08 09:30:05+00:00\n"
+"POT-Creation-Date: 2017-08-15 09:53:30+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,94 +13,94 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: includes/class-wc-pakettikauppa-admin.php:104
+#: includes/class-wc-pakettikauppa-admin.php:101
+msgid "Operation failed! Please try again."
+msgstr ""
+
+#: includes/class-wc-pakettikauppa-admin.php:115
 msgid "Visit Pakettikauppa.fi"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa-admin.php:104
+#: includes/class-wc-pakettikauppa-admin.php:115
 msgid "Show site Pakettikauppa.fi"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa-admin.php:117
+#: includes/class-wc-pakettikauppa-admin.php:128
 msgid "Pakettikauppa.fi"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa-admin.php:154
+#: includes/class-wc-pakettikauppa-admin.php:170
 msgid "Settings"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa-admin.php:163
+#: includes/class-wc-pakettikauppa-admin.php:182
 msgid "Requested pickup point"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa-admin.php:168
+#: includes/class-wc-pakettikauppa-admin.php:187
 msgid "None"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa-admin.php:208
-#: includes/class-wc-pakettikauppa-admin.php:402
+#: includes/class-wc-pakettikauppa-admin.php:228
+#: includes/class-wc-pakettikauppa-admin.php:422
 msgid "Print document"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa-admin.php:211
-#: includes/class-wc-pakettikauppa-admin.php:403
+#: includes/class-wc-pakettikauppa-admin.php:231
+#: includes/class-wc-pakettikauppa-admin.php:423
 msgid "Track"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa-admin.php:219
+#: includes/class-wc-pakettikauppa-admin.php:239
 msgid "Service"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa-admin.php:239
+#: includes/class-wc-pakettikauppa-admin.php:259
 msgid "Additional services"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa-admin.php:241
+#: includes/class-wc-pakettikauppa-admin.php:261
 msgid "Cash on Delivery"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa-admin.php:244
+#: includes/class-wc-pakettikauppa-admin.php:264
 msgid "Amount (€):"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa-admin.php:249
+#: includes/class-wc-pakettikauppa-admin.php:269
 msgid "Reference:"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa-admin.php:254
+#: includes/class-wc-pakettikauppa-admin.php:274
 msgid "Pickup Point"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa-admin.php:287
+#: includes/class-wc-pakettikauppa-admin.php:307
 msgid "Create"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa-admin.php:291
+#: includes/class-wc-pakettikauppa-admin.php:311
 msgid "Update Status"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa-admin.php:405
+#: includes/class-wc-pakettikauppa-admin.php:425
 msgid "Created Pakettikauppa.fi %1$s shipment.<br>%2$s<br>%1$s - %3$s"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa-admin.php:409
+#: includes/class-wc-pakettikauppa-admin.php:429
 msgid "Failed to create Pakettikauppa.fi  shipment. Errors: %s"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa-admin.php:477
+#: includes/class-wc-pakettikauppa-admin.php:497
 msgid "Cannot find shipment with given shipment number."
 msgstr ""
 
-#: includes/class-wc-pakettikauppa-admin.php:498
+#: includes/class-wc-pakettikauppa-admin.php:522
 msgid "Tracking"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa-admin.php:499
-msgid "You can <a href=\"%1$s\">track your order</a> with tracking code %1$s."
-msgstr ""
-
-#: includes/class-wc-pakettikauppa-admin.php:510
-msgid "Operation failed! Please try again."
+#: includes/class-wc-pakettikauppa-admin.php:523
+msgid "You can <a href=\"%1$s\">track your order</a> with tracking code %2$s."
 msgstr ""
 
 #: includes/class-wc-pakettikauppa-shipment-method.php:54
@@ -185,17 +185,17 @@ msgstr ""
 msgid "BIC code for Cash on Delivery"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa.php:132
+#: includes/class-wc-pakettikauppa.php:143
 msgid "Select a pickup point"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa.php:142
-#: includes/class-wc-pakettikauppa.php:143
-#: includes/class-wc-pakettikauppa.php:172
+#: includes/class-wc-pakettikauppa.php:153
+#: includes/class-wc-pakettikauppa.php:154
+#: includes/class-wc-pakettikauppa.php:183
 msgid "Pickup point"
 msgstr ""
 
-#: includes/class-wc-pakettikauppa.php:147
+#: includes/class-wc-pakettikauppa.php:158
 msgid "Choose one of the pickup points close to your postcode %s below:"
 msgstr ""
 
