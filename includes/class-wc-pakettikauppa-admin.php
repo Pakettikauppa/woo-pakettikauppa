@@ -39,17 +39,15 @@ class WC_Pakettikauppa_Admin {
   }
 
   public function load() {
-    add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
-
+    add_filter( 'plugin_action_links_' . WC_PAKETTIKAUPPA_BASENAME, array( $this, 'add_settings_link' ) );
     add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
+
+    add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
     add_action( 'add_meta_boxes', array( $this, 'register_meta_boxes' ) );
     add_action( 'save_post', array( $this, 'save_metabox' ), 10, 2 );
     add_action( 'admin_post_show_pakettikauppa', array( $this, 'show' ), 10 );
-
     add_action( 'woocommerce_email_order_meta', array( $this, 'attach_tracking_to_email' ), 10, 4 );
     add_action( 'woocommerce_admin_order_data_after_shipping_address', array( $this, 'show_pickup_point_in_admin_order_meta' ), 10, 1 );
-
-    add_filter( 'plugin_action_links_' . WC_PAKETTIKAUPPA_BASENAME, array( $this, 'add_settings_link' ) );
 
     $this->wc_pakettikauppa_client = null;
 
@@ -68,14 +66,16 @@ class WC_Pakettikauppa_Admin {
   }
 
   /**
-  * @TODO: Function description
+  * Return all errors that have been added via add_error().
+  *
+  * @return array Errors
   */
   public function get_errors() {
       return $this->errors;
   }
 
   /**
-  * @TODO: Function description
+  * Clear all existing errors that have been added via add_error().
   */
   public function clear_errors() {
     unset( $this->errors );
@@ -83,12 +83,23 @@ class WC_Pakettikauppa_Admin {
   }
 
   /**
-  * @TODO: Function description
+  * Add an error with a specified error message.
+  *
+  * @param string $message A message containing details about the error.
   */
   public function add_error( $message ) {
     if ( ! empty( $message ) ) {
       array_push( $this->errors, $message );
     }
+  }
+
+  /**
+  * Add an admin error notice to wp-admin.
+  */
+  function add_error_notice() {
+    $class = 'notice notice-error';
+    $message = _e( 'Operation failed! Please try again.', 'wc-pakettikauppa' );
+    printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
   }
 
   /**
@@ -109,7 +120,7 @@ class WC_Pakettikauppa_Admin {
   }
 
   /**
-  * @TODO: Function description
+  * Register meta boxes for WooCommerce order metapage.
   */
   public function register_meta_boxes() {
     foreach ( wc_get_order_types( 'order-meta-boxes' ) as $type ) {
@@ -119,7 +130,7 @@ class WC_Pakettikauppa_Admin {
   }
 
   /**
-  * @TODO: Function description
+  * Enqueue admin-specific styles and scripts.
   */
   public function admin_enqueue_scripts() {
     wp_enqueue_style( 'wc_pakettikauppa_admin', plugin_dir_url( __FILE__ ) . '../assets/css/wc-pakettikauppa-admin.css' );
@@ -147,7 +158,11 @@ class WC_Pakettikauppa_Admin {
   }
 
   /**
-   * Add settings link to the plugins page.
+   * Add settings link to the Pakettikauppa metabox on the plugins page when used with
+   * the WordPress hook plugin_action_links_woocommerce-pakettikauppa.
+   *
+   * @param array $links Already existing links on the plugin metabox
+   * @return array The plugin settings page link appended to the already existing links
    */
   public function add_settings_link( $links ) {
     $url = admin_url( 'admin.php?page=wc-settings&tab=shipping&section=wc_pakettikauppa_shipping_method' );
@@ -157,7 +172,10 @@ class WC_Pakettikauppa_Admin {
   }
 
   /**
-  * @TODO: Function description
+  * Show the selected pickup point in admin order meta. Use together with the hook
+  * woocommerce_admin_order_data_after_shipping_address.
+  *
+  * @param WC_Order $order The order that is currently being viewed in wp-admin
   */
   public function show_pickup_point_in_admin_order_meta( $order ) {
     echo '<p><strong>' . __('Requested pickup point', 'wc-pakettikauppa') . ':</strong><br>';
@@ -199,6 +217,7 @@ class WC_Pakettikauppa_Admin {
 
     ?>
       <div>
+
         <?php if ( ! empty( $tracking_code ) ) { ?>
           <p class="pakettikauppa-shipment">
             <strong>
@@ -297,7 +316,7 @@ class WC_Pakettikauppa_Admin {
   }
 
   /**
-   * Save metabox values
+   * Save metabox values and fetch the shipping label for the order.
    */
   public function save_metabox( $post_id, $post ) {
     if ( ! current_user_can( 'edit_post', $post_id ) ) {
@@ -441,7 +460,7 @@ class WC_Pakettikauppa_Admin {
 
 
   /**
-   * Output shipment label as PDF.
+   * Output shipment label as PDF in browser.
    */
   public function show() {
     $shipment_id = false;
@@ -480,6 +499,8 @@ class WC_Pakettikauppa_Admin {
 
   /**
    * Attach tracking URL to email.
+   * @TODO: Make this actually work, as the class WC_Pakettikauppa_Shipment does not
+   * exist, thus creating an error when attempting to send confirmation emails.
    */
   public function attach_tracking_to_email( $order, $sent_to_admin = false, $plain_text = false, $email = null ) {
 
@@ -500,15 +521,6 @@ class WC_Pakettikauppa_Admin {
         }
       }
     }
-  }
-
-  /**
-  * @TODO: Function description
-  */
-  function add_error_notice() {
-    $class = 'notice notice-error';
-    $message = _e( 'Operation failed! Please try again.', 'wc-pakettikauppa' );
-    printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
   }
 
 }

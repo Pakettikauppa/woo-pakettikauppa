@@ -48,7 +48,10 @@ class WC_Pakettikauppa {
     }
   }
 
-  public function admin_enqueue_scripts() {
+  /**
+  * Enqueue frontend-specific styles and scripts.
+  */
+  public function enqueue_scripts() {
     wp_enqueue_style( 'wc_pakettikauppa', plugin_dir_url( __FILE__ ) . '../assets/css/wc-pakettikauppa.css' );
     wp_enqueue_script( 'wc_pakettikauppa_js', plugin_dir_url( __FILE__ ) . '../assets/js/wc-pakettikauppa.js', array( 'jquery' ) );
   }
@@ -57,6 +60,8 @@ class WC_Pakettikauppa {
    * Update the order meta with pakettikauppa_pickup_point field value
    * Example value from checkout page: "DB Schenker: R-KIOSKI TRE AMURI (#6681)"
    * Prefix values with underscore is they should be hidden from the metadata fields list.
+   *
+   * @param int $order_id The id of the order to update
    */
   public function update_order_meta_pickup_point_field( $order_id ) {
     if ( ! empty( $_POST['pakettikauppa_pickup_point'] ) ) {
@@ -72,6 +77,12 @@ class WC_Pakettikauppa {
 
   /**
   * Return pickup points near a location specified by the parameters.
+  *
+  * @param int $postcode The postcode of the pickup point
+  * @param string $street_address The street address of the pickup point
+  * @param string $country The country in which the pickup point is located
+  * @param string $service_provider A service that should be provided by the pickup point
+  * @return array The pickup points based on the parameters, or empty array if none were found
   */
   public function get_pickup_points( $postcode, $street_address = null, $country = null, $service_provider = null ) {
     try {
@@ -162,7 +173,7 @@ class WC_Pakettikauppa {
   }
 
   /*
-   * Display pickup point to customer after order
+   * Display pickup point to customer after order.
    */
   public function display_order_data( $order ) {
 
@@ -175,7 +186,9 @@ class WC_Pakettikauppa {
   }
 
   /**
-   * Shipment services
+   * Get all available shipping services.
+   *
+   * @return array Available shipping services
    */
   public static function services() {
     $services = array();
@@ -203,7 +216,10 @@ class WC_Pakettikauppa {
   }
 
   /**
-   * Title for service
+   * Get the title of a service by providing its code.
+   *
+   * @param int $service_code The code of a service
+   * @return string The service title matching with the provided code, or false if not found
    */
   public static function service_title( $service_code ) {
     $services = self::services();
@@ -215,7 +231,11 @@ class WC_Pakettikauppa {
   }
 
   /**
-  * @TODO: Function description
+  * Get the status text that matches a specified status code.
+  *
+  * @param int $status_code A status code
+  * @return string The status text matching the provided code, or unknown status if the
+  * code is unknown.
   */
   public static function get_status_text( $status_code ) {
     $status = '';
@@ -241,7 +261,10 @@ class WC_Pakettikauppa {
   }
 
   /**
-   * Calculate total weight for this shipment
+  * Calculate the total shipping weight of an order.
+  *
+  * @param WC_Order $order The order to calculate the weight of
+  * @return int The total weight of the order
   */
   public static function order_weight( $order ) {
     $weight = 0;
@@ -261,7 +284,11 @@ class WC_Pakettikauppa {
   }
 
   /**
-  * @TODO: Function description
+  * Get the full-length tracking url of a shipment by providing its service id and tracking code
+  *
+  * @param int $service_id The id of the service that is used for the shipment
+  * @param int $tracking_code The tracking code of the shipment
+  * @return string The full tracking url for the order
   */
   public static function tracking_url( $service_id, $tracking_code ) {
     $tracking_url = '';
@@ -285,8 +312,11 @@ class WC_Pakettikauppa {
   }
 
   /**
-   * Calculate Finnish invoice reference from order ID
-   * http://tarkistusmerkit.teppovuori.fi/tarkmerk.htm#viitenumero
+  * Calculate Finnish invoice reference from order ID
+  * http://tarkistusmerkit.teppovuori.fi/tarkmerk.htm#viitenumero
+  *
+  * @param int $id The id of the order to calculate the reference of
+  * @return int The reference number calculated from the id
   */
   public static function calculate_reference( $id ) {
     $weights = array( 7, 3, 1, 7, 3, 1, 7, 3, 1, 7, 3, 1, 7, 3, 1, 7, 3, 1, 7 );
