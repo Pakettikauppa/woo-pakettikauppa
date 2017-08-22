@@ -260,8 +260,6 @@ class WC_Pakettikauppa_Admin {
                 </label>
                 <br>
               <?php } ?>
-            </fieldset>
-            <fieldset>
               <h4><?php _e( 'Additional services', 'wc-pakettikauppa' ); ?></h4>
               <input type="checkbox" name="wc_pakettikauppa_cod" value="1" id="wc-pakettikauppa-cod" <?php if ( $cod ) { ?>checked="checked"<?php } ?> />
               <label for="wc-pakettikauppa-cod"><?php _e( 'Cash on Delivery', 'wc-pakettikauppa' ); ?></label>
@@ -305,9 +303,7 @@ class WC_Pakettikauppa_Admin {
               </p>
 
             </fieldset>
-            <fieldset>
 
-            </fieldset>
           </div>
           <p>
             <input type="submit" value="<?php _e( 'Create', 'wc-pakettikauppa' ); ?>" name="wc_pakettikauppa_create" class="button" />

@@ -43,7 +43,7 @@ class WC_Pakettikauppa {
       $this->wc_pakettikauppa_client = new Pakettikauppa\Client( array( 'api_key' => $account_number, 'secret' => $secret_key, 'test_mode' => $is_test_mode ) );
 
     } catch ( Exception $e ) {
-      // @TODO handle errors
+      // @TODO Handle frontend errors, should they be shown to customer?
       die('pakettikauppa fail');
     }
   }
@@ -59,7 +59,7 @@ class WC_Pakettikauppa {
   /**
    * Update the order meta with pakettikauppa_pickup_point field value
    * Example value from checkout page: "DB Schenker: R-KIOSKI TRE AMURI (#6681)"
-   * @TODO: Prefix values with underscore is they should be hidden from the metadata fields list.
+   * @TODO: Prefix values with underscore as they should be hidden from the metadata fields list.
    *
    * @param int $order_id The id of the order to update
    */

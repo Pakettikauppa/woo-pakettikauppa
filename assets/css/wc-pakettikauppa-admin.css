@@ -12,6 +12,10 @@ p.pakettikauppa-shipment {
   margin: 10px 0 5px;
 }
 
+.pakettikauppa-services {
+    overflow-x: hidden;
+}
+
 .pakettikauppa-services p#wc-pakettikauppa-cod-amount-wrapper,
 .pakettikauppa-services p#wc-pakettikauppa-cod-reference-wrapper,
 .pakettikauppa-services p#wc-pakettikauppa-pickup-points-wrapper
