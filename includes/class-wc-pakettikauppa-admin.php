@@ -143,17 +143,17 @@ class WC_Pakettikauppa_Admin {
   public function get_default_service( $post, $order ) {
     $service = '2103';
 
-    $order = new WC_Order( $post->ID );
-    $shipping_methods = $order->get_shipping_methods();
-
-    if ( ! empty( $shipping_methods ) ) {
-      $shipping_method = reset( $shipping_methods );
-      $ids = explode( ':', $shipping_method['method_id'] );
-      $instance_id = $ids[1];
-
-      // @TODO: This option does not even exist, what is this supposed to be?
-      $service = get_option( 'wc_pakettikauppa_shipping_method_' . $instance_id, '2103' );
-    }
+    // $order = new WC_Order( $post->ID );
+    // $shipping_methods = $order->get_shipping_methods();
+    //
+    // if ( ! empty( $shipping_methods ) ) {
+    //   $shipping_method = reset( $shipping_methods );
+    //   $ids = explode( ':', $shipping_method['method_id'] );
+    //   $instance_id = $ids[1];
+    //
+    //   // @TODO: This option does not exist
+    //   $service = get_option( 'wc_pakettikauppa_shipping_method_' . $instance_id, '2103' );
+    // }
 
     return $service;
   }
@@ -201,8 +201,14 @@ class WC_Pakettikauppa_Admin {
     $cod_amount = get_post_meta( $post->ID, 'wc_pakettikauppa_cod_amount', true);
     $cod_reference = get_post_meta( $post->ID, 'wc_pakettikauppa_cod_reference', true);
     $service_id = get_post_meta( $post->ID, 'wc_pakettikauppa_service_id', true);
+
+    $shipping_methods = $order->get_shipping_methods();
+    $shipping_method = reset( $shipping_methods );
+    $ids = explode( ':', $shipping_method['method_id'] );
+    $service_id = (int) $ids[1];
+
     // var_dump($service_id);
-    $pickup_point = $order->get_meta('Pickup point (from order)');
+    $pickup_point = $order->get_meta('pakettikauppa_pickup_point');
     // var_dump($pickup_point);
     $pickup_point_id = $order->get_meta('pakettikauppa_pickup_point_id');
     // var_dump($pickup_point_id);
@@ -245,7 +251,7 @@ class WC_Pakettikauppa_Admin {
                     id="service-<?php echo $key; ?>"
                     <?php
                     // Show as selected the pickup point by id
-                    if ( $pickup_point_id == $key ) {
+                    if ( $service_id == $key ) {
                       echo 'checked="checked"';
                     }
                     ?>
@@ -470,15 +476,11 @@ class WC_Pakettikauppa_Admin {
     // data.
     if ( isset( $_REQUEST['sid'] ) ) {
       $shipment_id = $_REQUEST['sid'];
-    } else {
-      $post = get_post( $_REQUEST['post'] );
-      $shipment = new WC_Pakettikauppa_Shipment( $post );
-      $shipment->set_existing();
+  } else
 
-      if ( ! empty( $shipment->id ) ) {
-        $shipment_id = $shipment->id;
-      }
-    }
+  _e( 'Shipment tracking code is not defined...
+   shipment with given shipment number.', 'wc-pakettikauppa' );
+
 
     if ( false != $shipment_id ) {
       $upload_dir = wp_upload_dir();
