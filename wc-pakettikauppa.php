@@ -41,7 +41,7 @@ function wc_pakettikauppa_load_textdomain() {
 }
 add_action( 'plugins_loaded', 'wc_pakettikauppa_load_textdomain' );
 
-require_once( plugin_dir_path( __FILE__ ) . 'includes/class-wc-pakettikauppa-shipment-method.php' );
+require_once( plugin_dir_path( __FILE__ ) . 'includes/class-wc-pakettikauppa-shipping-method.php' );
 
 /**
 * Load the WC_Pakettikauppa class when in frontend

@@ -116,6 +116,8 @@ function wc_pakettikauppa_shipping_method_init() {
             'title'   => __( 'Active shipping options', 'wc-pakettikauppa' ),
             'type'    => 'multiselect',
             'options' => WC_Pakettikauppa::services(),
+            'description' => __( 'Press and hold Ctrl or Cmd to select multiple shipping methods.', 'wc-pakettikauppa' ),
+            'desc_tip'    => true,
           ),
 
           'fee' => array(

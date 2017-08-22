@@ -59,7 +59,7 @@ class WC_Pakettikauppa {
   /**
    * Update the order meta with pakettikauppa_pickup_point field value
    * Example value from checkout page: "DB Schenker: R-KIOSKI TRE AMURI (#6681)"
-   * Prefix values with underscore is they should be hidden from the metadata fields list.
+   * @TODO: Prefix values with underscore is they should be hidden from the metadata fields list.
    *
    * @param int $order_id The id of the order to update
    */
@@ -126,9 +126,6 @@ class WC_Pakettikauppa {
     $pickup_point_data = '';
     $shipping_postcode = WC()->customer->get_shipping_postcode();
 
-   // @TODO: This whole try block duplicates the WC_Pakettikauppa->get_pickup_points().
-   // Try to deduplicate code and have one clean function with good error handling
-   // and a clean API so it can be tested in PHP Unit.
     try {
       $pickup_point_data = $this->get_pickup_points( $shipping_postcode );
 
