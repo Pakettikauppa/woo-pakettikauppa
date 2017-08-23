@@ -199,20 +199,21 @@ class WC_Pakettikauppa_Admin {
   public function meta_box( $post ) {
     $order = wc_get_order( $post->ID );
 
-    $tracking_code = get_post_meta( $post->ID, 'wc_pakettikauppa_tracking_code', true);
-    $cod = get_post_meta( $post->ID, 'wc_pakettikauppa_cod', true);
-    $cod_amount = get_post_meta( $post->ID, 'wc_pakettikauppa_cod_amount', true);
-    $cod_reference = get_post_meta( $post->ID, 'wc_pakettikauppa_cod_reference', true);
-    $service_id = get_post_meta( $post->ID, 'wc_pakettikauppa_service_id', true);
+    // The tracking code will only be available if the shipment label has been generated
+    $tracking_code = get_post_meta( $post->ID, '_wc_pakettikauppa_tracking_code', true);
+    $cod = get_post_meta( $post->ID, '_wc_pakettikauppa_cod', true);
+    $cod_amount = get_post_meta( $post->ID, '_wc_pakettikauppa_cod_amount', true);
+    $cod_reference = get_post_meta( $post->ID, '_wc_pakettikauppa_cod_reference', true);
+    $service_id = get_post_meta( $post->ID, '_wc_pakettikauppa_service_id', true);
 
     $shipping_methods = $order->get_shipping_methods();
     $shipping_method = reset( $shipping_methods );
     $ids = explode( ':', $shipping_method['method_id'] );
     $service_id = (int) $ids[1];
 
-    $pickup_point = $order->get_meta('pakettikauppa_pickup_point');
-    $pickup_point_id = $order->get_meta('pakettikauppa_pickup_point_id');
-    $status = get_post_meta( $post->ID, 'wc_pakettikauppa_shipment_status', true);
+    $pickup_point = $order->get_meta('_pakettikauppa_pickup_point');
+    $pickup_point_id = $order->get_meta('_pakettikauppa_pickup_point_id');
+    $status = get_post_meta( $post->ID, '_wc_pakettikauppa_shipment_status', true);
 
     // Set defaults
     if ( empty( $cod_amount) ) { $cod_amount = $order->get_total(); }
@@ -250,7 +251,7 @@ class WC_Pakettikauppa_Admin {
                     value="<?php echo $key; ?>"
                     id="service-<?php echo $key; ?>"
                     <?php
-                    // Show as selected the pickup point by id
+                    // Show the customer selected pickup point as active by default
                     if ( $service_id == $key ) {
                       echo 'checked="checked"';
                     }
@@ -388,7 +389,7 @@ class WC_Pakettikauppa_Admin {
       if ( $_REQUEST['wc_pakettikauppa_pickup_points'] ) {
         $pickup_point = true;
         $pickup_point_id = intval( $_REQUEST['wc_pakettikauppa_pickup_point_id'] );
-        $shipment->setPickupPoint( $this->pickup_point_id );
+        $shipment->setPickupPoint( $pickup_point_id );
       }
 
       try {
@@ -406,13 +407,13 @@ class WC_Pakettikauppa_Admin {
         }
 
         // Update post meta
-        update_post_meta( $post_id, 'wc_pakettikauppa_tracking_code', $tracking_code);
-        update_post_meta( $post_id, 'wc_pakettikauppa_service_id', $service_id);
-        update_post_meta( $post_id, 'wc_pakettikauppa_cod', $cod);
-        update_post_meta( $post_id, 'wc_pakettikauppa_cod_amount', $cod_amount);
-        update_post_meta( $post_id, 'wc_pakettikauppa_cod_reference', $cod_reference);
-        update_post_meta( $post_id, 'wc_pakettikauppa_pickup_point', $pickup_point);
-        update_post_meta( $post_id, 'wc_pakettikauppa_pickup_point_id', $pickup_point_id);
+        update_post_meta( $post_id, '_wc_pakettikauppa_tracking_code', $tracking_code);
+        update_post_meta( $post_id, '_wc_pakettikauppa_service_id', $service_id);
+        update_post_meta( $post_id, '_wc_pakettikauppa_cod', $cod);
+        update_post_meta( $post_id, '_wc_pakettikauppa_cod_amount', $cod_amount);
+        update_post_meta( $post_id, '_wc_pakettikauppa_cod_reference', $cod_reference);
+        update_post_meta( $post_id, '_wc_pakettikauppa_pickup_point', $pickup_point);
+        update_post_meta( $post_id, '_wc_pakettikauppa_pickup_point_id', $pickup_point_id);
 
         $this->clear_errors();
 
@@ -423,7 +424,7 @@ class WC_Pakettikauppa_Admin {
         $dl_link = '<a href="' . $document_url . '">' . __( 'Print document', 'wc-pakettikauppa' ) . '</a>';
         $tracking_link = '<a href="' . $tracking_url . '">' . __( 'Track', 'wc-pakettikauppa' ) . '</a>';
 
-        $order->add_order_note( sprintf( __('Created Pakettikauppa.fi %1$s shipment.<br>%2$s<br>%1$s - %3$s', 'wc-pakettikauppa'), WC_Pakettikauppa::service_title($service_id), $tracking_code, $dl_link, $tracking_link ) );
+        $order->add_order_note( sprintf( __('Created Pakettikauppa.fi %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s', 'wc-pakettikauppa'), WC_Pakettikauppa::service_title($service_id), $tracking_code, $dl_link, $tracking_link ) );
 
         // @TODO check corrects shipment stuff
       } catch ( Exception $e ) {
@@ -437,13 +438,14 @@ class WC_Pakettikauppa_Admin {
 
     } elseif ( isset( $_POST['wc_pakettikauppa_get_status'] ) ) {
       try {
-         $tracking_code = get_post_meta( $post_id, 'wc_pakettikauppa_tracking_code', true);
+         $tracking_code = get_post_meta( $post_id, '_wc_pakettikauppa_tracking_code', true);
 
          if ( ! empty( $tracking_code ) ) {
            $result = $this->wc_pakettikauppa_client->getShipmentStatus($tracking_code);
+
            $data = json_decode( $result );
            $status_code = $data[0]->{'status_code'};
-           update_post_meta( $post_id, 'wc_pakettikauppa_shipment_status', $status_code );
+           update_post_meta( $post_id, '_wc_pakettikauppa_shipment_status', $status_code );
          }
 
          $this->clear_errors();
@@ -506,7 +508,7 @@ class WC_Pakettikauppa_Admin {
       $ids = explode( ':', $shipping_method['method_id'] );
       $instance_id = (int) $ids[1];
 
-      $tracking_code = get_post_meta( $order->get_ID(), 'wc_pakettikauppa_tracking_code', true );
+      $tracking_code = get_post_meta( $order->get_ID(), '_wc_pakettikauppa_tracking_code', true );
       $tracking_url = WC_Pakettikauppa::tracking_url( $instance_id, $tracking_code );
 
       if ( ! empty( $tracking_code ) && ! empty( $tracking_url ) ) {

@@ -59,18 +59,17 @@ class WC_Pakettikauppa {
   /**
    * Update the order meta with pakettikauppa_pickup_point field value
    * Example value from checkout page: "DB Schenker: R-KIOSKI TRE AMURI (#6681)"
-   * @TODO: Prefix values with underscore as they should be hidden from the metadata fields list.
    *
    * @param int $order_id The id of the order to update
    */
   public function update_order_meta_pickup_point_field( $order_id ) {
     if ( ! empty( $_POST['pakettikauppa_pickup_point'] ) ) {
-      update_post_meta( $order_id, 'pakettikauppa_pickup_point', sanitize_text_field( $_POST['pakettikauppa_pickup_point'] ) );
+      update_post_meta( $order_id, '_pakettikauppa_pickup_point', sanitize_text_field( $_POST['pakettikauppa_pickup_point'] ) );
       // Find string like '(#6681)'
       preg_match( '/\(#[0-9]+\)/' , $_POST['pakettikauppa_pickup_point'], $matches);
       // Cut the number out from a string of the form '(#6681)'
       $pakettikauppa_pickup_point_id = intval( substr($matches[0], 2, -1) );
-      update_post_meta( $order_id, 'pakettikauppa_pickup_point_id', $pakettikauppa_pickup_point_id );
+      update_post_meta( $order_id, '_pakettikauppa_pickup_point_id', $pakettikauppa_pickup_point_id );
     }
   }
 
