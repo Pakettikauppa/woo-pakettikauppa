@@ -138,9 +138,13 @@ class WC_Pakettikauppa_Admin {
   }
 
   /**
-  * @TODO: Find out what the use for this function is or get rid of it.
+  * Return the default shipping service if none has been specified
+  *
+  * @TODO: Does this method really need $post or $order, as the default service should
+  * not be order-specific?
   */
   public function get_default_service( $post, $order ) {
+    // @TODO: Maybe use an option in database so the merchant can set it in settings
     $service = '2103';
 
     // $order = new WC_Order( $post->ID );
@@ -196,7 +200,6 @@ class WC_Pakettikauppa_Admin {
     $order = wc_get_order( $post->ID );
 
     $tracking_code = get_post_meta( $post->ID, 'wc_pakettikauppa_tracking_code', true);
-    // var_dump($tracking_code);
     $cod = get_post_meta( $post->ID, 'wc_pakettikauppa_cod', true);
     $cod_amount = get_post_meta( $post->ID, 'wc_pakettikauppa_cod_amount', true);
     $cod_reference = get_post_meta( $post->ID, 'wc_pakettikauppa_cod_reference', true);
@@ -207,11 +210,8 @@ class WC_Pakettikauppa_Admin {
     $ids = explode( ':', $shipping_method['method_id'] );
     $service_id = (int) $ids[1];
 
-    // var_dump($service_id);
     $pickup_point = $order->get_meta('pakettikauppa_pickup_point');
-    // var_dump($pickup_point);
     $pickup_point_id = $order->get_meta('pakettikauppa_pickup_point_id');
-    // var_dump($pickup_point_id);
     $status = get_post_meta( $post->ID, 'wc_pakettikauppa_shipment_status', true);
 
     // Set defaults
@@ -394,7 +394,6 @@ class WC_Pakettikauppa_Admin {
       try {
         if ( $this->wc_pakettikauppa_client->createTrackingCode($shipment) ) {
           $tracking_code = $shipment->getTrackingCode()->__toString();
-          dir('code: ' . $tracking_code);
         } else {
           // @TODO error message
         }
@@ -439,12 +438,9 @@ class WC_Pakettikauppa_Admin {
     } elseif ( isset( $_POST['wc_pakettikauppa_get_status'] ) ) {
       try {
          $tracking_code = get_post_meta( $post_id, 'wc_pakettikauppa_tracking_code', true);
-         // error_log($tracking_code);
 
          if ( ! empty( $tracking_code ) ) {
            $result = $this->wc_pakettikauppa_client->getShipmentStatus($tracking_code);
-           // error_log($result);
-           // var_dump($result);
            $data = json_decode( $result );
            $status_code = $data[0]->{'status_code'};
            update_post_meta( $post_id, 'wc_pakettikauppa_shipment_status', $status_code );

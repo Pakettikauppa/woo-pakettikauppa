@@ -65,7 +65,6 @@ class WC_Pakettikauppa {
    */
   public function update_order_meta_pickup_point_field( $order_id ) {
     if ( ! empty( $_POST['pakettikauppa_pickup_point'] ) ) {
-      error_log("saving ". $_POST['pakettikauppa_pickup_point']);
       update_post_meta( $order_id, 'pakettikauppa_pickup_point', sanitize_text_field( $_POST['pakettikauppa_pickup_point'] ) );
       // Find string like '(#6681)'
       preg_match( '/\(#[0-9]+\)/' , $_POST['pakettikauppa_pickup_point'], $matches);
