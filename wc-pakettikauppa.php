@@ -19,15 +19,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 // @TODO: Also check for other solutions to refer to plugin_basename and plugin_dir_path in includes/ directory
 define( 'WC_PAKETTIKAUPPA_BASENAME', plugin_basename( __FILE__ ) );
 define( 'WC_PAKETTIKAUPPA_DIR', plugin_dir_path( __FILE__ ) );
+define( 'WC_PAKETTIKAUPPA_PRIVATE_DIR' , $_SERVER['DOCUMENT_ROOT'] . '/../wc-pakettikauppa' );
 
 /**
  * Prepare private directory for pakettikauppa documents.
  */
 function wc_pakettikauppa_prepare_directory() {
-  $upload_dir = wp_upload_dir();
-
-  @wp_mkdir_p( $upload_dir['basedir'] . '/wc-pakettikauppa' );
-  // @TODO: Locate this outside of htdocs and allow access only via X-Sendfile with auth or similar
+  // Use private directory out of webroot, can be accessed via X-Sendfile
+  @wp_mkdir_p( WC_PAKETTIKAUPPA_PRIVATE_DIR );
+  chmod( WC_PAKETTIKAUPPA_PRIVATE_DIR, 0755 );
 }
 register_activation_hook( __FILE__, 'wc_pakettikauppa_prepare_directory' );
 

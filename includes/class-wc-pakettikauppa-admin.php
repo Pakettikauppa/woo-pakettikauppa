@@ -402,7 +402,7 @@ class WC_Pakettikauppa_Admin {
         if ( ! empty( $tracking_code ) ) {
           $this->wc_pakettikauppa_client->fetchShippingLabel( $shipment );
           $upload_dir = wp_upload_dir();
-          $filepath = trailingslashit( $upload_dir['basedir'] ) . 'wc-pakettikauppa/' . $tracking_code . '.pdf';
+          $filepath = WC_PAKETTIKAUPPA_PRIVATE_DIR . '/' . $tracking_code . '.pdf';
           file_put_contents( $filepath , base64_decode( $shipment->getPdf() ) );
         }
 
@@ -480,10 +480,11 @@ class WC_Pakettikauppa_Admin {
       $upload_dir = wp_upload_dir();
 
       // Read file
-      $filepath = trailingslashit( $upload_dir['basedir'] ) . 'wc-pakettikauppa/' . $shipment_id . '.pdf';
-      $contents = file_get_contents( $filepath );
+      $filepath = WC_PAKETTIKAUPPA_PRIVATE_DIR . '/' .  $shipment_id . '.pdf';
+      header('X-Sendfile: ' . $filepath);
 
       // Output
+      $contents = file_get_contents( $filepath );
       header('Content-type:application/pdf');
       header("Content-Disposition:inline;filename='{$shipment_id}.pdf'");
       print $contents;
