@@ -50,11 +50,11 @@ function wc_pakettikauppa_shipping_method_init() {
       */
       public function __construct() {
         $this->id = 'WC_Pakettikauppa_Shipping_Method'; // ID for your shipping method. Should be unique.
-        $this->method_title = 'Pakettikauppa.fi'; // Title shown in admin
+        $this->method_title = 'Pakettikauppa'; // Title shown in admin
         $this->method_description = __( 'All shipping methods with one contract. For more information visit <a href="https://pakettikauppa.fi/">Pakettikauppa.fi</a>.', 'wc-pakettikauppa' ); // Description shown in admin
 
         $this->enabled = 'yes';
-        $this->title = 'Pakettikauppa.fi';
+        $this->title = 'Pakettikauppa';
 
         $this->init();
       }
@@ -91,16 +91,16 @@ function wc_pakettikauppa_shipping_method_init() {
           ),
 
           'account_number' => array(
-            'title'    => __( 'Account number', 'wc-pakettikauppa' ),
-            'desc'     => __( 'Account number provided by Pakettikauppa.fi', 'wc-pakettikauppa' ),
+            'title'    => __( 'API key', 'wc-pakettikauppa' ),
+            'desc'     => __( 'API key provided by Pakettikauppa.fi', 'wc-pakettikauppa' ),
             'type'     => 'text',
             'default'  => '',
             'desc_tip' => true,
           ),
 
           'secret_key' => array(
-            'title'    => __( 'Secret key', 'wc-pakettikauppa' ),
-            'desc'     => __( 'Secret key provided by Pakettikauppa.fi', 'wc-pakettikauppa' ),
+            'title'    => __( 'API secret', 'wc-pakettikauppa' ),
+            'desc'     => __( 'API Secret provided by Pakettikauppa.fi', 'wc-pakettikauppa' ),
             'type'     => 'text',
             'default'  => '',
             'desc_tip' => true,

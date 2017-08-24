@@ -167,12 +167,15 @@ class WC_Pakettikauppa {
 
   }
 
-  /*
+  /**
    * Display pickup point to customer after order.
+   *
+   * @param WC_Order $order the order that was placed
    */
   public function display_order_data( $order ) {
 
-    $pickup_point = $order->get_meta('pakettikauppa_pickup_point');
+    $pickup_point = $order->get_meta('_pakettikauppa_pickup_point');
+
     if ( ! empty( $pickup_point ) ) {
       echo '
       <h2>'. __('Pickup point', 'wc-pakettikauppa' ) .'</h2>

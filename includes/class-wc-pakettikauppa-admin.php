@@ -428,11 +428,11 @@ class WC_Pakettikauppa_Admin {
         $dl_link = '<a href="' . $document_url . '">' . __( 'Print document', 'wc-pakettikauppa' ) . '</a>';
         $tracking_link = '<a href="' . $tracking_url . '">' . __( 'Track', 'wc-pakettikauppa' ) . '</a>';
 
-        $order->add_order_note( sprintf( __('Created Pakettikauppa.fi %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s', 'wc-pakettikauppa'), WC_Pakettikauppa::service_title($service_id), $tracking_code, $dl_link, $tracking_link ) );
+        $order->add_order_note( sprintf( __('Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s', 'wc-pakettikauppa'), WC_Pakettikauppa::service_title($service_id), $tracking_code, $dl_link, $tracking_link ) );
 
         // @TODO check corrects shipment stuff
       } catch ( Exception $e ) {
-        $order->add_order_note( sprintf( __('Failed to create Pakettikauppa.fi  shipment. Errors: %s', 'wc-pakettikauppa'), join( ', ', $shipment->get_errors() ) ) );
+        $order->add_order_note( sprintf( __('Failed to create Pakettikauppa shipment. Errors: %s', 'wc-pakettikauppa'), join( ', ', $shipment->get_errors() ) ) );
         add_action( 'admin_notices', 'add_error_notice' );
 
         // @TODO errors
