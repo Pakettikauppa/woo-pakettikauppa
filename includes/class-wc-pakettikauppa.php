@@ -236,20 +236,20 @@ class WC_Pakettikauppa {
     $status = '';
 
     switch ( intval($status_code) ) {
-      case 13: $status = "Item is collected from sender - picked up"; break;
-      case 20: $status = "Exception"; break;
-      case 22: $status = "Item has been handed over to the recipient"; break;
-      case 31: $status = "Item is in transport"; break;
-      case 38: $status = "C.O.D payment is paid to the sender"; break;
-      case 45: $status = "Informed consignee of arrival"; break;
-      case 48: $status = "Item is loaded onto a means of transport"; break;
-      case 56: $status = "Item not delivered – delivery attempt made"; break;
-      case 68: $status = "Pre-information is received from sender"; break;
-      case 71: $status = "Item is ready for delivery transportation	"; break;
-      case 77: $status = "Item is returning to the sender"; break;
-      case 91: $status = "Item is arrived to a post office"; break;
-      case 99: $status = "Outbound"; break;
-      default: $status = "Unknown status: " . $status_code; break;
+      case 13: $status = __( 'Item is collected from sender - picked up', 'wc-pakettikauppa' ); break;
+      case 20: $status = __( 'Exception', 'wc-pakettikauppa' ); break;
+      case 22: $status = __( 'Item has been handed over to the recipient', 'wc-pakettikauppa' ); break;
+      case 31: $status = __( 'Item is in transport', 'wc-pakettikauppa' ); break;
+      case 38: $status = __( 'C.O.D payment is paid to the sender', 'wc-pakettikauppa' ); break;
+      case 45: $status = __( 'Informed consignee of arrival', 'wc-pakettikauppa' ); break;
+      case 48: $status = __( 'Item is loaded onto a means of transport', 'wc-pakettikauppa' ); break;
+      case 56: $status = __( 'Item not delivered – delivery attempt made', 'wc-pakettikauppa' ); break;
+      case 68: $status = __( 'Pre-information is received from sender', 'wc-pakettikauppa' ); break;
+      case 71: $status = __( 'Item is ready for delivery transportation', 'wc-pakettikauppa'); break;
+      case 77: $status = __( 'Item is returning to the sender', 'wc-pakettikauppa' ); break;
+      case 91: $status = __( 'Item is arrived to a post office', 'wc-pakettikauppa' ); break;
+      case 99: $status = __( 'Outbound', 'wc-pakettikauppa' ); break;
+      default: $status = wp_sprintf( __( 'Unknown status: %s', 'wc-pakettikauppa' ), $status_code ); break;
     }
 
     return $status;
