@@ -300,7 +300,7 @@ class WC_Pakettikauppa_Admin {
               ?>
 
               <p class="form-field" id="wc-pakettikauppa-pickup-points-wrapper">
-                <select name="wc_pakettikauppa_pickup_point_id" id="wc_pakettikauppa_pickup_point_id">
+                <select name="wc_pakettikauppa_pickup_point_id" class="wc_pakettikauppa_pickup_point_id" id="wc_pakettikauppa_pickup_point_id">
                   <?php foreach ( $pickup_points as $key => $value ) : ?>
                     <option value="<?php echo( $value->pickup_point_id ); ?>" <?php if ( $pickup_point_id == $value->pickup_point_id ) { echo 'selected'; } ?> ><?php echo( $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')' ); ?></option>
                   <?php endforeach; ?>
