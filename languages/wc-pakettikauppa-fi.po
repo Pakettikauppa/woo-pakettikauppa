@@ -6,7 +6,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woocommerce-"
 "pakettikauppa\n"
 "POT-Creation-Date: 2017-08-24 12:35:33+00:00\n"
-"PO-Revision-Date: 2017-08-24 15:41+0300\n"
+"PO-Revision-Date: 2017-08-28 09:32+0300\n"
 "Last-Translator: Otto Kekäläinen <otto@seravo.com>\n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -88,7 +88,7 @@ msgstr "Päivitä tila"
 
 #: includes/class-wc-pakettikauppa-admin.php:431
 msgid "Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s"
-msgstr "Luotiin Pakettikauppa %1$s-lähetys.<br>%2$s<br>%1$s - %3$s"
+msgstr "Luotiin Pakettikauppa %1$s-lähetys.<br>%2$s<br>%1$s - %3$s<br>%4$s"
 
 #: includes/class-wc-pakettikauppa-admin.php:435
 msgid "Failed to create Pakettikauppa shipment. Errors: %s"
