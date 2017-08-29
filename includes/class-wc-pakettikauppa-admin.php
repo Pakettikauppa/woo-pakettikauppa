@@ -199,6 +199,11 @@ class WC_Pakettikauppa_Admin {
   public function meta_box( $post ) {
     $order = wc_get_order( $post->ID );
 
+    if ( ! $this->validate_order_shipping_receiver( $order ) ) {
+      _e( 'Please add shipping info to the order to manage Pakettikauppa shipments.', 'wc-pakettikauppa' );
+      return;
+    }
+
     // Get active services from active_shipping_options
     $settings = get_option( 'woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null );
     $active_shipping_options = $settings['active_shipping_options'];
@@ -213,7 +218,9 @@ class WC_Pakettikauppa_Admin {
     $shipping_methods = $order->get_shipping_methods();
     $shipping_method = reset( $shipping_methods );
     $ids = explode( ':', $shipping_method['method_id'] );
-    $service_id = (int) $ids[1];
+    if ( isset( $ids[1] ) && ! empty( $ids[1] ) ) {
+      $service_id = (int) $ids[1];
+    }
 
     $pickup_point = $order->get_meta('_pakettikauppa_pickup_point');
     $pickup_point_id = $order->get_meta('_pakettikauppa_pickup_point_id');
@@ -249,7 +256,7 @@ class WC_Pakettikauppa_Admin {
             <fieldset>
               <h4><?php _e( 'Service', 'wc-pakettikauppa' ); ?></h4>
               <?php foreach ( $active_shipping_options as $shipping_option_id ) { ?>
-                <label for="service-<?php echo $key; ?>">
+                <label for="service-<?php echo $shipping_option_id; ?>">
                   <input type="radio"
                     name="wc_pakettikauppa_service_id"
                     value="<?php echo $shipping_option_id; ?>"
@@ -336,6 +343,11 @@ class WC_Pakettikauppa_Admin {
     }
 
     if ( wp_is_post_revision( $post_id ) ) {
+      return;
+    }
+
+    // Bail out if the receiver has not been properly configured
+    if ( ! $this->validate_order_shipping_receiver( wc_get_order( $post_id ) ) ) {
       return;
     }
 
@@ -528,4 +540,23 @@ class WC_Pakettikauppa_Admin {
     }
   }
 
+  /**
+  * Validate order details in wp-admin. Especially useful, when creating orders in wp-admin,
+  *
+  * @param WC_Order $order The order that needs its info to be validated
+  * @return True, if the details where valid, or false if not
+  */
+  public function validate_order_shipping_receiver( $order ) {
+    // Check shipping info first
+    $no_shipping_name = ( bool ) empty( $order->get_formatted_shipping_full_name() );
+    $no_shipping_address = ( bool ) empty( $order->get_shipping_address_1() ) && empty( $order->get_shipping_address_2() );
+    $no_shipping_postcode = ( bool ) empty( $order->get_shipping_postcode() );
+    $no_shipping_city = ( bool ) empty( $order->get_shipping_city() );
+    $no_shipping_country = ( bool ) empty( $order->get_shipping_country() );
+
+    if ( $no_shipping_name || $no_shipping_address || $no_shipping_postcode || $no_shipping_city || $no_shipping_country ) {
+        return false;
+    }
+    return true;
+  }
 }
