@@ -183,10 +183,10 @@ class WC_Pakettikauppa_Admin {
   * @param WC_Order $order The order that is currently being viewed in wp-admin
   */
   public function show_pickup_point_in_admin_order_meta( $order ) {
-    echo '<p><strong>' . __('Requested pickup point', 'wc-pakettikauppa') . ':</strong><br>';
-    if ( $order->get_meta('pakettikauppa_pickup_point') ) {
-      echo $order->get_meta('pakettikauppa_pickup_point');
-      echo '<br>ID: '. $order->get_meta('pakettikauppa_pickup_point_id');
+    echo '<p class="form-field"><strong>' . __('Requested pickup point', 'wc-pakettikauppa') . ':</strong><br>';
+    if ( $order->get_meta('_pakettikauppa_pickup_point') ) {
+      echo $order->get_meta('_pakettikauppa_pickup_point');
+      echo '<br>ID: '. $order->get_meta('_pakettikauppa_pickup_point_id');
     } else {
       echo __('None');
     }
