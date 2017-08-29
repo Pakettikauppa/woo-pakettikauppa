@@ -49,6 +49,9 @@ class WC_Pakettikauppa_Admin {
     add_action( 'woocommerce_email_order_meta', array( $this, 'attach_tracking_to_email' ), 10, 4 );
     add_action( 'woocommerce_admin_order_data_after_shipping_address', array( $this, 'show_pickup_point_in_admin_order_meta' ), 10, 1 );
 
+    // Delete the tracking label when order is deleted so the uploads directory doesn't get too bloated
+    add_action( 'before_delete_post', array( $this, 'delete_order_shipping_label' ) );
+
     $this->wc_pakettikauppa_client = null;
 
     try {
@@ -559,4 +562,27 @@ class WC_Pakettikauppa_Admin {
     }
     return true;
   }
+
+  /**
+  * Remove the shipping label of an order when it is deleted, used with woocommerce_delete_order hook.
+  *
+  * @param int $order_id The id of the order which is to be deleted
+  */
+  public function delete_order_shipping_label( $order_id ) {
+    // Check that the post type is order
+    $post_type = get_post_type( $order_id );
+    if ( $post_type !== 'shop_order' ) {
+      return;
+    }
+
+    $tracking_code = get_post_meta( $order_id, '_wc_pakettikauppa_tracking_code', true );
+
+    if ( ! empty( $tracking_code ) ) {
+      $filepath = WC_PAKETTIKAUPPA_PRIVATE_DIR . '/' .  $tracking_code . '.pdf';
+
+      // Delete if file exists
+      !file_exists( $filepath) ?: unlink( $filepath );
+    }
+  }
+
 }
