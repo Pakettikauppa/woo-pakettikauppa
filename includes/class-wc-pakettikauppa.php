@@ -282,30 +282,15 @@ class WC_Pakettikauppa {
   }
 
   /**
-  * Get the full-length tracking url of a shipment by providing its service id and tracking code
+  * Get the full-length tracking url of a shipment by providing its service id and tracking code.
+  * Use tracking url provided by pakettikauppa.fi.
   *
   * @param int $service_id The id of the service that is used for the shipment
   * @param int $tracking_code The tracking code of the shipment
   * @return string The full tracking url for the order
   */
   public static function tracking_url( $service_id, $tracking_code ) {
-    $tracking_url = '';
-
-    switch ( $service_id ) {
-      case 90010:
-      case 90030:
-      case 90080:
-        $tracking_url = "https://www.matkahuolto.fi/seuranta/tilanne/?package_code={$tracking_code}";
-        break;
-      case 2104:
-      case 2461:
-      case 2103:
-        $tracking_url = "http://www.posti.fi/yritysasiakkaat/seuranta/#/lahetys/{$tracking_code}";
-        break;
-      default:
-        $tracking_url = '';
-    }
-
+    $tracking_url = 'https://pakettikauppa.fi/seuranta/?' . $tracking_code;
     return $tracking_url;
   }
 

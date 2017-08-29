@@ -40,15 +40,7 @@ class TestWCPakettikauppa extends WP_UnitTestCase {
   function test_wc_pakettikauppa_tracking_url($pakettikauppa) {
 		$inputs = array( 0 => 90080, 1 => 'seurantakoodi' );
 		$output = WC_Pakettikauppa::tracking_url($inputs[0], $inputs[1]);
-		$this->assertEquals( "https://www.matkahuolto.fi/seuranta/tilanne/?package_code=seurantakoodi", $output);
-
-		$inputs = array( 0 => 999999, 1 => 'seurantakoodi' );
-		$output = WC_Pakettikauppa::tracking_url($inputs[0], $inputs[1]);
-		$this->assertEquals( "", $output);
-
-		$inputs = array( 0 => 2103, 1 => 'seurantakoodi' );
-		$output = WC_Pakettikauppa::tracking_url($inputs[0], $inputs[1]);
-		$this->assertEquals( "http://www.posti.fi/yritysasiakkaat/seuranta/#/lahetys/seurantakoodi", $output);
+		$this->assertEquals( "https://pakettikauppa.fi/seuranta/?seurantakoodi", $output);
 	}
 
 	/**
