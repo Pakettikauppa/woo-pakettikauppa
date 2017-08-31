@@ -149,6 +149,11 @@ class WC_Pakettikauppa {
       <td data-title="' . __('Pickup point', 'wc-pakettikauppa') . '">';
 
     echo '<p>';
+      // Return if the customer has not yet chosen a postcode
+    if ( empty( $shipping_postcode ) ) {
+      _e( 'Insert your shipping details to view nearby pickup points', 'wc-pakettikauppa' );
+      return;
+    }
     printf(
         esc_html__( 'Choose one of the pickup points close to your postcode %s below:', 'wc-pakettikauppa' ),
         '<span class="shipping_postcode_for_pickup">'. $shipping_postcode .'</span>'
