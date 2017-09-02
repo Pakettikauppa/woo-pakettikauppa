@@ -352,6 +352,7 @@ class WC_Pakettikauppa_Admin {
         // @TODO: Also add an error notice to wp-admin
         return;
       }
+
       $shipment = new Shipment();
       $service_id = $_REQUEST['wc_pakettikauppa_service_id'];
       $shipment->setShippingMethod( $service_id );
@@ -363,7 +364,6 @@ class WC_Pakettikauppa_Admin {
       $sender->setPostcode( $settings['sender_postal_code'] );
       $sender->setCity( $settings['sender_city'] );
       $sender->setCountry( 'FI' );
-
       $shipment->setSender($sender);
 
       $order = new WC_Order( $post_id );
@@ -377,13 +377,18 @@ class WC_Pakettikauppa_Admin {
       $receiver->setCountry('FI');
       $receiver->setEmail( $order->billing_email );
       $receiver->setPhone( $order->billing_phone );
-
       $shipment->setReceiver( $receiver );
 
       $info = new Info();
       $info->setReference( $order->get_order_number() );
-
       $shipment->setShipmentInfo( $info );
+
+      $parcel = new Parcel();
+      // @TODO: These and other shipping-related helper functions should really be moved
+      // to another class, e.g. WC_Pakettikauppa_Shipment
+      $parcel->setWeight( WC_Pakettikauppa::order_weight( $order ) );
+      $parcel->setVolume( WC_Pakettikauppa::order_volume( $order ) );
+      $shipment->addParcel( $parcel );
 
       $cod = false;
 

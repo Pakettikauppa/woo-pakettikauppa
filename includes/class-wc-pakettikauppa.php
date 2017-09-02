@@ -287,6 +287,46 @@ class WC_Pakettikauppa {
   }
 
   /**
+  * Calculate the total shipping volume of an order in cubic meters.
+  *
+  * @param WC_Order $order The order to calculate the volume of
+  * @return int The total volume of the order (m^3)
+  */
+  public static function order_volume( $order ) {
+    $volume = 0;
+
+    if ( sizeof( $order->get_items() ) > 0 ) {
+      foreach ( $order->get_items() as $item ) {
+        if ( $item['product_id'] > 0 ) {
+          $product = $order->get_product_from_item( $item );
+          if ( ! $product->is_virtual() ) {
+            // Ensure that the volume is in metres
+            $woo_dim_unit = strtolower( get_option('woocommerce_dimension_unit') );
+            switch ( $woo_dim_unit ) {
+              case 'mm':
+                $dim_multiplier = 0.001;
+                break;
+              case 'cm':
+                $dim_multiplier = 0.01;
+                break;
+              case 'dm':
+                $dim_multiplier = 0.1;
+                break;
+              default:
+                $dim_multiplier = 1;
+            }
+            // Calculate total volume
+            $volume += pow($dim_multiplier, 3) * $product->get_width()
+              * $product->get_height() * $product->get_length() * $item['qty'];
+          }
+        }
+      }
+    }
+
+    return $volume;
+  }
+
+  /**
   * Get the full-length tracking url of a shipment by providing its service id and tracking code.
   * Use tracking url provided by pakettikauppa.fi.
   *
