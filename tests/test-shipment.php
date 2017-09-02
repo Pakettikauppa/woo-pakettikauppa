@@ -1,15 +1,6 @@
 <?php
 
-require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Client.php');
-require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Shipment.php');
-require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Shipment/Sender.php');
-require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Shipment/Receiver.php');
-require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Shipment/Info.php');
-require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Shipment/AdditionalService.php');
-require_once( WC_PAKETTIKAUPPA_DIR . 'includes/class-wc-pakettikauppa-shipping-method.php' );
-include( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Shipment/Parcel.php' );
-include(WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Shipment/ContentLine.php' );
-
+require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/autoload.php');
 
 /**
  * Class TestWCPakettikauppaShipment

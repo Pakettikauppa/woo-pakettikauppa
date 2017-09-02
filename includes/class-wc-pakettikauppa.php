@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
   exit;
 }
 
-require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Client.php');
+require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/autoload.php' );
 
 /**
  * WC_Pakettikauppa Class

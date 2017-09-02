@@ -5,12 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
   exit;
 }
 
-require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Client.php');
-require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Shipment.php');
-require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Shipment/Sender.php');
-require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Shipment/Receiver.php');
-require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Shipment/Info.php');
-require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/Pakettikauppa/Shipment/AdditionalService.php');
+require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/autoload.php' );
 require_once( WC_PAKETTIKAUPPA_DIR . 'includes/class-wc-pakettikauppa-shipping-method.php' );
 require_once( WC_PAKETTIKAUPPA_DIR . 'includes/class-wc-pakettikauppa.php' );
 
