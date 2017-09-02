@@ -14,6 +14,11 @@
       "name": "Mika Haulo",
       "email": "mika@seravo.com",
       "homepage": "https://github.com/mhaulo"
+    },
+    {
+      "name": "Leo Toikka",
+      "email": "leo@seravo.com",
+      "homepage": "https://github.com/l3ku"
     }
   ],
   "keywords": [
@@ -22,5 +27,6 @@
   "require": {
     "composer/installers": "v1.0.12",
     "pakettikauppa/api-library": "*"
-  }
+  },
+  "minimum-stability": "dev"
 }
