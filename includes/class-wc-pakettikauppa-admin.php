@@ -14,6 +14,7 @@ use Pakettikauppa\Shipment\Sender;
 use Pakettikauppa\Shipment\Receiver;
 use Pakettikauppa\Shipment\Info;
 use Pakettikauppa\Shipment\AdditionalService;
+use Pakettikauppa\Shipment\Parcel;
 use Pakettikauppa\Client;
 
 /**
@@ -344,12 +345,13 @@ class WC_Pakettikauppa_Admin {
       return;
     }
 
-    // Bail out if the receiver has not been properly configured
-    if ( ! $this->validate_order_shipping_receiver( wc_get_order( $post_id ) ) ) {
-      return;
-    }
-
     if ( isset( $_POST['wc_pakettikauppa_create'] ) ) {
+
+      // Bail out if the receiver has not been properly configured
+      if ( ! $this->validate_order_shipping_receiver( wc_get_order( $post_id ) ) ) {
+        // @TODO: Also add an error notice to wp-admin
+        return;
+      }
       $shipment = new Shipment();
       $service_id = $_REQUEST['wc_pakettikauppa_service_id'];
       $shipment->setShippingMethod( $service_id );
