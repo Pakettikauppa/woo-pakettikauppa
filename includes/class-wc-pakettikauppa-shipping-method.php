@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once( plugin_dir_path( __FILE__ ) . '/class-wc-pakettikauppa.php' );
+require_once( plugin_dir_path(__FILE__ ) . '/class-wc-pakettikauppa-shipment.php' );
 
 /**
  * Pakettikauppa_Shipping_Method Class
@@ -115,7 +116,7 @@ function wc_pakettikauppa_shipping_method_init() {
           'active_shipping_options' => array(
             'title'   => __( 'Active shipping options', 'wc-pakettikauppa' ),
             'type'    => 'multiselect',
-            'options' => WC_Pakettikauppa::services(),
+            'options' => WC_Pakettikauppa_Shipment::services(),
             'description' => __( 'Press and hold Ctrl or Cmd to select multiple shipping methods.', 'wc-pakettikauppa' ),
             'desc_tip'    => true,
           ),
@@ -188,7 +189,7 @@ function wc_pakettikauppa_shipping_method_init() {
        */
       public function calculate_shipping( $package = array() ) {
 
-        foreach ( WC_Pakettikauppa::services() as $key => $value ) {
+        foreach ( WC_Pakettikauppa_Shipment::services() as $key => $value ) {
           if ( in_array($key, $this->active_shipping_options) ) {
             $this->add_rate(
               array(

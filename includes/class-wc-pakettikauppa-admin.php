@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/autoload.php' );
 require_once( WC_PAKETTIKAUPPA_DIR . 'includes/class-wc-pakettikauppa-shipping-method.php' );
-require_once( WC_PAKETTIKAUPPA_DIR . 'includes/class-wc-pakettikauppa.php' );
+require_once( WC_PAKETTIKAUPPA_DIR . 'includes/class-wc-pakettikauppa-shipment.php' );
 
 use Pakettikauppa\Shipment;
 use Pakettikauppa\Shipment\Sender;
@@ -27,7 +27,7 @@ use Pakettikauppa\Client;
  * @author Seravo
  */
 class WC_Pakettikauppa_Admin {
-  private $pakettikauppa = null;
+  private $wc_pakettikauppa_shipment = null;
   private $errors = array();
 
   function __construct() {
@@ -48,18 +48,21 @@ class WC_Pakettikauppa_Admin {
     // Delete the tracking label when order is deleted so the uploads directory doesn't get too bloated
     add_action( 'before_delete_post', array( $this, 'delete_order_shipping_label' ) );
 
-    $this->wc_pakettikauppa_client = null;
-
     try {
-      // Use option from database directly as WC_Pakettikauppa_Shipping_Method object is not accessible here
-      $settings = get_option( 'woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null );
-      $account_number = $settings['mode'];
-      $secret_key = $settings['secret_key'];
-      $mode = $settings['mode'];
-      $is_test_mode = ($mode == 'production' ? false : true);
-      $this->wc_pakettikauppa_client = new Client( array( 'api_key' => $account_number, 'secret' => $secret_key, 'test_mode' => $is_test_mode ) );
+      $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
+      $this->wc_pakettikauppa_shipment->load();
+
+      // @TODO: Interface this to WC_Pakettikauppa_Shipment and use a createShipment
+      // function to create the shipment in $this->save_metabox()
+     $settings = get_option( 'woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null );
+     $account_number = $settings['mode'];
+     $secret_key = $settings['secret_key'];
+     $mode = $settings['mode'];
+     $is_test_mode = ($mode == 'production' ? false : true);
+     $this->wc_pakettikauppa_client = new Client( array( 'api_key' => $account_number, 'secret' => $secret_key, 'test_mode' => $is_test_mode ) );
+
     } catch ( Exception $e ) {
-      // @TODO handle errors
+      // @TODO Handle frontend errors, should they be shown to customer?
       die('pakettikauppa fail');
     }
   }
@@ -137,31 +140,6 @@ class WC_Pakettikauppa_Admin {
   }
 
   /**
-  * Return the default shipping service if none has been specified
-  *
-  * @TODO: Does this method really need $post or $order, as the default service should
-  * not be order-specific?
-  */
-  public function get_default_service( $post, $order ) {
-    // @TODO: Maybe use an option in database so the merchant can set it in settings
-    $service = '2103';
-
-    // $order = new WC_Order( $post->ID );
-    // $shipping_methods = $order->get_shipping_methods();
-    //
-    // if ( ! empty( $shipping_methods ) ) {
-    //   $shipping_method = reset( $shipping_methods );
-    //   $ids = explode( ':', $shipping_method['method_id'] );
-    //   $instance_id = $ids[1];
-    //
-    //   // @TODO: This option does not exist
-    //   $service = get_option( 'wc_pakettikauppa_shipping_method_' . $instance_id, '2103' );
-    // }
-
-    return $service;
-  }
-
-  /**
    * Add settings link to the Pakettikauppa metabox on the plugins page when used with
    * the WordPress hook plugin_action_links_woocommerce-pakettikauppa.
    *
@@ -198,7 +176,7 @@ class WC_Pakettikauppa_Admin {
   public function meta_box( $post ) {
     $order = wc_get_order( $post->ID );
 
-    if ( ! $this->validate_order_shipping_receiver( $order ) ) {
+    if ( ! WC_Pakettikauppa_Shipment::validate_order_shipping_receiver( $order ) ) {
       _e( 'Please add shipping info to the order to manage Pakettikauppa shipments.', 'wc-pakettikauppa' );
       return;
     }
@@ -227,11 +205,11 @@ class WC_Pakettikauppa_Admin {
 
     // Set defaults
     if ( empty( $cod_amount) ) { $cod_amount = $order->get_total(); }
-    if ( empty( $cod_reference) ) { $cod_reference = WC_Pakettikauppa::calculate_reference( $post->ID ); }
-    if ( empty( $service_id ) ) { $service_id = $this->get_default_service($post, $order); }
+    if ( empty( $cod_reference) ) { $cod_reference = WC_Pakettikauppa_Shipment::calculate_reference( $post->ID ); }
+    if ( empty( $service_id ) ) { $service_id = WC_Pakettikauppa_Shipment::get_default_service($post, $order); }
 
     $document_url = admin_url( 'admin-post.php?post=' . $post->ID . '&action=show_pakettikauppa&sid=' . $tracking_code );
-    $tracking_url = WC_Pakettikauppa::tracking_url( $service_id, $tracking_code );
+    $tracking_url = WC_Pakettikauppa_Shipment::tracking_url( $service_id, $tracking_code );
 
     ?>
       <div>
@@ -239,7 +217,7 @@ class WC_Pakettikauppa_Admin {
         <?php if ( ! empty( $tracking_code ) ) { ?>
           <p class="pakettikauppa-shipment">
             <strong>
-              <?php printf( '%1$s<br>%2$s<br>%3$s', WC_Pakettikauppa::service_title($service_id), $tracking_code, WC_Pakettikauppa::get_status_text($status) ); ?>
+              <?php printf( '%1$s<br>%2$s<br>%3$s', WC_Pakettikauppa_Shipment::service_title($service_id), $tracking_code, WC_Pakettikauppa_Shipment::get_status_text($status) ); ?>
             </strong><br>
 
             <a href="<?php echo $document_url; ?>" target="_blank" class="download"><?php _e( 'Print document', 'wc-pakettikauppa' ) ?></a>&nbsp;-&nbsp;
@@ -267,7 +245,7 @@ class WC_Pakettikauppa_Admin {
                     }
                     ?>
                   >
-                  <span><?php print WC_Pakettikauppa::service_title( $shipping_option_id ); ?></span>
+                  <span><?php print WC_Pakettikauppa_Shipment::service_title( $shipping_option_id ); ?></span>
                 </label>
                 <br>
               <?php } ?>
@@ -289,18 +267,15 @@ class WC_Pakettikauppa_Admin {
               <label for="wc-pakettikauppa-pickup-points"><?php _e( 'Pickup Point', 'wc-pakettikauppa' ); ?></label>
 
              <?php
-               // Use option from database directly as WC_Pakettikauppa_Shipping_Method object is not accessible here
-               $settings = get_option( 'woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null );
-               $account_number = $settings['mode'];
-               $secret_key = $settings['secret_key'];
-               $mode = $settings['mode'];
-               $is_test_mode = ($mode == 'production' ? false : true);
-               $wc_pakettikauppa_client = new Client( array( 'api_key' => $account_number, 'secret' => $secret_key, 'test_mode' => $is_test_mode ) );
-               $pickup_point_data = $wc_pakettikauppa_client->searchPickupPoints( $order->get_shipping_postcode() );
+             try {
+               $pickup_point_data = $this->wc_pakettikauppa_shipment->get_pickup_points( $order->get_shipping_postcode() );
 
                if ( $pickup_point_data == 'Authentication error' ) {
-                 // @TODO: Add proper error handling
+                 // @TODO: test if data is a proper array or throw error
                }
+             } catch ( Exception $e ) {
+               // @TODO: throw error
+             }
 
                $pickup_points = json_decode( $pickup_point_data );
               ?>
@@ -348,7 +323,7 @@ class WC_Pakettikauppa_Admin {
     if ( isset( $_POST['wc_pakettikauppa_create'] ) ) {
 
       // Bail out if the receiver has not been properly configured
-      if ( ! $this->validate_order_shipping_receiver( wc_get_order( $post_id ) ) ) {
+      if ( ! WC_Pakettikauppa_Shipment::validate_order_shipping_receiver( wc_get_order( $post_id ) ) ) {
         // @TODO: Also add an error notice to wp-admin
         return;
       }
@@ -386,8 +361,8 @@ class WC_Pakettikauppa_Admin {
       $parcel = new Parcel();
       // @TODO: These and other shipping-related helper functions should really be moved
       // to another class, e.g. WC_Pakettikauppa_Shipment
-      $parcel->setWeight( WC_Pakettikauppa::order_weight( $order ) );
-      $parcel->setVolume( WC_Pakettikauppa::order_volume( $order ) );
+      $parcel->setWeight( WC_Pakettikauppa_Shipment::order_weight( $order ) );
+      $parcel->setVolume( WC_Pakettikauppa_Shipment::order_volume( $order ) );
       $shipment->addParcel( $parcel );
 
       $cod = false;
@@ -440,13 +415,13 @@ class WC_Pakettikauppa_Admin {
         $this->clear_errors();
 
         $document_url = admin_url( 'admin-post.php?post=' . $post_id . '&action=show_pakettikauppa&sid=' . $tracking_code );
-        $tracking_url = WC_Pakettikauppa::tracking_url( $service_id, $tracking_code );
+        $tracking_url = WC_Pakettikauppa_Shipment::tracking_url( $service_id, $tracking_code );
 
         // Add order note
         $dl_link = '<a href="' . $document_url . '" target="_blank">' . __( 'Print document', 'wc-pakettikauppa' ) . '</a>';
         $tracking_link = '<a href="' . $tracking_url . '" target="_blank">' . __( 'Track', 'wc-pakettikauppa' ) . '</a>';
 
-        $order->add_order_note( sprintf( __('Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s', 'wc-pakettikauppa'), WC_Pakettikauppa::service_title($service_id), $tracking_code, $dl_link, $tracking_link ) );
+        $order->add_order_note( sprintf( __('Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s', 'wc-pakettikauppa'), WC_Pakettikauppa_Shipment::service_title($service_id), $tracking_code, $dl_link, $tracking_link ) );
 
         // @TODO check corrects shipment stuff
       } catch ( Exception $e ) {
@@ -532,7 +507,7 @@ class WC_Pakettikauppa_Admin {
       $instance_id = (int) $ids[1];
 
       $tracking_code = get_post_meta( $order->get_ID(), '_wc_pakettikauppa_tracking_code', true );
-      $tracking_url = WC_Pakettikauppa::tracking_url( $instance_id, $tracking_code );
+      $tracking_url = WC_Pakettikauppa_Shipment::tracking_url( $instance_id, $tracking_code );
 
       if ( ! empty( $tracking_code ) && ! empty( $tracking_url ) ) {
         if ( $plain_text ) {
@@ -543,26 +518,6 @@ class WC_Pakettikauppa_Admin {
         }
       }
     }
-  }
-
-  /**
-  * Validate order details in wp-admin. Especially useful, when creating orders in wp-admin,
-  *
-  * @param WC_Order $order The order that needs its info to be validated
-  * @return True, if the details where valid, or false if not
-  */
-  public function validate_order_shipping_receiver( $order ) {
-    // Check shipping info first
-    $no_shipping_name = ( bool ) empty( $order->get_formatted_shipping_full_name() );
-    $no_shipping_address = ( bool ) empty( $order->get_shipping_address_1() ) && empty( $order->get_shipping_address_2() );
-    $no_shipping_postcode = ( bool ) empty( $order->get_shipping_postcode() );
-    $no_shipping_city = ( bool ) empty( $order->get_shipping_city() );
-    $no_shipping_country = ( bool ) empty( $order->get_shipping_country() );
-
-    if ( $no_shipping_name || $no_shipping_address || $no_shipping_postcode || $no_shipping_city || $no_shipping_country ) {
-        return false;
-    }
-    return true;
   }
 
   /**
