@@ -203,6 +203,11 @@ class WC_Pakettikauppa_Admin {
     $pickup_point_id = $order->get_meta('_pakettikauppa_pickup_point_id');
     $status = get_post_meta( $post->ID, '_wc_pakettikauppa_shipment_status', true);
 
+    // Set cod if cash on delivery is set
+    if ( empty( $cod ) ) {
+      $cod = ( $order->get_payment_method() === 'cod' );
+    }
+
     // Set defaults
     if ( empty( $cod_amount) ) { $cod_amount = $order->get_total(); }
     if ( empty( $cod_reference) ) { $cod_reference = WC_Pakettikauppa_Shipment::calculate_reference( $post->ID ); }
@@ -356,6 +361,7 @@ class WC_Pakettikauppa_Admin {
 
       $info = new Info();
       $info->setReference( $order->get_order_number() );
+      $info->setCurrency( get_woocommerce_currency() );
       $shipment->setShipmentInfo( $info );
 
       $parcel = new Parcel();
