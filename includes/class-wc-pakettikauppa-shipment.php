@@ -66,19 +66,15 @@ class WC_Pakettikauppa_Shipment {
   public function services() {
     $services = array();
 
-    // @TODO: Save shipping method list as transient for 24 hours or so to avoid doing unnecessary lookups
     // @TODO: File bug upstream about result being string instead of object by default
-    // We cannot access the WC_Pakettikauppa_Shipping_Method here as it has not yet been initialized,
-    // so access the settings directly from database using option name.
-    $settings = get_option( 'woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null );
-    $account_number = $settings['mode'];
-    $secret_key = $settings['secret_key'];
-    $mode = $settings['mode'];
-    $is_test_mode = ($mode == 'production' ? false : true);
-    $wc_pakettikauppa_client = new Pakettikauppa\Client( array( 'api_key' => $account_number, 'secret' => $secret_key, 'test_mode' => $is_test_mode ) );
-    $all_shipping_methods = json_decode($wc_pakettikauppa_client->listShippingMethods());
+    $transient_name = 'wc_pakettikauppa_shipping_methods';
+    $transent_time = 86400; // 24 hours
+    $all_shipping_methods = get_transient( $transient_name );
 
-
+    if ( false === $all_shipping_methods ) {
+      $all_shipping_methods = json_decode( $this->wc_pakettikauppa_client->listShippingMethods() );
+      set_transient( $transient_name, $all_shipping_methods, $transient_time );
+    }
     // List all available methods as shipping options on checkout page
     if ( ! empty( $all_shipping_methods ) ) {
         foreach ( $all_shipping_methods as $shipping_method ) {
