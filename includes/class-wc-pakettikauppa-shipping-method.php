@@ -22,6 +22,10 @@ function wc_pakettikauppa_shipping_method_init() {
   if ( ! class_exists( 'WC_Pakettikauppa_Shipping_Method' ) ) {
 
     class WC_Pakettikauppa_Shipping_Method extends WC_Shipping_Method {
+      /**
+      * Required to access pakettikauppa client
+      */
+      private $wc_pakettikauppa_shipment = null;
 
       /**
        * Default active shipping options.
@@ -64,6 +68,10 @@ function wc_pakettikauppa_shipping_method_init() {
        * Initialize Pakettikauppa.fi shipping
        */
       public function init() {
+        // Make Pakettikauppa API accessible via WC_Pakettikauppa_Shipment
+        $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment;
+        $this->wc_pakettikauppa_shipment->load();
+
         // Load the settings.
         $this->init_form_fields();
         $this->init_settings();
@@ -116,7 +124,7 @@ function wc_pakettikauppa_shipping_method_init() {
           'active_shipping_options' => array(
             'title'   => __( 'Active shipping options', 'wc-pakettikauppa' ),
             'type'    => 'multiselect',
-            'options' => WC_Pakettikauppa_Shipment::services(),
+            'options' => $this->wc_pakettikauppa_shipment->services(),
             'description' => __( 'Press and hold Ctrl or Cmd to select multiple shipping methods.', 'wc-pakettikauppa' ),
             'desc_tip'    => true,
           ),
@@ -189,7 +197,7 @@ function wc_pakettikauppa_shipping_method_init() {
        */
       public function calculate_shipping( $package = array() ) {
 
-        foreach ( WC_Pakettikauppa_Shipment::services() as $key => $value ) {
+        foreach ( $this->wc_pakettikauppa_shipment->services() as $key => $value ) {
           if ( in_array($key, $this->active_shipping_options) ) {
             $this->add_rate(
               array(

@@ -203,12 +203,8 @@ class WC_Pakettikauppa_Admin {
     $pickup_point_id = $order->get_meta('_pakettikauppa_pickup_point_id');
     $status = get_post_meta( $post->ID, '_wc_pakettikauppa_shipment_status', true);
 
-    // Set cod if cash on delivery is set
-    if ( empty( $cod ) ) {
-      $cod = ( $order->get_payment_method() === 'cod' );
-    }
-
     // Set defaults
+    if ( empty( $cod ) ) { $cod = ( $order->get_payment_method() === 'cod' ); }
     if ( empty( $cod_amount) ) { $cod_amount = $order->get_total(); }
     if ( empty( $cod_reference) ) { $cod_reference = WC_Pakettikauppa_Shipment::calculate_reference( $post->ID ); }
     if ( empty( $service_id ) ) { $service_id = WC_Pakettikauppa_Shipment::get_default_service($post, $order); }
@@ -222,7 +218,7 @@ class WC_Pakettikauppa_Admin {
         <?php if ( ! empty( $tracking_code ) ) { ?>
           <p class="pakettikauppa-shipment">
             <strong>
-              <?php printf( '%1$s<br>%2$s<br>%3$s', WC_Pakettikauppa_Shipment::service_title($service_id), $tracking_code, WC_Pakettikauppa_Shipment::get_status_text($status) ); ?>
+              <?php printf( '%1$s<br>%2$s<br>%3$s', $this->wc_pakettikauppa_shipment->service_title($service_id), $tracking_code, WC_Pakettikauppa_Shipment::get_status_text($status) ); ?>
             </strong><br>
 
             <a href="<?php echo $document_url; ?>" target="_blank" class="download"><?php _e( 'Print document', 'wc-pakettikauppa' ) ?></a>&nbsp;-&nbsp;
@@ -250,7 +246,7 @@ class WC_Pakettikauppa_Admin {
                     }
                     ?>
                   >
-                  <span><?php print WC_Pakettikauppa_Shipment::service_title( $shipping_option_id ); ?></span>
+                  <span><?php print $this->wc_pakettikauppa_shipment->service_title( $shipping_option_id ); ?></span>
                 </label>
                 <br>
               <?php } ?>
@@ -427,7 +423,7 @@ class WC_Pakettikauppa_Admin {
         $dl_link = '<a href="' . $document_url . '" target="_blank">' . __( 'Print document', 'wc-pakettikauppa' ) . '</a>';
         $tracking_link = '<a href="' . $tracking_url . '" target="_blank">' . __( 'Track', 'wc-pakettikauppa' ) . '</a>';
 
-        $order->add_order_note( sprintf( __('Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s', 'wc-pakettikauppa'), WC_Pakettikauppa_Shipment::service_title($service_id), $tracking_code, $dl_link, $tracking_link ) );
+        $order->add_order_note( sprintf( __('Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s', 'wc-pakettikauppa'), $this->wc_pakettikauppa_shipment->service_title($service_id), $tracking_code, $dl_link, $tracking_link ) );
 
         // @TODO check corrects shipment stuff
       } catch ( Exception $e ) {

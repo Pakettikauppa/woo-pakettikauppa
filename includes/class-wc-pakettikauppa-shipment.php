@@ -63,7 +63,7 @@ class WC_Pakettikauppa_Shipment {
    *
    * @return array Available shipping services
    */
-  public static function services() {
+  public function services() {
     $services = array();
 
     // @TODO: Save shipping method list as transient for 24 hours or so to avoid doing unnecessary lookups
@@ -94,8 +94,8 @@ class WC_Pakettikauppa_Shipment {
    * @param int $service_code The code of a service
    * @return string The service title matching with the provided code, or false if not found
    */
-  public static function service_title( $service_code ) {
-    $services = self::services();
+  public function service_title( $service_code ) {
+    $services = $this->services();
     if ( isset( $services[$service_code] ) ) {
       return $services[$service_code];
     }
