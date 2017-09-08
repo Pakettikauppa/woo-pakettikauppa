@@ -201,7 +201,7 @@ class WC_Pakettikauppa_Shipment {
   * @return string The full tracking url for the order
   */
   public static function tracking_url( $service_id, $tracking_code ) {
-    $tracking_url = 'https://pakettikauppa.fi/seuranta/?' . $tracking_code;
+    $tracking_url = 'https://www.pakettikauppa.fi/seuranta/?' . $tracking_code;
     return $tracking_url;
   }
 
