@@ -6,7 +6,7 @@
  * Description: Pakettikauppa shipping service for WooCommerce. Integrates Prinetti, Matkahuolto, DB Schenker and others.
  * Author: Seravo
  * Author URI: https://seravo.com/
- * Text Domain: pakettikauppa
+ * Text Domain: wc-pakettikauppa
  * Domain Path: /languages/
  * License: GPL v3 or later
  */

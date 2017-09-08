@@ -114,7 +114,7 @@ class WC_Pakettikauppa_Admin {
   public static function plugin_row_meta( $links, $file ) {
     if ( WC_PAKETTIKAUPPA_BASENAME == $file ) {
       $row_meta = array(
-        'service'    => '<a href="' . esc_url( 'https://pakettikauppa.fi' ) . '" aria-label="' . esc_attr__( 'Visit Pakettikauppa.fi', 'pakettikauppa' ) . '">' . esc_html__( 'Show site Pakettikauppa.fi', 'pakettikauppa' ) . '</a>',
+        'service'    => '<a href="' . esc_url( 'https://pakettikauppa.fi' ) . '" aria-label="' . esc_attr__( 'Visit Pakettikauppa.fi', 'wc-pakettikauppa' ) . '">' . esc_html__( 'Show site Pakettikauppa.fi', 'wc-pakettikauppa' ) . '</a>',
       );
       return array_merge( $links, $row_meta );
     }
