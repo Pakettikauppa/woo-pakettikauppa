@@ -1,9 +1,22 @@
 <?php
+/**
+* Shipment module.
+*/
 
 // Prevent direct access to this script
 if ( ! defined( 'ABSPATH' ) ) {
   exit;
 }
+
+require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/autoload.php' );
+
+use Pakettikauppa\Shipment;
+use Pakettikauppa\Shipment\Sender;
+use Pakettikauppa\Shipment\Receiver;
+use Pakettikauppa\Shipment\Info;
+use Pakettikauppa\Shipment\AdditionalService;
+use Pakettikauppa\Shipment\Parcel;
+use Pakettikauppa\Client;
 
 /**
  * WC_Pakettikauppa_Shipment Class
@@ -23,17 +36,130 @@ class WC_Pakettikauppa_Shipment {
 
   public function load() {
     try {
-    // Use option from database directly as WC_Pakettikauppa_Shipping_Method object is not accessible here
-    $settings = get_option( 'woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null );
-    $account_number = $settings['mode'];
-    $secret_key = $settings['secret_key'];
-    $mode = $settings['mode'];
-    $is_test_mode = ($mode == 'production' ? false : true);
-    $this->wc_pakettikauppa_client = new Pakettikauppa\Client( array( 'api_key' => $account_number, 'secret' => $secret_key, 'test_mode' => $is_test_mode ) );
+      // Use option from database directly as WC_Pakettikauppa_Shipping_Method object is not accessible here
+      $settings = get_option( 'woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null );
+      $account_number = $settings['mode'];
+      $secret_key = $settings['secret_key'];
+      $mode = $settings['mode'];
+      $is_test_mode = ($mode == 'production' ? false : true);
+      $this->wc_pakettikauppa_client = new Pakettikauppa\Client( array( 'api_key' => $account_number, 'secret' => $secret_key, 'test_mode' => $is_test_mode ) );
     } catch ( Exception $e ) {
       // @TODO: errors
       die('pakettikauppa fail');
     }
+  }
+
+  /**
+  * Get the status of a shipment
+  *
+  * @param int $post_id The post id of the order to update status of
+  * @return int The status code of the shipment
+  */
+  public function get_shipment_status( $post_id ) {
+    $tracking_code = get_post_meta( $post_id, '_wc_pakettikauppa_tracking_code', true);
+
+    if ( ! empty( $tracking_code ) ) {
+      $result = $this->wc_pakettikauppa_client->getShipmentStatus($tracking_code);
+
+      $data = json_decode( $result );
+      return $data[0]->{'status_code'};
+    }
+
+  }
+
+  /**
+  * Create Pakettikauppa shipment from order
+  *
+  * @param int $post_id The post id of the order to ship
+  * @return array Shipment details
+  */
+  public function create_shipment( $post_id ) {
+    $shipment = new Shipment();
+    $service_id = $_REQUEST['wc_pakettikauppa_service_id'];
+    $shipment->setShippingMethod( $service_id );
+    $settings = WC()->shipping->shipping_methods['WC_Pakettikauppa_Shipping_Method']->settings;
+
+    $sender = new Sender();
+    $sender->setName1( $settings['sender_name'] );
+    $sender->setAddr1( $settings['sender_address'] );
+    $sender->setPostcode( $settings['sender_postal_code'] );
+    $sender->setCity( $settings['sender_city'] );
+    $sender->setCountry( 'FI' );
+    $shipment->setSender($sender);
+
+    $order = new WC_Order( $post_id );
+
+    $receiver = new Receiver();
+    $receiver->setName1( $order->get_formatted_shipping_full_name() );
+    $receiver->setAddr1( $order->shipping_address_1 );
+    $receiver->setAddr2( $order->shipping_address_2 );
+    $receiver->setPostcode( $order->shipping_postcode );
+    $receiver->setCity( $order->shipping_city );
+    $receiver->setCountry('FI');
+    $receiver->setEmail( $order->billing_email );
+    $receiver->setPhone( $order->billing_phone );
+    $shipment->setReceiver( $receiver );
+
+    $info = new Info();
+    $info->setReference( $order->get_order_number() );
+    $info->setCurrency( get_woocommerce_currency() );
+    $shipment->setShipmentInfo( $info );
+
+    $parcel = new Parcel();
+    $parcel->setWeight( $this::order_weight( $order ) );
+    $parcel->setVolume( $this::order_volume( $order ) );
+    $shipment->addParcel( $parcel );
+
+    $cod = false;
+
+    if ( $_REQUEST['wc_pakettikauppa_cod'] ) {
+      $cod = true;
+      $cod_amount = floatval( str_replace( ',', '.', $_REQUEST['wc_pakettikauppa_cod_amount'] ) );
+      $cod_reference = trim( $_REQUEST['wc_pakettikauppa_cod_reference'] );
+      $cod_iban = $settings['cod_iban'];
+      $cod_bic = $settings['cod_bic'];
+
+      $additional_service = new AdditionalService();
+      $additional_service->addSpecifier( 'amount', $cod_amount );
+      $additional_service->addSpecifier( 'account', $cod_iban );
+      $additional_service->addSpecifier( 'codbic', $cod_bic );
+      $additional_service->setServiceCode( 3101 );
+      $shipment->addAdditionalService($additional_service);
+    }
+
+    $pickup_point = false;
+    if ( $_REQUEST['wc_pakettikauppa_pickup_points'] ) {
+      $pickup_point = true;
+      $pickup_point_id = intval( $_REQUEST['wc_pakettikauppa_pickup_point_id'] );
+      $shipment->setPickupPoint( $pickup_point_id );
+    }
+
+    if ( $this->wc_pakettikauppa_client->createTrackingCode($shipment) ) {
+      $tracking_code = $shipment->getTrackingCode()->__toString();
+    } else {
+      // @TODO error message
+    }
+
+    if ( ! empty( $tracking_code ) ) {
+      $this->wc_pakettikauppa_client->fetchShippingLabel( $shipment );
+      $upload_dir = wp_upload_dir();
+      $filepath = WC_PAKETTIKAUPPA_PRIVATE_DIR . '/' . $tracking_code . '.pdf';
+      file_put_contents( $filepath , base64_decode( $shipment->getPdf() ) );
+    }
+
+    // Update post meta
+    update_post_meta( $post_id, '_wc_pakettikauppa_tracking_code', $tracking_code);
+    update_post_meta( $post_id, '_wc_pakettikauppa_service_id', $service_id);
+    update_post_meta( $post_id, '_wc_pakettikauppa_cod', $cod);
+    update_post_meta( $post_id, '_wc_pakettikauppa_cod_amount', $cod_amount);
+    update_post_meta( $post_id, '_wc_pakettikauppa_cod_reference', $cod_reference);
+    update_post_meta( $post_id, '_wc_pakettikauppa_pickup_point', $pickup_point);
+    update_post_meta( $post_id, '_wc_pakettikauppa_pickup_point_id', $pickup_point_id);
+
+    return array(
+      'tracking_code' => $tracking_code,
+      'service_id' => $service_id,
+    );
   }
 
   /**

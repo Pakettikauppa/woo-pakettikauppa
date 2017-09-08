@@ -5,17 +5,8 @@ if ( ! defined( 'ABSPATH' ) ) {
   exit;
 }
 
-require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/autoload.php' );
 require_once( WC_PAKETTIKAUPPA_DIR . 'includes/class-wc-pakettikauppa-shipping-method.php' );
 require_once( WC_PAKETTIKAUPPA_DIR . 'includes/class-wc-pakettikauppa-shipment.php' );
-
-use Pakettikauppa\Shipment;
-use Pakettikauppa\Shipment\Sender;
-use Pakettikauppa\Shipment\Receiver;
-use Pakettikauppa\Shipment\Info;
-use Pakettikauppa\Shipment\AdditionalService;
-use Pakettikauppa\Shipment\Parcel;
-use Pakettikauppa\Client;
 
 /**
  * WC_Pakettikauppa_Admin Class
@@ -55,21 +46,15 @@ class WC_Pakettikauppa_Admin {
       $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
       $this->wc_pakettikauppa_shipment->load();
 
-      // @TODO: Interface this to WC_Pakettikauppa_Shipment and use a createShipment
-      // function to create the shipment in $this->save_metabox()
-     $settings = get_option( 'woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null );
-     $account_number = $settings['mode'];
-     $secret_key = $settings['secret_key'];
-     $mode = $settings['mode'];
-     $is_test_mode = ($mode == 'production' ? false : true);
-     $this->wc_pakettikauppa_client = new Client( array( 'api_key' => $account_number, 'secret' => $secret_key, 'test_mode' => $is_test_mode ) );
-
     } catch ( Exception $e ) {
       // @TODO Handle frontend errors, should they be shown to customer?
       die('pakettikauppa fail');
     }
   }
 
+  /**
+  * Check if the selected service has pickup points via wp_ajax
+  */
   public function update_meta_box_pickup_points() {
     if ( isset( $_POST ) && ! empty( $_POST['service_id'] ) ) {
       $service_id = $_POST['service_id'];
@@ -77,6 +62,7 @@ class WC_Pakettikauppa_Admin {
       wp_die();
     }
   }
+
   /**
   * Return all errors that have been added via add_error().
   *
@@ -137,7 +123,14 @@ class WC_Pakettikauppa_Admin {
   public function register_meta_boxes() {
     foreach ( wc_get_order_types( 'order-meta-boxes' ) as $type ) {
       $order_type_object = get_post_type_object( $type );
-      add_meta_box( 'wc-pakettikauppa', __( 'Pakettikauppa', 'wc-pakettikauppa' ), array( $this, 'meta_box' ), $type, 'side', 'default' );
+      add_meta_box(
+        'wc-pakettikauppa',
+        __( 'Pakettikauppa', 'wc-pakettikauppa' ), 
+        array( $this, 'meta_box' ),
+        $type,
+        'side',
+        'default'
+      );
     }
   }
 
@@ -336,126 +329,38 @@ class WC_Pakettikauppa_Admin {
         // @TODO: Also add an error notice to wp-admin
         return;
       }
-
-      $shipment = new Shipment();
-      $service_id = $_REQUEST['wc_pakettikauppa_service_id'];
-      $shipment->setShippingMethod( $service_id );
-      $settings = WC()->shipping->shipping_methods['WC_Pakettikauppa_Shipping_Method']->settings;
-
-      $sender = new Sender();
-      $sender->setName1( $settings['sender_name'] );
-      $sender->setAddr1( $settings['sender_address'] );
-      $sender->setPostcode( $settings['sender_postal_code'] );
-      $sender->setCity( $settings['sender_city'] );
-      $sender->setCountry( 'FI' );
-      $shipment->setSender($sender);
-
-      $order = new WC_Order( $post_id );
-
-      $receiver = new Receiver();
-      $receiver->setName1( $order->get_formatted_shipping_full_name() );
-      $receiver->setAddr1( $order->shipping_address_1 );
-      $receiver->setAddr2( $order->shipping_address_2 );
-      $receiver->setPostcode( $order->shipping_postcode );
-      $receiver->setCity( $order->shipping_city );
-      $receiver->setCountry('FI');
-      $receiver->setEmail( $order->billing_email );
-      $receiver->setPhone( $order->billing_phone );
-      $shipment->setReceiver( $receiver );
-
-      $info = new Info();
-      $info->setReference( $order->get_order_number() );
-      $info->setCurrency( get_woocommerce_currency() );
-      $shipment->setShipmentInfo( $info );
-
-      $parcel = new Parcel();
-      // @TODO: These and other shipping-related helper functions should really be moved
-      // to another class, e.g. WC_Pakettikauppa_Shipment
-      $parcel->setWeight( WC_Pakettikauppa_Shipment::order_weight( $order ) );
-      $parcel->setVolume( WC_Pakettikauppa_Shipment::order_volume( $order ) );
-      $shipment->addParcel( $parcel );
-
-      $cod = false;
-
-      if ( $_REQUEST['wc_pakettikauppa_cod'] ) {
-        $cod = true;
-        $cod_amount = floatval( str_replace( ',', '.', $_REQUEST['wc_pakettikauppa_cod_amount'] ) );
-        $cod_reference = trim( $_REQUEST['wc_pakettikauppa_cod_reference'] );
-        $cod_iban = $settings['cod_iban'];
-        $cod_bic = $settings['cod_bic'];
-
-        $additional_service = new AdditionalService();
-        $additional_service->addSpecifier( 'amount', $cod_amount );
-        $additional_service->addSpecifier( 'account', $cod_iban );
-        $additional_service->addSpecifier( 'codbic', $cod_bic );
-        $additional_service->setServiceCode( 3101 );
-        $shipment->addAdditionalService($additional_service);
-      }
-
-      $pickup_point = false;
-      if ( $_REQUEST['wc_pakettikauppa_pickup_points'] ) {
-        $pickup_point = true;
-        $pickup_point_id = intval( $_REQUEST['wc_pakettikauppa_pickup_point_id'] );
-        $shipment->setPickupPoint( $pickup_point_id );
-      }
-
       try {
-        if ( $this->wc_pakettikauppa_client->createTrackingCode($shipment) ) {
-          $tracking_code = $shipment->getTrackingCode()->__toString();
-        } else {
-          // @TODO error message
-        }
+        $shipment_data = $this->wc_pakettikauppa_shipment->create_shipment( $post_id );
 
-        if ( ! empty( $tracking_code ) ) {
-          $this->wc_pakettikauppa_client->fetchShippingLabel( $shipment );
-          $upload_dir = wp_upload_dir();
-          $filepath = WC_PAKETTIKAUPPA_PRIVATE_DIR . '/' . $tracking_code . '.pdf';
-          file_put_contents( $filepath , base64_decode( $shipment->getPdf() ) );
-        }
-
-        // Update post meta
-        update_post_meta( $post_id, '_wc_pakettikauppa_tracking_code', $tracking_code);
-        update_post_meta( $post_id, '_wc_pakettikauppa_service_id', $service_id);
-        update_post_meta( $post_id, '_wc_pakettikauppa_cod', $cod);
-        update_post_meta( $post_id, '_wc_pakettikauppa_cod_amount', $cod_amount);
-        update_post_meta( $post_id, '_wc_pakettikauppa_cod_reference', $cod_reference);
-        update_post_meta( $post_id, '_wc_pakettikauppa_pickup_point', $pickup_point);
-        update_post_meta( $post_id, '_wc_pakettikauppa_pickup_point_id', $pickup_point_id);
-
-        $this->clear_errors();
-
-        $document_url = admin_url( 'admin-post.php?post=' . $post_id . '&action=show_pakettikauppa&sid=' . $tracking_code );
-        $tracking_url = WC_Pakettikauppa_Shipment::tracking_url( $service_id, $tracking_code );
+        $document_url = admin_url( 'admin-post.php?post=' . $post_id . '&action=show_pakettikauppa&sid=' . $shipment_data['tracking_code'] );
+        $tracking_url = WC_Pakettikauppa_Shipment::tracking_url( $shipment_data['service_id'], $shipment_data['tracking_code'] );
 
         // Add order note
         $dl_link = '<a href="' . $document_url . '" target="_blank">' . __( 'Print document', 'wc-pakettikauppa' ) . '</a>';
         $tracking_link = '<a href="' . $tracking_url . '" target="_blank">' . __( 'Track', 'wc-pakettikauppa' ) . '</a>';
 
-        $order->add_order_note( sprintf( __('Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s', 'wc-pakettikauppa'), $this->wc_pakettikauppa_shipment->service_title($service_id), $tracking_code, $dl_link, $tracking_link ) );
+        $order = new WC_Order( $post_id );
+        $order->add_order_note(
+          sprintf( __('Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s', 'wc-pakettikauppa'),
+          $this->wc_pakettikauppa_shipment->service_title($shipment_data['service_id']),
+          $shipment_data['tracking_code'],
+          $dl_link,
+          $tracking_link ) );
 
         // @TODO check corrects shipment stuff
       } catch ( Exception $e ) {
-        $order->add_order_note( sprintf( __('Failed to create Pakettikauppa shipment. Errors: %s', 'wc-pakettikauppa'), join( ', ', $shipment->get_errors() ) ) );
+        $order->add_order_note( sprintf( __('Failed to create Pakettikauppa shipment. Errors: %s', 'wc-pakettikauppa'), $e->getMessage() ) );
         add_action( 'admin_notices', 'add_error_notice' );
 
         // @TODO errors
-
         return;
       }
 
     } elseif ( isset( $_POST['wc_pakettikauppa_get_status'] ) ) {
       try {
-         $tracking_code = get_post_meta( $post_id, '_wc_pakettikauppa_tracking_code', true);
+        $status_code = $this->wc_pakettikauppa_shipment->get_shipment_status( $post_id );
+         update_post_meta( $post_id, '_wc_pakettikauppa_shipment_status', $status_code );
 
-         if ( ! empty( $tracking_code ) ) {
-           $result = $this->wc_pakettikauppa_client->getShipmentStatus($tracking_code);
-
-           $data = json_decode( $result );
-           $status_code = $data[0]->{'status_code'};
-           update_post_meta( $post_id, '_wc_pakettikauppa_shipment_status', $status_code );
-         }
-
-         $this->clear_errors();
       } catch ( Exception $e ) {
         $this->add_error( $e->getMessage() );
         return;

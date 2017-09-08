@@ -30,7 +30,7 @@ class WC_Pakettikauppa {
     add_action( 'woocommerce_review_order_after_shipping', array( $this, 'pickup_point_field_html') );
     add_action( 'woocommerce_order_details_after_order_table', array( $this, 'display_order_data' ) );
     add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'update_order_meta_pickup_point_field' ) );
-
+    
     try {
       $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
       $this->wc_pakettikauppa_shipment->load();
