@@ -127,7 +127,7 @@ class WC_Pakettikauppa_Admin {
   public function register_meta_boxes() {
     foreach ( wc_get_order_types( 'order-meta-boxes' ) as $type ) {
       $order_type_object = get_post_type_object( $type );
-      add_meta_box( 'wc-pakettikauppa', __( 'Pakettikauppa.fi', 'wc-pakettikauppa' ), array( $this, 'meta_box' ), $type, 'side', 'default' );
+      add_meta_box( 'wc-pakettikauppa', __( 'Pakettikauppa', 'wc-pakettikauppa' ), array( $this, 'meta_box' ), $type, 'side', 'default' );
     }
   }
 
