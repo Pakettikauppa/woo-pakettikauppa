@@ -79,16 +79,7 @@ class WC_Pakettikauppa {
     $shipping_method_id = explode(':', WC()->session->get( 'chosen_shipping_methods' )[0])[1];
 
     // Bail out if the shipping method is not one of the pickup point services
-    if ( ! in_array(
-            $shipping_method_id,
-            array(
-              '2103',
-              '80010',
-              '90010',
-              '90080'
-            )
-          )
-        ) {
+    if ( ! WC_Pakettikauppa_Shipment::service_has_pickup_points( $shipping_method_id ) ) {
       return;
     }
 

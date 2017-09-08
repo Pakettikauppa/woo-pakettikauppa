@@ -261,4 +261,22 @@ class WC_Pakettikauppa_Shipment {
     return true;
   }
 
+  public static function service_has_pickup_points( $service_id ) {
+    // @TODO: Find out if the Pakettikauppa API can be used to check if the service uses
+    // pickup points instead of hard coding them here.
+    if ( in_array(
+            $service_id,
+            array(
+              '2103',
+              '80010',
+              '90010',
+              '90080'
+            )
+          )
+        ) {
+      return true;
+    }
+    return false;
+  }
+
 }

@@ -48,6 +48,9 @@ class WC_Pakettikauppa_Admin {
     // Delete the tracking label when order is deleted so the uploads directory doesn't get too bloated
     add_action( 'before_delete_post', array( $this, 'delete_order_shipping_label' ) );
 
+    // Connect shipping service and pickup points in admin
+    add_action( 'wp_ajax_admin_update_pickup_point', array( $this, 'update_meta_box_pickup_points' ) );
+
     try {
       $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
       $this->wc_pakettikauppa_shipment->load();
@@ -67,6 +70,13 @@ class WC_Pakettikauppa_Admin {
     }
   }
 
+  public function update_meta_box_pickup_points() {
+    if ( isset( $_POST ) && ! empty( $_POST['service_id'] ) ) {
+      $service_id = $_POST['service_id'];
+      echo WC_Pakettikauppa_Shipment::service_has_pickup_points( $service_id );
+      wp_die();
+    }
+  }
   /**
   * Return all errors that have been added via add_error().
   *
@@ -231,7 +241,7 @@ class WC_Pakettikauppa_Admin {
 
         <?php if ( empty( $tracking_code ) ) : ?>
           <div class="pakettikauppa-services">
-            <fieldset>
+            <fieldset class="pakettikauppa-metabox-fieldset">
               <h4><?php _e( 'Service', 'wc-pakettikauppa' ); ?></h4>
               <?php foreach ( $active_shipping_options as $shipping_option_id ) { ?>
                 <label for="service-<?php echo $shipping_option_id; ?>">
@@ -250,45 +260,43 @@ class WC_Pakettikauppa_Admin {
                 </label>
                 <br>
               <?php } ?>
+
               <h4><?php _e( 'Additional services', 'wc-pakettikauppa' ); ?></h4>
               <input type="checkbox" name="wc_pakettikauppa_cod" value="1" id="wc-pakettikauppa-cod" <?php if ( $cod ) { ?>checked="checked"<?php } ?> />
               <label for="wc-pakettikauppa-cod"><?php _e( 'Cash on Delivery', 'wc-pakettikauppa' ); ?></label>
 
-              <p class="form-field" id="wc-pakettikauppa-cod-amount-wrapper">
+              <div class="form-field" id="wc-pakettikauppa-cod-amount-wrapper">
                 <label for="wc_pakettikauppa_cod_amount"><?php _e( 'Amount (€):', 'wc-pakettikauppa' ) ?></label>
                 <input type="text" name="wc_pakettikauppa_cod_amount" value="<?php echo $cod_amount; ?>" id="wc_pakettikauppa_cod_amount" />
-              </p>
+              </div>
 
               <p class="form-field" id="wc-pakettikauppa-cod-reference-wrapper">
                 <label for="wc_pakettikauppa_cod_reference"><?php _e( 'Reference:', 'wc-pakettikauppa' ) ?></label>
                 <input type="text" name="wc_pakettikauppa_cod_reference" value="<?php echo $cod_reference; ?>" id="wc_pakettikauppa_cod_reference" />
               </p>
 
-              <br><input type="checkbox" name="wc_pakettikauppa_pickup_points" value="1" id="wc-pakettikauppa-pickup-points" <?php if ( $pickup_point ) { ?>checked="checked"<?php } ?> />
-              <label for="wc-pakettikauppa-pickup-points"><?php _e( 'Pickup Point', 'wc-pakettikauppa' ); ?></label>
+              <input type="checkbox" style="display:none;" name="wc_pakettikauppa_pickup_points" value="1" id="wc-pakettikauppa-pickup-points" <?php if ( $pickup_point ) { ?>checked="checked"<?php } ?> />
+              <?php
 
-             <?php
-             try {
-               $pickup_point_data = $this->wc_pakettikauppa_shipment->get_pickup_points( $order->get_shipping_postcode() );
+              try {
+                $pickup_point_data = $this->wc_pakettikauppa_shipment->get_pickup_points( $order->get_shipping_postcode() );
 
-               if ( $pickup_point_data == 'Authentication error' ) {
-                 // @TODO: test if data is a proper array or throw error
-               }
-             } catch ( Exception $e ) {
-               // @TODO: throw error
-             }
+                if ( $pickup_point_data == 'Authentication error' ) {
+                // @TODO: test if data is a proper array or throw error
+                }
+              } catch ( Exception $e ) {
+                // @TODO: throw error
+              }
 
-               $pickup_points = json_decode( $pickup_point_data );
-              ?>
-
-              <p class="form-field" id="wc-pakettikauppa-pickup-points-wrapper">
-                <select name="wc_pakettikauppa_pickup_point_id" class="wc_pakettikauppa_pickup_point_id" id="wc_pakettikauppa_pickup_point_id">
-                  <?php foreach ( $pickup_points as $key => $value ) : ?>
+               $pickup_points = json_decode( $pickup_point_data ); ?>
+                <div class="form-field" id="wc-pakettikauppa-pickup-points-wrapper">
+                  <h4><?php _e( 'Pickup Point', 'wc-pakettikauppa' ); ?></h4>
+                  <select name="wc_pakettikauppa_pickup_point_id" class="wc_pakettikauppa_pickup_point_id" id="wc_pakettikauppa_pickup_point_id">
+                    <?php foreach ( $pickup_points as $key => $value ) : ?>
                     <option value="<?php echo( $value->pickup_point_id ); ?>" <?php if ( $pickup_point_id == $value->pickup_point_id ) { echo 'selected'; } ?> ><?php echo( $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')' ); ?></option>
-                  <?php endforeach; ?>
-                </select>
-              </p>
-
+                    <?php endforeach; ?>
+                  </select>
+                </div>
             </fieldset>
 
           </div>
