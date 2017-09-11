@@ -22,3 +22,7 @@ p.pakettikauppa-shipment {
 {
   display: none;
 }
+
+.button.wc-pakettikauppa-delete-button {
+    color: #a00 !important;
+}

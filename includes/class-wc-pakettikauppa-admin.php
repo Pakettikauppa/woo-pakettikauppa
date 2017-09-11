@@ -125,7 +125,7 @@ class WC_Pakettikauppa_Admin {
       $order_type_object = get_post_type_object( $type );
       add_meta_box(
         'wc-pakettikauppa',
-        __( 'Pakettikauppa', 'wc-pakettikauppa' ), 
+        __( 'Pakettikauppa', 'wc-pakettikauppa' ),
         array( $this, 'meta_box' ),
         $type,
         'side',
@@ -299,6 +299,7 @@ class WC_Pakettikauppa_Admin {
           <?php else : ?>
             <p>
               <input type="submit" value="<?php _e( 'Update Status', 'wc-pakettikauppa' ); ?>" name="wc_pakettikauppa_get_status" class="button" />
+              <input type="submit" value="<?php _e( 'Delete Shipping Label', 'wc-pakettikauppa' ); ?>" name="wc_pakettikauppa_delete_shipping_label" class="button wc-pakettikauppa-delete-button" />
             </p>
           <?php endif; ?>
         </div>
@@ -347,7 +348,6 @@ class WC_Pakettikauppa_Admin {
           $dl_link,
           $tracking_link ) );
 
-        // @TODO check corrects shipment stuff
       } catch ( Exception $e ) {
         $order->add_order_note( sprintf( __('Failed to create Pakettikauppa shipment. Errors: %s', 'wc-pakettikauppa'), $e->getMessage() ) );
         add_action( 'admin_notices', 'add_error_notice' );
@@ -364,6 +364,25 @@ class WC_Pakettikauppa_Admin {
       } catch ( Exception $e ) {
         $this->add_error( $e->getMessage() );
         return;
+      }
+
+    } elseif ( isset( $_POST['wc_pakettikauppa_delete_shipping_label'] ) ) {
+      try {
+        // Delete old shipping label
+        $this->delete_order_shipping_label( $post_id );
+        // Delete old tracking code
+        update_post_meta( $post_id, '_wc_pakettikauppa_tracking_code', '' );
+
+        $order = new WC_Order( $post_id );
+        $order->add_order_note( __('Successfully deleted Pakettikauppa shipping label.', 'wc-pakettikauppa') );
+
+      } catch ( Exception $e ) {
+        $this->add_error( $e->getMessage() );
+
+        $order = new WC_Order( $post_id );
+        $order->add_order_note(
+          sprintf( __('Deleting Pakettikauppa shipment failed! Errors: %s', 'wc-pakettikauppa'),
+            $e->getMessage() ) );
       }
 
     } else {
@@ -436,19 +455,18 @@ class WC_Pakettikauppa_Admin {
   }
 
   /**
-  * Remove the shipping label of an order when it is deleted, used with woocommerce_delete_order hook.
+  * Remove the shipping label of an order from the wc-pakettikauppa uploads directory
   *
-  * @param int $order_id The id of the order which is to be deleted
+  * @param int $post_id The post id of the order which is to be deleted
   */
-  public function delete_order_shipping_label( $order_id ) {
+  public function delete_order_shipping_label( $post_id ) {
     // Check that the post type is order
-    $post_type = get_post_type( $order_id );
+    $post_type = get_post_type( $post_id );
     if ( $post_type !== 'shop_order' ) {
       return;
     }
 
-    $tracking_code = get_post_meta( $order_id, '_wc_pakettikauppa_tracking_code', true );
-
+    $tracking_code = get_post_meta( $post_id, '_wc_pakettikauppa_tracking_code', true );
     if ( ! empty( $tracking_code ) ) {
       $filepath = WC_PAKETTIKAUPPA_PRIVATE_DIR . '/' .  $tracking_code . '.pdf';
 
