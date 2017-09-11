@@ -91,13 +91,13 @@ class WC_Pakettikauppa_Shipment {
 
     $receiver = new Receiver();
     $receiver->setName1( $order->get_formatted_shipping_full_name() );
-    $receiver->setAddr1( $order->shipping_address_1 );
-    $receiver->setAddr2( $order->shipping_address_2 );
-    $receiver->setPostcode( $order->shipping_postcode );
-    $receiver->setCity( $order->shipping_city );
+    $receiver->setAddr1( $order->get_shipping_address_1() );
+    $receiver->setAddr2( $order->get_shipping_address_2() );
+    $receiver->setPostcode( $order->get_shipping_postcode() );
+    $receiver->setCity( $order->get_shipping_city() );
     $receiver->setCountry('FI');
-    $receiver->setEmail( $order->billing_email );
-    $receiver->setPhone( $order->billing_phone );
+    $receiver->setEmail( $order->get_billing_email() );
+    $receiver->setPhone( $order->get_billing_phone() );
     $shipment->setReceiver( $receiver );
 
     $info = new Info();
