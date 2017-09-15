@@ -12,13 +12,17 @@ p.pakettikauppa-shipment {
   margin: 10px 0 5px;
 }
 
+.pakettikauppa-services div#wc-pakettikauppa-pickup-points-wrapper {
+  width: 95%;
+}
+
 .wc_pakettikauppa_pickup_point_id {
   width: 100%;
 }
 
-.pakettikauppa-services p#wc-pakettikauppa-cod-amount-wrapper,
-.pakettikauppa-services p#wc-pakettikauppa-cod-reference-wrapper,
-.pakettikauppa-services p#wc-pakettikauppa-pickup-points-wrapper
+.pakettikauppa-services div#wc-pakettikauppa-cod-amount-wrapper,
+.pakettikauppa-services div#wc-pakettikauppa-cod-reference-wrapper,
+.pakettikauppa-services div#wc-pakettikauppa-pickup-points-wrapper
 {
   display: none;
 }

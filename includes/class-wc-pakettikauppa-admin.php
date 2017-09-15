@@ -263,10 +263,10 @@ class WC_Pakettikauppa_Admin {
                 <input type="text" name="wc_pakettikauppa_cod_amount" value="<?php echo $cod_amount; ?>" id="wc_pakettikauppa_cod_amount" />
               </div>
 
-              <p class="form-field" id="wc-pakettikauppa-cod-reference-wrapper">
+              <div class="form-field" id="wc-pakettikauppa-cod-reference-wrapper">
                 <label for="wc_pakettikauppa_cod_reference"><?php _e( 'Reference:', 'wc-pakettikauppa' ) ?></label>
                 <input type="text" name="wc_pakettikauppa_cod_reference" value="<?php echo $cod_reference; ?>" id="wc_pakettikauppa_cod_reference" />
-              </p>
+              </div>
 
               <input type="checkbox" style="display:none;" name="wc_pakettikauppa_pickup_points" value="1" id="wc-pakettikauppa-pickup-points" <?php if ( $pickup_point ) { ?>checked="checked"<?php } ?> />
               <?php
