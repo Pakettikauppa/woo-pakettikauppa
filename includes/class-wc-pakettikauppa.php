@@ -30,7 +30,7 @@ class WC_Pakettikauppa {
     add_action( 'woocommerce_review_order_after_shipping', array( $this, 'pickup_point_field_html') );
     add_action( 'woocommerce_order_details_after_order_table', array( $this, 'display_order_data' ) );
     add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'update_order_meta_pickup_point_field' ) );
-    
+
     try {
       $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
       $this->wc_pakettikauppa_shipment->load();
@@ -77,6 +77,7 @@ class WC_Pakettikauppa {
 
     $shipping_method_name = explode(':', WC()->session->get( 'chosen_shipping_methods' )[0])[0];
     $shipping_method_id = explode(':', WC()->session->get( 'chosen_shipping_methods' )[0])[1];
+    $shipping_method_provider = $this->wc_pakettikauppa_shipment->service_provider($shipping_method_id);
 
     // Bail out if the shipping method is not one of the pickup point services
     if ( ! WC_Pakettikauppa_Shipment::service_has_pickup_points( $shipping_method_id ) ) {
@@ -85,9 +86,11 @@ class WC_Pakettikauppa {
 
     $pickup_point_data = '';
     $shipping_postcode = WC()->customer->get_shipping_postcode();
+    $shipping_address = WC()->customer->get_shipping_address();
+    $shipping_country = WC()->customer->get_shipping_country();
 
     try {
-      $pickup_point_data = $this->wc_pakettikauppa_shipment->get_pickup_points( $shipping_postcode );
+      $pickup_point_data = $this->wc_pakettikauppa_shipment->get_pickup_points( $shipping_postcode, $shipping_address, $shipping_country, $shipping_method_provider );
 
       if ( $pickup_point_data == 'Authentication error' ) {
         // @TODO: test if data is a proper array or throw error

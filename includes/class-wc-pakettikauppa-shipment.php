@@ -226,6 +226,40 @@ class WC_Pakettikauppa_Shipment {
   }
 
   /**
+   * Get the provider of a service by providing its code.
+   *
+   * @param int $service_code The code of a service
+   * @return string The service provider matching with the provided code, or false if not found
+   */
+   public function service_provider( $service_code ) {
+     $services = array();
+
+     $transient_name = 'wc_pakettikauppa_shipping_methods';
+     $transent_time = 86400; // 24 hours
+     $all_shipping_methods = get_transient( $transient_name );
+
+     if ( false === $all_shipping_methods ) {
+       try {
+         $all_shipping_methods = json_decode( $this->wc_pakettikauppa_client->listShippingMethods() );
+         set_transient( $transient_name, $all_shipping_methods, $transient_time );
+
+       } catch ( Exception $e ) {
+         // @TODO: Proper error handling
+         return;
+       }
+     }
+
+     if ( ! empty( $all_shipping_methods ) ) {
+         foreach ( $all_shipping_methods as $shipping_method ) {
+           if ( intval($service_code) === intval($shipping_method->shipping_method_code) ) {
+             return $shipping_method->service_provider;
+           }
+         }
+     }
+     return false;
+   }
+
+  /**
   * Get the status text of a shipment that matches a specified status code.
   *
   * @param int $status_code A status code
