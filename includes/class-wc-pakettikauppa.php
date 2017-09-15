@@ -30,6 +30,7 @@ class WC_Pakettikauppa {
     add_action( 'woocommerce_review_order_after_shipping', array( $this, 'pickup_point_field_html') );
     add_action( 'woocommerce_order_details_after_order_table', array( $this, 'display_order_data' ) );
     add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'update_order_meta_pickup_point_field' ) );
+    add_action('woocommerce_checkout_process', array( $this, 'validate_checkout_pickup_point' ) );
 
     try {
       $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
@@ -150,6 +151,14 @@ class WC_Pakettikauppa {
       echo '
       <h2>'. __('Pickup point', 'wc-pakettikauppa' ) .'</h2>
       <p>'. $pickup_point .'</p>';
+    }
+  }
+
+  public function validate_checkout_pickup_point() {
+    $shipping_method_id = explode(':', WC()->session->get( 'chosen_shipping_methods' )[0])[1];
+    // Check if the service has a pickup point
+    if ( $this->wc_pakettikauppa_shipment->service_has_pickup_points( $shipping_method_id ) && empty( $_POST['pakettikauppa_pickup_point'] ) ) {
+        wc_add_notice( __( 'Please choose a pickup point.', 'wc-pakettikauppa' ), 'error' );
     }
   }
 
