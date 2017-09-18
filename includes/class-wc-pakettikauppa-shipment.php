@@ -35,18 +35,27 @@ class WC_Pakettikauppa_Shipment {
   }
 
   public function load() {
-    try {
-      // Use option from database directly as WC_Pakettikauppa_Shipping_Method object is not accessible here
-      $settings = get_option( 'woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null );
-      $account_number = $settings['mode'];
-      $secret_key = $settings['secret_key'];
-      $mode = $settings['mode'];
-      $is_test_mode = ($mode == 'production' ? false : true);
-      $this->wc_pakettikauppa_client = new Pakettikauppa\Client( array( 'api_key' => $account_number, 'secret' => $secret_key, 'test_mode' => $is_test_mode ) );
-    } catch ( Exception $e ) {
-      // @TODO: errors
-      die('pakettikauppa fail');
+    // Use option from database directly as WC_Pakettikauppa_Shipping_Method object is not accessible here
+    $settings = get_option( 'woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null );
+
+    if ( false === $settings ) {
+      throw new Exception( 'WooCommerce Pakettikauppa:
+        woocommerce_WC_Pakettikauppa_Shipping_Method_settings was not
+        found in the database!' );
     }
+
+    $account_number = $settings['mode'];
+    $secret_key = $settings['secret_key'];
+    $mode = $settings['mode'];
+    $is_test_mode = ($mode == 'production' ? false : true);
+
+    $options_array = array(
+      'api_key' => $account_number,
+      'secret' => $secret_key,
+      'test_mode' => $is_test_mode
+    );
+
+    $this->wc_pakettikauppa_client = new Pakettikauppa\Client( $options_array );
   }
 
   /**
@@ -112,7 +121,7 @@ class WC_Pakettikauppa_Shipment {
 
     $cod = false;
 
-    if ( $_REQUEST['wc_pakettikauppa_cod'] ) {
+    if ( isset( $_REQUEST['wc_pakettikauppa_cod'] ) && $_REQUEST['wc_pakettikauppa_cod'] ) {
       $cod = true;
       $cod_amount = floatval( str_replace( ',', '.', $_REQUEST['wc_pakettikauppa_cod_amount'] ) );
       $cod_reference = trim( $_REQUEST['wc_pakettikauppa_cod_reference'] );
@@ -128,16 +137,19 @@ class WC_Pakettikauppa_Shipment {
     }
 
     $pickup_point = false;
-    if ( $_REQUEST['wc_pakettikauppa_pickup_points'] ) {
+    if ( isset( $_REQUEST['wc_pakettikauppa_pickup_points'] ) && $_REQUEST['wc_pakettikauppa_pickup_points'] ) {
       $pickup_point = true;
       $pickup_point_id = intval( $_REQUEST['wc_pakettikauppa_pickup_point_id'] );
       $shipment->setPickupPoint( $pickup_point_id );
     }
 
-    if ( $this->wc_pakettikauppa_client->createTrackingCode($shipment) ) {
-      $tracking_code = $shipment->getTrackingCode()->__toString();
-    } else {
-      // @TODO error message
+    try {
+      if ( $this->wc_pakettikauppa_client->createTrackingCode($shipment) ) {
+        $tracking_code = $shipment->getTrackingCode()->__toString();
+      }
+
+    } catch ( Exception $e ) {
+      throw new Exception( wp_sprintf( __( 'WooCommerce Pakettikauppa: tracking code creation failed: %s', 'wc-pakettikauppa' ), $e->getMessage() ) );
     }
 
     if ( ! empty( $tracking_code ) ) {
@@ -172,16 +184,11 @@ class WC_Pakettikauppa_Shipment {
   * @return array The pickup points based on the parameters, or empty array if none were found
   */
   public function get_pickup_points( $postcode, $street_address = null, $country = null, $service_provider = null ) {
-    try {
-      $pickup_point_data = $this->wc_pakettikauppa_client->searchPickupPoints( $postcode, $street_address, $country, $service_provider);
-      if ( $pickup_point_data == 'Authentication error' ) {
-        // @TODO: Add proper error handling
-      }
-      return $pickup_point_data;
-    } catch ( Exception $e ) {
-      $this->add_error( 'Unable to connect to Pakettikauppa service.' );
-      return [];
+    $pickup_point_data = $this->wc_pakettikauppa_client->searchPickupPoints( $postcode, $street_address, $country, $service_provider);
+    if ( $pickup_point_data === 'Bad request' ) {
+      throw new Exception( __( 'WC_Pakettikauppa: An error occured when searching pickup points.', 'wc-pakettikauppa') );
     }
+    return $pickup_point_data;
   }
 
   /**
@@ -231,23 +238,23 @@ class WC_Pakettikauppa_Shipment {
    * @param int $service_code The code of a service
    * @return string The service provider matching with the provided code, or false if not found
    */
-   public function service_provider( $service_code ) {
-     $services = array();
+  public function service_provider( $service_code ) {
+    $services = array();
 
-     $transient_name = 'wc_pakettikauppa_shipping_methods';
-     $transent_time = 86400; // 24 hours
-     $all_shipping_methods = get_transient( $transient_name );
+    $transient_name = 'wc_pakettikauppa_shipping_methods';
+    $transent_time = 86400; // 24 hours
+    $all_shipping_methods = get_transient( $transient_name );
 
-     if ( false === $all_shipping_methods ) {
-       try {
-         $all_shipping_methods = json_decode( $this->wc_pakettikauppa_client->listShippingMethods() );
-         set_transient( $transient_name, $all_shipping_methods, $transient_time );
+    if ( false === $all_shipping_methods ) {
+      try {
+        $all_shipping_methods = json_decode( $this->wc_pakettikauppa_client->listShippingMethods() );
+        set_transient( $transient_name, $all_shipping_methods, $transient_time );
 
-       } catch ( Exception $e ) {
-         // @TODO: Proper error handling
-         return;
-       }
-     }
+      } catch ( Exception $e ) {
+        throw new Exception( wp_sprintf( __( 'WooCommerce Pakettikauppa: an error occured when accessing service providers: %s', 'wc-pakettikauppa' ), $e->getMessage() ) );
+        return;
+      }
+    }
 
      if ( ! empty( $all_shipping_methods ) ) {
          foreach ( $all_shipping_methods as $shipping_method ) {

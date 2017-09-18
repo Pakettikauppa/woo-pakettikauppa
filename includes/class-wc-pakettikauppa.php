@@ -37,9 +37,28 @@ class WC_Pakettikauppa {
       $this->wc_pakettikauppa_shipment->load();
 
     } catch ( Exception $e ) {
-      // @TODO Handle frontend errors, should they be shown to customer?
-      die('pakettikauppa fail');
+      $this->add_error( $e->getMessage() );
+      $this->display_error();
     }
+  }
+
+  /**
+  * Add an error with a specified error message.
+  *
+  * @param string $message A message containing details about the error.
+  */
+  public function add_error( $message ) {
+    if ( ! empty( $message ) ) {
+      array_push( $this->errors, $message );
+      error_log( $message );
+    }
+  }
+
+  /**
+  * Display error in woocommerce
+  */
+  function display_error() {
+    wc_add_notice( __( 'An error occured. Please try again later.', 'wc-pakettikauppa' ), 'error' );
   }
 
   /**
@@ -93,11 +112,10 @@ class WC_Pakettikauppa {
     try {
       $pickup_point_data = $this->wc_pakettikauppa_shipment->get_pickup_points( $shipping_postcode, $shipping_address, $shipping_country, $shipping_method_provider );
 
-      if ( $pickup_point_data == 'Authentication error' ) {
-        // @TODO: test if data is a proper array or throw error
-      }
     } catch ( Exception $e ) {
-      // @TODO: throw error
+      $this->add_error( $e->getMessage() );
+      $this->display_error();
+      return;
     }
 
     $pickup_points = json_decode( $pickup_point_data );
@@ -132,7 +150,6 @@ class WC_Pakettikauppa {
         'custom_attributes' => array('style' => 'max-width:18em;'),
         'options'     => $options_array,
     ),  null );
-    // WC()->cart['pakettikauppa_pickup_point_id']
 
     echo '</div>';
 
@@ -157,8 +174,14 @@ class WC_Pakettikauppa {
   public function validate_checkout_pickup_point() {
     $shipping_method_id = explode(':', WC()->session->get( 'chosen_shipping_methods' )[0])[1];
     // Check if the service has a pickup point
-    if ( $this->wc_pakettikauppa_shipment->service_has_pickup_points( $shipping_method_id ) && empty( $_POST['pakettikauppa_pickup_point'] ) ) {
-        wc_add_notice( __( 'Please choose a pickup point.', 'wc-pakettikauppa' ), 'error' );
+    try {
+      if ( $this->wc_pakettikauppa_shipment->service_has_pickup_points( $shipping_method_id ) && empty( $_POST['pakettikauppa_pickup_point'] ) ) {
+          wc_add_notice( __( 'Please choose a pickup point.', 'wc-pakettikauppa' ), 'error' );
+      }
+    } catch ( Exception $e ) {
+      $this->add_error( $e->getMessage() );
+      $this->display_error();
+      return;
     }
   }
 

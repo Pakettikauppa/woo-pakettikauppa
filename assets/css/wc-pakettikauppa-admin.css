@@ -30,3 +30,7 @@ p.pakettikauppa-shipment {
 .button.wc-pakettikauppa-delete-button {
     color: #a00 !important;
 }
+
+.wc-pakettikauppa-metabox-error {
+  color: #a00;
+}

@@ -35,10 +35,8 @@ class WC_Pakettikauppa_Admin {
     add_action( 'admin_post_show_pakettikauppa', array( $this, 'show' ), 10 );
     add_action( 'woocommerce_email_order_meta', array( $this, 'attach_tracking_to_email' ), 10, 4 );
     add_action( 'woocommerce_admin_order_data_after_shipping_address', array( $this, 'show_pickup_point_in_admin_order_meta' ), 10, 1 );
-
     // Delete the tracking label when order is deleted so the uploads directory doesn't get too bloated
     add_action( 'before_delete_post', array( $this, 'delete_order_shipping_label' ) );
-
     // Connect shipping service and pickup points in admin
     add_action( 'wp_ajax_admin_update_pickup_point', array( $this, 'update_meta_box_pickup_points' ) );
 
@@ -47,8 +45,9 @@ class WC_Pakettikauppa_Admin {
       $this->wc_pakettikauppa_shipment->load();
 
     } catch ( Exception $e ) {
-      // @TODO Handle frontend errors, should they be shown to customer?
-      die('pakettikauppa fail');
+      $this->add_error( $e->getMessage() );
+      $this->add_error_notice( $e->getMessage() );
+      return;
     }
   }
 
@@ -64,13 +63,25 @@ class WC_Pakettikauppa_Admin {
   }
 
   /**
-  * Return all errors that have been added via add_error().
+  * Add an error with a specified error message.
   *
-  * @return array Errors
+  * @param string $message A message containing details about the error.
   */
-  public function get_errors() {
-      return $this->errors;
+  public function add_error( $message ) {
+    if ( ! empty( $message ) ) {
+      array_push( $this->errors, $message );
+      error_log( $message );
+    }
   }
+
+  /**
+   * Return all errors that have been added via add_error().
+   *
+   * @return array Errors
+   */
+   public function get_errors() {
+       return $this->errors;
+   }
 
   /**
   * Clear all existing errors that have been added via add_error().
@@ -79,25 +90,16 @@ class WC_Pakettikauppa_Admin {
     unset( $this->errors );
     $this->errors = array();
   }
-
-  /**
-  * Add an error with a specified error message.
-  *
-  * @param string $message A message containing details about the error.
-  */
-  public function add_error( $message ) {
-    if ( ! empty( $message ) ) {
-      array_push( $this->errors, $message );
-    }
-  }
-
+  
   /**
   * Add an admin error notice to wp-admin.
   */
-  function add_error_notice() {
-    $class = 'notice notice-error';
-    $message = _e( 'Operation failed! Please try again.', 'wc-pakettikauppa' );
-    printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
+  function add_error_notice( $message ) {
+    if ( ! empty( $message ) ) {
+      $class = 'notice notice-error';
+      $print_error = wp_sprintf( __( 'An error occured: %s', 'wc-pakettikauppa' ), $message );
+      printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $print_error ) );
+    }
   }
 
   /**
@@ -110,7 +112,9 @@ class WC_Pakettikauppa_Admin {
   public static function plugin_row_meta( $links, $file ) {
     if ( WC_PAKETTIKAUPPA_BASENAME == $file ) {
       $row_meta = array(
-        'service'    => '<a href="' . esc_url( 'https://www.pakettikauppa.fi' ) . '" aria-label="' . esc_attr__( 'Visit Pakettikauppa.fi', 'wc-pakettikauppa' ) . '">' . esc_html__( 'Show site Pakettikauppa.fi', 'wc-pakettikauppa' ) . '</a>',
+        'service'    => '<a href="' . esc_url( 'https://www.pakettikauppa.fi' ) .
+        '" aria-label="' . esc_attr__( 'Visit Pakettikauppa.fi', 'wc-pakettikauppa' ) .
+        '">' . esc_html__( 'Show site Pakettikauppa.fi', 'wc-pakettikauppa' ) . '</a>',
       );
       return array_merge( $links, $row_meta );
     }
@@ -273,23 +277,23 @@ class WC_Pakettikauppa_Admin {
 
               try {
                 $pickup_point_data = $this->wc_pakettikauppa_shipment->get_pickup_points( $order->get_shipping_postcode() );
+                $pickup_points = json_decode( $pickup_point_data ); ?>
 
-                if ( $pickup_point_data == 'Authentication error' ) {
-                // @TODO: test if data is a proper array or throw error
-                }
+                 <div class="form-field" id="wc-pakettikauppa-pickup-points-wrapper">
+                   <h4><?php _e( 'Pickup Point', 'wc-pakettikauppa' ); ?></h4>
+                   <select name="wc_pakettikauppa_pickup_point_id" class="wc_pakettikauppa_pickup_point_id" id="wc_pakettikauppa_pickup_point_id">
+                     <?php foreach ( $pickup_points as $key => $value ) : ?>
+                     <option value="<?php echo( $value->pickup_point_id ); ?>" <?php if ( $pickup_point_id == $value->pickup_point_id ) { echo 'selected'; } ?> ><?php echo( $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')' ); ?></option>
+                     <?php endforeach; ?>
+                   </select>
+                 </div>
+                 <?php
               } catch ( Exception $e ) {
-                // @TODO: throw error
+                $this->add_error( $e->getMessage() );
+                echo '<p class="wc-pakettikauppa-metabox-error">' . __( 'Pickup point search failed!
+                  Check your error log for details.', 'wc-pakettikauppa' ) . '</p>';
               }
-
-               $pickup_points = json_decode( $pickup_point_data ); ?>
-                <div class="form-field" id="wc-pakettikauppa-pickup-points-wrapper">
-                  <h4><?php _e( 'Pickup Point', 'wc-pakettikauppa' ); ?></h4>
-                  <select name="wc_pakettikauppa_pickup_point_id" class="wc_pakettikauppa_pickup_point_id" id="wc_pakettikauppa_pickup_point_id">
-                    <?php foreach ( $pickup_points as $key => $value ) : ?>
-                    <option value="<?php echo( $value->pickup_point_id ); ?>" <?php if ( $pickup_point_id == $value->pickup_point_id ) { echo 'selected'; } ?> ><?php echo( $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')' ); ?></option>
-                    <?php endforeach; ?>
-                  </select>
-                </div>
+              ?>
             </fieldset>
 
           </div>
@@ -299,7 +303,7 @@ class WC_Pakettikauppa_Admin {
           <?php else : ?>
             <p>
               <input type="submit" value="<?php _e( 'Update Status', 'wc-pakettikauppa' ); ?>" name="wc_pakettikauppa_get_status" class="button" />
-              <input type="submit" value="<?php _e( 'Delete Shipping Label', 'wc-pakettikauppa' ); ?>" name="wc_pakettikauppa_delete_shipping_label" class="button wc-pakettikauppa-delete-button" />
+              <input type="submit" value="<?php _e( 'Delete Shipping Label', 'wc-pakettikauppa' ); ?>" name="wc_pakettikauppa_delete_shipping_label"  class="button wc-pakettikauppa-delete-button" />
             </p>
           <?php endif; ?>
         </div>
@@ -327,9 +331,16 @@ class WC_Pakettikauppa_Admin {
 
       // Bail out if the receiver has not been properly configured
       if ( ! WC_Pakettikauppa_Shipment::validate_order_shipping_receiver( wc_get_order( $post_id ) ) ) {
-        // @TODO: Also add an error notice to wp-admin
+        add_action( 'admin_notices', function() {
+          echo '<div class="update-nag notice">' .
+            __( 'The shipping label was not created because the order does not contain valid shipping details.', 'wc-pakettikauppa' )
+            . '</div>';
+        });
         return;
       }
+
+      $order = new WC_Order( $post_id );
+
       try {
         $shipment_data = $this->wc_pakettikauppa_shipment->create_shipment( $post_id );
 
@@ -340,7 +351,6 @@ class WC_Pakettikauppa_Admin {
         $dl_link = '<a href="' . $document_url . '" target="_blank">' . __( 'Print document', 'wc-pakettikauppa' ) . '</a>';
         $tracking_link = '<a href="' . $tracking_url . '" target="_blank">' . __( 'Track', 'wc-pakettikauppa' ) . '</a>';
 
-        $order = new WC_Order( $post_id );
         $order->add_order_note(
           sprintf( __('Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s', 'wc-pakettikauppa'),
           $this->wc_pakettikauppa_shipment->service_title($shipment_data['service_id']),
@@ -349,10 +359,11 @@ class WC_Pakettikauppa_Admin {
           $tracking_link ) );
 
       } catch ( Exception $e ) {
+        $this->add_error( $e->getMessage() );
         $order->add_order_note( sprintf( __('Failed to create Pakettikauppa shipment. Errors: %s', 'wc-pakettikauppa'), $e->getMessage() ) );
-        add_action( 'admin_notices', 'add_error_notice' );
-
-        // @TODO errors
+        add_action( 'admin_notices', function() {
+          $this->add_error_notice( wp_sprintf( __( 'An error occured: %s', 'wc-pakettikauppa' ), $e->getMessage() ) );
+        } );
         return;
       }
 
@@ -363,6 +374,9 @@ class WC_Pakettikauppa_Admin {
 
       } catch ( Exception $e ) {
         $this->add_error( $e->getMessage() );
+        add_action( 'admin_notices', function() {
+          $this->add_error_notice( wp_sprintf( __( 'An error occured: %s', 'wc-pakettikauppa' ), $e->getMessage() ) );
+        } );
         return;
       }
 
@@ -378,6 +392,9 @@ class WC_Pakettikauppa_Admin {
 
       } catch ( Exception $e ) {
         $this->add_error( $e->getMessage() );
+        add_action( 'admin_notices', function() {
+          $this->add_error_notice( wp_sprintf( __( 'An error occured: %s', 'wc-pakettikauppa' ), $e->getMessage() ) );
+        } );
 
         $order = new WC_Order( $post_id );
         $order->add_order_note(
