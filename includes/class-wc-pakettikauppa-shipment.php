@@ -136,13 +136,21 @@ class WC_Pakettikauppa_Shipment {
       $additional_service->addSpecifier( 'codbic', $cod_bic );
       $additional_service->setServiceCode( 3101 );
       $shipment->addAdditionalService($additional_service);
+
+      update_post_meta( $post_id, '_wc_pakettikauppa_cod', $cod);
+      update_post_meta( $post_id, '_wc_pakettikauppa_cod_amount', $cod_amount);
+      update_post_meta( $post_id, '_wc_pakettikauppa_cod_reference', $cod_reference);
     }
 
     $pickup_point = false;
     if ( isset( $_REQUEST['wc_pakettikauppa_pickup_points'] ) && $_REQUEST['wc_pakettikauppa_pickup_points'] ) {
       $pickup_point = true;
       $pickup_point_id = intval( $_REQUEST['wc_pakettikauppa_pickup_point_id'] );
+
       $shipment->setPickupPoint( $pickup_point_id );
+
+      update_post_meta( $post_id, '_wc_pakettikauppa_pickup_point', $pickup_point);
+      update_post_meta( $post_id, '_wc_pakettikauppa_pickup_point_id', $pickup_point_id);
     }
 
     try {
@@ -159,16 +167,11 @@ class WC_Pakettikauppa_Shipment {
       $upload_dir = wp_upload_dir();
       $filepath = WC_PAKETTIKAUPPA_PRIVATE_DIR . '/' . $tracking_code . '.pdf';
       file_put_contents( $filepath , base64_decode( $shipment->getPdf() ) );
+
+      update_post_meta( $post_id, '_wc_pakettikauppa_tracking_code', $tracking_code);
     }
 
-    // Update post meta
-    update_post_meta( $post_id, '_wc_pakettikauppa_tracking_code', $tracking_code);
     update_post_meta( $post_id, '_wc_pakettikauppa_service_id', $service_id);
-    update_post_meta( $post_id, '_wc_pakettikauppa_cod', $cod);
-    update_post_meta( $post_id, '_wc_pakettikauppa_cod_amount', $cod_amount);
-    update_post_meta( $post_id, '_wc_pakettikauppa_cod_reference', $cod_reference);
-    update_post_meta( $post_id, '_wc_pakettikauppa_pickup_point', $pickup_point);
-    update_post_meta( $post_id, '_wc_pakettikauppa_pickup_point_id', $pickup_point_id);
 
     return array(
       'tracking_code' => $tracking_code,
