@@ -5,8 +5,8 @@ msgstr ""
 "Project-Id-Version: WooCommerce pakettikauppa 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woocommerce-"
 "pakettikauppa\n"
-"POT-Creation-Date: 2017-09-18 12:00:13+00:00\n"
-"PO-Revision-Date: 2017-09-18 15:19+0300\n"
+"POT-Creation-Date: 2017-09-22 07:42:51+00:00\n"
+"PO-Revision-Date: 2017-09-22 10:45+0300\n"
 "Last-Translator: Leo Toikka <leo@seravo.fi>\n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -149,73 +149,73 @@ msgstr "Lähetysseuranta"
 msgid "You can <a href=\"%1$s\">track your order</a> with tracking code %2$s."
 msgstr "Voit <a href=\"%1$s\">seurata lähetystä</a> lähetystunnuksella %2$s."
 
-#: includes/class-wc-pakettikauppa-shipment.php:152
+#: includes/class-wc-pakettikauppa-shipment.php:155
 msgid "WooCommerce Pakettikauppa: tracking code creation failed: %s"
 msgstr "WooCommerce Pakettikauppa: seurantakoodin luonti epäonnistui: %s"
 
-#: includes/class-wc-pakettikauppa-shipment.php:189
+#: includes/class-wc-pakettikauppa-shipment.php:198
 msgid "WC_Pakettikauppa: An error occured when searching pickup points."
 msgstr "WC_Pakettikauppa: noutopistehaussa tapahtui virhe."
 
-#: includes/class-wc-pakettikauppa-shipment.php:254
+#: includes/class-wc-pakettikauppa-shipment.php:263
 msgid ""
 "WooCommerce Pakettikauppa: an error occured when accessing service "
 "providers: %s"
 msgstr "WooCommerce Pakettikauppa: toimittajahaussa tapahtui virhe: %s"
 
-#: includes/class-wc-pakettikauppa-shipment.php:280
+#: includes/class-wc-pakettikauppa-shipment.php:289
 msgid "Item is collected from sender - picked up"
 msgstr "Lähetys on noudettu lähettäjältä"
 
-#: includes/class-wc-pakettikauppa-shipment.php:281
+#: includes/class-wc-pakettikauppa-shipment.php:290
 msgid "Exception"
 msgstr "Lähetykselle on tehty poikkeama"
 
-#: includes/class-wc-pakettikauppa-shipment.php:282
+#: includes/class-wc-pakettikauppa-shipment.php:291
 msgid "Item has been handed over to the recipient"
 msgstr "Lähetys on luovutettu vastaanottajalle"
 
-#: includes/class-wc-pakettikauppa-shipment.php:283
+#: includes/class-wc-pakettikauppa-shipment.php:292
 msgid "Item is in transport"
 msgstr "Lähetys on kuljetuksessa"
 
-#: includes/class-wc-pakettikauppa-shipment.php:284
+#: includes/class-wc-pakettikauppa-shipment.php:293
 msgid "C.O.D payment is paid to the sender"
 msgstr "Lähetykseen liittyvä postiennakkomaksu on suoritettu"
 
-#: includes/class-wc-pakettikauppa-shipment.php:285
+#: includes/class-wc-pakettikauppa-shipment.php:294
 msgid "Informed consignee of arrival"
 msgstr "Lähetyksestä on lähetetty saapumisilmoitus"
 
-#: includes/class-wc-pakettikauppa-shipment.php:286
+#: includes/class-wc-pakettikauppa-shipment.php:295
 msgid "Item is loaded onto a means of transport"
 msgstr "Lähetys on lastattu runkokuljetukseen"
 
-#: includes/class-wc-pakettikauppa-shipment.php:287
+#: includes/class-wc-pakettikauppa-shipment.php:296
 msgid "Item not delivered – delivery attempt made"
 msgstr "Lähetystä ei ole toimitettu – luovutusyritys on tehty"
 
-#: includes/class-wc-pakettikauppa-shipment.php:288
+#: includes/class-wc-pakettikauppa-shipment.php:297
 msgid "Pre-information is received from sender"
 msgstr "Lähetyksen EDI-tiedot vastaanotettu lähettäjältä"
 
-#: includes/class-wc-pakettikauppa-shipment.php:289
+#: includes/class-wc-pakettikauppa-shipment.php:298
 msgid "Item is ready for delivery transportation"
 msgstr "Lähetys on lastattu jakelukuljetukseen"
 
-#: includes/class-wc-pakettikauppa-shipment.php:290
+#: includes/class-wc-pakettikauppa-shipment.php:299
 msgid "Item is returning to the sender"
 msgstr "Lähetys palautuu lähettäjälle"
 
-#: includes/class-wc-pakettikauppa-shipment.php:291
+#: includes/class-wc-pakettikauppa-shipment.php:300
 msgid "Item is arrived to a post office"
 msgstr "Lähetys on saapunut postitoimipaikkaan"
 
-#: includes/class-wc-pakettikauppa-shipment.php:292
+#: includes/class-wc-pakettikauppa-shipment.php:301
 msgid "Outbound"
 msgstr "Lähetys on lähdössä ulkomaille"
 
-#: includes/class-wc-pakettikauppa-shipment.php:293
+#: includes/class-wc-pakettikauppa-shipment.php:302
 msgid "Unknown status: %s"
 msgstr "Tuntematon tila: %s"
 
@@ -281,31 +281,39 @@ msgstr "Oletusarvoinen kiinteä hinta kaikille Pakettikaupan toimitustavoille."
 msgid "Add tracking link to the order completed email"
 msgstr "Liitä seurantatunnus \"Tilaus valmis\" sähköpostiin"
 
-#: includes/class-wc-pakettikauppa-shipping-method.php:147
+#: includes/class-wc-pakettikauppa-shipping-method.php:146
+msgid "Pickup point search limit"
+msgstr "Noutopistehaun rajoitus"
+
+#: includes/class-wc-pakettikauppa-shipping-method.php:149
+msgid "Limit the amount of nearest pickup points shown."
+msgstr "Rajoita noutopistelistassa näkyvien noutopisteiden lukumäärää."
+
+#: includes/class-wc-pakettikauppa-shipping-method.php:155
 msgid "Store owner information"
 msgstr "Kauppiaan tiedot"
 
-#: includes/class-wc-pakettikauppa-shipping-method.php:152
+#: includes/class-wc-pakettikauppa-shipping-method.php:160
 msgid "Sender name"
 msgstr "Lähettäjän nimi"
 
-#: includes/class-wc-pakettikauppa-shipping-method.php:158
+#: includes/class-wc-pakettikauppa-shipping-method.php:166
 msgid "Sender address"
 msgstr "Lähettäjän osoite"
 
-#: includes/class-wc-pakettikauppa-shipping-method.php:164
+#: includes/class-wc-pakettikauppa-shipping-method.php:172
 msgid "Sender postal code"
 msgstr "Lähettäjän postinumero"
 
-#: includes/class-wc-pakettikauppa-shipping-method.php:170
+#: includes/class-wc-pakettikauppa-shipping-method.php:178
 msgid "Sender city"
 msgstr "Lähettäjän kaupunki"
 
-#: includes/class-wc-pakettikauppa-shipping-method.php:176
+#: includes/class-wc-pakettikauppa-shipping-method.php:184
 msgid "Bank account number for Cash on Delivery (IBAN)"
 msgstr "Postiennakko: tilinumero IBAN-muodossa"
 
-#: includes/class-wc-pakettikauppa-shipping-method.php:182
+#: includes/class-wc-pakettikauppa-shipping-method.php:190
 msgid "BIC code for Cash on Delivery"
 msgstr "Postiennakko: tilin BIC-koodi"
 

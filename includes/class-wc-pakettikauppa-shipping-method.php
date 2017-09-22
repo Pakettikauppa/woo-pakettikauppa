@@ -142,6 +142,14 @@ function wc_pakettikauppa_shipping_method_init() {
             'default'  => 'no',
           ),
 
+          'pickup_points_search_limit' => array(
+            'title'     => __( 'Pickup point search limit', 'wc-pakettikauppa' ),
+            'type'     => 'number',
+            'default'  => 5,
+            'description' => __( 'Limit the amount of nearest pickup points shown.', 'wc-pakettikauppa' ),
+            'desc_tip'    => true,
+          ),
+
           /* Start new section */
           array(
             'title' => __( 'Store owner information', 'wc-pakettikauppa' ),

@@ -448,7 +448,7 @@ class WC_Pakettikauppa_Admin {
    */
   public function attach_tracking_to_email( $order, $sent_to_admin = false, $plain_text = false, $email = null ) {
 
-    $add_to_email = WC()->shipping->shipping_methods['WC_Pakettikauppa_Shipping_Method']->settings['add_tracking_to_email'];
+    $add_to_email = WC()->shipping->shipping_methods['WC_Pakettikauppa_Shipping_Method']['settings']['add_tracking_to_email'];
 
     if ( 'yes' === $add_to_email && isset( $email->id ) && 'customer_completed_order' === $email->id ) {
 

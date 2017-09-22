@@ -29,6 +29,7 @@ use Pakettikauppa\Client;
  */
 class WC_Pakettikauppa_Shipment {
   private $wc_pakettikauppa_client = null;
+  private $wc_pakettikauppa_settings = null;
 
   function __construct() {
     $this->id = 'wc_pakettikauppa_shipment';
@@ -43,6 +44,8 @@ class WC_Pakettikauppa_Shipment {
         woocommerce_WC_Pakettikauppa_Shipping_Method_settings was not
         found in the database!' );
     }
+
+    $this->wc_pakettikauppa_settings = $settings;
 
     $account_number = $settings['mode'];
     $secret_key = $settings['secret_key'];
@@ -86,13 +89,12 @@ class WC_Pakettikauppa_Shipment {
     $shipment = new Shipment();
     $service_id = $_REQUEST['wc_pakettikauppa_service_id'];
     $shipment->setShippingMethod( $service_id );
-    $settings = WC()->shipping->shipping_methods['WC_Pakettikauppa_Shipping_Method']->settings;
 
     $sender = new Sender();
-    $sender->setName1( $settings['sender_name'] );
-    $sender->setAddr1( $settings['sender_address'] );
-    $sender->setPostcode( $settings['sender_postal_code'] );
-    $sender->setCity( $settings['sender_city'] );
+    $sender->setName1( $this->wc_pakettikauppa_settings['sender_name'] );
+    $sender->setAddr1( $this->wc_pakettikauppa_settings['sender_address'] );
+    $sender->setPostcode( $this->wc_pakettikauppa_settings['sender_postal_code'] );
+    $sender->setCity( $this->wc_pakettikauppa_settings['sender_city'] );
     $sender->setCountry( 'FI' );
     $shipment->setSender($sender);
 
@@ -125,8 +127,8 @@ class WC_Pakettikauppa_Shipment {
       $cod = true;
       $cod_amount = floatval( str_replace( ',', '.', $_REQUEST['wc_pakettikauppa_cod_amount'] ) );
       $cod_reference = trim( $_REQUEST['wc_pakettikauppa_cod_reference'] );
-      $cod_iban = $settings['cod_iban'];
-      $cod_bic = $settings['cod_bic'];
+      $cod_iban = $this->wc_pakettikauppa_settings['cod_iban'];
+      $cod_bic = $this->wc_pakettikauppa_settings['cod_bic'];
 
       $additional_service = new AdditionalService();
       $additional_service->addSpecifier( 'amount', $cod_amount );
@@ -184,7 +186,13 @@ class WC_Pakettikauppa_Shipment {
   * @return array The pickup points based on the parameters, or empty array if none were found
   */
   public function get_pickup_points( $postcode, $street_address = null, $country = null, $service_provider = null ) {
-    $pickup_point_data = $this->wc_pakettikauppa_client->searchPickupPoints( $postcode, $street_address, $country, $service_provider);
+    $pickup_point_limit = 5; // Default limit value for pickup point search
+
+    if ( isset( $this->wc_pakettikauppa_settings['pickup_points_search_limit'] )&& ! empty( $this->wc_pakettikauppa_settings['pickup_points_search_limit'] ) ) {
+      $pickup_point_limit = intval( $this->wc_pakettikauppa_settings['pickup_points_search_limit'] );
+    }
+
+    $pickup_point_data = $this->wc_pakettikauppa_client->searchPickupPoints( $postcode, $street_address, $country, $service_provider, $pickup_point_limit);
     if ( $pickup_point_data === 'Bad request' ) {
       throw new Exception( __( 'WC_Pakettikauppa: An error occured when searching pickup points.', 'wc-pakettikauppa') );
     }
