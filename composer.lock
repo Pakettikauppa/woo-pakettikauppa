@@ -96,12 +96,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Pakettikauppa/api-library.git",
-                "reference": "7bce84c475c68c69269613500d2e7bd8a1fe0c2f"
+                "reference": "1cc7fdf3d97221f474ae67bbd1c3c562167f7503"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Pakettikauppa/api-library/zipball/7bce84c475c68c69269613500d2e7bd8a1fe0c2f",
-                "reference": "7bce84c475c68c69269613500d2e7bd8a1fe0c2f",
+                "url": "https://api.github.com/repos/Pakettikauppa/api-library/zipball/1cc7fdf3d97221f474ae67bbd1c3c562167f7503",
+                "reference": "1cc7fdf3d97221f474ae67bbd1c3c562167f7503",
                 "shasum": ""
             },
             "type": "library",
@@ -126,7 +126,7 @@
                 "Pakettikauppa",
                 "api"
             ],
-            "time": "2017-08-17 09:52:21"
+            "time": "2017-09-20 10:07:23"
         }
     ],
     "packages-dev": [],
