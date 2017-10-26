@@ -6,7 +6,7 @@
 
 # Maturity
 
-> This software is alpha quality. The feature set might change and require reinstallation or reconfiguration of settings.
+> This software is now available for General Availability.
 
 # Installation
 
