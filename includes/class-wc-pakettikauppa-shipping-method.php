@@ -56,7 +56,7 @@ function wc_pakettikauppa_shipping_method_init() {
       public function __construct() {
         $this->id = 'WC_Pakettikauppa_Shipping_Method'; // ID for your shipping method. Should be unique.
         $this->method_title = 'Pakettikauppa'; // Title shown in admin
-        $this->method_description = __( 'All shipping methods with one contract. For more information visit <a href="https://pakettikauppa.fi/">Pakettikauppa.fi</a>.', 'wc-pakettikauppa' ); // Description shown in admin
+        $this->method_description = __( 'All shipping methods with one contract. For more information visit <a href="https://pakettikauppa.fi/">Pakettikauppa</a>.', 'wc-pakettikauppa' ); // Description shown in admin
 
         $this->enabled = 'yes';
         $this->title = 'Pakettikauppa';
@@ -65,7 +65,7 @@ function wc_pakettikauppa_shipping_method_init() {
       }
 
       /**
-       * Initialize Pakettikauppa.fi shipping
+       * Initialize Pakettikauppa shipping
        */
       public function init() {
         // Make Pakettikauppa API accessible via WC_Pakettikauppa_Shipment
@@ -101,7 +101,7 @@ function wc_pakettikauppa_shipping_method_init() {
 
           'account_number' => array(
             'title'    => __( 'API key', 'wc-pakettikauppa' ),
-            'desc'     => __( 'API key provided by Pakettikauppa.fi', 'wc-pakettikauppa' ),
+            'desc'     => __( 'API key provided by Pakettikauppa', 'wc-pakettikauppa' ),
             'type'     => 'text',
             'default'  => '',
             'desc_tip' => true,
@@ -109,7 +109,7 @@ function wc_pakettikauppa_shipping_method_init() {
 
           'secret_key' => array(
             'title'    => __( 'API secret', 'wc-pakettikauppa' ),
-            'desc'     => __( 'API Secret provided by Pakettikauppa.fi', 'wc-pakettikauppa' ),
+            'desc'     => __( 'API Secret provided by Pakettikauppa', 'wc-pakettikauppa' ),
             'type'     => 'text',
             'default'  => '',
             'desc_tip' => true,
@@ -132,7 +132,7 @@ function wc_pakettikauppa_shipping_method_init() {
           'fee' => array(
             'title'       => __( 'Fixed fee (€)', 'wc-pakettikauppa' ),
             'type'        => 'price',
-            'description' => __( 'Default fixed price for all Pakettikauppa.fi shipping methods.', 'wc-pakettikauppa' ),
+            'description' => __( 'Default fixed price for all Pakettikauppa shipping methods.', 'wc-pakettikauppa' ),
             'desc_tip'    => true,
           ),
 

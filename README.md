@@ -1,6 +1,6 @@
-![Pakettikauppa.fi](https://www.pakettikauppa.fi/load/pakettikauppa-logo.png)
+![Pakettikauppa](https://www.pakettikauppa.fi/load/pakettikauppa-logo.png)
 
-# Pakettikauppa.fi WordPress plugin for WooCommerce
+# Pakettikauppa WordPress plugin for WooCommerce
 
 [![Build Status](https://travis-ci.org/Seravo/woocommerce-pakettikauppa.svg?branch=master)](https://travis-ci.org/Seravo/woocommerce-pakettikauppa) [![Latest Stable Version](https://poser.pugx.org/seravo/woocommerce-pakettikauppa/v/stable)](https://packagist.org/packages/seravo/woocommerce-pakettikauppa) [![Total Downloads](https://poser.pugx.org/seravo/woocommerce-pakettikauppa/downloads)](https://packagist.org/packages/seravo/woocommerce-pakettikauppa) [![Latest Unstable Version](https://poser.pugx.org/seravo/woocommerce-pakettikauppa/v/unstable)](https://packagist.org/packages/seravo/woocommerce-pakettikauppa) [![License](https://poser.pugx.org/seravo/woocommerce-pakettikauppa/license)](https://packagist.org/packages/seravo/woocommerce-pakettikauppa)
 
@@ -24,11 +24,11 @@ The plugin requires WooCommerce to be installed, with shipping zones configured 
 
 # Features
 
-* Integrates Pakettikauppa.fi with WooCommerce
-* Based on the official [Pakettikauppa.fi API library](https://github.com/Pakettikauppa/api-library)
-* Supports WooCommerce shipping zones (though Pakettikauppa.fi is currently only available in Finland)
+* Integrates Pakettikauppa with WooCommerce
+* Based on the official [Pakettikauppa API library](https://github.com/Pakettikauppa/api-library)
+* Supports WooCommerce shipping zones (though Pakettikauppa is currently only available in Finland)
 * Store owners can specify themselves any fixed rate for a shipping or have free shipping if the order value is above a certain limit
-* Customers can choose to ship products to an address or to any pickup point available from the Pakettikauppa.fi shipping methods
+* Customers can choose to ship products to an address or to any pickup point available from the Pakettikauppa shipping methods
 * Store owner can generate the shipping label in one click
 * Store owners and customers get tracking code links and status information
 * Test mode available that uses the testing API
