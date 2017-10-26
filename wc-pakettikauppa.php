@@ -9,6 +9,13 @@
  * Text Domain: wc-pakettikauppa
  * Domain Path: /languages/
  * License: GPL v3 or later
+ *
+ * WC requires at least: 3.0
+ * WC tested up to: 3.2
+ *
+ * Copyright: © 2017 Seravo Oy
+ * License: GNU General Public License v3.0
+ * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  */
 
 // Prevent direct access to this script
