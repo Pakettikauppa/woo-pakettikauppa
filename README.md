@@ -2,7 +2,7 @@
 
 # Pakettikauppa WordPress plugin for WooCommerce
 
-[![Build Status](https://travis-ci.org/Seravo/woocommerce-pakettikauppa.svg?branch=master)](https://travis-ci.org/Seravo/woocommerce-pakettikauppa) [![Latest Stable Version](https://poser.pugx.org/seravo/woocommerce-pakettikauppa/v/stable)](https://packagist.org/packages/seravo/woocommerce-pakettikauppa) [![Total Downloads](https://poser.pugx.org/seravo/woocommerce-pakettikauppa/downloads)](https://packagist.org/packages/seravo/woocommerce-pakettikauppa) [![Latest Unstable Version](https://poser.pugx.org/seravo/woocommerce-pakettikauppa/v/unstable)](https://packagist.org/packages/seravo/woocommerce-pakettikauppa) [![License](https://poser.pugx.org/seravo/woocommerce-pakettikauppa/license)](https://packagist.org/packages/seravo/woocommerce-pakettikauppa)
+[![Build Status](https://travis-ci.org/Seravo/woo-pakettikauppa.svg?branch=master)](https://travis-ci.org/Seravo/woo-pakettikauppa) [![Latest Stable Version](https://poser.pugx.org/seravo/woo-pakettikauppa/v/stable)](https://packagist.org/packages/seravo/woo-pakettikauppa) [![Total Downloads](https://poser.pugx.org/seravo/woo-pakettikauppa/downloads)](https://packagist.org/packages/seravo/woo-pakettikauppa) [![Latest Unstable Version](https://poser.pugx.org/seravo/woo-pakettikauppa/v/unstable)](https://packagist.org/packages/seravo/woo-pakettikauppa) [![License](https://poser.pugx.org/seravo/woo-pakettikauppa/license)](https://packagist.org/packages/seravo/woo-pakettikauppa)
 
 # Maturity
 
@@ -10,21 +10,21 @@
 
 # Installation
 
-This plugin can be installed via Composer and WP-CLI:
+This plugin can be installed via [WordPress.org plugin directory](https://wordpress.org/plugins/woo-pakettikauppa/), WP-CLI or Composer:
 
 ```sh
-composer require seravo/woocommerce-pakettikauppa
+wp plugin install --activate woo-pakettikauppa
 # OR
-wp plugin install --activate https://github.com/Seravo/woocommerce-pakettikauppa/archive/master.zip
+wp plugin install --activate https://github.com/Seravo/woo-pakettikauppa/archive/master.zip
+# OR
+composer require seravo/woo-pakettikauppa
 ```
-
-We aim to publish this at WordPress.org as well.
 
 The plugin requires WooCommerce to be installed, with shipping zones configured and this plugin activated and settings set.
 
 # Features
 
-* Integrates Pakettikauppa with WooCommerce
+* Integrates [Pakettikauppa](https://www.pakettikauppa.fi/) with WooCommerce
 * Based on the official [Pakettikauppa API library](https://github.com/Pakettikauppa/api-library)
 * Supports WooCommerce shipping zones (though Pakettikauppa is currently only available in Finland)
 * Store owners can specify themselves any fixed rate for a shipping or have free shipping if the order value is above a certain limit
