@@ -1,5 +1,5 @@
 {
-  "name": "seravo/woocommerce-pakettikauppa",
+  "name": "seravo/woo-pakettikauppa",
   "type": "wordpress-plugin",
   "license": "GPLv3",
   "description": "Integrates Pakettikauppa with WooCommerce and provides Prinetti, Matkahuolto, DB Schenker et al shipping options.",
@@ -19,10 +19,15 @@
       "name": "Leo Toikka",
       "email": "leo@seravo.com",
       "homepage": "https://github.com/l3ku"
+    },
+    {
+      "name": "Tero Auvinen",
+      "email": "tero@seravo.com",
+      "homepage": "https://github.com/serter"
     }
   ],
   "keywords": [
-    "wordpress", "wp", "pakettikauppa", "seravo", "woocommerce", "prinetti", "matkahuolto", "schenker"
+    "wordpress", "wp", "pakettikauppa", "seravo", "woocommerce", "prinetti", "matkahuolto", "schenker", "posti"
   ],
   "require": {
     "composer/installers": "v1.0.12",
