@@ -22,6 +22,10 @@ composer require seravo/woo-pakettikauppa
 
 The plugin requires WooCommerce to be installed, with shipping zones configured and this plugin activated and settings set.
 
+Naturally the store owner also needs to have a merchant account at [Pakettikauppa](https://www.pakettikauppa.fi/).
+
+> *Note!* If you already have shipping contracts with Posti, Matkahuolto or DB Schenker with reduced prices, you can contact the customer support of Pakettikauppa to get those contracts via Pakettikauppa so you can use the WooCommerce Pakettikauppa plugin with your current shipping contracts.
+
 # Features
 
 * Integrates [Pakettikauppa](https://www.pakettikauppa.fi/) with WooCommerce
