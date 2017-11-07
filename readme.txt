@@ -1,7 +1,7 @@
 === WooCommerce Pakettikauppa ===
 Contributors: ottok, leotoikka
 Donate link: https://seravo.fi/
-Tags: woocommerce, shipping, pakettikauppa, osti, prinetti, matkahuolto, schenker, seravo
+Tags: woocommerce, shipping, toimitustavat, pakettikauppa, posti, smartpost, prinetti, matkahuolto, schenker, seravo
 Requires at least: 4.6
 Tested up to: 4.8
 Requires PHP: 5.6.0
