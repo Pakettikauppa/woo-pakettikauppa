@@ -47,7 +47,7 @@ class WC_Pakettikauppa_Shipment {
 
     $this->wc_pakettikauppa_settings = $settings;
 
-    $account_number = $settings['mode'];
+    $account_number = $settings['account_number'];
     $secret_key = $settings['secret_key'];
     $mode = $settings['mode'];
     $is_test_mode = ($mode == 'production' ? false : true);
