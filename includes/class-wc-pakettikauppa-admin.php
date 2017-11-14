@@ -448,17 +448,13 @@ class WC_Pakettikauppa_Admin {
    */
   public function attach_tracking_to_email( $order, $sent_to_admin = false, $plain_text = false, $email = null ) {
 
-    $add_to_email = WC()->shipping->shipping_methods['WC_Pakettikauppa_Shipping_Method']['settings']['add_tracking_to_email'];
+    $settings = get_option( 'woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null );
+    $add_to_email = $settings['add_tracking_to_email'];
 
     if ( 'yes' === $add_to_email && isset( $email->id ) && 'customer_completed_order' === $email->id ) {
 
-      $shipping_methods = $order->get_shipping_methods();
-      $shipping_method = reset( $shipping_methods );
-      $ids = explode( ':', $shipping_method['method_id'] );
-      $instance_id = (int) $ids[1];
-
       $tracking_code = get_post_meta( $order->get_ID(), '_wc_pakettikauppa_tracking_code', true );
-      $tracking_url = WC_Pakettikauppa_Shipment::tracking_url( $instance_id, $tracking_code );
+      $tracking_url = WC_Pakettikauppa_Shipment::tracking_url( '', $tracking_code );
 
       if ( ! empty( $tracking_code ) && ! empty( $tracking_url ) ) {
         if ( $plain_text ) {
