@@ -90,7 +90,7 @@ class WC_Pakettikauppa_Admin {
     unset( $this->errors );
     $this->errors = array();
   }
-  
+
   /**
   * Add an admin error notice to wp-admin.
   */
@@ -276,7 +276,11 @@ class WC_Pakettikauppa_Admin {
               <?php
 
               try {
-                $pickup_point_data = $this->wc_pakettikauppa_shipment->get_pickup_points( $order->get_shipping_postcode() );
+                $shipping_postcode = $order->get_shipping_postcode();
+                $shipping_address_1 = $order->get_shipping_address_1();
+                $shipping_country = $order->get_shipping_country();
+
+                $pickup_point_data = $this->wc_pakettikauppa_shipment->get_pickup_points( $shipping_postcode, $shipping_address_1, $shipping_country );
                 $pickup_points = json_decode( $pickup_point_data ); ?>
 
                  <div class="form-field" id="wc-pakettikauppa-pickup-points-wrapper">
