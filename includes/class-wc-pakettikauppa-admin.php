@@ -438,7 +438,7 @@ class WC_Pakettikauppa_Admin {
       // Output
       $contents = file_get_contents( $filepath );
       header('Content-type:application/pdf');
-      header("Content-Disposition:inline;filename='{$shipment_id}.pdf'");
+      header("Content-Disposition:inline;filename={$shipment_id}.pdf");
       print $contents;
       exit;
     }
