@@ -53,8 +53,10 @@ function wc_pakettikauppa_shipping_method_init() {
       * @access public
       * @return void
       */
-      public function __construct() {
+      public function __construct($instance_id = 0) {
         $this->id = 'WC_Pakettikauppa_Shipping_Method'; // ID for your shipping method. Should be unique.
+    $this->instance_id        = absint( $instance_id );
+
         $this->method_title = 'Pakettikauppa'; // Title shown in admin
         $this->method_description = __( 'All shipping methods with one contract. For more information visit <a href="https://pakettikauppa.fi/">Pakettikauppa</a>.', 'wc-pakettikauppa' ); // Description shown in admin
 
@@ -62,7 +64,54 @@ function wc_pakettikauppa_shipping_method_init() {
         $this->title = 'Pakettikauppa';
 
         $this->init();
+
       }
+
+      public function generate_pkprice_html( $key, $value ) {
+        $html = '
+          <tr valign="top">
+            <th colspan="2"><label>'.esc_html( $value['title'] ).'</label></th>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <table>
+                <thead>
+                  <tr>
+                   <th>Service</th>
+                   <th>Active</th>
+                   <th>Price</th>
+                   <th>Free shipping</th>
+                  </tr>
+                </thead>
+                <tbody>';
+                foreach($value['options'] as $_serviceCode => $_serviceName) {
+                  $html.='
+                  <tr valign="top">
+                      <th scope="row" class="titledesc">
+                          <label>'. esc_html( $_serviceName). '</label>
+                      </th>
+                      <td>
+                       <input type="hidden" name="'. $value['name'] .'['. $_serviceCode. '][active]" value="false">
+                       <input type="checkbox" name="'. $value['name'] .'['. $_serviceCode. '][active]" value="true">
+                      </td>
+                      <td>
+                        <input type="text" name="'. $value['name'] .'['. $_serviceCode. '][price]" value="">
+                      </td>
+                      <td>
+                        <input type="text" name="'. $value['name'] .'['. $_serviceCode. '][price_free]" value="">
+                      </td>
+                  </tr>';
+                }
+
+                $html.='
+              </tbody>
+            </table>
+            </td>
+          </tr>';
+
+          return $html;
+        }
+
 
       /**
        * Initialize Pakettikauppa shipping
@@ -72,15 +121,15 @@ function wc_pakettikauppa_shipping_method_init() {
         $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment;
         $this->wc_pakettikauppa_shipment->load();
 
+        // Save settings in admin if you have any defined
+        add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
+
         // Load the settings.
         $this->init_form_fields();
         $this->init_settings();
 
         $this->active_shipping_options = $this->get_option( 'active_shipping_options', $this->active_shipping_options );
         $this->fee = $this->get_option( 'fee', $this->fee );
-
-        // Save settings in admin if you have any defined
-        add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
       }
 
       /**
@@ -122,18 +171,8 @@ function wc_pakettikauppa_shipping_method_init() {
           ),
 
           'active_shipping_options' => array(
-            'title'   => __( 'Active shipping options', 'wc-pakettikauppa' ),
-            'type'    => 'multiselect',
+            'type'        => 'pkprice',
             'options' => $this->wc_pakettikauppa_shipment->services(),
-            'description' => __( 'Press and hold Ctrl or Cmd to select multiple shipping methods.', 'wc-pakettikauppa' ),
-            'desc_tip'    => true,
-          ),
-
-          'fee' => array(
-            'title'       => __( 'Fixed fee (€)', 'wc-pakettikauppa' ),
-            'type'        => 'price',
-            'description' => __( 'Default fixed price for all Pakettikauppa shipping methods.', 'wc-pakettikauppa' ),
-            'desc_tip'    => true,
           ),
 
           'add_tracking_to_email' => array(
@@ -193,6 +232,7 @@ function wc_pakettikauppa_shipping_method_init() {
           ),
 
         );
+
       }
 
       /**
@@ -223,6 +263,8 @@ function wc_pakettikauppa_shipping_method_init() {
     }
   }
 }
+
+
 
 add_action( 'woocommerce_shipping_init', 'wc_pakettikauppa_shipping_method_init' );
 
