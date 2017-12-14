@@ -28,24 +28,11 @@ function wc_pakettikauppa_shipping_method_init() {
       private $wc_pakettikauppa_shipment = null;
 
       /**
-       * Default active shipping options.
-       *
-       * @var array
-       */
-      public $active_shipping_options = array(
-        '2103',
-        '2461',
-        '80010',
-        '90010',
-        '90080'
-      );
-
-      /**
        * Default shipping fee.
        *
        * @var int
        */
-      public $fee = 5;
+      public $fee = 5.95;
 
       /**
       * Constructor for Pakettikauppa shipping class
@@ -55,7 +42,7 @@ function wc_pakettikauppa_shipping_method_init() {
       */
       public function __construct($instance_id = 0) {
         $this->id = 'WC_Pakettikauppa_Shipping_Method'; // ID for your shipping method. Should be unique.
-    $this->instance_id        = absint( $instance_id );
+        $this->instance_id        = absint( $instance_id );
 
         $this->method_title = 'Pakettikauppa'; // Title shown in admin
         $this->method_description = __( 'All shipping methods with one contract. For more information visit <a href="https://pakettikauppa.fi/">Pakettikauppa</a>.', 'wc-pakettikauppa' ); // Description shown in admin
@@ -67,7 +54,26 @@ function wc_pakettikauppa_shipping_method_init() {
 
       }
 
+    public function validate_pkprice_field( $key, $value ) {
+
+      foreach($value as $_serviceCode => $_serviceSettings) {
+        $_serviceSettings['price'] = wc_format_decimal( trim( stripslashes( $value ) ) );
+        $_serviceSettings['price_free'] = wc_format_decimal( trim( stripslashes( $value ) ) );
+      }
+      $values = json_encode($value);
+
+      return $values;
+    }
+
       public function generate_pkprice_html( $key, $value ) {
+        $fieldKey = $this->get_field_key( $key );
+
+        if($this->get_option( $key ) != '') {
+          $values = json_decode($this->get_option( $key ), true);
+        } else {
+          $values = array();
+        }
+
         $html = '
           <tr valign="top">
             <th colspan="2"><label>'.esc_html( $value['title'] ).'</label></th>
@@ -78,27 +84,33 @@ function wc_pakettikauppa_shipping_method_init() {
                 <thead>
                   <tr>
                    <th>Service</th>
-                   <th>Active</th>
-                   <th>Price</th>
-                   <th>Free shipping</th>
+                   <th style="width: 60px;">Active</th>
+                   <th style="text-align: center;">Price</th>
+                   <th style="text-align: center;">Free shipping tier</th>
                   </tr>
                 </thead>
                 <tbody>';
                 foreach($value['options'] as $_serviceCode => $_serviceName) {
+                  if(!isset($values[$_serviceCode])) {
+                    $values[$_serviceCode]['active']  = false;
+                    $values[$_serviceCode]['price']  = $this->fee;
+                    $values[$_serviceCode]['price_free']  = '0';
+                  }
+
                   $html.='
                   <tr valign="top">
                       <th scope="row" class="titledesc">
                           <label>'. esc_html( $_serviceName). '</label>
                       </th>
                       <td>
-                       <input type="hidden" name="'. $value['name'] .'['. $_serviceCode. '][active]" value="false">
-                       <input type="checkbox" name="'. $value['name'] .'['. $_serviceCode. '][active]" value="true">
+                       <input type="hidden" name="'. $fieldKey .'['. $_serviceCode. '][active]" value="no">
+                       <input type="checkbox" name="'. $fieldKey .'['. $_serviceCode. '][active]" value="yes" '.($values[$_serviceCode]['active'] == 'yes' ? 'checked': '').'>
                       </td>
                       <td>
-                        <input type="text" name="'. $value['name'] .'['. $_serviceCode. '][price]" value="">
+                        <input type="number" name="'. $fieldKey .'['. $_serviceCode. '][price]" step="0.01" value="'.($values[$_serviceCode]['price']).'">
                       </td>
                       <td>
-                        <input type="text" name="'. $value['name'] .'['. $_serviceCode. '][price_free]" value="">
+                        <input type="number" name="'. $fieldKey .'['. $_serviceCode. '][price_free]" step="0.01" value="'.($values[$_serviceCode]['price_free']).'">
                       </td>
                   </tr>';
                 }
@@ -128,8 +140,6 @@ function wc_pakettikauppa_shipping_method_init() {
         $this->init_form_fields();
         $this->init_settings();
 
-        $this->active_shipping_options = $this->get_option( 'active_shipping_options', $this->active_shipping_options );
-        $this->fee = $this->get_option( 'fee', $this->fee );
       }
 
       /**
@@ -244,22 +254,32 @@ function wc_pakettikauppa_shipping_method_init() {
        * @param array $package Shipping package.
        */
       public function calculate_shipping( $package = array() ) {
+        global $woocommerce;
 
-        foreach ( $this->wc_pakettikauppa_shipment->services() as $key => $value ) {
-          if ( in_array($key, $this->active_shipping_options) ) {
+        $cartTotal = $woocommerce->cart->cart_contents_total;
+
+        $shippingSettings = json_decode($this->get_option( 'active_shipping_options' ), true);
+
+        foreach($shippingSettings as $_serviceCode => $_serviceSettings) {
+
+          if ($_serviceSettings['active'] == 'yes') {
+
+            $_shippingCost = $_serviceSettings['price'];
+
+            if ($_serviceSettings['price_free'] < $cartTotal) {
+              $_shippingCost = 110;
+            }
+
             $this->add_rate(
               array(
-                'id'    => $this->id .':'. $key,
-                'label' => $value,
-                'cost'  => $this->fee
+                'id'    => $this->id .':'. $_serviceCode,
+                'label' => $this->wc_pakettikauppa_shipment->service_title($_serviceCode),
+                'cost'  => (string) $_shippingCost
               )
             );
-          }
-
-        }
-
-      }
-
+          } // endif
+        } // endforeach
+      } // end function
     }
   }
 }
