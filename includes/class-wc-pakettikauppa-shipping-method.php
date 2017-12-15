@@ -266,7 +266,7 @@ function wc_pakettikauppa_shipping_method_init() {
 
             $_shippingCost = $_serviceSettings['price'];
 
-            if ($_serviceSettings['price_free'] < $cartTotal) {
+            if ($_serviceSettings['price_free'] < $cartTotal && $_serviceSettings['price_free'] > 0) {
               $_shippingCost = 0;
             }
 
