@@ -431,9 +431,8 @@ class WC_Pakettikauppa_Shipment {
     $no_shipping_address = ( bool ) empty( $order->get_shipping_address_1() ) && empty( $order->get_shipping_address_2() );
     $no_shipping_postcode = ( bool ) empty( $order->get_shipping_postcode() );
     $no_shipping_city = ( bool ) empty( $order->get_shipping_city() );
-    $no_shipping_country = ( bool ) empty( $order->get_shipping_country() );
 
-    if ( $no_shipping_name || $no_shipping_address || $no_shipping_postcode || $no_shipping_city || $no_shipping_country ) {
+    if ( $no_shipping_name || $no_shipping_address || $no_shipping_postcode || $no_shipping_city ) {
         return false;
     }
     return true;

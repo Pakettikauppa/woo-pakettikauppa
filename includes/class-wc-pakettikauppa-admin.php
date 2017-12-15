@@ -280,9 +280,13 @@ class WC_Pakettikauppa_Admin {
                 $shipping_address_1 = $order->get_shipping_address_1();
                 $shipping_country = $order->get_shipping_country();
 
-                $pickup_point_data = $this->wc_pakettikauppa_shipment->get_pickup_points( $shipping_postcode, $shipping_address_1, $shipping_country );
-                $pickup_points = json_decode( $pickup_point_data ); ?>
+                if ( empty( $shipping_country )) {
+                  $shipping_country = 'FI';
+                }
 
+                $pickup_point_data = $this->wc_pakettikauppa_shipment->get_pickup_points( $shipping_postcode, $shipping_address_1, $shipping_country );
+                $pickup_points = json_decode( $pickup_point_data );
+              ?>
                  <div class="form-field" id="wc-pakettikauppa-pickup-points-wrapper">
                    <h4><?php _e( 'Pickup Point', 'wc-pakettikauppa' ); ?></h4>
                    <select name="wc_pakettikauppa_pickup_point_id" class="wc_pakettikauppa_pickup_point_id" id="wc_pakettikauppa_pickup_point_id">

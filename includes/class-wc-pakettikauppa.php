@@ -109,6 +109,10 @@ class WC_Pakettikauppa {
     $shipping_address = WC()->customer->get_shipping_address();
     $shipping_country = WC()->customer->get_shipping_country();
 
+    if ( empty( $shipping_country ) ) {
+      $shipping_country = 'FI';
+    }
+
     try {
       $pickup_point_data = $this->wc_pakettikauppa_shipment->get_pickup_points( $shipping_postcode, $shipping_address, $shipping_country );
 
