@@ -280,6 +280,10 @@ class WC_Pakettikauppa_Admin {
                 $shipping_address_1 = $order->get_shipping_address_1();
                 $shipping_country = $order->get_shipping_country();
 
+                if ( empty( $shipping_country) ) {
+                  $shipping_country = 'FI';
+                }
+
                 foreach ( $active_shipping_options as $shipping_option_id ) {
                   $shipping_providers[$this->wc_pakettikauppa_shipment->service_provider($shipping_option_id)] = true;
                 }
