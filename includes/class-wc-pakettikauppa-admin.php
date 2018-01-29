@@ -190,7 +190,7 @@ class WC_Pakettikauppa_Admin {
 
     // Get active services from active_shipping_options
     $settings = get_option( 'woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null );
-    $active_shipping_options = $settings['active_shipping_options'];
+    $active_shipping_options = json_decode($settings['active_shipping_options'], true);
 
     // The tracking code will only be available if the shipment label has been generated
     $tracking_code = get_post_meta( $post->ID, '_wc_pakettikauppa_tracking_code', true);
@@ -240,23 +240,25 @@ class WC_Pakettikauppa_Admin {
           <div class="pakettikauppa-services">
             <fieldset class="pakettikauppa-metabox-fieldset">
               <h4><?php _e( 'Service', 'wc-pakettikauppa' ); ?></h4>
-              <?php foreach ( $active_shipping_options as $shipping_option_id ) { ?>
-                <label for="service-<?php echo $shipping_option_id; ?>">
+              <?php foreach ( $active_shipping_options as $_shippingCode => $_shippingSettings ): ?>
+                <?php if ($_shippingSettings['active'] == 'yes'):?>
+                <label for="service-<?php echo $_shippingCode; ?>">
                   <input type="radio"
                     name="wc_pakettikauppa_service_id"
-                    value="<?php echo $shipping_option_id; ?>"
-                    id="service-<?php echo $shipping_option_id; ?>"
+                    value="<?php echo $_shippingCode; ?>"
+                    id="service-<?php echo $_shippingCode; ?>"
                     <?php
                     // Show the customer selected pickup point as active by default
-                    if ( $service_id == $shipping_option_id ) {
+                    if ( $service_id == $_shippingCode ) {
                       echo 'checked="checked"';
                     }
                     ?>
                   >
-                  <span><?php print $this->wc_pakettikauppa_shipment->service_title( $shipping_option_id ); ?></span>
+                  <span><?php print $this->wc_pakettikauppa_shipment->service_title( $_shippingCode ); ?></span>
                 </label>
                 <br>
-              <?php } ?>
+              <?php endif; ?>
+              <?php endforeach; ?>
 
               <h4><?php _e( 'Additional services', 'wc-pakettikauppa' ); ?></h4>
               <input type="checkbox" name="wc_pakettikauppa_cod" value="1" id="wc-pakettikauppa-cod" <?php if ( $cod ) { ?>checked="checked"<?php } ?> />
@@ -284,8 +286,16 @@ class WC_Pakettikauppa_Admin {
                   $shipping_country = 'FI';
                 }
 
-                $pickup_point_data = $this->wc_pakettikauppa_shipment->get_pickup_points( $shipping_postcode, $shipping_address_1, $shipping_country );
-                $pickup_points = json_decode( $pickup_point_data );
+                foreach ( $active_shipping_options as $_shippingCode => $_shippingSettings ) {
+                  $shipping_providers[$this->wc_pakettikauppa_shipment->service_provider($_shippingCode)] = true;
+                }
+
+                $pickup_points = array();
+
+                foreach($shipping_providers as $_shippingProvider => $_notInUse) {
+                  $pickup_point_data = $this->wc_pakettikauppa_shipment->get_pickup_points( $shipping_postcode, $shipping_address_1, $shipping_country, $_shippingProvider);
+                  $pickup_points = array_merge($pickup_points, json_decode( $pickup_point_data ) );
+                }
               ?>
                  <div class="form-field" id="wc-pakettikauppa-pickup-points-wrapper">
                    <h4><?php _e( 'Pickup Point', 'wc-pakettikauppa' ); ?></h4>
