@@ -282,16 +282,21 @@ class WC_Pakettikauppa_Admin {
                 $shipping_address_1 = $order->get_shipping_address_1();
                 $shipping_country = $order->get_shipping_country();
 
+                if ( empty( $shipping_country )) {
+                  $shipping_country = 'FI';
+                }
+
                 foreach ( $active_shipping_options as $_shippingCode => $_shippingSettings ) {
                   $shipping_providers[$this->wc_pakettikauppa_shipment->service_provider($_shippingCode)] = true;
                 }
 
                 $pickup_points = array();
+
                 foreach($shipping_providers as $_shippingProvider => $_notInUse) {
                   $pickup_point_data = $this->wc_pakettikauppa_shipment->get_pickup_points( $shipping_postcode, $shipping_address_1, $shipping_country, $_shippingProvider);
                   $pickup_points = array_merge($pickup_points, json_decode( $pickup_point_data ) );
                 }
-?>
+              ?>
                  <div class="form-field" id="wc-pakettikauppa-pickup-points-wrapper">
                    <h4><?php _e( 'Pickup Point', 'wc-pakettikauppa' ); ?></h4>
                    <select name="wc_pakettikauppa_pickup_point_id" class="wc_pakettikauppa_pickup_point_id" id="wc_pakettikauppa_pickup_point_id">
@@ -447,7 +452,7 @@ class WC_Pakettikauppa_Admin {
       // Output
       $contents = file_get_contents( $filepath );
       header('Content-type:application/pdf');
-      header("Content-Disposition:inline;filename='{$shipment_id}.pdf'");
+      header("Content-Disposition:inline;filename={$shipment_id}.pdf");
       print $contents;
       exit;
     }
