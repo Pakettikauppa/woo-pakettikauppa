@@ -21,7 +21,7 @@ class WC_Pakettikauppa_Admin {
   private $wc_pakettikauppa_shipment = null;
   private $errors = array();
 
-  function __construct() {
+  public function __construct() {
     $this->id = 'wc_pakettikauppa_admin';
   }
 
@@ -94,7 +94,7 @@ class WC_Pakettikauppa_Admin {
   /**
   * Add an admin error notice to wp-admin.
   */
-  function add_error_notice( $message ) {
+  public function add_error_notice( $message ) {
     if ( ! empty( $message ) ) {
       $class = 'notice notice-error';
       $print_error = wp_sprintf( __( 'An error occured: %s', 'wc-pakettikauppa' ), $message );
