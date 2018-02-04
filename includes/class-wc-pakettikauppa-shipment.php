@@ -31,7 +31,7 @@ class WC_Pakettikauppa_Shipment {
   private $wc_pakettikauppa_client = null;
   private $wc_pakettikauppa_settings = null;
 
-  function __construct() {
+  public function __construct() {
     $this->id = 'wc_pakettikauppa_shipment';
   }
 

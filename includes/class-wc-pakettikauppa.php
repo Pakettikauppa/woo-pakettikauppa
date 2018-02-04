@@ -21,7 +21,7 @@ class WC_Pakettikauppa {
   private $wc_pakettikauppa_shipment = null;
   private $errors = array();
 
-  function __construct() {
+  public function __construct() {
     $this->id = 'wc_pakettikauppa';
   }
 
@@ -57,7 +57,7 @@ class WC_Pakettikauppa {
   /**
   * Display error in woocommerce
   */
-  function display_error() {
+  public function display_error() {
     wc_add_notice( __( 'An error occured. Please try again later.', 'wc-pakettikauppa' ), 'error' );
   }
 
