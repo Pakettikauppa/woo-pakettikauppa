@@ -5,8 +5,8 @@ if ( ! defined( 'ABSPATH' ) ) {
   exit;
 }
 
-require_once( plugin_dir_path( __FILE__ ) . '/class-wc-pakettikauppa.php' );
-require_once( plugin_dir_path(__FILE__ ) . '/class-wc-pakettikauppa-shipment.php' );
+require_once plugin_dir_path( __FILE__ ) . '/class-wc-pakettikauppa.php';
+require_once plugin_dir_path(__FILE__ ) . '/class-wc-pakettikauppa-shipment.php';
 
 /**
  * Pakettikauppa_Shipping_Method Class
