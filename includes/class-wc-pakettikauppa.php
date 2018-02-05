@@ -132,13 +132,13 @@ class WC_Pakettikauppa {
 
     echo '
     <tr class="shipping-pickup-point">
-      <th>' . __('Pickup point', 'wc-pakettikauppa') . '</th>
-      <td data-title="' . __('Pickup point', 'wc-pakettikauppa') . '">';
+      <th>' . esc_attr__('Pickup point', 'wc-pakettikauppa') . '</th>
+      <td data-title="' . esc_attr__('Pickup point', 'wc-pakettikauppa') . '">';
 
     echo '<p>';
       // Return if the customer has not yet chosen a postcode
     if ( empty( $shipping_postcode ) ) {
-      _e( 'Insert your shipping details to view nearby pickup points', 'wc-pakettikauppa' );
+      esc_attr_e( 'Insert your shipping details to view nearby pickup points', 'wc-pakettikauppa' );
       return;
     }
     printf(
@@ -171,8 +171,8 @@ class WC_Pakettikauppa {
 
     if ( ! empty( $pickup_point ) ) {
       echo '
-      <h2>' . __('Pickup point', 'wc-pakettikauppa' ) . '</h2>
-      <p>' . $pickup_point . '</p>';
+      <h2>' . esc_attr__('Pickup point', 'wc-pakettikauppa' ) . '</h2>
+      <p>' . esc_attr( $pickup_point ) . '</p>';
     }
   }
 
