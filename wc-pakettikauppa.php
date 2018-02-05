@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'WC_PAKETTIKAUPPA_BASENAME', plugin_basename( __FILE__ ) );
 define( 'WC_PAKETTIKAUPPA_DIR', plugin_dir_path( __FILE__ ) );
 $upload_dir = wp_upload_dir();
-define( 'WC_PAKETTIKAUPPA_PRIVATE_DIR' , $upload_dir['basedir'] . '/wc-pakettikauppa' );
+define( 'WC_PAKETTIKAUPPA_PRIVATE_DIR', $upload_dir['basedir'] . '/wc-pakettikauppa' );
 // @TODO: Now the location is unprotected. In future, allow users to customize this
 // location and use techniques like X-Sendfile to limit access to logged in users.
 
