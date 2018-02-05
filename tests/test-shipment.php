@@ -140,91 +140,91 @@ class Test_WC_Pakettikauppa_Shipment extends WP_UnitTestCase {
    */
   private function generate_xml_test_data() {
     return array(
-		'Sender.Name1'                  => 'Testsender1',
-		'Sender.Name2'                  => 'Testsender2',
-		'Sender.Addr1'                  => 'Testsenderaddress1',
-		'Sender.Addr2'                  => 'Testsenderaddress2',
-		'Sender.Addr3'                  => 'Testsenderaddress3',
-		'Sender.Postcode'               => '12345',
-		'Sender.City'                   => 'Testsendercity',
-		'Sender.Country'                => 'Testsendercountry',
-		'Sender.Phone'                  => '0123456',
-		'Sender.Vatcode'                => '0123456',
-		'Recipient.Name1'               => 'Testrecipient1',
-		'Recipient.Name2'               => 'Testrecipient1',
-		'Recipient.Addr1'               => 'Testrecipientaddress1',
-		'Recipient.Addr2'               => 'Testrecipientaddress2',
-		'Recipient.Addr3'               => 'Testrecipientaddress3',
-		'Recipient.Postcode'            => '54321',
-		'Recipient.City'                => 'Testrecipientcity',
-		'Recipient.Country'             => 'Testrecipientcountry',
-		'Recipient.Phone'               => '654321',
-		'Recipient.Vatcode'             => '654321',
-		'Recipient.Email'               => 'testrecipient@testrecipient.com',
-		'Consignment.Reference'         => 'Testreference',
-		'Consignment.Product'           => 123,
-		'Consignment.Contentcode'       => '1234567',
-		'Consignment.ReturnInstruction' => 'We do not accept any returns.',
-		'Consignment.Invoicenumber'     => '123456789',
-		'Consignment.Merchandisevalue'  => '100',
-		'AdditionalServices'            => array(
-			'AdditionalService1' => array(
-				'AdditionalService.ServiceCode' => '1234',
-				'Specifiers'                    => array(
-					'Testspecifierkey11' => 'Testspecifiervalue11',
-					'Testspecifierkey12' => 'Testspecifiervalue12',
-				),
-			),
-			'AdditionalService2' => array(
-				'AdditionalService.ServiceCode' => '2345',
-				'Specifiers'                    => array(
-					'Testspecifierkey21' => 'Testspecifiervalue21',
-					'Testspecifierkey22' => 'Testspecifiervalue22',
-				),
-			),
-		),
-		'Parcels'                       => array(
-			'Parcel1' => array(
-				'Parcel.Reference'    => 'Testreference1',
-				'Parcel.PackageType'  => 'Testpackagetype1',
-				'Parcel.Weight'       => '100',
-				'Parcel.Volume'       => '100',
-				'Parcel.Infocode'     => '123456',
-				'Parcel.Contents'     => 'Lots of stuff',
-				'Parcel.ContentLines' => array(
-					'ContentLine1' => array(
-						'contentline.description'     => 'Cool Stuff',
-						'contentline.quantity'        => 100,
-						'contentline.currency'        => 'eur',
-						'contentline.netweight'       => 123.4,
-						'contentline.value'           => 145.6,
-						'contentline.countryoforigin' => 'Testcountry',
-						'contentline.tariffcode'      => 'Testtariffcode1',
-					),
-				),
-			),
-			'Parcel2' => array(
-				'Parcel.Reference'    => 'Testreference2',
-				'Parcel.PackageType'  => 'Testpackagetype2',
-				'Parcel.Weight'       => '200',
-				'Parcel.Volume'       => '200',
-				'Parcel.Infocode'     => '234567',
-				'Parcel.Contents'     => 'Not so much stuff',
-				'Parcel.ContentLines' => array(
-					'ContentLine1' => array(
-						'contentline.description'     => 'Not so cool Stuff',
-						'contentline.quantity'        => 200,
-						'contentline.currency'        => 'eur',
-						'contentline.netweight'       => 234.5,
-						'contentline.value'           => 3265.12,
-						'contentline.countryoforigin' => 'Testcountry',
-						'contentline.tariffcode'      => 'Testtariffcode2',
-					),
-				),
-			),
-		),
+    'Sender.Name1'                  => 'Testsender1',
+    'Sender.Name2'                  => 'Testsender2',
+    'Sender.Addr1'                  => 'Testsenderaddress1',
+    'Sender.Addr2'                  => 'Testsenderaddress2',
+    'Sender.Addr3'                  => 'Testsenderaddress3',
+    'Sender.Postcode'               => '12345',
+    'Sender.City'                   => 'Testsendercity',
+    'Sender.Country'                => 'Testsendercountry',
+    'Sender.Phone'                  => '0123456',
+    'Sender.Vatcode'                => '0123456',
+    'Recipient.Name1'               => 'Testrecipient1',
+    'Recipient.Name2'               => 'Testrecipient1',
+    'Recipient.Addr1'               => 'Testrecipientaddress1',
+    'Recipient.Addr2'               => 'Testrecipientaddress2',
+    'Recipient.Addr3'               => 'Testrecipientaddress3',
+    'Recipient.Postcode'            => '54321',
+    'Recipient.City'                => 'Testrecipientcity',
+    'Recipient.Country'             => 'Testrecipientcountry',
+    'Recipient.Phone'               => '654321',
+    'Recipient.Vatcode'             => '654321',
+    'Recipient.Email'               => 'testrecipient@testrecipient.com',
+    'Consignment.Reference'         => 'Testreference',
+    'Consignment.Product'           => 123,
+    'Consignment.Contentcode'       => '1234567',
+    'Consignment.ReturnInstruction' => 'We do not accept any returns.',
+    'Consignment.Invoicenumber'     => '123456789',
+    'Consignment.Merchandisevalue'  => '100',
+    'AdditionalServices'            => array(
+      'AdditionalService1' => array(
+        'AdditionalService.ServiceCode' => '1234',
+        'Specifiers'                    => array(
+          'Testspecifierkey11' => 'Testspecifiervalue11',
+          'Testspecifierkey12' => 'Testspecifiervalue12',
+        ),
+      ),
+      'AdditionalService2' => array(
+        'AdditionalService.ServiceCode' => '2345',
+        'Specifiers'                    => array(
+          'Testspecifierkey21' => 'Testspecifiervalue21',
+          'Testspecifierkey22' => 'Testspecifiervalue22',
+        ),
+      ),
+    ),
+    'Parcels'                       => array(
+      'Parcel1' => array(
+        'Parcel.Reference'    => 'Testreference1',
+        'Parcel.PackageType'  => 'Testpackagetype1',
+        'Parcel.Weight'       => '100',
+        'Parcel.Volume'       => '100',
+        'Parcel.Infocode'     => '123456',
+        'Parcel.Contents'     => 'Lots of stuff',
+        'Parcel.ContentLines' => array(
+          'ContentLine1' => array(
+            'contentline.description'     => 'Cool Stuff',
+            'contentline.quantity'        => 100,
+            'contentline.currency'        => 'eur',
+            'contentline.netweight'       => 123.4,
+            'contentline.value'           => 145.6,
+            'contentline.countryoforigin' => 'Testcountry',
+            'contentline.tariffcode'      => 'Testtariffcode1',
+          ),
+        ),
+      ),
+      'Parcel2' => array(
+        'Parcel.Reference'    => 'Testreference2',
+        'Parcel.PackageType'  => 'Testpackagetype2',
+        'Parcel.Weight'       => '200',
+        'Parcel.Volume'       => '200',
+        'Parcel.Infocode'     => '234567',
+        'Parcel.Contents'     => 'Not so much stuff',
+        'Parcel.ContentLines' => array(
+          'ContentLine1' => array(
+            'contentline.description'     => 'Not so cool Stuff',
+            'contentline.quantity'        => 200,
+            'contentline.currency'        => 'eur',
+            'contentline.netweight'       => 234.5,
+            'contentline.value'           => 3265.12,
+            'contentline.countryoforigin' => 'Testcountry',
+            'contentline.tariffcode'      => 'Testtariffcode2',
+          ),
+        ),
+      ),
+    ),
         'AdditionalInfo.Text'           => 'No additional information provided.',
-	);
+  );
     }
 
 
@@ -275,8 +275,8 @@ private function generate_test_xml() {
     $additional_service->addChild('AdditionalService.ServiceCode', $service['AdditionalService.ServiceCode']);
 
     foreach ( $service['Specifiers'] as $key => $value ) {
-    	$specifier         = $additional_service->addChild('AdditionalService.Specifier', $value);
-    	$specifier['name'] = $key;
+      $specifier         = $additional_service->addChild('AdditionalService.Specifier', $value);
+      $specifier['name'] = $key;
     }
   }
 
