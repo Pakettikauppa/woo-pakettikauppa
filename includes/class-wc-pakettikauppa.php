@@ -5,8 +5,8 @@ if ( ! defined( 'ABSPATH' ) ) {
   exit;
 }
 
-require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/autoload.php' );
-require_once( WC_PAKETTIKAUPPA_DIR . 'includes/class-wc-pakettikauppa-shipment.php' );
+require_once WC_PAKETTIKAUPPA_DIR . 'vendor/autoload.php';
+require_once WC_PAKETTIKAUPPA_DIR . 'includes/class-wc-pakettikauppa-shipment.php';
 
 /**
  * WC_Pakettikauppa Class
@@ -19,15 +19,15 @@ require_once( WC_PAKETTIKAUPPA_DIR . 'includes/class-wc-pakettikauppa-shipment.p
  */
 class WC_Pakettikauppa {
   private $wc_pakettikauppa_shipment = null;
-  private $errors = array();
+  private $errors                    = array();
 
-  function __construct() {
+  public function __construct() {
     $this->id = 'wc_pakettikauppa';
   }
 
   public function load() {
     add_action( 'enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-    add_action( 'woocommerce_review_order_after_shipping', array( $this, 'pickup_point_field_html') );
+    add_action( 'woocommerce_review_order_after_shipping', array( $this, 'pickup_point_field_html' ) );
     add_action( 'woocommerce_order_details_after_order_table', array( $this, 'display_order_data' ) );
     add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'update_order_meta_pickup_point_field' ) );
     add_action('woocommerce_checkout_process', array( $this, 'validate_checkout_pickup_point' ) );
@@ -43,10 +43,10 @@ class WC_Pakettikauppa {
   }
 
   /**
-  * Add an error with a specified error message.
-  *
-  * @param string $message A message containing details about the error.
-  */
+   * Add an error with a specified error message.
+   *
+   * @param string $message A message containing details about the error.
+   */
   public function add_error( $message ) {
     if ( ! empty( $message ) ) {
       array_push( $this->errors, $message );
@@ -55,15 +55,15 @@ class WC_Pakettikauppa {
   }
 
   /**
-  * Display error in woocommerce
-  */
-  function display_error() {
+   * Display error in woocommerce
+   */
+  public function display_error() {
     wc_add_notice( __( 'An error occured. Please try again later.', 'wc-pakettikauppa' ), 'error' );
   }
 
   /**
-  * Enqueue frontend-specific styles and scripts.
-  */
+   * Enqueue frontend-specific styles and scripts.
+   */
   public function enqueue_scripts() {
     wp_enqueue_style( 'wc_pakettikauppa', plugin_dir_url( __FILE__ ) . '../assets/css/wc-pakettikauppa.css' );
     wp_enqueue_script( 'wc_pakettikauppa_js', plugin_dir_url( __FILE__ ) . '../assets/js/wc-pakettikauppa.js', array( 'jquery' ) );
@@ -79,7 +79,7 @@ class WC_Pakettikauppa {
     if ( ! empty( $_POST['pakettikauppa_pickup_point'] ) ) {
       update_post_meta( $order_id, '_pakettikauppa_pickup_point', sanitize_text_field( $_POST['pakettikauppa_pickup_point'] ) );
       // Find string like '(#6681)'
-      preg_match( '/\(#[0-9]+\)/' , $_POST['pakettikauppa_pickup_point'], $matches);
+      preg_match( '/\(#[0-9]+\)/', $_POST['pakettikauppa_pickup_point'], $matches);
       // Cut the number out from a string of the form '(#6681)'
       $pakettikauppa_pickup_point_id = intval( substr($matches[0], 2, -1) );
       update_post_meta( $order_id, '_pakettikauppa_pickup_point_id', $pakettikauppa_pickup_point_id );
@@ -93,10 +93,9 @@ class WC_Pakettikauppa {
    * Also the woocommerce_checkout_fields has separate billing and shipping address
    * listings, when we want to have only one single pickup point per order.
    */
-  public function pickup_point_field_html( ) {
-
-    $shipping_method_name = explode(':', WC()->session->get( 'chosen_shipping_methods' )[0])[0];
-    $shipping_method_id = explode(':', WC()->session->get( 'chosen_shipping_methods' )[0])[1];
+  public function pickup_point_field_html() {
+    $shipping_method_name     = explode(':', WC()->session->get( 'chosen_shipping_methods' )[0])[0];
+    $shipping_method_id       = explode(':', WC()->session->get( 'chosen_shipping_methods' )[0])[1];
     $shipping_method_provider = $this->wc_pakettikauppa_shipment->service_provider($shipping_method_id);
 
     // Bail out if the shipping method is not one of the pickup point services
@@ -106,8 +105,8 @@ class WC_Pakettikauppa {
 
     $pickup_point_data = '';
     $shipping_postcode = WC()->customer->get_shipping_postcode();
-    $shipping_address = WC()->customer->get_shipping_address();
-    $shipping_country = WC()->customer->get_shipping_country();
+    $shipping_address  = WC()->customer->get_shipping_address();
+    $shipping_country  = WC()->customer->get_shipping_country();
 
     if ( empty( $shipping_country ) ) {
       $shipping_country = 'FI';
@@ -123,37 +122,41 @@ class WC_Pakettikauppa {
     }
 
     $pickup_points = json_decode( $pickup_point_data );
-    $options_array = array( '' => '- '. __('Select a pickup point', 'wc-pakettikauppa') .' -' );
+    $options_array = array( '' => '- ' . __('Select a pickup point', 'wc-pakettikauppa') . ' -' );
 
     foreach ( $pickup_points as $key => $value ) {
-      $pickup_point_key = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ')';
-      $pickup_point_value = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
+      $pickup_point_key                   = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ')';
+      $pickup_point_value                 = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
       $options_array[ $pickup_point_key ] = $pickup_point_value;
     }
 
     echo '
     <tr class="shipping-pickup-point">
-      <th>' . __('Pickup point', 'wc-pakettikauppa') . '</th>
-      <td data-title="' . __('Pickup point', 'wc-pakettikauppa') . '">';
+      <th>' . esc_attr__('Pickup point', 'wc-pakettikauppa') . '</th>
+      <td data-title="' . esc_attr__('Pickup point', 'wc-pakettikauppa') . '">';
 
     echo '<p>';
       // Return if the customer has not yet chosen a postcode
     if ( empty( $shipping_postcode ) ) {
-      _e( 'Insert your shipping details to view nearby pickup points', 'wc-pakettikauppa' );
+      esc_attr_e( 'Insert your shipping details to view nearby pickup points', 'wc-pakettikauppa' );
       return;
     }
     printf(
-        esc_html__( 'Choose one of the pickup points close to your postcode %s below:', 'wc-pakettikauppa' ),
-        '<span class="shipping_postcode_for_pickup">'. $shipping_postcode .'</span>'
+      /* translators: %s: Postcode */
+      esc_html__( 'Choose one of the pickup points close to your postcode %s below:', 'wc-pakettikauppa' ),
+      '<span class="shipping_postcode_for_pickup">' . esc_attr( $shipping_postcode ) . '</span>'
     );
     echo '</p>';
 
-    woocommerce_form_field( 'pakettikauppa_pickup_point', array(
-        'clear'       => true,
-        'type'        => 'select',
-        'custom_attributes' => array('style' => 'max-width:18em;'),
-        'options'     => $options_array,
-    ),  null );
+    woocommerce_form_field(
+      'pakettikauppa_pickup_point', array(
+        'clear'             => true,
+        'type'              => 'select',
+        'custom_attributes' => array( 'style' => 'max-width:18em;' ),
+        'options'           => $options_array,
+      ),
+      null
+    );
 
     echo '</div>';
 
@@ -165,13 +168,12 @@ class WC_Pakettikauppa {
    * @param WC_Order $order the order that was placed
    */
   public function display_order_data( $order ) {
-
     $pickup_point = $order->get_meta('_pakettikauppa_pickup_point');
 
     if ( ! empty( $pickup_point ) ) {
       echo '
-      <h2>'. __('Pickup point', 'wc-pakettikauppa' ) .'</h2>
-      <p>'. $pickup_point .'</p>';
+      <h2>' . esc_attr__('Pickup point', 'wc-pakettikauppa' ) . '</h2>
+      <p>' . esc_attr( $pickup_point ) . '</p>';
     }
   }
 
@@ -180,7 +182,7 @@ class WC_Pakettikauppa {
     // Check if the service has a pickup point
     try {
       if ( $this->wc_pakettikauppa_shipment->service_has_pickup_points( $shipping_method_id ) && empty( $_POST['pakettikauppa_pickup_point'] ) ) {
-          wc_add_notice( __( 'Please choose a pickup point.', 'wc-pakettikauppa' ), 'error' );
+        wc_add_notice( __( 'Please choose a pickup point.', 'wc-pakettikauppa' ), 'error' );
       }
     } catch ( Exception $e ) {
       $this->add_error( $e->getMessage() );

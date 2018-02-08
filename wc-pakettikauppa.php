@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'WC_PAKETTIKAUPPA_BASENAME', plugin_basename( __FILE__ ) );
 define( 'WC_PAKETTIKAUPPA_DIR', plugin_dir_path( __FILE__ ) );
 $upload_dir = wp_upload_dir();
-define( 'WC_PAKETTIKAUPPA_PRIVATE_DIR' , $upload_dir['basedir'] . '/wc-pakettikauppa' );
+define( 'WC_PAKETTIKAUPPA_PRIVATE_DIR', $upload_dir['basedir'] . '/wc-pakettikauppa' );
 // @TODO: Now the location is unprotected. In future, allow users to customize this
 // location and use techniques like X-Sendfile to limit access to logged in users.
 
@@ -51,14 +51,14 @@ function wc_pakettikauppa_load_textdomain() {
 }
 add_action( 'plugins_loaded', 'wc_pakettikauppa_load_textdomain' );
 
-require_once( plugin_dir_path( __FILE__ ) . 'includes/class-wc-pakettikauppa-shipping-method.php' );
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-wc-pakettikauppa-shipping-method.php';
 
 /**
-* Load the WC_Pakettikauppa class when in frontend
-*/
+ * Load the WC_Pakettikauppa class when in frontend
+ */
 function wc_pakettikauppa_load() {
   if ( ! is_admin() ) {
-    require_once( plugin_dir_path( __FILE__ ) . 'includes/class-wc-pakettikauppa.php' );
+    require_once plugin_dir_path( __FILE__ ) . 'includes/class-wc-pakettikauppa.php';
     $wc_pakettikauppa = new WC_Pakettikauppa();
     $wc_pakettikauppa->load();
   }
@@ -66,10 +66,10 @@ function wc_pakettikauppa_load() {
 add_action( 'init', 'wc_pakettikauppa_load' );
 
 /**
-* Load the WC_Pakettikauppa_Admin class in wp-admin
-*/
+ * Load the WC_Pakettikauppa_Admin class in wp-admin
+ */
 function wc_pakettikauppa_load_admin() {
-  require_once( plugin_dir_path( __FILE__ ) . 'includes/class-wc-pakettikauppa-admin.php' );
+  require_once plugin_dir_path( __FILE__ ) . 'includes/class-wc-pakettikauppa-admin.php';
   $wc_pakettikauppa_admin = new WC_Pakettikauppa_Admin();
   $wc_pakettikauppa_admin->load();
 }

@@ -1,14 +1,14 @@
 <?php
 /**
-* Shipment module.
-*/
+ * Shipment module.
+ */
 
 // Prevent direct access to this script
 if ( ! defined( 'ABSPATH' ) ) {
   exit;
 }
 
-require_once( WC_PAKETTIKAUPPA_DIR . 'vendor/autoload.php' );
+require_once WC_PAKETTIKAUPPA_DIR . 'vendor/autoload.php';
 
 use Pakettikauppa\Shipment;
 use Pakettikauppa\Shipment\Sender;
@@ -28,10 +28,10 @@ use Pakettikauppa\Client;
  * @author Seravo
  */
 class WC_Pakettikauppa_Shipment {
-  private $wc_pakettikauppa_client = null;
+  private $wc_pakettikauppa_client   = null;
   private $wc_pakettikauppa_settings = null;
 
-  function __construct() {
+  public function __construct() {
     $this->id = 'wc_pakettikauppa_shipment';
   }
 
@@ -40,33 +40,35 @@ class WC_Pakettikauppa_Shipment {
     $settings = get_option( 'woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null );
 
     if ( false === $settings ) {
-      throw new Exception( 'WooCommerce Pakettikauppa:
+    throw new Exception(
+         'WooCommerce Pakettikauppa:
         woocommerce_WC_Pakettikauppa_Shipping_Method_settings was not
-        found in the database!' );
+        found in the database!'
+        );
     }
 
     $this->wc_pakettikauppa_settings = $settings;
 
     $account_number = $settings['account_number'];
-    $secret_key = $settings['secret_key'];
-    $mode = $settings['mode'];
-    $is_test_mode = ($mode == 'production' ? false : true);
+    $secret_key     = $settings['secret_key'];
+    $mode           = $settings['mode'];
+    $is_test_mode   = ( $mode === 'production' ? false : true );
 
     $options_array = array(
-      'api_key' => $account_number,
-      'secret' => $secret_key,
-      'test_mode' => $is_test_mode
+		'api_key'   => $account_number,
+		'secret'    => $secret_key,
+		'test_mode' => $is_test_mode,
     );
 
     $this->wc_pakettikauppa_client = new Pakettikauppa\Client( $options_array );
   }
 
   /**
-  * Get the status of a shipment
-  *
-  * @param int $post_id The post id of the order to update status of
-  * @return int The status code of the shipment
-  */
+   * Get the status of a shipment
+   *
+   * @param int $post_id The post id of the order to update status of
+   * @return int The status code of the shipment
+   */
   public function get_shipment_status( $post_id ) {
     $tracking_code = get_post_meta( $post_id, '_wc_pakettikauppa_tracking_code', true);
 
@@ -80,13 +82,13 @@ class WC_Pakettikauppa_Shipment {
   }
 
   /**
-  * Create Pakettikauppa shipment from order
-  *
-  * @param int $post_id The post id of the order to ship
-  * @return array Shipment details
-  */
+   * Create Pakettikauppa shipment from order
+   *
+   * @param int $post_id The post id of the order to ship
+   * @return array Shipment details
+   */
   public function create_shipment( $post_id ) {
-    $shipment = new Shipment();
+    $shipment   = new Shipment();
     $service_id = $_REQUEST['wc_pakettikauppa_service_id'];
     $shipment->setShippingMethod( $service_id );
 
@@ -124,11 +126,11 @@ class WC_Pakettikauppa_Shipment {
     $cod = false;
 
     if ( isset( $_REQUEST['wc_pakettikauppa_cod'] ) && $_REQUEST['wc_pakettikauppa_cod'] ) {
-      $cod = true;
-      $cod_amount = floatval( str_replace( ',', '.', $_REQUEST['wc_pakettikauppa_cod_amount'] ) );
+      $cod           = true;
+      $cod_amount    = floatval( str_replace( ',', '.', $_REQUEST['wc_pakettikauppa_cod_amount'] ) );
       $cod_reference = trim( $_REQUEST['wc_pakettikauppa_cod_reference'] );
-      $cod_iban = $this->wc_pakettikauppa_settings['cod_iban'];
-      $cod_bic = $this->wc_pakettikauppa_settings['cod_bic'];
+      $cod_iban      = $this->wc_pakettikauppa_settings['cod_iban'];
+      $cod_bic       = $this->wc_pakettikauppa_settings['cod_bic'];
 
       $additional_service = new AdditionalService();
       $additional_service->addSpecifier( 'amount', $cod_amount );
@@ -144,7 +146,7 @@ class WC_Pakettikauppa_Shipment {
 
     $pickup_point = false;
     if ( isset( $_REQUEST['wc_pakettikauppa_pickup_points'] ) && $_REQUEST['wc_pakettikauppa_pickup_points'] ) {
-      $pickup_point = true;
+      $pickup_point    = true;
       $pickup_point_id = intval( $_REQUEST['wc_pakettikauppa_pickup_point_id'] );
 
       $shipment->setPickupPoint( $pickup_point_id );
@@ -157,47 +159,47 @@ class WC_Pakettikauppa_Shipment {
       if ( $this->wc_pakettikauppa_client->createTrackingCode($shipment) ) {
         $tracking_code = $shipment->getTrackingCode()->__toString();
       }
-
     } catch ( Exception $e ) {
+      /* translators: %s: Error message */
       throw new Exception( wp_sprintf( __( 'WooCommerce Pakettikauppa: tracking code creation failed: %s', 'wc-pakettikauppa' ), $e->getMessage() ) );
     }
 
     if ( ! empty( $tracking_code ) ) {
       $this->wc_pakettikauppa_client->fetchShippingLabel( $shipment );
       $upload_dir = wp_upload_dir();
-      $filepath = WC_PAKETTIKAUPPA_PRIVATE_DIR . '/' . $tracking_code . '.pdf';
-      file_put_contents( $filepath , base64_decode( $shipment->getPdf() ) );
+      $filepath   = WC_PAKETTIKAUPPA_PRIVATE_DIR . '/' . $tracking_code . '.pdf';
+      file_put_contents( $filepath, base64_decode( $shipment->getPdf() ) );
 
-      update_post_meta( $post_id, '_wc_pakettikauppa_tracking_code', $tracking_code);
+      update_post_meta( $post_id, '_wc_pakettikauppa_tracking_code', $tracking_code );
     }
 
-    update_post_meta( $post_id, '_wc_pakettikauppa_service_id', $service_id);
+    update_post_meta( $post_id, '_wc_pakettikauppa_service_id', $service_id );
 
     return array(
-      'tracking_code' => $tracking_code,
-      'service_id' => $service_id,
+		'tracking_code' => $tracking_code,
+		'service_id'    => $service_id,
     );
   }
 
   /**
-  * Return pickup points near a location specified by the parameters.
-  *
-  * @param int $postcode The postcode of the pickup point
-  * @param string $street_address The street address of the pickup point
-  * @param string $country The country in which the pickup point is located
-  * @param string $service_provider A service that should be provided by the pickup point
-  * @return array The pickup points based on the parameters, or empty array if none were found
-  */
+   * Return pickup points near a location specified by the parameters.
+   *
+   * @param int $postcode The postcode of the pickup point
+   * @param string $street_address The street address of the pickup point
+   * @param string $country The country in which the pickup point is located
+   * @param string $service_provider A service that should be provided by the pickup point
+   * @return array The pickup points based on the parameters, or empty array if none were found
+   */
   public function get_pickup_points( $postcode, $street_address = null, $country = null, $service_provider = null ) {
     $pickup_point_limit = 5; // Default limit value for pickup point search
 
-    if ( isset( $this->wc_pakettikauppa_settings['pickup_points_search_limit'] )&& ! empty( $this->wc_pakettikauppa_settings['pickup_points_search_limit'] ) ) {
+    if ( isset( $this->wc_pakettikauppa_settings['pickup_points_search_limit'] ) && ! empty( $this->wc_pakettikauppa_settings['pickup_points_search_limit'] ) ) {
       $pickup_point_limit = intval( $this->wc_pakettikauppa_settings['pickup_points_search_limit'] );
     }
 
     $pickup_point_data = $this->wc_pakettikauppa_client->searchPickupPoints( $postcode, $street_address, $country, $service_provider, $pickup_point_limit);
     if ( $pickup_point_data === 'Bad request' ) {
-      throw new Exception( __( 'WC_Pakettikauppa: An error occured when searching pickup points.', 'wc-pakettikauppa') );
+      throw new Exception( __( 'WC_Pakettikauppa: An error occured when searching pickup points.', 'wc-pakettikauppa' ) );
     }
     return $pickup_point_data;
   }
@@ -211,8 +213,8 @@ class WC_Pakettikauppa_Shipment {
     $services = array();
 
     // @TODO: File bug upstream about result being string instead of object by default
-    $transient_name = 'wc_pakettikauppa_shipping_methods';
-    $transent_time = 86400; // 24 hours
+    $transient_name       = 'wc_pakettikauppa_shipping_methods';
+    $transent_time        = 86400; // 24 hours
     $all_shipping_methods = get_transient( $transient_name );
 
     if ( false === $all_shipping_methods ) {
@@ -221,9 +223,9 @@ class WC_Pakettikauppa_Shipment {
     }
     // List all available methods as shipping options on checkout page
     if ( ! empty( $all_shipping_methods ) ) {
-        foreach ( $all_shipping_methods as $shipping_method ) {
-          $services[$shipping_method->shipping_method_code] = sprintf( '%1$s %2$s', $shipping_method->service_provider, $shipping_method->name );
-        }
+      foreach ( $all_shipping_methods as $shipping_method ) {
+        $services[$shipping_method->shipping_method_code] = sprintf( '%1$s %2$s', $shipping_method->service_provider, $shipping_method->name );
+      }
     }
     return $services;
   }
@@ -252,8 +254,8 @@ class WC_Pakettikauppa_Shipment {
   public function service_provider( $service_code ) {
     $services = array();
 
-    $transient_name = 'wc_pakettikauppa_shipping_methods';
-    $transent_time = 86400; // 24 hours
+    $transient_name       = 'wc_pakettikauppa_shipping_methods';
+    $transent_time        = 86400; // 24 hours
     $all_shipping_methods = get_transient( $transient_name );
 
     if ( false === $all_shipping_methods ) {
@@ -262,61 +264,90 @@ class WC_Pakettikauppa_Shipment {
         set_transient( $transient_name, $all_shipping_methods, $transient_time );
 
       } catch ( Exception $e ) {
+        /* translators: %s: Error message */
         throw new Exception( wp_sprintf( __( 'WooCommerce Pakettikauppa: an error occured when accessing service providers: %s', 'wc-pakettikauppa' ), $e->getMessage() ) );
-        return;
       }
     }
 
-     if ( ! empty( $all_shipping_methods ) ) {
-         foreach ( $all_shipping_methods as $shipping_method ) {
-           if ( intval($service_code) === intval($shipping_method->shipping_method_code) ) {
-             return $shipping_method->service_provider;
-           }
-         }
+    if ( ! empty( $all_shipping_methods ) ) {
+      foreach ( $all_shipping_methods as $shipping_method ) {
+        if ( intval($service_code) === intval($shipping_method->shipping_method_code) ) {
+          return $shipping_method->service_provider;
+        }
+      }
      }
      return false;
    }
 
   /**
-  * Get the status text of a shipment that matches a specified status code.
-  *
-  * @param int $status_code A status code
-  * @return string The status text matching the provided code, or unknown status if the
-  * code is unknown.
-  */
+   * Get the status text of a shipment that matches a specified status code.
+   *
+   * @param int $status_code A status code
+   * @return string The status text matching the provided code, or unknown status if the
+   * code is unknown.
+   */
   public static function get_status_text( $status_code ) {
     $status = '';
 
     switch ( intval($status_code) ) {
-      case 13: $status = __( 'Item is collected from sender - picked up', 'wc-pakettikauppa' ); break;
-      case 20: $status = __( 'Exception', 'wc-pakettikauppa' ); break;
-      case 22: $status = __( 'Item has been handed over to the recipient', 'wc-pakettikauppa' ); break;
-      case 31: $status = __( 'Item is in transport', 'wc-pakettikauppa' ); break;
-      case 38: $status = __( 'C.O.D payment is paid to the sender', 'wc-pakettikauppa' ); break;
-      case 45: $status = __( 'Informed consignee of arrival', 'wc-pakettikauppa' ); break;
-      case 48: $status = __( 'Item is loaded onto a means of transport', 'wc-pakettikauppa' ); break;
-      case 56: $status = __( 'Item not delivered – delivery attempt made', 'wc-pakettikauppa' ); break;
-      case 68: $status = __( 'Pre-information is received from sender', 'wc-pakettikauppa' ); break;
-      case 71: $status = __( 'Item is ready for delivery transportation', 'wc-pakettikauppa'); break;
-      case 77: $status = __( 'Item is returning to the sender', 'wc-pakettikauppa' ); break;
-      case 91: $status = __( 'Item is arrived to a post office', 'wc-pakettikauppa' ); break;
-      case 99: $status = __( 'Outbound', 'wc-pakettikauppa' ); break;
-      default: $status = wp_sprintf( __( 'Unknown status: %s', 'wc-pakettikauppa' ), $status_code ); break;
+      case 13:
+        $status = __( 'Item is collected from sender - picked up', 'wc-pakettikauppa' );
+        break;
+      case 20:
+        $status = __( 'Exception', 'wc-pakettikauppa' );
+        break;
+      case 22:
+        $status = __( 'Item has been handed over to the recipient', 'wc-pakettikauppa' );
+        break;
+      case 31:
+        $status = __( 'Item is in transport', 'wc-pakettikauppa' );
+        break;
+      case 38:
+        $status = __( 'C.O.D payment is paid to the sender', 'wc-pakettikauppa' );
+        break;
+      case 45:
+        $status = __( 'Informed consignee of arrival', 'wc-pakettikauppa' );
+        break;
+      case 48:
+        $status = __( 'Item is loaded onto a means of transport', 'wc-pakettikauppa' );
+        break;
+      case 56:
+        $status = __( 'Item not delivered – delivery attempt made', 'wc-pakettikauppa' );
+        break;
+      case 68:
+        $status = __( 'Pre-information is received from sender', 'wc-pakettikauppa' );
+        break;
+      case 71:
+        $status = __( 'Item is ready for delivery transportation', 'wc-pakettikauppa');
+        break;
+      case 77:
+        $status = __( 'Item is returning to the sender', 'wc-pakettikauppa' );
+        break;
+      case 91:
+        $status = __( 'Item is arrived to a post office', 'wc-pakettikauppa' );
+        break;
+      case 99:
+        $status = __( 'Outbound', 'wc-pakettikauppa' );
+        break;
+      default:
+        /* translators: %s: Status code */
+        $status = wp_sprintf( __( 'Unknown status: %s', 'wc-pakettikauppa' ), $status_code );
+        break;
     }
 
     return $status;
   }
 
   /**
-  * Calculate the total shipping weight of an order.
-  *
-  * @param WC_Order $order The order to calculate the weight of
-  * @return int The total weight of the order
-  */
+   * Calculate the total shipping weight of an order.
+   *
+   * @param WC_Order $order The order to calculate the weight of
+   * @return int The total weight of the order
+   */
   public static function order_weight( $order ) {
     $weight = 0;
 
-    if ( sizeof( $order->get_items() ) > 0 ) {
+    if ( count( $order->get_items() ) > 0 ) {
       foreach ( $order->get_items() as $item ) {
         if ( $item['product_id'] > 0 ) {
           $product = $order->get_product_from_item( $item );
@@ -331,15 +362,15 @@ class WC_Pakettikauppa_Shipment {
   }
 
   /**
-  * Calculate the total shipping volume of an order in cubic meters.
-  *
-  * @param WC_Order $order The order to calculate the volume of
-  * @return int The total volume of the order (m^3)
-  */
+   * Calculate the total shipping volume of an order in cubic meters.
+   *
+   * @param WC_Order $order The order to calculate the volume of
+   * @return int The total volume of the order (m^3)
+   */
   public static function order_volume( $order ) {
     $volume = 0;
 
-    if ( sizeof( $order->get_items() ) > 0 ) {
+    if ( count( $order->get_items() ) > 0 ) {
       foreach ( $order->get_items() as $item ) {
         if ( $item['product_id'] > 0 ) {
           $product = $order->get_product_from_item( $item );
@@ -371,48 +402,49 @@ class WC_Pakettikauppa_Shipment {
   }
 
   /**
-  * Get the full-length tracking url of a shipment by providing its service id and tracking code.
-  * Use tracking url provided by pakettikauppa.fi.
-  *
-  * @param int $service_id The id of the service that is used for the shipment
-  * @param int $tracking_code The tracking code of the shipment
-  * @return string The full tracking url for the order
-  */
+   * Get the full-length tracking url of a shipment by providing its service id and tracking code.
+   * Use tracking url provided by pakettikauppa.fi.
+   *
+   * @param int $service_id The id of the service that is used for the shipment
+   * @param int $tracking_code The tracking code of the shipment
+   * @return string The full tracking url for the order
+   */
   public static function tracking_url( $service_id, $tracking_code ) {
     $tracking_url = 'https://www.pakettikauppa.fi/seuranta/?' . $tracking_code;
     return $tracking_url;
   }
 
   /**
-  * Calculate Finnish invoice reference from order ID
-  * http://tarkistusmerkit.teppovuori.fi/tarkmerk.htm#viitenumero
-  *
-  * @param int $id The id of the order to calculate the reference of
-  * @return int The reference number calculated from the id
-  */
+   * Calculate Finnish invoice reference from order ID
+   * http://tarkistusmerkit.teppovuori.fi/tarkmerk.htm#viitenumero
+   *
+   * @param int $id The id of the order to calculate the reference of
+   * @return int The reference number calculated from the id
+   */
   public static function calculate_reference( $id ) {
-    $weights = array( 7, 3, 1, 7, 3, 1, 7, 3, 1, 7, 3, 1, 7, 3, 1, 7, 3, 1, 7 );
-    $base = str_split( strval( ( $id + 100 ) ) );
-    $reversed_base = array_reverse( $base );
+    $weights              = array( 7, 3, 1, 7, 3, 1, 7, 3, 1, 7, 3, 1, 7, 3, 1, 7, 3, 1, 7 );
+    $base                 = str_split( strval( ( $id + 100 ) ) );
+    $reversed_base        = array_reverse( $base );
+    $sum                  = 0;
+    $reversed_base_length = count( $reversed_base );
 
-    $sum = 0;
-    for ( $i = 0; $i < count( $reversed_base ); $i++ ) {
+    for ( $i = 0; $i < $reversed_base_length; $i++ ) {
       $coefficient = array_shift( $weights );
-      $sum += $reversed_base[$i] * $coefficient;
+      $sum        += $reversed_base[$i] * $coefficient;
     }
 
-    $checksum = ( $sum % 10 == 0 ) ? 0 : ( 10 - $sum % 10 );
+    $checksum = ( $sum % 10 === 0 ) ? 0 : ( 10 - $sum % 10 );
 
     $reference = implode( '', $base ) . $checksum;
     return $reference;
   }
 
   /**
-  * Return the default shipping service if none has been specified
-  *
-  * @TODO: Does this method really need $post or $order, as the default service should
-  * not be order-specific?
-  */
+   * Return the default shipping service if none has been specified
+   *
+   * @TODO: Does this method really need $post or $order, as the default service should
+   * not be order-specific?
+   */
   public static function get_default_service( $post, $order ) {
     // @TODO: Maybe use an option in database so the merchant can set it in settings
     $service = '2103';
@@ -420,20 +452,20 @@ class WC_Pakettikauppa_Shipment {
   }
 
   /**
-  * Validate order details in wp-admin. Especially useful, when creating orders in wp-admin,
-  *
-  * @param WC_Order $order The order that needs its info to be validated
-  * @return True, if the details where valid, or false if not
-  */
+   * Validate order details in wp-admin. Especially useful, when creating orders in wp-admin,
+   *
+   * @param WC_Order $order The order that needs its info to be validated
+   * @return True, if the details where valid, or false if not
+   */
   public static function validate_order_shipping_receiver( $order ) {
     // Check shipping info first
-    $no_shipping_name = ( bool ) empty( $order->get_formatted_shipping_full_name() );
-    $no_shipping_address = ( bool ) empty( $order->get_shipping_address_1() ) && empty( $order->get_shipping_address_2() );
-    $no_shipping_postcode = ( bool ) empty( $order->get_shipping_postcode() );
-    $no_shipping_city = ( bool ) empty( $order->get_shipping_city() );
+    $no_shipping_name     = (bool) empty( $order->get_formatted_shipping_full_name() );
+    $no_shipping_address  = (bool) empty( $order->get_shipping_address_1() ) && empty( $order->get_shipping_address_2() );
+    $no_shipping_postcode = (bool) empty( $order->get_shipping_postcode() );
+    $no_shipping_city     = (bool) empty( $order->get_shipping_city() );
 
     if ( $no_shipping_name || $no_shipping_address || $no_shipping_postcode || $no_shipping_city ) {
-        return false;
+      return false;
     }
     return true;
   }
@@ -441,16 +473,14 @@ class WC_Pakettikauppa_Shipment {
   public static function service_has_pickup_points( $service_id ) {
     // @TODO: Find out if the Pakettikauppa API can be used to check if the service uses
     // pickup points instead of hard coding them here.
-    if ( in_array(
-            $service_id,
-            array(
-              '2103',
-              '80010',
-              '90010',
-              '90080'
-            )
-          )
-        ) {
+    $services_with_pickup_points = array(
+      '2103',
+      '80010',
+      '90010',
+      '90080',
+    );
+
+    if ( in_array( $service_id, $services_with_pickup_points, true ) ) {
       return true;
     }
     return false;
