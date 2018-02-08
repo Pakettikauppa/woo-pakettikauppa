@@ -18,9 +18,10 @@ env:
 matrix:
   include:
     - php: 7.0
-      env: WP_VERSION=latest WP_MULTISITE=1
+      env: WP_VERSION=latest WP_MULTISITE=1 SNIFF=1
 
 before_script:
+  # Install WordPress PHPUnit tests
   - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - |
@@ -33,6 +34,27 @@ before_script:
     composer global require wp-coding-standards/wpcs
     phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
 
+  # Install PHP_CodeSniffer
+  - if [[ "$SNIFF" == "1" ]]; then export PHPCS_DIR=/tmp/phpcs; fi
+  - if [[ "$SNIFF" == "1" ]]; then export SNIFFS_DIR=/tmp/sniffs; fi
+  - if [[ "$SNIFF" == "1" ]]; then git clone -b master --depth 1 https://github.com/squizlabs/PHP_CodeSniffer.git $PHPCS_DIR; fi
+
+  # Install WordPress Coding Standards.
+  - if [[ "$SNIFF" == "1" ]]; then git clone -b master --depth 1 https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git $SNIFFS_DIR; fi
+
+  # Set install path for WordPress Coding Standards.
+  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs --config-set installed_paths $SNIFFS_DIR; fi
+
+  # After CodeSniffer install you should refresh your path.
+  - if [[ "$SNIFF" == "1" ]]; then phpenv rehash; fi
+
 script:
+  # Syntax check all php files and fail for any error text in STDERR
+  - '! find . -type f -name "*.php" -exec php -d error_reporting=32767 -l {} \; 2>&1 >&- | grep "^"'
+
+  # Run PHPUnit tests
   - find -name '*.php' -exec php -d error_reporting=32767 -l {} \;
   - phpunit
+
+  # Run PHP style check via PHPCS
+  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -i; $PHPCS_DIR/bin/phpcs -n --standard=phpcs.xml wc-pakettikauppa.php; fi
