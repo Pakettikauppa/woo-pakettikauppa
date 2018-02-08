@@ -223,8 +223,8 @@ class Test_WC_Pakettikauppa_Shipment extends WP_UnitTestCase {
         ),
       ),
     ),
-        'AdditionalInfo.Text'           => 'No additional information provided.',
-  );
+        'AdditionalInfo.Text'       => 'No additional information provided.',
+	);
     }
 
 

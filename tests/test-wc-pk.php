@@ -20,8 +20,8 @@ class Test_WC_Pakettikauppa extends WP_UnitTestCase {
   }
 
   /**
-  * Check that the shipment status texts can be set correctly.
-  *
+   * Check that the shipment status texts can be set correctly.
+   *
    * @depends test_init
    */
   public function test_wc_pakettikauppa_get_status_text( $pakettikauppa ) {

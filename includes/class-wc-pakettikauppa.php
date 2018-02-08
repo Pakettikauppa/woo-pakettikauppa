@@ -43,10 +43,10 @@ class WC_Pakettikauppa {
   }
 
   /**
-  * Add an error with a specified error message.
-  *
-  * @param string $message A message containing details about the error.
-  */
+   * Add an error with a specified error message.
+   *
+   * @param string $message A message containing details about the error.
+   */
   public function add_error( $message ) {
     if ( ! empty( $message ) ) {
       array_push( $this->errors, $message );
@@ -55,15 +55,15 @@ class WC_Pakettikauppa {
   }
 
   /**
-  * Display error in woocommerce
-  */
+   * Display error in woocommerce
+   */
   public function display_error() {
     wc_add_notice( __( 'An error occured. Please try again later.', 'wc-pakettikauppa' ), 'error' );
   }
 
   /**
-  * Enqueue frontend-specific styles and scripts.
-  */
+   * Enqueue frontend-specific styles and scripts.
+   */
   public function enqueue_scripts() {
     wp_enqueue_style( 'wc_pakettikauppa', plugin_dir_url( __FILE__ ) . '../assets/css/wc-pakettikauppa.css' );
     wp_enqueue_script( 'wc_pakettikauppa_js', plugin_dir_url( __FILE__ ) . '../assets/js/wc-pakettikauppa.js', array( 'jquery' ) );

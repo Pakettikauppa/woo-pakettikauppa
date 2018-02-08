@@ -1,3 +1,3 @@
 /**
-* Add frontend scripts to this file.
-*/
+ * Add frontend scripts to this file.
+ */
