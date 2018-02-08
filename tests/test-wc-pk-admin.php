@@ -12,8 +12,8 @@ require_once WC_PAKETTIKAUPPA_DIR . 'includes/class-wc-pakettikauppa-admin.php';
 class Test_WC_Pakettikauppa_Admin extends WP_UnitTestCase {
 
   /**
-  * Test that the id is set correctly and return an WC_Pakettikauppa_Admin object
-  */
+   * Test that the id is set correctly and return an WC_Pakettikauppa_Admin object
+   */
   public function test_admin_init() {
     $pakettikauppa_admin = new WC_Pakettikauppa_Admin();
     $this->assertEquals( 'wc_pakettikauppa_admin', $pakettikauppa_admin->id );

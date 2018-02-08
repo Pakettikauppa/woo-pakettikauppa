@@ -54,8 +54,8 @@ add_action( 'plugins_loaded', 'wc_pakettikauppa_load_textdomain' );
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-wc-pakettikauppa-shipping-method.php';
 
 /**
-* Load the WC_Pakettikauppa class when in frontend
-*/
+ * Load the WC_Pakettikauppa class when in frontend
+ */
 function wc_pakettikauppa_load() {
   if ( ! is_admin() ) {
     require_once plugin_dir_path( __FILE__ ) . 'includes/class-wc-pakettikauppa.php';
@@ -66,8 +66,8 @@ function wc_pakettikauppa_load() {
 add_action( 'init', 'wc_pakettikauppa_load' );
 
 /**
-* Load the WC_Pakettikauppa_Admin class in wp-admin
-*/
+ * Load the WC_Pakettikauppa_Admin class in wp-admin
+ */
 function wc_pakettikauppa_load_admin() {
   require_once plugin_dir_path( __FILE__ ) . 'includes/class-wc-pakettikauppa-admin.php';
   $wc_pakettikauppa_admin = new WC_Pakettikauppa_Admin();

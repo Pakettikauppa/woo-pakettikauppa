@@ -1,7 +1,7 @@
 <?php
 /**
-* Shipment module.
-*/
+ * Shipment module.
+ */
 
 // Prevent direct access to this script
 if ( ! defined( 'ABSPATH' ) ) {
@@ -64,11 +64,11 @@ class WC_Pakettikauppa_Shipment {
   }
 
   /**
-  * Get the status of a shipment
-  *
-  * @param int $post_id The post id of the order to update status of
-  * @return int The status code of the shipment
-  */
+   * Get the status of a shipment
+   *
+   * @param int $post_id The post id of the order to update status of
+   * @return int The status code of the shipment
+   */
   public function get_shipment_status( $post_id ) {
     $tracking_code = get_post_meta( $post_id, '_wc_pakettikauppa_tracking_code', true);
 
@@ -82,11 +82,11 @@ class WC_Pakettikauppa_Shipment {
   }
 
   /**
-  * Create Pakettikauppa shipment from order
-  *
-  * @param int $post_id The post id of the order to ship
-  * @return array Shipment details
-  */
+   * Create Pakettikauppa shipment from order
+   *
+   * @param int $post_id The post id of the order to ship
+   * @return array Shipment details
+   */
   public function create_shipment( $post_id ) {
     $shipment   = new Shipment();
     $service_id = $_REQUEST['wc_pakettikauppa_service_id'];
@@ -181,14 +181,14 @@ class WC_Pakettikauppa_Shipment {
   }
 
   /**
-  * Return pickup points near a location specified by the parameters.
-  *
-  * @param int $postcode The postcode of the pickup point
-  * @param string $street_address The street address of the pickup point
-  * @param string $country The country in which the pickup point is located
-  * @param string $service_provider A service that should be provided by the pickup point
-  * @return array The pickup points based on the parameters, or empty array if none were found
-  */
+   * Return pickup points near a location specified by the parameters.
+   *
+   * @param int $postcode The postcode of the pickup point
+   * @param string $street_address The street address of the pickup point
+   * @param string $country The country in which the pickup point is located
+   * @param string $service_provider A service that should be provided by the pickup point
+   * @return array The pickup points based on the parameters, or empty array if none were found
+   */
   public function get_pickup_points( $postcode, $street_address = null, $country = null, $service_provider = null ) {
     $pickup_point_limit = 5; // Default limit value for pickup point search
 
@@ -278,12 +278,12 @@ class WC_Pakettikauppa_Shipment {
    }
 
   /**
-  * Get the status text of a shipment that matches a specified status code.
-  *
-  * @param int $status_code A status code
-  * @return string The status text matching the provided code, or unknown status if the
-  * code is unknown.
-  */
+   * Get the status text of a shipment that matches a specified status code.
+   *
+   * @param int $status_code A status code
+   * @return string The status text matching the provided code, or unknown status if the
+   * code is unknown.
+   */
   public static function get_status_text( $status_code ) {
     $status = '';
 
@@ -336,11 +336,11 @@ class WC_Pakettikauppa_Shipment {
   }
 
   /**
-  * Calculate the total shipping weight of an order.
-  *
-  * @param WC_Order $order The order to calculate the weight of
-  * @return int The total weight of the order
-  */
+   * Calculate the total shipping weight of an order.
+   *
+   * @param WC_Order $order The order to calculate the weight of
+   * @return int The total weight of the order
+   */
   public static function order_weight( $order ) {
     $weight = 0;
 
@@ -359,11 +359,11 @@ class WC_Pakettikauppa_Shipment {
   }
 
   /**
-  * Calculate the total shipping volume of an order in cubic meters.
-  *
-  * @param WC_Order $order The order to calculate the volume of
-  * @return int The total volume of the order (m^3)
-  */
+   * Calculate the total shipping volume of an order in cubic meters.
+   *
+   * @param WC_Order $order The order to calculate the volume of
+   * @return int The total volume of the order (m^3)
+   */
   public static function order_volume( $order ) {
     $volume = 0;
 
@@ -377,13 +377,13 @@ class WC_Pakettikauppa_Shipment {
             switch ( $woo_dim_unit ) {
               case 'mm':
                 $dim_multiplier = 0.001;
-                    break;
+                break;
               case 'cm':
                 $dim_multiplier = 0.01;
-                    break;
+                break;
               case 'dm':
                 $dim_multiplier = 0.1;
-                    break;
+                break;
               default:
                 $dim_multiplier = 1;
             }
@@ -399,25 +399,25 @@ class WC_Pakettikauppa_Shipment {
   }
 
   /**
-  * Get the full-length tracking url of a shipment by providing its service id and tracking code.
-  * Use tracking url provided by pakettikauppa.fi.
-  *
-  * @param int $service_id The id of the service that is used for the shipment
-  * @param int $tracking_code The tracking code of the shipment
-  * @return string The full tracking url for the order
-  */
+   * Get the full-length tracking url of a shipment by providing its service id and tracking code.
+   * Use tracking url provided by pakettikauppa.fi.
+   *
+   * @param int $service_id The id of the service that is used for the shipment
+   * @param int $tracking_code The tracking code of the shipment
+   * @return string The full tracking url for the order
+   */
   public static function tracking_url( $service_id, $tracking_code ) {
     $tracking_url = 'https://www.pakettikauppa.fi/seuranta/?' . $tracking_code;
     return $tracking_url;
   }
 
   /**
-  * Calculate Finnish invoice reference from order ID
-  * http://tarkistusmerkit.teppovuori.fi/tarkmerk.htm#viitenumero
-  *
-  * @param int $id The id of the order to calculate the reference of
-  * @return int The reference number calculated from the id
-  */
+   * Calculate Finnish invoice reference from order ID
+   * http://tarkistusmerkit.teppovuori.fi/tarkmerk.htm#viitenumero
+   *
+   * @param int $id The id of the order to calculate the reference of
+   * @return int The reference number calculated from the id
+   */
   public static function calculate_reference( $id ) {
     $weights              = array( 7, 3, 1, 7, 3, 1, 7, 3, 1, 7, 3, 1, 7, 3, 1, 7, 3, 1, 7 );
     $base                 = str_split( strval( ( $id + 100 ) ) );
@@ -437,11 +437,11 @@ class WC_Pakettikauppa_Shipment {
   }
 
   /**
-  * Return the default shipping service if none has been specified
-  *
-  * @TODO: Does this method really need $post or $order, as the default service should
-  * not be order-specific?
-  */
+   * Return the default shipping service if none has been specified
+   *
+   * @TODO: Does this method really need $post or $order, as the default service should
+   * not be order-specific?
+   */
   public static function get_default_service( $post, $order ) {
     // @TODO: Maybe use an option in database so the merchant can set it in settings
     $service = '2103';
@@ -449,11 +449,11 @@ class WC_Pakettikauppa_Shipment {
   }
 
   /**
-  * Validate order details in wp-admin. Especially useful, when creating orders in wp-admin,
-  *
-  * @param WC_Order $order The order that needs its info to be validated
-  * @return True, if the details where valid, or false if not
-  */
+   * Validate order details in wp-admin. Especially useful, when creating orders in wp-admin,
+   *
+   * @param WC_Order $order The order that needs its info to be validated
+   * @return True, if the details where valid, or false if not
+   */
   public static function validate_order_shipping_receiver( $order ) {
     // Check shipping info first
     $no_shipping_name     = (bool) empty( $order->get_formatted_shipping_full_name() );

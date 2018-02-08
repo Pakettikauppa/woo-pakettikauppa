@@ -52,8 +52,8 @@ class WC_Pakettikauppa_Admin {
   }
 
   /**
-  * Check if the selected service has pickup points via wp_ajax
-  */
+   * Check if the selected service has pickup points via wp_ajax
+   */
   public function update_meta_box_pickup_points() {
     if ( isset( $_POST ) && ! empty( $_POST['service_id'] ) ) {
       $service_id = $_POST['service_id'];
@@ -63,10 +63,10 @@ class WC_Pakettikauppa_Admin {
   }
 
   /**
-  * Add an error with a specified error message.
-  *
-  * @param string $message A message containing details about the error.
-  */
+   * Add an error with a specified error message.
+   *
+   * @param string $message A message containing details about the error.
+   */
   public function add_error( $message ) {
     if ( ! empty( $message ) ) {
       array_push( $this->errors, $message );
@@ -84,16 +84,16 @@ class WC_Pakettikauppa_Admin {
    }
 
   /**
-  * Clear all existing errors that have been added via add_error().
-  */
+   * Clear all existing errors that have been added via add_error().
+   */
   public function clear_errors() {
     unset( $this->errors );
     $this->errors = array();
   }
 
   /**
-  * Add an admin error notice to wp-admin.
-  */
+   * Add an admin error notice to wp-admin.
+   */
   public function add_error_notice( $message ) {
     if ( ! empty( $message ) ) {
       $class       = 'notice notice-error';
@@ -122,8 +122,8 @@ class WC_Pakettikauppa_Admin {
   }
 
   /**
-  * Register meta boxes for WooCommerce order metapage.
-  */
+   * Register meta boxes for WooCommerce order metapage.
+   */
   public function register_meta_boxes() {
     foreach ( wc_get_order_types( 'order-meta-boxes' ) as $type ) {
       $order_type_object = get_post_type_object( $type );
@@ -142,8 +142,8 @@ class WC_Pakettikauppa_Admin {
   }
 
   /**
-  * Enqueue admin-specific styles and scripts.
-  */
+   * Enqueue admin-specific styles and scripts.
+   */
   public function admin_enqueue_scripts() {
     wp_enqueue_style( 'wc_pakettikauppa_admin', plugin_dir_url( __FILE__ ) . '../assets/css/wc-pakettikauppa-admin.css' );
     wp_enqueue_script( 'wc_pakettikauppa_admin_js', plugin_dir_url( __FILE__ ) . '../assets/js/wc-pakettikauppa-admin.js', array( 'jquery' ) );
@@ -164,11 +164,11 @@ class WC_Pakettikauppa_Admin {
   }
 
   /**
-  * Show the selected pickup point in admin order meta. Use together with the hook
-  * woocommerce_admin_order_data_after_shipping_address.
-  *
-  * @param WC_Order $order The order that is currently being viewed in wp-admin
-  */
+   * Show the selected pickup point in admin order meta. Use together with the hook
+   * woocommerce_admin_order_data_after_shipping_address.
+   *
+   * @param WC_Order $order The order that is currently being viewed in wp-admin
+   */
   public function show_pickup_point_in_admin_order_meta( $order ) {
     echo '<p class="form-field"><strong>' . esc_attr__('Requested pickup point', 'wc-pakettikauppa') . ':</strong><br>';
     if ( $order->get_meta('_pakettikauppa_pickup_point') ) {
@@ -507,10 +507,10 @@ class WC_Pakettikauppa_Admin {
   }
 
   /**
-  * Remove the shipping label of an order from the wc-pakettikauppa uploads directory
-  *
-  * @param int $post_id The post id of the order which is to be deleted
-  */
+   * Remove the shipping label of an order from the wc-pakettikauppa uploads directory
+   *
+   * @param int $post_id The post id of the order which is to be deleted
+   */
   public function delete_order_shipping_label( $post_id ) {
     // Check that the post type is order
     $post_type = get_post_type( $post_id );

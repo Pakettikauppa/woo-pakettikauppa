@@ -23,8 +23,8 @@ function wc_pakettikauppa_shipping_method_init() {
 
     class WC_Pakettikauppa_Shipping_Method extends WC_Shipping_Method {
       /**
-      * Required to access pakettikauppa client
-      */
+       * Required to access pakettikauppa client
+       */
       private $wc_pakettikauppa_shipment = null;
 
       /**
@@ -48,11 +48,11 @@ function wc_pakettikauppa_shipping_method_init() {
       public $fee = 5;
 
       /**
-      * Constructor for Pakettikauppa shipping class
-      *
-      * @access public
-      * @return void
-      */
+       * Constructor for Pakettikauppa shipping class
+       *
+       * @access public
+       * @return void
+       */
       public function __construct() {
         $this->id                 = 'WC_Pakettikauppa_Shipping_Method'; // ID for your shipping method. Should be unique.
         $this->method_title       = 'Pakettikauppa'; // Title shown in admin
@@ -88,7 +88,7 @@ function wc_pakettikauppa_shipping_method_init() {
        */
       public function init_form_fields() {
         $this->form_fields = array(
-          'mode' => array(
+          'mode'                       => array(
             'title'   => __( 'Mode', 'wc-pakettikauppa' ),
             'type'    => 'select',
             'default' => 'test',
@@ -98,7 +98,7 @@ function wc_pakettikauppa_shipping_method_init() {
             ),
           ),
 
-          'account_number' => array(
+          'account_number'             => array(
             'title'    => __( 'API key', 'wc-pakettikauppa' ),
             'desc'     => __( 'API key provided by Pakettikauppa', 'wc-pakettikauppa' ),
             'type'     => 'text',
@@ -106,7 +106,7 @@ function wc_pakettikauppa_shipping_method_init() {
             'desc_tip' => true,
           ),
 
-          'secret_key' => array(
+          'secret_key'                 => array(
             'title'    => __( 'API secret', 'wc-pakettikauppa' ),
             'desc'     => __( 'API Secret provided by Pakettikauppa', 'wc-pakettikauppa' ),
             'type'     => 'text',
@@ -120,7 +120,7 @@ function wc_pakettikauppa_shipping_method_init() {
             'type'  => 'title',
           ),
 
-          'active_shipping_options' => array(
+          'active_shipping_options'    => array(
             'title'       => __( 'Active shipping options', 'wc-pakettikauppa' ),
             'type'        => 'multiselect',
             'options'     => $this->wc_pakettikauppa_shipment->services(),
@@ -128,14 +128,14 @@ function wc_pakettikauppa_shipping_method_init() {
             'desc_tip'    => true,
           ),
 
-          'fee' => array(
+          'fee'                        => array(
             'title'       => __( 'Fixed fee (€)', 'wc-pakettikauppa' ),
             'type'        => 'price',
             'description' => __( 'Default fixed price for all Pakettikauppa shipping methods.', 'wc-pakettikauppa' ),
             'desc_tip'    => true,
           ),
 
-          'add_tracking_to_email' => array(
+          'add_tracking_to_email'      => array(
             'title'   => __( 'Add tracking link to the order completed email', 'wc-pakettikauppa' ),
             'type'    => 'checkbox',
             'default' => 'no',
@@ -155,40 +155,40 @@ function wc_pakettikauppa_shipping_method_init() {
             'type'  => 'title',
           ),
 
-          'sender_name' => array(
-            'title'    => __( 'Sender name', 'wc-pakettikauppa' ),
-            'type'     => 'text',
-            'default'  => '',
+          'sender_name'                => array(
+            'title'   => __( 'Sender name', 'wc-pakettikauppa' ),
+            'type'    => 'text',
+            'default' => '',
           ),
 
-          'sender_address' => array(
-            'title'    => __( 'Sender address', 'wc-pakettikauppa' ),
-            'type'     => 'text',
-            'default'  => '',
+          'sender_address'             => array(
+            'title'   => __( 'Sender address', 'wc-pakettikauppa' ),
+            'type'    => 'text',
+            'default' => '',
           ),
 
-          'sender_postal_code' => array(
-            'title'    => __( 'Sender postal code', 'wc-pakettikauppa' ),
-            'type'     => 'text',
-            'default'  => '',
+          'sender_postal_code'         => array(
+            'title'   => __( 'Sender postal code', 'wc-pakettikauppa' ),
+            'type'    => 'text',
+            'default' => '',
           ),
 
-          'sender_city' => array(
-            'title'    => __( 'Sender city', 'wc-pakettikauppa' ),
-            'type'     => 'text',
-            'default'  => '',
+          'sender_city'                => array(
+            'title'   => __( 'Sender city', 'wc-pakettikauppa' ),
+            'type'    => 'text',
+            'default' => '',
           ),
 
-          'cod_iban' => array(
-            'title'    => __( 'Bank account number for Cash on Delivery (IBAN)', 'wc-pakettikauppa' ),
-            'type'     => 'text',
-            'default'  => '',
+          'cod_iban'                   => array(
+            'title'   => __( 'Bank account number for Cash on Delivery (IBAN)', 'wc-pakettikauppa' ),
+            'type'    => 'text',
+            'default' => '',
           ),
 
-          'cod_bic' => array(
-            'title'    => __( 'BIC code for Cash on Delivery', 'wc-pakettikauppa' ),
-            'type'     => 'text',
-            'default'  => '',
+          'cod_bic'                    => array(
+            'title'   => __( 'BIC code for Cash on Delivery', 'wc-pakettikauppa' ),
+            'type'    => 'text',
+            'default' => '',
           ),
 
         );
