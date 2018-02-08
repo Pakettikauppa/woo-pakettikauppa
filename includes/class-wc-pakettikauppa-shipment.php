@@ -160,6 +160,7 @@ class WC_Pakettikauppa_Shipment {
         $tracking_code = $shipment->getTrackingCode()->__toString();
       }
     } catch ( Exception $e ) {
+      /* translators: %s: Error message */
       throw new Exception( wp_sprintf( __( 'WooCommerce Pakettikauppa: tracking code creation failed: %s', 'wc-pakettikauppa' ), $e->getMessage() ) );
     }
 
@@ -263,6 +264,7 @@ class WC_Pakettikauppa_Shipment {
         set_transient( $transient_name, $all_shipping_methods, $transient_time );
 
       } catch ( Exception $e ) {
+        /* translators: %s: Error message */
         throw new Exception( wp_sprintf( __( 'WooCommerce Pakettikauppa: an error occured when accessing service providers: %s', 'wc-pakettikauppa' ), $e->getMessage() ) );
       }
     }
@@ -328,6 +330,7 @@ class WC_Pakettikauppa_Shipment {
         $status = __( 'Outbound', 'wc-pakettikauppa' );
         break;
       default:
+        /* translators: %s: Status code */
         $status = wp_sprintf( __( 'Unknown status: %s', 'wc-pakettikauppa' ), $status_code );
         break;
     }

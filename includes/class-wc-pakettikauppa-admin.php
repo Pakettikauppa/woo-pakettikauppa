@@ -96,7 +96,8 @@ class WC_Pakettikauppa_Admin {
    */
   public function add_error_notice( $message ) {
     if ( ! empty( $message ) ) {
-      $class       = 'notice notice-error';
+      $class = 'notice notice-error';
+      /* translators: %s: Error message */
       $print_error = wp_sprintf( __( 'An error occured: %s', 'wc-pakettikauppa' ), $message );
       printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $print_error ) );
     }
@@ -132,7 +133,7 @@ class WC_Pakettikauppa_Admin {
         esc_attr__( 'Pakettikauppa', 'wc-pakettikauppa' ),
         array(
           $this,
-          'meta_box'
+          'meta_box',
         ),
         $type,
         'side',
@@ -388,23 +389,23 @@ class WC_Pakettikauppa_Admin {
         $dl_link       = '<a href="' . $document_url . '" target="_blank">' . esc_attr__( 'Print document', 'wc-pakettikauppa' ) . '</a>';
         $tracking_link = '<a href="' . $tracking_url . '" target="_blank">' . __( 'Track', 'wc-pakettikauppa' ) . '</a>';
 
-        $order->add_order_note(
-          sprintf(
-            esc_html__('Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s', 'wc-pakettikauppa'),
-            $this->wc_pakettikauppa_shipment->service_title($shipment_data['service_id']),
-            $shipment_data['tracking_code'],
-            $dl_link,
-            $tracking_link
-          )
-        );
+        $order->add_order_note( sprintf(
+          /* translators: 1: Shipping service title 2: Shipment tracking code 3: Shipping label URL 4: Shipment tracking URL */
+          esc_html__('Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s', 'wc-pakettikauppa'),
+          $this->wc_pakettikauppa_shipment->service_title($shipment_data['service_id']),
+          $shipment_data['tracking_code'],
+          $dl_link,
+          $tracking_link
+        ));
 
       } catch ( Exception $e ) {
         $this->add_error( $e->getMessage() );
+        /* translators: %s: Error message */
         $order->add_order_note( sprintf( esc_attr__('Failed to create Pakettikauppa shipment. Errors: %s', 'wc-pakettikauppa'), $e->getMessage() ) );
         add_action( 'admin_notices', function() {
+          /* translators: %s: Error message */
           $this->add_error_notice( wp_sprintf( esc_attr__( 'An error occured: %s', 'wc-pakettikauppa' ), $e->getMessage() ) );
-        }
-            );
+        });
         return;
       }
     } elseif ( isset( $_POST['wc_pakettikauppa_get_status'] ) ) {
@@ -415,6 +416,7 @@ class WC_Pakettikauppa_Admin {
       } catch ( Exception $e ) {
         $this->add_error( $e->getMessage() );
         add_action( 'admin_notices', function() {
+          /* translators: %s: Error message */
           $this->add_error_notice( wp_sprintf( esc_attr__( 'An error occured: %s', 'wc-pakettikauppa' ), $e->getMessage() ) );
         });
         return;
@@ -432,12 +434,14 @@ class WC_Pakettikauppa_Admin {
       } catch ( Exception $e ) {
         $this->add_error( $e->getMessage() );
         add_action( 'admin_notices', function() {
+          /* translators: %s: Error message */
           $this->add_error_notice( wp_sprintf( esc_attr__( 'An error occured: %s', 'wc-pakettikauppa' ), $e->getMessage() ) );
         });
 
         $order = new WC_Order( $post_id );
         $order->add_order_note(
           sprintf(
+            /* translators: %s: Error message */
             esc_attr__('Deleting Pakettikauppa shipment failed! Errors: %s', 'wc-pakettikauppa'),
             $e->getMessage()
           )
@@ -497,9 +501,11 @@ class WC_Pakettikauppa_Admin {
 
       if ( ! empty( $tracking_code ) && ! empty( $tracking_url ) ) {
         if ( $plain_text ) {
+          /* translators: %s: Shipment tracking URL */
           echo sprintf( esc_html__( "You can track your order at %1$s.\n\n", 'wc-pakettikauppa' ), esc_url( $tracking_url ) );
         } else {
           echo '<h2>' . esc_attr__( 'Tracking', 'wc-pakettikauppa' ) . '</h2>';
+          /* translators: 1: Shipment tracking URL 2: Shipment tracking code */
           echo '<p>' . sprintf( esc_html__( 'You can <a href="%1$s">track your order</a> with tracking code %2$s.', 'wc-pakettikauppa' ), esc_url( $tracking_url ), esc_attr( $tracking_code ) ) . '</p>';
         }
       }

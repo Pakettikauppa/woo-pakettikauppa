@@ -142,6 +142,7 @@ class WC_Pakettikauppa {
       return;
     }
     printf(
+      /* translators: %s: Postcode */
       esc_html__( 'Choose one of the pickup points close to your postcode %s below:', 'wc-pakettikauppa' ),
       '<span class="shipping_postcode_for_pickup">' . esc_attr( $shipping_postcode ) . '</span>'
     );
