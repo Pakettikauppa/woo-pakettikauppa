@@ -391,7 +391,7 @@ class WC_Pakettikauppa_Admin {
 
         $order->add_order_note( sprintf(
           /* translators: 1: Shipping service title 2: Shipment tracking code 3: Shipping label URL 4: Shipment tracking URL */
-          esc_html__('Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s', 'wc-pakettikauppa'),
+          __('Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s', 'wc-pakettikauppa'),
           $this->wc_pakettikauppa_shipment->service_title($shipment_data['service_id']),
           $shipment_data['tracking_code'],
           $dl_link,
@@ -506,7 +506,7 @@ class WC_Pakettikauppa_Admin {
         } else {
           echo '<h2>' . esc_attr__( 'Tracking', 'wc-pakettikauppa' ) . '</h2>';
           /* translators: 1: Shipment tracking URL 2: Shipment tracking code */
-          echo '<p>' . sprintf( esc_html__( 'You can <a href="%1$s">track your order</a> with tracking code %2$s.', 'wc-pakettikauppa' ), esc_url( $tracking_url ), esc_attr( $tracking_code ) ) . '</p>';
+          echo '<p>' . sprintf( __( 'You can <a href="%1$s">track your order</a> with tracking code %2$s.', 'wc-pakettikauppa' ), esc_url( $tracking_url ), esc_attr( $tracking_code ) ) . '</p>';
         }
       }
     }
