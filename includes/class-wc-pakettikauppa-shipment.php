@@ -76,7 +76,11 @@ class WC_Pakettikauppa_Shipment {
       $result = $this->wc_pakettikauppa_client->getShipmentStatus($tracking_code);
 
       $data = json_decode( $result );
-      return $data[0]->{'status_code'};
+
+      if ( ! empty( $data ) && isset( $data[0] ) ) {
+        return $data[0]->{'status_code'};
+      }
+      return '';
     }
 
   }
