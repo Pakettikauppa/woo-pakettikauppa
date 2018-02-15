@@ -113,7 +113,7 @@ class WC_Pakettikauppa {
     }
 
     try {
-      $pickup_point_data = $this->wc_pakettikauppa_shipment->get_pickup_points( $shipping_postcode, $shipping_address, $shipping_country );
+      $pickup_point_data = $this->wc_pakettikauppa_shipment->get_pickup_points( $shipping_postcode, $shipping_address, $shipping_country, $shipping_method_provider );
 
     } catch ( Exception $e ) {
       $this->add_error( $e->getMessage() );
