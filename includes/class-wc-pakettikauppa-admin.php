@@ -79,9 +79,9 @@ class WC_Pakettikauppa_Admin {
    *
    * @return array Errors
    */
-   public function get_errors() {
-       return $this->errors;
-   }
+  public function get_errors() {
+    return $this->errors;
+  }
 
   /**
    * Clear all existing errors that have been added via add_error().
