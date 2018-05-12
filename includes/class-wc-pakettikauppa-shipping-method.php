@@ -45,7 +45,7 @@ function wc_pakettikauppa_shipping_method_init() {
         $this->instance_id        = absint( $instance_id );
 
         $this->method_title       = 'Pakettikauppa'; // Title shown in admin
-        $this->method_description = __( 'All shipping methods with one contract. For more information visit <a href="https://pakettikauppa.fi/">Pakettikauppa</a>.', 'wc-pakettikauppa' ); // Description shown in admin
+        $this->method_description = __( 'All shipping methods with one contract. For more information visit <a href="https://www.pakettikauppa.fi/">Pakettikauppa</a>.', 'wc-pakettikauppa' ); // Description shown in admin
 
         $this->enabled = 'yes';
         $this->title   = 'Pakettikauppa';
