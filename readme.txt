@@ -13,7 +13,7 @@ This plugin enables WooCommerce orders to ship using pretty much any shipping me
 
 == Description ==
 
-[Pakettikauppa](https://pakettikauppa.fi/) is a shipping service provider in Finland. This plugin integrates their service into WooCommerce. To start shipping, all your WooCommerce needs is this plugin and a merchant ID of your account registered with Pakettikauppa.
+[Pakettikauppa](https://www.pakettikauppa.fi/) is a shipping service provider in Finland. This plugin integrates their service into WooCommerce. To start shipping, all your WooCommerce needs is this plugin and a merchant ID of your account registered with Pakettikauppa.
 
 > *Note!* If you already have shipping contracts with Posti, Matkahuolto or DB Schenker with reduced prices, you can contact the customer support of Pakettikauppa to get those contracts via Pakettikauppa so you can use the WooCommerce Pakettikauppa plugin with your current shipping contracts.
 

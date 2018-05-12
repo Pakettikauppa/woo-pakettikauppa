@@ -222,10 +222,10 @@ msgstr "Tuntematon tila: %s"
 #: includes/class-wc-pakettikauppa-shipping-method.php:59
 msgid ""
 "All shipping methods with one contract. For more information visit <a href="
-"\"https://pakettikauppa.fi/\">Pakettikauppa</a>."
+"\"https://www.pakettikauppa.fi/\">Pakettikauppa</a>."
 msgstr ""
 "Kaikki olennaiset toimitustavat yhdellä sopimuksella. Lisätietoja "
-"Pakettikaupan kotisivuilta <a href=\"https://pakettikauppa.fi/\">www."
+"Pakettikaupan kotisivuilta <a href=\"https://www.pakettikauppa.fi/\">www."
 "pakettikauppa.fi</a>."
 
 #: includes/class-wc-pakettikauppa-shipping-method.php:93
