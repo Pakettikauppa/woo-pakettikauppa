@@ -356,7 +356,7 @@ class WC_Pakettikauppa_Shipment {
         if ( $item['product_id'] > 0 ) {
           $product = $order->get_product_from_item( $item );
           if ( ! $product->is_virtual() ) {
-            $weight += wc_get_weight($product->get_weight() * $item['qty'], 'kg');
+            $weight += $product->get_weight() * $item['qty'];
           }
         }
       }
