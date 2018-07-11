@@ -35,9 +35,11 @@ define( 'WC_PAKETTIKAUPPA_PRIVATE_DIR', $upload_dir['basedir'] . '/wc-pakettikau
  * Prepare private directory for pakettikauppa documents.
  */
 function wc_pakettikauppa_prepare_directory() {
-  // Use private directory out of webroot, can be accessed via X-Sendfile
-  @wp_mkdir_p( WC_PAKETTIKAUPPA_PRIVATE_DIR );
-  chmod( WC_PAKETTIKAUPPA_PRIVATE_DIR, 0755 );
+  // Create directory for plugin documents if does not yet exist
+  if ( ! file_exists( WC_PAKETTIKAUPPA_PRIVATE_DIR ) ) {
+    @wp_mkdir_p( WC_PAKETTIKAUPPA_PRIVATE_DIR );
+    chmod( WC_PAKETTIKAUPPA_PRIVATE_DIR, 0755 );
+  }
 
   // Create index.php to disallow directory listing in some incorrectly configured servers
   $index_file = WC_PAKETTIKAUPPA_PRIVATE_DIR . '/index.php';
