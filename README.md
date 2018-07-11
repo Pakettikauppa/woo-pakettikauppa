@@ -26,6 +26,8 @@ Naturally the store owner also needs to have a merchant account at [Pakettikaupp
 
 > *Note!* If you already have shipping contracts with Posti, Matkahuolto or DB Schenker with reduced prices, you can contact the customer support of Pakettikauppa to get those contracts via Pakettikauppa so you can use the WooCommerce Pakettikauppa plugin with your current shipping contracts.
 
+> *Important!* Before you start using this plugin, please check with your hosting provider that you have directory listing disabled. For more information about directory listing, check the documentation for [Apache](https://wiki.apache.org/httpd/DirectoryListings) or [Nginx](https://nginx.org/en/docs/http/ngx_http_autoindex_module.html).
+
 # Features
 
 * Integrates [Pakettikauppa](https://www.pakettikauppa.fi/) with WooCommerce

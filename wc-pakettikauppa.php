@@ -38,6 +38,12 @@ function wc_pakettikauppa_prepare_directory() {
   // Use private directory out of webroot, can be accessed via X-Sendfile
   @wp_mkdir_p( WC_PAKETTIKAUPPA_PRIVATE_DIR );
   chmod( WC_PAKETTIKAUPPA_PRIVATE_DIR, 0755 );
+
+  // Create index.php to disallow directory listing in some incorrectly configured servers
+  $index_file = WC_PAKETTIKAUPPA_PRIVATE_DIR . '/index.php';
+  if ( ! file_exists( $index_file ) ) {
+    touch( $index_file );
+  }
 }
 register_activation_hook( __FILE__, 'wc_pakettikauppa_prepare_directory' );
 
