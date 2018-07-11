@@ -47,7 +47,7 @@ function wc_pakettikauppa_prepare_directory() {
     touch( $index_file );
   }
 }
-register_activation_hook( __FILE__, 'wc_pakettikauppa_prepare_directory' );
+add_action( 'init', 'wc_pakettikauppa_prepare_directory' );
 
 /**
  * Load plugin textdomain
