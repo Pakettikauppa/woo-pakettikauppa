@@ -250,6 +250,11 @@ function wc_pakettikauppa_shipping_method_init() {
             'default' => '',
           ),
 
+            'info_code' => array(
+                    'title' => __('Info-code for shipments'),
+                'type' => 'text',
+                'default' => '',
+            ),
         );
       }
 
