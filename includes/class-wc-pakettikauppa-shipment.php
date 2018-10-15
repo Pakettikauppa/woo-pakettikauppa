@@ -205,7 +205,7 @@ class WC_Pakettikauppa_Shipment {
       $pickup_point_limit = intval( $this->wc_pakettikauppa_settings['pickup_points_search_limit'] );
     }
 
-    $pickup_point_data = $this->wc_pakettikauppa_client->searchPickupPoints( $postcode, $street_address, $country, $service_provider, $pickup_point_limit);
+    $pickup_point_data = $this->wc_pakettikauppa_client->searchPickupPoints( trim($postcode), trim($street_address), trim($country), $service_provider, $pickup_point_limit);
     if ( $pickup_point_data === 'Bad request' ) {
       throw new Exception( __( 'WC_Pakettikauppa: An error occured when searching pickup points.', 'wc-pakettikauppa' ) );
     }
