@@ -500,12 +500,10 @@ class WC_Pakettikauppa_Admin
         }
 
         if (false !== $shipment_id) {
-            $tracking_code = get_post_meta($post_id, '_wc_pakettikauppa_tracking_code', true);
-
-            $contents = $this->wc_pakettikauppa_shipment->fetchShippingLabel($tracking_code);
+            $contents = $this->wc_pakettikauppa_shipment->fetchShippingLabel($shipment_id);
             // Output
             header('Content-type:application/pdf');
-            header("Content-Disposition:inline;filename={$tracking_code}.pdf");
+            header("Content-Disposition:inline;filename={$shipment_id}.pdf");
             print $contents;
             exit;
         }
