@@ -475,16 +475,12 @@ class WC_Pakettikauppa_Admin {
     }
 
     if ( false !== $shipment_id ) {
-      $upload_dir = wp_upload_dir();
+        $tracking_code = get_post_meta($post_id, '_wc_pakettikauppa_tracking_code', true);
 
-      // Read file
-      $filepath = WC_PAKETTIKAUPPA_PRIVATE_DIR . '/' . $shipment_id . '.pdf';
-      header('X-Sendfile: ' . $filepath);
-
+        $contents = $this->wc_pakettikauppa_shipment->fetchShippingLabel($tracking_code);
       // Output
-      $contents = file_get_contents( $filepath );
       header('Content-type:application/pdf');
-      header("Content-Disposition:inline;filename={$shipment_id}.pdf");
+      header("Content-Disposition:inline;filename={$tracking_code}.pdf");
       print $contents;
       exit;
     }
@@ -529,16 +525,6 @@ class WC_Pakettikauppa_Admin {
     $post_type = get_post_type( $post_id );
     if ( $post_type !== 'shop_order' ) {
       return;
-    }
-
-    $tracking_code = get_post_meta( $post_id, '_wc_pakettikauppa_tracking_code', true );
-    if ( ! empty( $tracking_code ) ) {
-      $filepath = WC_PAKETTIKAUPPA_PRIVATE_DIR . '/' . $tracking_code . '.pdf';
-
-      // Delete if file exists
-      if ( file_exists( $filepath) ) {
-        unlink( $filepath );
-      }
     }
   }
 

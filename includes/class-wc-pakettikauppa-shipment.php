@@ -178,11 +178,6 @@ class WC_Pakettikauppa_Shipment
         }
 
         if (!empty($tracking_code)) {
-            $this->wc_pakettikauppa_client->fetchShippingLabel($shipment);
-            $upload_dir = wp_upload_dir();
-            $filepath = WC_PAKETTIKAUPPA_PRIVATE_DIR . '/' . $tracking_code . '.pdf';
-            file_put_contents($filepath, base64_decode($shipment->getPdf()));
-
             update_post_meta($post_id, '_wc_pakettikauppa_tracking_code', $tracking_code);
         }
 
@@ -192,6 +187,10 @@ class WC_Pakettikauppa_Shipment
             'tracking_code' => $tracking_code,
             'service_id' => $service_id,
         );
+    }
+
+    public function fetch_shipping_label($tracking_code) {
+        return $this->wc_pakettikauppa_client->fetchShippingLabels(array($shipment));
     }
 
     /**
