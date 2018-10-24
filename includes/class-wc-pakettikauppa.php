@@ -155,7 +155,8 @@ class WC_Pakettikauppa
             );
 
             woocommerce_form_field(
-                'pakettikauppa_pickup_point', array(
+                'pakettikauppa_pickup_point',
+                array(
                     'clear' => true,
                     'type' => 'select',
                     'custom_attributes' => array('style' => 'word-wrap: normal;'),
