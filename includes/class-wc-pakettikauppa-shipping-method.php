@@ -276,6 +276,51 @@ function wc_pakettikauppa_shipping_method_init()
             }
 
             /**
+             * Mostly copy pasted from WooCommerce: woocommerce/includes/abstracts/abstract-wc-shipping-method.php
+             *   protected function get_taxes_per_item( $costs )
+             *
+             * @param $shippingCost
+             * @return array
+             */
+            private function calculate_shipping_tax($shippingCost) {
+                $taxes = array();
+
+                $taxesTotal = 0;
+                $cart_total = WC()->cart->get_cart_contents_total();
+
+                $cart = WC()->cart->get_cart();
+
+                $costs = array();
+
+                foreach($cart as $item) {
+                    $costs[$item['key']] = $shippingCost * $item['line_total'] / $cart_total;
+                }
+
+                // If we have an array of costs we can look up each items tax class and add tax accordingly.
+                if ( is_array( $costs ) ) {
+                    $cart = WC()->cart->get_cart();
+
+                    foreach ( $costs as $cost_key => $amount ) {
+                        if ( ! isset( $cart[ $cost_key ] ) ) {
+                            continue;
+                        }
+
+                        $taxObj = WC_Tax::get_shipping_tax_rates( $cart[ $cost_key ]['data']->get_tax_class() );
+                        $item_taxes = WC_Tax::calc_shipping_tax( $amount,  $taxObj );
+
+                        // Sum the item taxes.
+                        foreach ( array_keys( $taxes + $item_taxes ) as $key ) {
+                            $taxes[ $key ] = round(( isset( $item_taxes[ $key ] ) ? $item_taxes[ $key ] : 0 ) + ( isset( $taxes[ $key ] ) ? $taxes[ $key ] : 0), 2);
+                        }
+                    }
+                }
+
+                foreach($taxes as $_tax) {
+                    $taxesTotal+=$_tax;
+                }
+                return array('total' => $taxesTotal, 'taxes' => $taxes);
+            }
+            /**
              * Called to calculate shipping rates for this method. Rates can be added using the add_rate() method.
              * Return only active shipping methods.
              *
@@ -285,32 +330,28 @@ function wc_pakettikauppa_shipping_method_init()
              */
             public function calculate_shipping($package = array())
             {
-                global $woocommerce;
+                $cart_total = WC()->cart->cart_contents_total;
 
-                $cart_total = $woocommerce->cart->cart_contents_total;
-                /*
-                        echo "<pre>";
-
-                        var_dump(WC()->cart);
-                          echo "</pre>";
-                */
                 $shipping_settings = json_decode($this->get_option('active_shipping_options'), true);
 
                 foreach ($shipping_settings as $service_code => $service_settings) {
-
                     if ($service_settings['active'] === 'yes') {
-
                         $shipping_cost = $service_settings['price'];
 
                         if ($service_settings['price_free'] < $cart_total && $service_settings['price_free'] > 0) {
                             $shipping_cost = 0;
                         }
 
+                        $taxes = $this->calculate_shipping_tax($shipping_cost);
+
+                        $shipping_cost = $shipping_cost - $taxes['total'];
+
                         $this->add_rate(
                             array(
                                 'id' => $this->id . ':' . $service_code,
                                 'label' => $this->wc_pakettikauppa_shipment->service_title($service_code),
-                                'cost' => (string)$shipping_cost
+                                'cost' => (string)$shipping_cost,
+                                'taxes' => $taxes['taxes'],
                             )
                         );
                     }
