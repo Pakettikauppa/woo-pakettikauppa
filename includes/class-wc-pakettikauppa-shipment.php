@@ -227,7 +227,9 @@ class WC_Pakettikauppa_Shipment
     {
         $services = array();
 
-        $shippingCountry = WC()->customer->get_shipping_country();
+        if (WC()->customer != null) {
+            $shippingCountry = WC()->customer->get_shipping_country();
+        }
 
         if($shippingCountry == null || $shippingCountry == '') {
             $shippingCountry = 'FI';
