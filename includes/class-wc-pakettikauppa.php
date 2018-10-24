@@ -138,36 +138,34 @@ class WC_Pakettikauppa
             $options_array[$pickup_point_key] = $pickup_point_value;
         }
 
-        echo '
-    <tr class="shipping-pickup-point">
-      <th>' . esc_attr__('Pickup point', 'wc-pakettikauppa') . '</th>
-      <td data-title="' . esc_attr__('Pickup point', 'wc-pakettikauppa') . '">';
+        echo '<tr class="shipping-pickup-point">';
+        echo '<th>' . esc_attr__('Pickup point', 'wc-pakettikauppa') . '</th>';
+        echo '<td data-title="' . esc_attr__('Pickup point', 'wc-pakettikauppa') . '">';
 
-        echo '<p>';
         // Return if the customer has not yet chosen a postcode
         if (empty($shipping_postcode)) {
+            echo '<p>';
             esc_attr_e('Insert your shipping details to view nearby pickup points', 'wc-pakettikauppa');
-            return;
+            echo '</p>';
+        } else {
+            printf(
+            /* translators: %s: Postcode */
+                esc_html__('Choose one of the pickup points close to your postcode %s below:', 'wc-pakettikauppa'),
+                '<span class="shipping_postcode_for_pickup">' . esc_attr($shipping_postcode) . '</span>'
+            );
+
+            woocommerce_form_field(
+                'pakettikauppa_pickup_point', array(
+                    'clear' => true,
+                    'type' => 'select',
+                    'custom_attributes' => array('style' => 'word-wrap: normal;'),
+                    'options' => $options_array,
+                ),
+                null
+            );
         }
-        printf(
-        /* translators: %s: Postcode */
-            esc_html__('Choose one of the pickup points close to your postcode %s below:', 'wc-pakettikauppa'),
-            '<span class="shipping_postcode_for_pickup">' . esc_attr($shipping_postcode) . '</span>'
-        );
-        echo '</p>';
 
-        woocommerce_form_field(
-            'pakettikauppa_pickup_point', array(
-            'clear' => true,
-            'type' => 'select',
-            'custom_attributes' => array('style' => 'max-width:18em;'),
-            'options' => $options_array,
-        ),
-            null
-        );
-
-        echo '</div>';
-
+        echo '</td></tr>';
     }
 
     /**
