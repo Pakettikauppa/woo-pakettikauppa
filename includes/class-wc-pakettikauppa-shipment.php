@@ -227,6 +227,12 @@ class WC_Pakettikauppa_Shipment
     {
         $services = array();
 
+        $shippingCountry = WC()->customer->get_shipping_country();
+
+        if($shippingCountry == null || $shippingCountry == '') {
+            $shippingCountry = 'FI';
+        }
+
         // @TODO: File bug upstream about result being string instead of object by default
         $transient_name = 'wc_pakettikauppa_shipping_methods';
         $transient_time = 86400; // 24 hours
@@ -234,12 +240,16 @@ class WC_Pakettikauppa_Shipment
 
         if (false === $all_shipping_methods) {
             $all_shipping_methods = json_decode($this->wc_pakettikauppa_client->listShippingMethods());
+
             set_transient($transient_name, $all_shipping_methods, $transient_time);
         }
+
         // List all available methods as shipping options on checkout page
         if (!empty($all_shipping_methods)) {
             foreach ($all_shipping_methods as $shipping_method) {
-                $services[$shipping_method->shipping_method_code] = sprintf('%1$s %2$s', $shipping_method->service_provider, $shipping_method->name);
+                if(in_array($shippingCountry, $shipping_method->supported_countries)) {
+                    $services[$shipping_method->shipping_method_code] = sprintf('%1$s %2$s', $shipping_method->service_provider, $shipping_method->name);
+                }
             }
         }
         return $services;
