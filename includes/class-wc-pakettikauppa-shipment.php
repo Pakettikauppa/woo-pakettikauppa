@@ -229,7 +229,7 @@ class WC_Pakettikauppa_Shipment
 
         // @TODO: File bug upstream about result being string instead of object by default
         $transient_name = 'wc_pakettikauppa_shipping_methods';
-        $transent_time = 86400; // 24 hours
+        $transient_time = 86400; // 24 hours
         $all_shipping_methods = get_transient($transient_name);
 
         if (false === $all_shipping_methods) {
