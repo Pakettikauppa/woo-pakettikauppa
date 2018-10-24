@@ -276,89 +276,26 @@ class WC_Pakettikauppa_Admin
                         <h4><?php esc_attr_e('Service', 'wc-pakettikauppa'); ?></h4>
                         <?php foreach ($active_shipping_options as $shipping_code => $shipping_settings) : ?>
                             <?php if ($shipping_settings['active'] === 'yes') : ?>
-                                <label for="service-<?php echo esc_attr($shipping_code); ?>">
+                                <?php if ($service_id == $shipping_code) : ?>
+                                    <label for="service-<?php echo esc_attr($shipping_code); ?>">
                                     <input type="radio"
                                            name="wc_pakettikauppa_service_id"
                                            value="<?php echo esc_attr($shipping_code); ?>"
                                            id="service-<?php echo esc_attr($shipping_code); ?>"
-                                        <?php if ($service_id === $shipping_code) : ?>
-                                            checked="checked";
-                                        <?php endif; ?>
+                                           checked="checked"
                                     />
                                     <span><?php echo esc_attr($this->wc_pakettikauppa_shipment->service_title($shipping_code)); ?></span>
                                 </label>
                                 <br>
+                                <?php endif; ?>
                             <?php endif; ?>
                         <?php endforeach; ?>
 
-                        <h4><?php esc_attr_e('Additional services', 'wc-pakettikauppa'); ?></h4>
-                        <input type="checkbox" name="wc_pakettikauppa_cod" value="1" id="wc-pakettikauppa-cod"
-                            <?php if ($cod) : ?>
-                                checked="checked"
-                            <?php endif; ?> />
-                        <label for="wc-pakettikauppa-cod"><?php esc_attr_e('Cash on Delivery', 'wc-pakettikauppa'); ?></label>
+                        <?php if($pickup_point): ?>
+                            <input type="hidden" name="wc_pakettikauppa_pickup_points" value="1">
+                            <input type="hidden" name="wc_pakettikauppa_pickup_point_id" value="<?php echo $pickup_point_id;?>">
+                        <?php endif; ?>
 
-                        <div class="form-field" id="wc-pakettikauppa-cod-amount-wrapper">
-                            <label for="wc_pakettikauppa_cod_amount"><?php esc_attr_e('Amount (€):', 'wc-pakettikauppa'); ?></label>
-                            <input type="text" name="wc_pakettikauppa_cod_amount"
-                                   value="<?php echo esc_attr($cod_amount); ?>" id="wc_pakettikauppa_cod_amount"/>
-                        </div>
-
-                        <div class="form-field" id="wc-pakettikauppa-cod-reference-wrapper">
-                            <label for="wc_pakettikauppa_cod_reference"><?php esc_attr_e('Reference:', 'wc-pakettikauppa'); ?></label>
-                            <input type="text" name="wc_pakettikauppa_cod_reference"
-                                   value="<?php echo esc_attr($cod_reference); ?>" id="wc_pakettikauppa_cod_reference"/>
-                        </div>
-
-                        <input type="checkbox" style="display:none;" name="wc_pakettikauppa_pickup_points" value="1"
-                               id="wc-pakettikauppa-pickup-points"
-                            <?php if ($pickup_point) : ?>
-                                checked="checked"
-                            <?php endif; ?>
-                        />
-
-                        <?php
-                        try {
-                            $shipping_postcode = $order->get_shipping_postcode();
-                            $shipping_address_1 = $order->get_shipping_address_1();
-                            $shipping_country = $order->get_shipping_country();
-
-                            if (empty($shipping_country)) {
-                                $shipping_country = 'FI';
-                            }
-
-                            $pickup_points = array();
-
-                            foreach ($active_shipping_options as $shipping_code => $shipping_settings) {
-                                $shipping_provider = $this->wc_pakettikauppa_shipment->service_provider($shipping_code);
-                                $pickup_point_data = $this->wc_pakettikauppa_shipment->get_pickup_points($shipping_postcode, $shipping_address_1, $shipping_country, $shipping_provider);
-                                $pickup_points = array_merge($pickup_points, json_decode($pickup_point_data));
-                            }
-                            ?>
-
-                            <div class="form-field" id="wc-pakettikauppa-pickup-points-wrapper">
-                                <h4><?php esc_attr_e('Pickup Point', 'wc-pakettikauppa'); ?></h4>
-                                <select name="wc_pakettikauppa_pickup_point_id" class="wc_pakettikauppa_pickup_point_id"
-                                        id="wc_pakettikauppa_pickup_point_id">
-                                    <?php foreach ($pickup_points as $key => $value) : ?>
-                                        <option value="<?php echo esc_attr($value->pickup_point_id); ?>"
-                                            <?php if ($pickup_point_id === $value->pickup_point_id) : ?>
-                                                selected
-                                            <?php endif; ?>
-                                        />
-                                        <?php echo esc_attr($value->provider . ': ' . $value->name . ' (' . $value->street_address . ')'); ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-
-                            <?php
-                        } catch (Exception $e) {
-                            $this->add_error($e->getMessage());
-                            echo '<p class="wc-pakettikauppa-metabox-error">'
-                                . esc_attr__('Pickup point search failed! Check your error log for details.', 'wc-pakettikauppa')
-                                . '</p>';
-                        }
-                        ?>
                     </fieldset>
 
                 </div>
@@ -500,11 +437,12 @@ class WC_Pakettikauppa_Admin
         }
 
         if (false !== $shipment_id) {
-            $contents = $this->wc_pakettikauppa_shipment->fetchShippingLabel($shipment_id);
+            $contents = $this->wc_pakettikauppa_shipment->fetch_shipping_label($shipment_id);
+
             // Output
             header('Content-type:application/pdf');
             header("Content-Disposition:inline;filename={$shipment_id}.pdf");
-            print $contents;
+            print base64_decode($contents->{"response.file"});
             exit;
         }
 
