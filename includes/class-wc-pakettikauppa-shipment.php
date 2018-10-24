@@ -190,7 +190,8 @@ class WC_Pakettikauppa_Shipment
     }
 
     public function fetch_shipping_label($tracking_code) {
-        return $this->wc_pakettikauppa_client->fetchShippingLabels(array($shipment));
+        return $this->wc_pakettikauppa_client->fetchShippingLabels(array($tracking_code));
+
     }
 
     /**

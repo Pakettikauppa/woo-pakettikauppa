@@ -276,7 +276,7 @@ class WC_Pakettikauppa_Admin
                         <h4><?php esc_attr_e('Service', 'wc-pakettikauppa'); ?></h4>
                         <?php foreach ($active_shipping_options as $shipping_code => $shipping_settings) : ?>
                             <?php if ($shipping_settings['active'] === 'yes') : ?>
-                                <?php if ($service_id === $shipping_code) : ?>
+                                <?php if ($service_id == $shipping_code) : ?>
                                     <label for="service-<?php echo esc_attr($shipping_code); ?>">
                                     <input type="radio"
                                            name="wc_pakettikauppa_service_id"
@@ -437,11 +437,12 @@ class WC_Pakettikauppa_Admin
         }
 
         if (false !== $shipment_id) {
-            $contents = $this->wc_pakettikauppa_shipment->fetchShippingLabel($shipment_id);
+            $contents = $this->wc_pakettikauppa_shipment->fetch_shipping_label($shipment_id);
+
             // Output
             header('Content-type:application/pdf');
             header("Content-Disposition:inline;filename={$shipment_id}.pdf");
-            print $contents;
+            print base64_decode($contents->{"response.file"});
             exit;
         }
 
