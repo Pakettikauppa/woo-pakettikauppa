@@ -26,28 +26,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 // @TODO: Also check for other solutions to refer to plugin_basename and plugin_dir_path in includes/ directory
 define( 'WC_PAKETTIKAUPPA_BASENAME', plugin_basename( __FILE__ ) );
 define( 'WC_PAKETTIKAUPPA_DIR', plugin_dir_path( __FILE__ ) );
-$upload_dir = wp_upload_dir();
-define( 'WC_PAKETTIKAUPPA_PRIVATE_DIR', $upload_dir['basedir'] . '/wc-pakettikauppa' );
-// @TODO: Now the location is unprotected. In future, allow users to customize this
-// location and use techniques like X-Sendfile to limit access to logged in users.
-
-/**
- * Prepare private directory for pakettikauppa documents.
- */
-function wc_pakettikauppa_prepare_directory() {
-  // Create directory for plugin documents if does not yet exist
-  if ( ! file_exists( WC_PAKETTIKAUPPA_PRIVATE_DIR ) ) {
-    @wp_mkdir_p( WC_PAKETTIKAUPPA_PRIVATE_DIR );
-    chmod( WC_PAKETTIKAUPPA_PRIVATE_DIR, 0755 );
-  }
-
-  // Create index.php to disallow directory listing in some incorrectly configured servers
-  $index_file = WC_PAKETTIKAUPPA_PRIVATE_DIR . '/index.php';
-  if ( ! file_exists( $index_file ) ) {
-    touch( $index_file );
-  }
-}
-add_action( 'init', 'wc_pakettikauppa_prepare_directory' );
 
 /**
  * Load plugin textdomain
