@@ -179,11 +179,11 @@ class Shipment
     /**
      * Builds the xml from given data
      *
-     * @return \SimpleXMLElement
+     * @return SimpleXMLElement
      */
     private function toXml()
     {
-        $xml = new \SimpleXMLElement('<eChannel/>');
+        $xml = new SimpleXMLElement('<eChannel/>');
 
         $routing = $xml->addChild('ROUTING');
         $routing->addChild("Routing.Time", time());

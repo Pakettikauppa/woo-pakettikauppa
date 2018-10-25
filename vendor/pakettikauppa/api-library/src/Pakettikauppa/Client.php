@@ -7,7 +7,9 @@ class Client
     private $api_key;
     private $secret;
     private $base_uri;
-    private $user_agent = 'pk-client-lib/0.1';
+    private $user_agent = 'pk-client-lib/0.2';
+    private $comment = null;
+    private $response = null;
 
     /**
      * Client constructor.
@@ -33,10 +35,24 @@ class Client
 
             $this->api_key      = $params['api_key'];
             $this->secret       = $params['secret'];
-            $this->base_uri     = 'https://api.pakettikauppa.fi';
+
+            if(isset($params['base_uri'])) {
+                $this->base_uri = $params['base_uri'];
+            } else {
+                $this->base_uri = 'https://api.pakettikauppa.fi';
+            }
         }
     }
 
+    /**
+     * Sets comment for the request. You can set there information for Pakettikauppa. Like
+     * "Generated from Foobar platform"
+     *
+     * @param string $comment
+     */
+    public function setComment($comment) {
+        $this->comment = $comment;
+    }
     /**
      * Posts shipment data to Pakettikauppa, if request was successful
      * sets $reference and $tracking_code params to given shipment.
@@ -53,6 +69,9 @@ class Client
         $shipment_xml->{"ROUTING"}->{"Routing.Account"}     = $this->api_key;
         $shipment_xml->{"ROUTING"}->{"Routing.Id"}          = $id;
         $shipment_xml->{"ROUTING"}->{"Routing.Key"}         = md5("{$this->api_key}{$id}{$this->secret}");
+        if($this->comment != null) {
+            $shipment_xml->{"ROUTING"}->{"Routing.Comment"} = $this->comment;
+        }
 
         $response = $this->doPost('/prinetti/create-shipment', null, $shipment_xml->asXML());
 
@@ -61,6 +80,8 @@ class Client
         if(!$response_xml) {
             throw new \Exception("Failed to load response xml");
         }
+
+        $this->response = $response_xml;
 
         if($response_xml->{'response.status'} != 0) {
             throw new \Exception("Error: {$response_xml->{'response.status'}}, {$response_xml->{'response.message'}}");
@@ -73,6 +94,14 @@ class Client
     }
 
     /**
+     * Returns latest response as XML
+     * 
+     * @return \SimpleXMLElement
+     */
+    public function getResponse() {
+        return $this->response;
+    }
+    /**a
      * Fetches the shipping label pdf for a given Shipment and
      * saves it as base64 encoded string to $pdf parameter on the Shipment.
      * The shipment must have $tracking_code and $reference set.
@@ -104,6 +133,8 @@ class Client
             throw new \Exception("Failed to load response xml");
         }
 
+        $this->response = $response_xml;
+
         if($response_xml->{'response.status'} != 0) {
             throw new \Exception("Error: {$response_xml->{'response.status'}}, {$response_xml->{'response.message'}}");
         }
@@ -114,8 +145,50 @@ class Client
     }
 
     /**
+     * Fetches the shipping labels in one pdf for a given tracking_codes and
+     * saves it as base64 encoded string inside XML.
+     *
+     * @param array $trackingCodes
+     * @return xml
+     * @throws \Exception
+     */
+    public function fetchShippingLabels($trackingCodes)
+    {
+        $id     = str_replace('.', '', microtime(true));
+        $xml    = new \SimpleXMLElement('<eChannel/>');
+
+        $routing = $xml->addChild('ROUTING');
+        $routing->addChild('Routing.Account', $this->api_key);
+        $routing->addChild('Routing.Id', $id);
+        $routing->addChild('Routing.Key', md5("{$this->api_key}{$id}{$this->secret}"));
+
+        $label = $xml->addChild('PrintLabel');
+        $label['responseFormat'] = 'File';
+
+        foreach($trackingCodes as $trackingCode) {
+            $label->addChild('TrackingCode', $trackingCode);
+        }
+
+        $response = $this->doPost('/prinetti/get-shipping-label', null, $xml->asXML());
+
+        $response_xml = @simplexml_load_string($response);
+
+        if(!$response_xml) {
+            throw new \Exception("Failed to load response xml");
+        }
+
+        $this->response = $response_xml;
+
+        if($response_xml->{'response.status'} != 0) {
+            throw new \Exception("Error: {$response_xml->{'response.status'}}, {$response_xml->{'response.message'}}");
+        }
+
+        return $response_xml;
+    }
+
+    /**
      * @param $tracking_code
-     * @return \Psr\Http\Message\StreamInterface
+     * @return mixed
      */
     public function getShipmentStatus($tracking_code)
     {
@@ -123,7 +196,7 @@ class Client
     }
 
     /**
-     * @return \Psr\Http\Message\StreamInterface
+     * @return mixed
      */
     public function listAdditionalServices()
     {
@@ -131,7 +204,7 @@ class Client
     }
 
     /**
-     * @return \Psr\Http\Message\StreamInterface
+     * @return mixed
      */
     public function listShippingMethods()
     {
@@ -139,19 +212,48 @@ class Client
     }
 
     /**
-     * @param $postcode
-     * @param null $street_address
-     * @param null $country
-     * @param null $service_provider
-     * @param $limit
-     * @return \Psr\Http\Message\StreamInterface
+     * Search pickup points.
+     *
+     * @param int $postcode
+     * @param string $street_address
+     * @param string $country
+     * @param string $service_provider Limits results for to certain providers possible values: Posti, Matkahuolto, Db Schenker.
+     * @param int $limit 1 - 15
+     * @return mixed
      */
-    public function searchPickupPoints($postcode, $street_address = null, $country = null, $service_provider = null, $limit = 5)
+    public function searchPickupPoints($postcode = null, $street_address = null, $country = null, $service_provider = null, $limit = 5)
     {
+        if ( ($postcode == null && $street_address == null) || (trim($postcode) == '' && trim($street_address) == '') ) {
+            return '[]';
+        }
+
         $post_params = array(
             'postcode'          => (string) $postcode,
             'address'           => (string) $street_address,
             'country'           => (string) $country,
+            'service_provider'  => (string) $service_provider,
+            'limit'             => (int) $limit
+        );
+
+        return $this->doPost('/pickup-points/search', $post_params);
+    }
+
+    /**
+     * Searches pickup points with a text query. For best results the query should contain a full address
+     *
+     * @param $query_text Text containing the full address, for example: "Keskustori 1, 33100 Tampere"
+     * @param string $service_provider $service_provider Limits results for to certain providers possible values: Posti, Matkahuolto, Db Schenker.
+     * @param int $limit 1 - 15
+     * @return mixed
+     */
+    public function searchPickupPointsByText($query_text, $service_provider = null, $limit = 5)
+    {
+        if ( $query_text == null || trim($query_text) == '' ) {
+            return '[]';
+        }
+
+        $post_params = array(
+            'query'             => (string) $query_text,
             'service_provider'  => (string) $service_provider,
             'limit'             => (int) $limit
         );

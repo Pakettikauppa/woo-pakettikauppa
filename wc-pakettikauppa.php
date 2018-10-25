@@ -20,34 +20,12 @@
 
 // Prevent direct access to this script
 if ( ! defined( 'ABSPATH' ) ) {
-  exit;
+	exit;
 }
 
 // @TODO: Also check for other solutions to refer to plugin_basename and plugin_dir_path in includes/ directory
 define( 'WC_PAKETTIKAUPPA_BASENAME', plugin_basename( __FILE__ ) );
 define( 'WC_PAKETTIKAUPPA_DIR', plugin_dir_path( __FILE__ ) );
-$upload_dir = wp_upload_dir();
-define( 'WC_PAKETTIKAUPPA_PRIVATE_DIR', $upload_dir['basedir'] . '/wc-pakettikauppa' );
-// @TODO: Now the location is unprotected. In future, allow users to customize this
-// location and use techniques like X-Sendfile to limit access to logged in users.
-
-/**
- * Prepare private directory for pakettikauppa documents.
- */
-function wc_pakettikauppa_prepare_directory() {
-  // Create directory for plugin documents if does not yet exist
-  if ( ! file_exists( WC_PAKETTIKAUPPA_PRIVATE_DIR ) ) {
-    @wp_mkdir_p( WC_PAKETTIKAUPPA_PRIVATE_DIR );
-    chmod( WC_PAKETTIKAUPPA_PRIVATE_DIR, 0755 );
-  }
-
-  // Create index.php to disallow directory listing in some incorrectly configured servers
-  $index_file = WC_PAKETTIKAUPPA_PRIVATE_DIR . '/index.php';
-  if ( ! file_exists( $index_file ) ) {
-    touch( $index_file );
-  }
-}
-add_action( 'init', 'wc_pakettikauppa_prepare_directory' );
 
 /**
  * Load plugin textdomain
@@ -55,8 +33,9 @@ add_action( 'init', 'wc_pakettikauppa_prepare_directory' );
  * @return void
  */
 function wc_pakettikauppa_load_textdomain() {
-  load_plugin_textdomain( 'wc-pakettikauppa', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+	load_plugin_textdomain( 'wc-pakettikauppa', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 }
+
 add_action( 'plugins_loaded', 'wc_pakettikauppa_load_textdomain' );
 
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-wc-pakettikauppa-shipping-method.php';
@@ -65,20 +44,22 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-wc-pakettikauppa-ship
  * Load the WC_Pakettikauppa class when in frontend
  */
 function wc_pakettikauppa_load() {
-  if ( ! is_admin() ) {
-    require_once plugin_dir_path( __FILE__ ) . 'includes/class-wc-pakettikauppa.php';
-    $wc_pakettikauppa = new WC_Pakettikauppa();
-    $wc_pakettikauppa->load();
-  }
+	if ( ! is_admin() ) {
+		require_once plugin_dir_path( __FILE__ ) . 'includes/class-wc-pakettikauppa.php';
+		$wc_pakettikauppa = new WC_Pakettikauppa();
+		$wc_pakettikauppa->load();
+	}
 }
+
 add_action( 'init', 'wc_pakettikauppa_load' );
 
 /**
  * Load the WC_Pakettikauppa_Admin class in wp-admin
  */
 function wc_pakettikauppa_load_admin() {
-  require_once plugin_dir_path( __FILE__ ) . 'includes/class-wc-pakettikauppa-admin.php';
-  $wc_pakettikauppa_admin = new WC_Pakettikauppa_Admin();
-  $wc_pakettikauppa_admin->load();
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wc-pakettikauppa-admin.php';
+	$wc_pakettikauppa_admin = new WC_Pakettikauppa_Admin();
+	$wc_pakettikauppa_admin->load();
 }
+
 add_action( 'admin_init', 'wc_pakettikauppa_load_admin' );

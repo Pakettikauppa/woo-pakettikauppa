@@ -113,7 +113,7 @@ class Parcel
      */
     public function setVolume($volume)
     {
-        $this->volume = $volume;
+        $this->volume = round($volume, 4);
     }
 
     /**
