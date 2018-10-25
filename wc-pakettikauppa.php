@@ -19,7 +19,7 @@
  */
 
 // Prevent direct access to this script
-if (!defined('ABSPATH')) {
+if(!defined('ABSPATH')) {
     exit;
 }
 
@@ -32,8 +32,7 @@ define('WC_PAKETTIKAUPPA_DIR', plugin_dir_path(__FILE__));
  *
  * @return void
  */
-function wc_pakettikauppa_load_textdomain()
-{
+function wc_pakettikauppa_load_textdomain() {
     load_plugin_textdomain('wc-pakettikauppa', false, dirname(plugin_basename(__FILE__)) . '/languages/');
 }
 
@@ -44,9 +43,8 @@ require_once plugin_dir_path(__FILE__) . 'includes/class-wc-pakettikauppa-shippi
 /**
  * Load the WC_Pakettikauppa class when in frontend
  */
-function wc_pakettikauppa_load()
-{
-    if (!is_admin()) {
+function wc_pakettikauppa_load() {
+    if(!is_admin()) {
         require_once plugin_dir_path(__FILE__) . 'includes/class-wc-pakettikauppa.php';
         $wc_pakettikauppa = new WC_Pakettikauppa();
         $wc_pakettikauppa->load();
@@ -58,8 +56,7 @@ add_action('init', 'wc_pakettikauppa_load');
 /**
  * Load the WC_Pakettikauppa_Admin class in wp-admin
  */
-function wc_pakettikauppa_load_admin()
-{
+function wc_pakettikauppa_load_admin() {
     require_once plugin_dir_path(__FILE__) . 'includes/class-wc-pakettikauppa-admin.php';
     $wc_pakettikauppa_admin = new WC_Pakettikauppa_Admin();
     $wc_pakettikauppa_admin->load();
