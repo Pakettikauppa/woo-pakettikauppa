@@ -98,8 +98,8 @@ class WC_Pakettikauppa_Shipment
     public function create_shipment($post_id)
     {
         $shipment = new Shipment();
-        $service_id = $_REQUEST['wc_pakettikauppa_service_id'];
-        $shipment->setShippingMethod($service_id);
+	    $service_id = get_post_meta($post_id, '_wc_pakettikauppa_service_id', true);
+	    $shipment->setShippingMethod($service_id);
 
         $sender = new Sender();
         $sender->setName1($this->wc_pakettikauppa_settings['sender_name']);
@@ -117,7 +117,7 @@ class WC_Pakettikauppa_Shipment
         $receiver->setAddr2($order->get_shipping_address_2());
         $receiver->setPostcode($order->get_shipping_postcode());
         $receiver->setCity($order->get_shipping_city());
-        $receiver->setCountry('FI');
+        $receiver->setCountry( ($order->get_shipping_country() == null ? 'FI' : $order->get_shipping_country()) );
         $receiver->setEmail($order->get_billing_email());
         $receiver->setPhone($order->get_billing_phone());
         $shipment->setReceiver($receiver);
@@ -141,6 +141,7 @@ class WC_Pakettikauppa_Shipment
             $shipment->setPickupPoint($pickup_point_id);
         }
 
+        $tracking_code = null;
         try {
             if ($this->wc_pakettikauppa_client->createTrackingCode($shipment)) {
                 $tracking_code = $shipment->getTrackingCode()->__toString();
@@ -150,14 +151,8 @@ class WC_Pakettikauppa_Shipment
             throw new Exception(wp_sprintf(__('WooCommerce Pakettikauppa: tracking code creation failed: %s', 'wc-pakettikauppa'), $e->getMessage()));
         }
 
-        if (!empty($tracking_code)) {
-            update_post_meta($post_id, '_wc_pakettikauppa_tracking_code', $tracking_code);
-        }
+        return $tracking_code;
 
-        return array(
-            'tracking_code' => $tracking_code,
-            'service_id' => $service_id,
-        );
     }
 
     public function fetch_shipping_label($tracking_code) {
@@ -412,7 +407,7 @@ class WC_Pakettikauppa_Shipment
      * @param int $tracking_code The tracking code of the shipment
      * @return string The full tracking url for the order
      */
-    public static function tracking_url($service_id, $tracking_code)
+    public static function tracking_url($tracking_code)
     {
         $tracking_url = 'https://www.pakettikauppa.fi/seuranta/?' . $tracking_code;
         return $tracking_url;
