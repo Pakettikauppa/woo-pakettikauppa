@@ -212,9 +212,6 @@ class WC_Pakettikauppa_Admin
 
         // The tracking code will only be available if the shipment label has been generated
         $tracking_code = get_post_meta($post->ID, '_wc_pakettikauppa_tracking_code', true);
-        $cod = get_post_meta($post->ID, '_wc_pakettikauppa_cod', true);
-        $cod_amount = get_post_meta($post->ID, '_wc_pakettikauppa_cod_amount', true);
-        $cod_reference = get_post_meta($post->ID, '_wc_pakettikauppa_cod_reference', true);
         $service_id = get_post_meta($post->ID, '_wc_pakettikauppa_service_id', true);
 
         $shipping_methods = $order->get_shipping_methods();
@@ -228,16 +225,6 @@ class WC_Pakettikauppa_Admin
         $pickup_point_id = $order->get_meta('_pakettikauppa_pickup_point_id');
         $status = get_post_meta($post->ID, '_wc_pakettikauppa_shipment_status', true);
 
-        // Set defaults
-        if (empty($cod)) {
-            $cod = ($order->get_payment_method() === 'cod');
-        }
-        if (empty($cod_amount)) {
-            $cod_amount = $order->get_total();
-        }
-        if (empty($cod_reference)) {
-            $cod_reference = WC_Pakettikauppa_Shipment::calculate_reference($post->ID);
-        }
         if (empty($service_id)) {
             $service_id = WC_Pakettikauppa_Shipment::get_default_service($post, $order);
         }

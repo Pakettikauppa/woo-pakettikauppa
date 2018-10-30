@@ -136,36 +136,9 @@ class WC_Pakettikauppa_Shipment
         }
         $shipment->addParcel($parcel);
 
-        $cod = false;
-
-        if (isset($_REQUEST['wc_pakettikauppa_cod']) && $_REQUEST['wc_pakettikauppa_cod']) {
-            $cod = true;
-            $cod_amount = floatval(str_replace(',', '.', $_REQUEST['wc_pakettikauppa_cod_amount']));
-            $cod_reference = trim($_REQUEST['wc_pakettikauppa_cod_reference']);
-            $cod_iban = $this->wc_pakettikauppa_settings['cod_iban'];
-            $cod_bic = $this->wc_pakettikauppa_settings['cod_bic'];
-
-            $additional_service = new AdditionalService();
-            $additional_service->addSpecifier('amount', $cod_amount);
-            $additional_service->addSpecifier('account', $cod_iban);
-            $additional_service->addSpecifier('codbic', $cod_bic);
-            $additional_service->setServiceCode(3101);
-            $shipment->addAdditionalService($additional_service);
-
-            update_post_meta($post_id, '_wc_pakettikauppa_cod', $cod);
-            update_post_meta($post_id, '_wc_pakettikauppa_cod_amount', $cod_amount);
-            update_post_meta($post_id, '_wc_pakettikauppa_cod_reference', $cod_reference);
-        }
-
-        $pickup_point = false;
         if (isset($_REQUEST['wc_pakettikauppa_pickup_points']) && $_REQUEST['wc_pakettikauppa_pickup_points']) {
-            $pickup_point = true;
             $pickup_point_id = intval($_REQUEST['wc_pakettikauppa_pickup_point_id']);
-
             $shipment->setPickupPoint($pickup_point_id);
-
-            update_post_meta($post_id, '_wc_pakettikauppa_pickup_point', $pickup_point);
-            update_post_meta($post_id, '_wc_pakettikauppa_pickup_point_id', $pickup_point_id);
         }
 
         try {
@@ -180,8 +153,6 @@ class WC_Pakettikauppa_Shipment
         if (!empty($tracking_code)) {
             update_post_meta($post_id, '_wc_pakettikauppa_tracking_code', $tracking_code);
         }
-
-        update_post_meta($post_id, '_wc_pakettikauppa_service_id', $service_id);
 
         return array(
             'tracking_code' => $tracking_code,
