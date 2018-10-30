@@ -434,7 +434,7 @@ class WC_Pakettikauppa_Admin
             // Output
             header('Content-type:application/pdf');
             header("Content-Disposition:inline;filename={$shipment_id}.pdf");
-            print base64_decode($contents->{"response.file"});
+            echo base64_decode($contents->{"response.file"});
             exit;
         }
 
