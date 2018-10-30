@@ -351,13 +351,13 @@ class WC_Pakettikauppa_Admin
 	            $service_id = get_post_meta($post_id, '_wc_pakettikauppa_service_id', true);
 
 	            $order->add_order_note(sprintf(
-                /* translators: 1: Shipping service title 2: Shipment tracking code 3: Shipping label URL 4: Shipment tracking URL */
-                    __('Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s', 'wc-pakettikauppa'),
-                    $this->wc_pakettikauppa_shipment->service_title($service_id),
-                    $tracking_code,
-                    $dl_link,
-                    $tracking_link
-                ));
+	            /* translators: 1: Shipping service title 2: Shipment tracking code 3: Shipping label URL 4: Shipment tracking URL */
+		            __('Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s', 'wc-pakettikauppa'),
+		            $this->wc_pakettikauppa_shipment->service_title($service_id),
+		            $tracking_code,
+		            $dl_link,
+		            $tracking_link
+	            ));
 
             } catch (Exception $e) {
                 $this->add_error($e->getMessage());
