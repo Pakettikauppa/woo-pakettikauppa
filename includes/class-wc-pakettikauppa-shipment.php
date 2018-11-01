@@ -99,6 +99,7 @@ class WC_Pakettikauppa_Shipment
     {
         $shipment = new Shipment();
 	    $service_id = get_post_meta($post_id, '_wc_pakettikauppa_service_id', true);
+
 	    $shipment->setShippingMethod($service_id);
 
         $sender = new Sender();
