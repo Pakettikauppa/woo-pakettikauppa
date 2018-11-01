@@ -98,8 +98,9 @@ class WC_Pakettikauppa_Shipment
     public function create_shipment($post_id)
     {
         $shipment = new Shipment();
-        $service_id = $_REQUEST['wc_pakettikauppa_service_id'];
-        $shipment->setShippingMethod($service_id);
+	    $service_id = get_post_meta($post_id, '_wc_pakettikauppa_service_id', true);
+
+	    $shipment->setShippingMethod($service_id);
 
         $sender = new Sender();
         $sender->setName1($this->wc_pakettikauppa_settings['sender_name']);
@@ -117,7 +118,7 @@ class WC_Pakettikauppa_Shipment
         $receiver->setAddr2($order->get_shipping_address_2());
         $receiver->setPostcode($order->get_shipping_postcode());
         $receiver->setCity($order->get_shipping_city());
-        $receiver->setCountry('FI');
+        $receiver->setCountry( ($order->get_shipping_country() == null ? 'FI' : $order->get_shipping_country()) );
         $receiver->setEmail($order->get_billing_email());
         $receiver->setPhone($order->get_billing_phone());
         $shipment->setReceiver($receiver);
@@ -136,38 +137,12 @@ class WC_Pakettikauppa_Shipment
         }
         $shipment->addParcel($parcel);
 
-        $cod = false;
-
-        if (isset($_REQUEST['wc_pakettikauppa_cod']) && $_REQUEST['wc_pakettikauppa_cod']) {
-            $cod = true;
-            $cod_amount = floatval(str_replace(',', '.', $_REQUEST['wc_pakettikauppa_cod_amount']));
-            $cod_reference = trim($_REQUEST['wc_pakettikauppa_cod_reference']);
-            $cod_iban = $this->wc_pakettikauppa_settings['cod_iban'];
-            $cod_bic = $this->wc_pakettikauppa_settings['cod_bic'];
-
-            $additional_service = new AdditionalService();
-            $additional_service->addSpecifier('amount', $cod_amount);
-            $additional_service->addSpecifier('account', $cod_iban);
-            $additional_service->addSpecifier('codbic', $cod_bic);
-            $additional_service->setServiceCode(3101);
-            $shipment->addAdditionalService($additional_service);
-
-            update_post_meta($post_id, '_wc_pakettikauppa_cod', $cod);
-            update_post_meta($post_id, '_wc_pakettikauppa_cod_amount', $cod_amount);
-            update_post_meta($post_id, '_wc_pakettikauppa_cod_reference', $cod_reference);
-        }
-
-        $pickup_point = false;
         if (isset($_REQUEST['wc_pakettikauppa_pickup_points']) && $_REQUEST['wc_pakettikauppa_pickup_points']) {
-            $pickup_point = true;
             $pickup_point_id = intval($_REQUEST['wc_pakettikauppa_pickup_point_id']);
-
             $shipment->setPickupPoint($pickup_point_id);
-
-            update_post_meta($post_id, '_wc_pakettikauppa_pickup_point', $pickup_point);
-            update_post_meta($post_id, '_wc_pakettikauppa_pickup_point_id', $pickup_point_id);
         }
 
+        $tracking_code = null;
         try {
             if ($this->wc_pakettikauppa_client->createTrackingCode($shipment)) {
                 $tracking_code = $shipment->getTrackingCode()->__toString();
@@ -177,16 +152,8 @@ class WC_Pakettikauppa_Shipment
             throw new Exception(wp_sprintf(__('WooCommerce Pakettikauppa: tracking code creation failed: %s', 'wc-pakettikauppa'), $e->getMessage()));
         }
 
-        if (!empty($tracking_code)) {
-            update_post_meta($post_id, '_wc_pakettikauppa_tracking_code', $tracking_code);
-        }
+        return $tracking_code;
 
-        update_post_meta($post_id, '_wc_pakettikauppa_service_id', $service_id);
-
-        return array(
-            'tracking_code' => $tracking_code,
-            'service_id' => $service_id,
-        );
     }
 
     public function fetch_shipping_label($tracking_code) {
@@ -223,7 +190,7 @@ class WC_Pakettikauppa_Shipment
      *
      * @return array Available shipping services
      */
-    public function services()
+    public function services($admin_page = false)
     {
         $services = array();
 
@@ -240,16 +207,18 @@ class WC_Pakettikauppa_Shipment
         $transient_time = 86400; // 24 hours
         $all_shipping_methods = get_transient($transient_name);
 
-        if (false === $all_shipping_methods) {
+        if ($admin_page || $all_shipping_methods === false || empty($all_shipping_methods)) {
             $all_shipping_methods = json_decode($this->wc_pakettikauppa_client->listShippingMethods());
 
-            set_transient($transient_name, $all_shipping_methods, $transient_time);
+            if(!($all_shipping_methods === false || empty($all_shipping_methods))) {
+	            set_transient( $transient_name, $all_shipping_methods, $transient_time );
+            }
         }
 
         // List all available methods as shipping options on checkout page
         if (!empty($all_shipping_methods)) {
             foreach ($all_shipping_methods as $shipping_method) {
-                if(in_array($shippingCountry, $shipping_method->supported_countries)) {
+                if($admin_page || in_array($shippingCountry, $shipping_method->supported_countries)) {
                     $services[$shipping_method->shipping_method_code] = sprintf('%1$s %2$s', $shipping_method->service_provider, $shipping_method->name);
                 }
             }
@@ -281,10 +250,8 @@ class WC_Pakettikauppa_Shipment
      */
     public function service_provider($service_code)
     {
-        $services = array();
-
         $transient_name = 'wc_pakettikauppa_shipping_methods';
-        $transent_time = 86400; // 24 hours
+        $transient_time = 86400; // 24 hours
         $all_shipping_methods = get_transient($transient_name);
 
         if (false === $all_shipping_methods) {
@@ -317,8 +284,6 @@ class WC_Pakettikauppa_Shipment
      */
     public static function get_status_text($status_code)
     {
-        $status = '';
-
         switch (intval($status_code)) {
             case 13:
                 $status = __('Item is collected from sender - picked up', 'wc-pakettikauppa');
@@ -441,7 +406,7 @@ class WC_Pakettikauppa_Shipment
      * @param int $tracking_code The tracking code of the shipment
      * @return string The full tracking url for the order
      */
-    public static function tracking_url($service_id, $tracking_code)
+    public static function tracking_url($tracking_code)
     {
         $tracking_url = 'https://www.pakettikauppa.fi/seuranta/?' . $tracking_code;
         return $tracking_url;
