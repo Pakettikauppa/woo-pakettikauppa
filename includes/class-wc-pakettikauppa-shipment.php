@@ -141,7 +141,7 @@ class WC_Pakettikauppa_Shipment
             $pickup_point_id = intval($_REQUEST['wc_pakettikauppa_pickup_point_id']);
 
             if($pickup_point_id > 1) {
-	            $shipment->setPickupPoint( $pickup_point_id );
+	            $shipment->setPickupPoint( $_REQUEST['wc_pakettikauppa_pickup_point_id'] );
             }
         }
 
@@ -270,7 +270,7 @@ class WC_Pakettikauppa_Shipment
 
         if (!empty($all_shipping_methods)) {
             foreach ($all_shipping_methods as $shipping_method) {
-                if (intval($service_code) === intval($shipping_method->shipping_method_code)) {
+                if ($service_code == $shipping_method->shipping_method_code) {
                     return $shipping_method->service_provider;
                 }
             }

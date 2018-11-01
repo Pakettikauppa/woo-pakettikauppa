@@ -88,7 +88,7 @@ class WC_Pakettikauppa
             // Find string like '(#6681)'
             preg_match('/\(#[0-9]+\)/', $_POST['pakettikauppa_pickup_point'], $matches);
             // Cut the number out from a string of the form '(#6681)'
-            $pakettikauppa_pickup_point_id = intval(substr($matches[0], 2, -1));
+            $pakettikauppa_pickup_point_id = substr($matches[0], 2, -1);
             update_post_meta($order_id, '_pakettikauppa_pickup_point_id', $pakettikauppa_pickup_point_id);
         }
     }
