@@ -481,7 +481,6 @@ class WC_Pakettikauppa_Shipment
         $services_with_pickup_points = array(
             '2103',
             '80010',
-            '90010',
             '90080',
         );
 
