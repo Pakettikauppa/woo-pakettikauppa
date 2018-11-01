@@ -350,7 +350,8 @@ function wc_pakettikauppa_shipping_method_init()
 
                         $this->add_rate(
                             array(
-                                'id' => $this->id . ':' . $service_code,
+                                'id' => 'pk:'.$service_code,
+                                'meta_data' => ['service_code' => $service_code],
                                 'label' => $this->wc_pakettikauppa_shipment->service_title($service_code),
                                 'cost' => (string)$shipping_cost,
                                 'taxes' => $taxes['taxes'],

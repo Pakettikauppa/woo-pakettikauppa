@@ -214,14 +214,14 @@ class WC_Pakettikauppa_Admin
         $tracking_code = get_post_meta($post->ID, '_wc_pakettikauppa_tracking_code', true);
         $service_id = get_post_meta($post->ID, '_wc_pakettikauppa_service_id', true);
 
-        $shipping_methods = $order->get_shipping_methods();
-        $shipping_method = reset($shipping_methods);
-        $ids = explode(':', $shipping_method['method_id']);
-        if (isset($ids[1]) && !empty($ids[1])) {
-            $service_id = (int)$ids[1];
+        if($service_id == '') {
+	        $shipping_methods = $order->get_shipping_methods();
+	        $service_id       = array_pop( $shipping_methods )->get_meta( 'service_code' );
+
+	        update_post_meta( $post->ID, '_wc_pakettikauppa_service_id', $service_id );
         }
 
-        $pickup_point = $order->get_meta('_pakettikauppa_pickup_point');
+	    $pickup_point = $order->get_meta('_pakettikauppa_pickup_point');
         $pickup_point_id = $order->get_meta('_pakettikauppa_pickup_point_id');
         $status = get_post_meta($post->ID, '_wc_pakettikauppa_shipment_status', true);
 
