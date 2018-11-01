@@ -207,10 +207,10 @@ class WC_Pakettikauppa_Shipment
         $transient_time = 86400; // 24 hours
         $all_shipping_methods = get_transient($transient_name);
 
-        if ($admin_page or $all_shipping_methods === false) {
+        if ($admin_page || $all_shipping_methods === false || empty($all_shipping_methods)) {
             $all_shipping_methods = json_decode($this->wc_pakettikauppa_client->listShippingMethods());
 
-            if(!$admin_page or ($all_shipping_methods !== false and !empty($all_shipping_methods))) {
+            if(!($all_shipping_methods === false || empty($all_shipping_methods))) {
 	            set_transient( $transient_name, $all_shipping_methods, $transient_time );
             }
         }
@@ -250,10 +250,8 @@ class WC_Pakettikauppa_Shipment
      */
     public function service_provider($service_code)
     {
-        $services = array();
-
         $transient_name = 'wc_pakettikauppa_shipping_methods';
-        $transent_time = 86400; // 24 hours
+        $transient_time = 86400; // 24 hours
         $all_shipping_methods = get_transient($transient_name);
 
         if (false === $all_shipping_methods) {
@@ -286,8 +284,6 @@ class WC_Pakettikauppa_Shipment
      */
     public static function get_status_text($status_code)
     {
-        $status = '';
-
         switch (intval($status_code)) {
             case 13:
                 $status = __('Item is collected from sender - picked up', 'wc-pakettikauppa');
