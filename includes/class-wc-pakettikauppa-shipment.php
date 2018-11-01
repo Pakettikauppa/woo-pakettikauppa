@@ -206,10 +206,12 @@ class WC_Pakettikauppa_Shipment
         $transient_time = 86400; // 24 hours
         $all_shipping_methods = get_transient($transient_name);
 
-        if (false === $all_shipping_methods) {
+        if ($admin_page or $all_shipping_methods === false) {
             $all_shipping_methods = json_decode($this->wc_pakettikauppa_client->listShippingMethods());
 
-            set_transient($transient_name, $all_shipping_methods, $transient_time);
+            if(!$admin_page or ($all_shipping_methods !== false and !empty($all_shipping_methods))) {
+	            set_transient( $transient_name, $all_shipping_methods, $transient_time );
+            }
         }
 
         // List all available methods as shipping options on checkout page
