@@ -208,7 +208,7 @@ function wc_pakettikauppa_shipping_method_init()
 
                     'active_shipping_options' => array(
                         'type' => 'pkprice',
-                        'options' => $this->wc_pakettikauppa_shipment->services(),
+                        'options' => $this->wc_pakettikauppa_shipment->services(true),
                     ),
 
                     'add_tracking_to_email' => array(

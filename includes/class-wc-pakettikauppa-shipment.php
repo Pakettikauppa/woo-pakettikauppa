@@ -189,7 +189,7 @@ class WC_Pakettikauppa_Shipment
      *
      * @return array Available shipping services
      */
-    public function services()
+    public function services($admin_page = false)
     {
         $services = array();
 
@@ -215,7 +215,7 @@ class WC_Pakettikauppa_Shipment
         // List all available methods as shipping options on checkout page
         if (!empty($all_shipping_methods)) {
             foreach ($all_shipping_methods as $shipping_method) {
-                if(in_array($shippingCountry, $shipping_method->supported_countries)) {
+                if($admin_page || in_array($shippingCountry, $shipping_method->supported_countries)) {
                     $services[$shipping_method->shipping_method_code] = sprintf('%1$s %2$s', $shipping_method->service_provider, $shipping_method->name);
                 }
             }
