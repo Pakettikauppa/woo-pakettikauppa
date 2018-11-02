@@ -40,7 +40,7 @@ class Test_WC_Pakettikauppa extends WP_UnitTestCase {
       0 => 90080,
       1 => 'seurantakoodi',
     );
-    $output = WC_Pakettikauppa_Shipment::tracking_url($inputs[0], $inputs[1]);
+    $output = WC_Pakettikauppa_Shipment::tracking_url($inputs[1]);
     $this->assertEquals( 'https://www.pakettikauppa.fi/seuranta/?seurantakoodi', $output);
   }
 
