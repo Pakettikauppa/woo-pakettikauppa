@@ -287,9 +287,10 @@ function wc_pakettikauppa_shipping_method_init()
                 $taxes = array();
 
                 $taxesTotal = 0;
-                $cart_total = WC()->cart->get_cart_contents_total();
+                $cartObj = WC()->cart;
+                $cart_total = $cartObj->get_cart_contents_total();
 
-                $cart = WC()->cart->get_cart();
+                $cart = $cartObj->get_cart();
 
                 $costs = array();
 
@@ -299,8 +300,6 @@ function wc_pakettikauppa_shipping_method_init()
 
                 // If we have an array of costs we can look up each items tax class and add tax accordingly.
                 if (is_array($costs)) {
-                    $cart = WC()->cart->get_cart();
-
                     foreach ($costs as $cost_key => $amount) {
                         if (!isset($cart[$cost_key])) {
                             continue;
@@ -332,7 +331,8 @@ function wc_pakettikauppa_shipping_method_init()
              */
             public function calculate_shipping($package = array())
             {
-                $cart_total = WC()->cart->cart_contents_total;
+                $cart = WC()->cart;
+                $cart_total = $cart->get_cart_contents_total() + $cart->get_cart_contents_tax();
 
                 $shipping_settings = json_decode($this->get_option('active_shipping_options'), true);
 
@@ -340,7 +340,7 @@ function wc_pakettikauppa_shipping_method_init()
                     if ($service_settings['active'] === 'yes') {
                         $shipping_cost = $service_settings['price'];
 
-                        if ($service_settings['price_free'] < $cart_total && $service_settings['price_free'] > 0) {
+                        if ($service_settings['price_free'] <= $cart_total && $service_settings['price_free'] > 0) {
                             $shipping_cost = 0;
                         }
 
