@@ -89,16 +89,18 @@ class WC_Pakettikauppa_Shipment
         }
     }
 
-    /**
-     * Create Pakettikauppa shipment from order
-     *
-     * @param int $post_id The post id of the order to ship
-     * @return array Shipment details
-     */
-    public function create_shipment($post_id)
+	/**
+	 * Create Pakettikauppa shipment from order
+	 *
+	 * @param WC_Order $order
+	 *
+	 * @return array Shipment details
+	 * @throws Exception
+	 */
+    public function create_shipment($order)
     {
         $shipment = new Shipment();
-	    $service_id = get_post_meta($post_id, '_wc_pakettikauppa_service_id', true);
+	    $service_id = get_post_meta($order->get_id(), '_wc_pakettikauppa_service_id', true);
 
 	    $shipment->setShippingMethod($service_id);
 
@@ -109,8 +111,6 @@ class WC_Pakettikauppa_Shipment
         $sender->setCity($this->wc_pakettikauppa_settings['sender_city']);
         $sender->setCountry('FI');
         $shipment->setSender($sender);
-
-        $order = new WC_Order($post_id);
 
         $receiver = new Receiver();
         $receiver->setName1($order->get_formatted_shipping_full_name());
