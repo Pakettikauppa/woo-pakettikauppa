@@ -188,11 +188,13 @@ class WC_Pakettikauppa_Shipment
         return $pickup_point_data;
     }
 
-    /**
-     * Get all available shipping services.
-     *
-     * @return array Available shipping services
-     */
+	/**
+	 * Get all available shipping services.
+	 *
+	 * @param bool $admin_page
+	 *
+	 * @return array Available shipping services
+	 */
     public function services($admin_page = false)
     {
         $services = array();
