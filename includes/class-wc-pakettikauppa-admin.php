@@ -171,7 +171,6 @@ class WC_Pakettikauppa_Admin
         echo '<p class="form-field"><strong>' . esc_attr__('Requested pickup point', 'wc-pakettikauppa') . ':</strong><br>';
         if ($order->get_meta('_pakettikauppa_pickup_point')) {
             echo esc_attr($order->get_meta('_pakettikauppa_pickup_point'));
-            echo '<br>ID: ' . esc_attr($order->get_meta('_pakettikauppa_pickup_point_id'));
         } else {
             echo esc_attr__('None');
         }
