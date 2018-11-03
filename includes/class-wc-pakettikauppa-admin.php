@@ -176,9 +176,11 @@ class WC_Pakettikauppa_Admin
         echo '</p>';
     }
 
-    /**
-     * Meta box for managing shipments.
-     */
+	/**
+	 * Meta box for managing shipments.
+	 *
+	 * @param $post
+	 */
     public function meta_box($post)
     {
         $order = wc_get_order($post->ID);
