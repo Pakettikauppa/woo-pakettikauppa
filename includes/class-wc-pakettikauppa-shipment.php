@@ -87,7 +87,6 @@ class WC_Pakettikauppa_Shipment
             }
             return '';
         }
-
     }
 
     /**
@@ -211,15 +210,15 @@ class WC_Pakettikauppa_Shipment
         $all_shipping_methods = $this->get_shipping_methods(!$admin_page);
 
         // List all available methods as shipping options on checkout page
-        if (!empty($all_shipping_methods)) {
-            foreach ($all_shipping_methods as $shipping_method) {
-                if($admin_page || in_array($shippingCountry, $shipping_method->supported_countries)) {
-                    $services[$shipping_method->shipping_method_code] = sprintf('%1$s %2$s', $shipping_method->service_provider, $shipping_method->name);
-                }
+        if ($all_shipping_methods == null) {
+	        // returning null seems to invalidate services cache
+	        return null;
+        }
+
+        foreach ($all_shipping_methods as $shipping_method) {
+            if($admin_page || in_array($shippingCountry, $shipping_method->supported_countries)) {
+                $services[$shipping_method->shipping_method_code] = sprintf('%1$s %2$s', $shipping_method->service_provider, $shipping_method->name);
             }
-        } else {
-        	// returning null seems to invalidate services cache
-        	return null;
         }
 
         return $services;
