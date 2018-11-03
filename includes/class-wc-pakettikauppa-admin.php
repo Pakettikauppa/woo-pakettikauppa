@@ -121,7 +121,6 @@ class WC_Pakettikauppa_Admin
     public function register_meta_boxes()
     {
         foreach (wc_get_order_types('order-meta-boxes') as $type) {
-            $order_type_object = get_post_type_object($type);
             add_meta_box(
                 'wc-pakettikauppa',
                 esc_attr__('Pakettikauppa', 'wc-pakettikauppa'),
