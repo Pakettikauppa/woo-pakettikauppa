@@ -198,13 +198,18 @@ function wc_pakettikauppa_shipping_method_init()
 
 		            /* Start new section */
 		            array(
-			            'title' => __('Shipping settings', 'wc-pakettikauppa'),
+			            'title' => __('Shipping methods', 'wc-pakettikauppa'),
 			            'type' => 'title',
 		            ),
 
 		            'active_shipping_options' => array(
 			            'type' => 'pkprice',
 			            'options' => $this->wc_pakettikauppa_shipment->services(true),
+		            ),
+
+		            array(
+			            'title' => __('Shipping settings', 'wc-pakettikauppa'),
+			            'type' => 'title',
 		            ),
 
 		            'add_tracking_to_email' => array(
