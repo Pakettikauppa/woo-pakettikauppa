@@ -197,6 +197,8 @@ class WC_Pakettikauppa_Shipment
     {
         $services = array();
 
+        $shippingCountry = null;
+        
         if (WC()->customer != null) {
             $shippingCountry = WC()->customer->get_shipping_country();
         }
@@ -211,7 +213,7 @@ class WC_Pakettikauppa_Shipment
         $all_shipping_methods = get_transient($transient_name);
 
         if ($admin_page || $all_shipping_methods === false || empty($all_shipping_methods)) {
-            $all_shipping_methods = json_decode($this->wc_pakettikauppa_client->listShippingMethods());
+        	$all_shipping_methods = json_decode($this->wc_pakettikauppa_client->listShippingMethods());
 
             if(!($all_shipping_methods === false || empty($all_shipping_methods))) {
 	            set_transient( $transient_name, $all_shipping_methods, $transient_time );
@@ -225,7 +227,11 @@ class WC_Pakettikauppa_Shipment
                     $services[$shipping_method->shipping_method_code] = sprintf('%1$s %2$s', $shipping_method->service_provider, $shipping_method->name);
                 }
             }
+        } else {
+        	// returning null seems to invalidate services cache
+        	return null;
         }
+
         return $services;
     }
 
