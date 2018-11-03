@@ -64,6 +64,7 @@ class WC_Pakettikauppa_Shipment
         );
 
         $this->wc_pakettikauppa_client = new Pakettikauppa\Client($options_array);
+        $this->wc_pakettikauppa_client->setComment("From WooCommerce");
     }
 
     /**
