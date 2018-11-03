@@ -162,8 +162,7 @@ function wc_pakettikauppa_shipping_method_init()
                 // Save settings in admin if you have any defined
                 add_action('woocommerce_update_options_shipping_' . $this->id, array($this, 'process_admin_options'));
 
-                // Load the settings.
-                $this->init_settings();
+
             }
 
             /**
@@ -272,11 +271,18 @@ function wc_pakettikauppa_shipping_method_init()
 	            );
             }
 
+            public function process_admin_options() {
+	            $this->init_form_fields();
+
+	            parent::process_admin_options();
+            }
             public function get_admin_options_html()
             {
-                $this->init_form_fields();
+	            $this->init_form_fields();
 
-                return parent::get_admin_options_html();
+	            $this->init_settings();
+
+	            return parent::get_admin_options_html();
             }
 
             /**
