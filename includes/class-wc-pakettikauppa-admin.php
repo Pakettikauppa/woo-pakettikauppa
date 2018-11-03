@@ -198,20 +198,15 @@ class WC_Pakettikauppa_Admin
         $tracking_code = get_post_meta($post->ID, '_wc_pakettikauppa_tracking_code', true);
         $service_id = get_post_meta($post->ID, '_wc_pakettikauppa_service_id', true);
 
-        if($service_id == '') {
+        if(empty($service_id)) {
 	        $shipping_methods = $order->get_shipping_methods();
 	        $service_id       = array_pop( $shipping_methods )->get_meta( 'service_code' );
 
 	        update_post_meta( $post->ID, '_wc_pakettikauppa_service_id', $service_id );
         }
 
-	    $pickup_point = $order->get_meta('_pakettikauppa_pickup_point');
         $pickup_point_id = $order->get_meta('_pakettikauppa_pickup_point_id');
         $status = get_post_meta($post->ID, '_wc_pakettikauppa_shipment_status', true);
-
-        if (empty($service_id)) {
-            $service_id = WC_Pakettikauppa_Shipment::get_default_service($post, $order);
-        }
 
         $document_url = admin_url('admin-post.php?post=' . $post->ID . '&action=show_pakettikauppa&sid=' . $tracking_code);
         $tracking_url = WC_Pakettikauppa_Shipment::tracking_url($tracking_code);
@@ -246,27 +241,26 @@ class WC_Pakettikauppa_Admin
                     <fieldset class="pakettikauppa-metabox-fieldset">
                         <h4><?php esc_attr_e('Service', 'wc-pakettikauppa'); ?></h4>
                         <?php foreach ($active_shipping_options as $shipping_code => $shipping_settings) : ?>
-                            <?php if ($shipping_settings['active'] === 'yes') : ?>
-                                <?php if ($service_id == $shipping_code) : ?>
+                            <?php if ($shipping_settings['active'] === 'yes' && ($service_id == $shipping_code || empty($service_id))) : ?>
                                     <label for="service-<?php echo esc_attr($shipping_code); ?>">
                                     <input type="radio"
                                            name="wc_pakettikauppa_service_id"
                                            value="<?php echo esc_attr($shipping_code); ?>"
                                            id="service-<?php echo esc_attr($shipping_code); ?>"
-                                           checked="checked"
+		                        <?php if ($service_id == $shipping_code || (empty($service_id) && WC_Pakettikauppa_Shipment::get_default_service($post, $order) == $shipping_code)): ?>
+                                    checked="checked"
+		                        <?php endif; ?>
                                     />
                                     <span><?php echo esc_attr($this->wc_pakettikauppa_shipment->service_title($shipping_code)); ?></span>
                                 </label>
                                 <br>
-                                <?php endif; ?>
                             <?php endif; ?>
                         <?php endforeach; ?>
 
-                        <?php if($pickup_point): ?>
+                        <?php if($pickup_point_id): ?>
                             <input type="hidden" name="wc_pakettikauppa_pickup_points" value="1">
                             <input type="hidden" name="wc_pakettikauppa_pickup_point_id" value="<?php echo $pickup_point_id;?>">
                         <?php endif; ?>
-
                     </fieldset>
 
                 </div>
