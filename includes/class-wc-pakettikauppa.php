@@ -106,7 +106,7 @@ class WC_Pakettikauppa
         $shipping_method_provider = $this->wc_pakettikauppa_shipment->service_provider($shipping_method_id);
 
         // Bail out if the shipping method is not one of the pickup point services
-        if (!WC_Pakettikauppa_Shipment::service_has_pickup_points($shipping_method_id)) {
+        if (!$this->wc_pakettikauppa_shipment->service_has_pickup_points($shipping_method_id)) {
             return;
         }
 
@@ -188,7 +188,7 @@ class WC_Pakettikauppa
         $shipping_method_id = explode(':', WC()->session->get('chosen_shipping_methods')[0])[1];
         // Check if the service has a pickup point
         try {
-            if (WC_Pakettikauppa_Shipment::service_has_pickup_points($shipping_method_id) && empty($_POST['pakettikauppa_pickup_point'])) {
+            if ($this->wc_pakettikauppa_shipment->service_has_pickup_points($shipping_method_id) && empty($_POST['pakettikauppa_pickup_point'])) {
                 wc_add_notice(__('Please choose a pickup point.', 'wc-pakettikauppa'), 'error');
             }
         } catch (Exception $e) {

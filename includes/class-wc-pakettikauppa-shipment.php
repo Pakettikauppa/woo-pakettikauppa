@@ -198,7 +198,7 @@ class WC_Pakettikauppa_Shipment
         $services = array();
 
         $shippingCountry = null;
-        
+
         if (WC()->customer != null) {
             $shippingCountry = WC()->customer->get_shipping_country();
         }
@@ -207,18 +207,7 @@ class WC_Pakettikauppa_Shipment
             $shippingCountry = 'FI';
         }
 
-        // @TODO: File bug upstream about result being string instead of object by default
-        $transient_name = 'wc_pakettikauppa_shipping_methods';
-        $transient_time = 86400; // 24 hours
-        $all_shipping_methods = get_transient($transient_name);
-
-        if ($admin_page || $all_shipping_methods === false || empty($all_shipping_methods)) {
-        	$all_shipping_methods = json_decode($this->wc_pakettikauppa_client->listShippingMethods());
-
-            if(!($all_shipping_methods === false || empty($all_shipping_methods))) {
-	            set_transient( $transient_name, $all_shipping_methods, $transient_time );
-            }
-        }
+        $all_shipping_methods = $this->get_shipping_methods(!$admin_page);
 
         // List all available methods as shipping options on checkout page
         if (!empty($all_shipping_methods)) {
@@ -235,6 +224,37 @@ class WC_Pakettikauppa_Shipment
         return $services;
     }
 
+	/**
+	 * Fetch shipping methods from the Pakettikauppa and returns it as objects
+	 *
+	 * @param boolean $fromCache should we try to fetch results from cache?
+	 *
+	 * @return mixed
+	 */
+	private function get_shipping_methods($fromCache = true) {
+		$transient_name = 'wc_pakettikauppa_shipping_methods';
+		$transient_time = 86400; // 24 hours
+
+		$all_shipping_methods = null;
+
+		if ($fromCache) {
+			$all_shipping_methods = get_transient($transient_name);
+		}
+
+		if(!$fromCache || empty($all_shipping_methods)) {
+			$all_shipping_methods = json_decode($this->wc_pakettikauppa_client->listShippingMethods());
+
+			if(!empty($all_shipping_methods)) {
+				set_transient( $transient_name, $all_shipping_methods, $transient_time );
+			}
+		}
+
+		if(empty($all_shipping_methods)) {
+			return null;
+		}
+
+		return $all_shipping_methods;
+    }
     /**
      * Get the title of a service by providing its code.
      *
@@ -259,26 +279,15 @@ class WC_Pakettikauppa_Shipment
      */
     public function service_provider($service_code)
     {
-        $transient_name = 'wc_pakettikauppa_shipping_methods';
-        $transient_time = 86400; // 24 hours
-        $all_shipping_methods = get_transient($transient_name);
+        $all_shipping_methods = $this->get_shipping_methods();
 
-        if (false === $all_shipping_methods) {
-            try {
-                $all_shipping_methods = json_decode($this->wc_pakettikauppa_client->listShippingMethods());
-                set_transient($transient_name, $all_shipping_methods, $transient_time);
-
-            } catch (Exception $e) {
-                /* translators: %s: Error message */
-                throw new Exception(wp_sprintf(__('WooCommerce Pakettikauppa: an error occured when accessing service providers: %s', 'wc-pakettikauppa'), $e->getMessage()));
-            }
+        if ($all_shipping_methods == null) {
+        	return false;
         }
 
-        if (!empty($all_shipping_methods)) {
-            foreach ($all_shipping_methods as $shipping_method) {
-                if ($service_code == $shipping_method->shipping_method_code) {
-                    return $shipping_method->service_provider;
-                }
+        foreach ($all_shipping_methods as $shipping_method) {
+            if ($service_code == $shipping_method->shipping_method_code) {
+                return $shipping_method->service_provider;
             }
         }
         return false;
@@ -480,20 +489,25 @@ class WC_Pakettikauppa_Shipment
         return true;
     }
 
-    public static function service_has_pickup_points($service_id)
+	/**
+	 * Returns information if this shipping service supports pickup points
+	 *
+	 * @param $service_id
+	 *
+	 * @return bool
+	 */
+	public function service_has_pickup_points($service_id)
     {
-        // @TODO: Find out if the Pakettikauppa API can be used to check if the service uses
-        // pickup points instead of hard coding them here.
-        $services_with_pickup_points = array(
-            '2103',
-            '80010',
-            '90080',
-        );
+    	$all_shipping_methods = $this->get_shipping_methods();
 
-        if (in_array($service_id, $services_with_pickup_points, true)) {
-            return true;
-        }
-        return false;
+		if($all_shipping_methods == null) {
+			return false;
+		}
+
+		foreach($all_shipping_methods as $shipping_method) {
+			if($shipping_method->shipping_method_code == $service_id) {
+				return $shipping_method->has_pickup_points;
+			}
+		}
     }
-
 }
