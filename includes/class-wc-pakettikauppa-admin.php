@@ -422,30 +422,38 @@ class WC_Pakettikauppa_Admin
         exit;
     }
 
-    /**
-     * Attach tracking URL to email.
-     */
+	/**
+	 * Attach tracking URL to email.
+	 *
+	 * @param $order
+	 * @param bool $sent_to_admin
+	 * @param bool $plain_text
+	 * @param null $email
+	 */
     public function attach_tracking_to_email($order, $sent_to_admin = false, $plain_text = false, $email = null)
     {
 
         $settings = get_option('woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null);
         $add_to_email = $settings['add_tracking_to_email'];
 
-        if ('yes' === $add_to_email && isset($email->id) && 'customer_completed_order' === $email->id) {
+        if (!($add_to_email === 'yes' && isset($email->id) && $email->id === 'customer_completed_order')) {
+	        return;
+        }
 
-            $tracking_code = get_post_meta($order->get_ID(), '_wc_pakettikauppa_tracking_code', true);
-            $tracking_url = WC_Pakettikauppa_Shipment::tracking_url($tracking_code);
+        $tracking_code = get_post_meta($order->get_ID(), '_wc_pakettikauppa_tracking_code', true);
+        $tracking_url = WC_Pakettikauppa_Shipment::tracking_url($tracking_code);
 
-            if (!empty($tracking_code) && !empty($tracking_url)) {
-                if ($plain_text) {
-                    /* translators: %s: Shipment tracking URL */
-                    echo sprintf(esc_html__("You can track your order at %1$s.\n\n", 'wc-pakettikauppa'), esc_url($tracking_url));
-                } else {
-                    echo '<h2>' . esc_attr__('Tracking', 'wc-pakettikauppa') . '</h2>';
-                    /* translators: 1: Shipment tracking URL 2: Shipment tracking code */
-                    echo '<p>' . sprintf(__('You can <a href="%1$s">track your order</a> with tracking code %2$s.', 'wc-pakettikauppa'), esc_url($tracking_url), esc_attr($tracking_code)) . '</p>';
-                }
-            }
+        if (empty($tracking_code) || empty($tracking_url)) {
+            return;
+        }
+
+        if ($plain_text) {
+            /* translators: %s: Shipment tracking URL */
+            echo sprintf(esc_html__("You can track your order at %1$s.\n\n", 'wc-pakettikauppa'), esc_url($tracking_url));
+        } else {
+            echo '<h2>' . esc_attr__('Tracking', 'wc-pakettikauppa') . '</h2>';
+            /* translators: 1: Shipment tracking URL 2: Shipment tracking code */
+            echo '<p>' . sprintf(__('You can <a href="%1$s">track your order</a> with tracking code %2$s.', 'wc-pakettikauppa'), esc_url($tracking_url), esc_attr($tracking_code)) . '</p>';
         }
     }
 }
