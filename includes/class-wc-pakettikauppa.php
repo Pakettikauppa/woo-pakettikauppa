@@ -111,7 +111,6 @@ class WC_Pakettikauppa
             return;
         }
 
-        $pickup_point_data = '';
         $shipping_postcode = WC()->customer->get_shipping_postcode();
         $shipping_address = WC()->customer->get_shipping_address();
         $shipping_country = WC()->customer->get_shipping_country();
