@@ -38,10 +38,6 @@ class WC_Pakettikauppa_Admin
         add_action('admin_post_show_pakettikauppa', array($this, 'show'), 10);
         add_action('woocommerce_email_order_meta', array($this, 'attach_tracking_to_email'), 10, 4);
         add_action('woocommerce_admin_order_data_after_shipping_address', array($this, 'show_pickup_point_in_admin_order_meta'), 10, 1);
-        // Delete the tracking label when order is deleted so the uploads directory doesn't get too bloated
-        add_action('before_delete_post', array($this, 'delete_order_shipping_label'));
-        // Connect shipping service and pickup points in admin
-        add_action('wp_ajax_admin_update_pickup_point', array($this, 'update_meta_box_pickup_points'));
 
         try {
             $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
@@ -51,18 +47,6 @@ class WC_Pakettikauppa_Admin
             $this->add_error($e->getMessage());
             $this->add_error_notice($e->getMessage());
             return;
-        }
-    }
-
-    /**
-     * Check if the selected service has pickup points via wp_ajax
-     */
-    public function update_meta_box_pickup_points()
-    {
-        if (isset($_POST) && !empty($_POST['service_id'])) {
-            $service_id = $_POST['service_id'];
-            echo esc_attr(WC_Pakettikauppa_Shipment::service_has_pickup_points($service_id));
-            wp_die();
         }
     }
 
@@ -384,9 +368,6 @@ class WC_Pakettikauppa_Admin
             }
         } elseif (isset($_POST['wc_pakettikauppa_delete_shipping_label'])) {
             try {
-                // Delete old shipping label
-                $this->delete_order_shipping_label($post_id);
-
                 // Delete old tracking code
                 update_post_meta($post_id, '_wc_pakettikauppa_tracking_code', '');
 
@@ -468,19 +449,4 @@ class WC_Pakettikauppa_Admin
             }
         }
     }
-
-    /**
-     * Remove the shipping label of an order from the wc-pakettikauppa uploads directory
-     *
-     * @param int $post_id The post id of the order which is to be deleted
-     */
-    public function delete_order_shipping_label($post_id)
-    {
-        // Check that the post type is order
-        $post_type = get_post_type($post_id);
-        if ($post_type !== 'shop_order') {
-            return;
-        }
-    }
-
 }
