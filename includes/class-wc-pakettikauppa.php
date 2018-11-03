@@ -102,7 +102,6 @@ class WC_Pakettikauppa
      */
     public function pickup_point_field_html()
     {
-        $shipping_method_name = explode(':', WC()->session->get('chosen_shipping_methods')[0])[0];
         $shipping_method_id = explode(':', WC()->session->get('chosen_shipping_methods')[0])[1];
         $shipping_method_provider = $this->wc_pakettikauppa_shipment->service_provider($shipping_method_id);
 
