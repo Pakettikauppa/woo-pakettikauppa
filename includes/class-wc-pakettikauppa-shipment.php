@@ -158,15 +158,17 @@ class WC_Pakettikauppa_Shipment
 
     }
 
-    /**
-     * Return pickup points near a location specified by the parameters.
-     *
-     * @param int $postcode The postcode of the pickup point
-     * @param string $street_address The street address of the pickup point
-     * @param string $country The country in which the pickup point is located
-     * @param string $service_provider A service that should be provided by the pickup point
-     * @return array The pickup points based on the parameters, or empty array if none were found
-     */
+	/**
+	 * Return pickup points near a location specified by the parameters.
+	 *
+	 * @param int $postcode The postcode of the pickup point
+	 * @param string $street_address The street address of the pickup point
+	 * @param string $country The country in which the pickup point is located
+	 * @param string $service_provider A service that should be provided by the pickup point
+	 *
+	 * @return array The pickup points based on the parameters, or empty array if none were found
+	 * @throws Exception
+	 */
     public function get_pickup_points($postcode, $street_address = null, $country = null, $service_provider = null)
     {
         $pickup_point_limit = 5; // Default limit value for pickup point search
