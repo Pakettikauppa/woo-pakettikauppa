@@ -127,8 +127,8 @@ class WC_Pakettikauppa_Shipment
         $shipment->setShipmentInfo($info);
 
         $parcel = new Parcel();
-        $parcel->setWeight($this::order_weight($order));
-        $parcel->setVolume($this::order_volume($order));
+        $parcel->setWeight(self::order_weight($order));
+        $parcel->setVolume(self::order_volume($order));
 
         if (isset($this->wc_pakettikauppa_settings['info_code']) && $this->wc_pakettikauppa_settings['info_code'] != null && $this->wc_pakettikauppa_settings['info_code'] != '') {
             $parcel->setInfocode($this->wc_pakettikauppa_settings['info_code']);
