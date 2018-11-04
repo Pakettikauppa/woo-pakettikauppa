@@ -141,7 +141,6 @@ class WC_Pakettikauppa_Shipment
             $shipment->setPickupPoint( $pickup_point_id );
         }
 
-        $tracking_code = null;
         try {
             $this->wc_pakettikauppa_client->createTrackingCode($shipment);
             $tracking_code = $shipment->getTrackingCode()->__toString();
