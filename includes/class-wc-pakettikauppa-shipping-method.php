@@ -352,31 +352,31 @@ function wc_pakettikauppa_shipping_method_init()
                 $shipping_settings = json_decode($this->get_option('active_shipping_options'), true);
 
                 foreach ($shipping_settings as $service_code => $service_settings) {
-                    if ($service_settings['active'] === 'yes') {
-                        $shipping_cost = $service_settings['price'];
-
-                        if ($service_settings['price_free'] <= $cart_total && $service_settings['price_free'] > 0) {
-                            $shipping_cost = 0;
-                        }
-
-                        $taxes = $this->calculate_shipping_tax($shipping_cost);
-
-                        $shipping_cost = $shipping_cost - $taxes['total'];
-
-                        $this->add_rate(
-                            array(
-                                'id' => 'pk:'.$service_code,
-                                'meta_data' => ['service_code' => $service_code],
-                                'label' => $this->wc_pakettikauppa_shipment->service_title($service_code),
-                                'cost' => (string)$shipping_cost,
-                                'taxes' => $taxes['taxes'],
-                            )
-                        );
+                    if ($service_settings['active'] !== 'yes') {
+                        continue;
                     }
+
+                    $shipping_cost = $service_settings['price'];
+
+                    if ($service_settings['price_free'] <= $cart_total && $service_settings['price_free'] > 0) {
+                        $shipping_cost = 0;
+                    }
+
+                    $taxes = $this->calculate_shipping_tax($shipping_cost);
+
+                    $shipping_cost = $shipping_cost - $taxes['total'];
+
+                    $this->add_rate(
+                        array(
+                            'id' => 'pk:'.$service_code,
+                            'meta_data' => ['service_code' => $service_code],
+                            'label' => $this->wc_pakettikauppa_shipment->service_title($service_code),
+                            'cost' => (string)$shipping_cost,
+                            'taxes' => $taxes['taxes'],
+                        )
+                    );
                 }
-
             }
-
         }
     }
 }
