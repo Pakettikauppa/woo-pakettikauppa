@@ -310,7 +310,17 @@ class WC_Pakettikauppa_Admin
 			    update_post_meta( $order->get_id(), '_wc_pakettikauppa_service_id', $service_id );
 		    }
 
-            $this->wc_pakettikauppa_create($order);
+		    $pickup_point_id = $order->get_meta('_pakettikauppa_pickup_point_id');
+
+		    if(empty($pickup_point_id) && isset( $_REQUEST['wc_pakettikauppa_pickup_point_id'] ) ) {
+                $pickup_point_id = $_REQUEST['wc_pakettikauppa_pickup_point_id'];
+
+                if(!empty($pickup_point_id)) {
+                    update_post_meta( $order->get_id(), '_pakettikauppa_pickup_point_id', $pickup_point_id );
+                }
+            }
+
+		    $this->wc_pakettikauppa_create($order);
         } elseif (isset($_POST['wc_pakettikauppa_get_status'])) {
 	        $this->wc_pakettikauppa_get_status($order);
         } elseif (isset($_POST['wc_pakettikauppa_delete_shipping_label'])) {

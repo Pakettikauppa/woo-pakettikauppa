@@ -135,12 +135,10 @@ class WC_Pakettikauppa_Shipment
         }
         $shipment->addParcel($parcel);
 
-        if (isset($_REQUEST['wc_pakettikauppa_pickup_points']) && $_REQUEST['wc_pakettikauppa_pickup_points']) {
-            $pickup_point_id = intval($_REQUEST['wc_pakettikauppa_pickup_point_id']);
+        $pickup_point_id = $order->get_meta('_pakettikauppa_pickup_point_id');
 
-            if($pickup_point_id > 1) {
-	            $shipment->setPickupPoint( $_REQUEST['wc_pakettikauppa_pickup_point_id'] );
-            }
+        if(!empty($pickup_point_id)) {
+            $shipment->setPickupPoint( $pickup_point_id );
         }
 
         $tracking_code = null;
