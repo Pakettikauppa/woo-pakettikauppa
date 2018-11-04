@@ -313,20 +313,17 @@ function wc_pakettikauppa_shipping_method_init()
                     $costs[$item['key']] = $shippingCost * $item['line_total'] / $cart_total;
                 }
 
-                // If we have an array of costs we can look up each items tax class and add tax accordingly.
-                if (is_array($costs)) {
-                    foreach ($costs as $cost_key => $amount) {
-                        if (!isset($cart[$cost_key])) {
-                            continue;
-                        }
+                foreach ($costs as $cost_key => $amount) {
+                    if (!isset($cart[$cost_key])) {
+                        continue;
+                    }
 
-                        $taxObj = WC_Tax::get_shipping_tax_rates($cart[$cost_key]['data']->get_tax_class());
-                        $item_taxes = WC_Tax::calc_shipping_tax($amount, $taxObj);
+                    $taxObj = WC_Tax::get_shipping_tax_rates($cart[$cost_key]['data']->get_tax_class());
+                    $item_taxes = WC_Tax::calc_shipping_tax($amount, $taxObj);
 
-                        // Sum the item taxes.
-                        foreach (array_keys($taxes + $item_taxes) as $key) {
-                            $taxes[$key] = round((isset($item_taxes[$key]) ? $item_taxes[$key] : 0) + (isset($taxes[$key]) ? $taxes[$key] : 0), 2);
-                        }
+                    // Sum the item taxes.
+                    foreach (array_keys($taxes + $item_taxes) as $key) {
+                        $taxes[$key] = round((isset($item_taxes[$key]) ? $item_taxes[$key] : 0) + (isset($taxes[$key]) ? $taxes[$key] : 0), 2);
                     }
                 }
 
