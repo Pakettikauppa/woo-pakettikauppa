@@ -145,6 +145,11 @@ class WC_Pakettikauppa
             echo '<p>';
             esc_attr_e('Insert your shipping details to view nearby pickup points', 'wc-pakettikauppa');
             echo '</p>';
+        } else if (!is_numeric($shipping_postcode)) {
+	        echo '<p>';
+            printf( esc_attr__('Invalid postcode "%1$s". Please check your address information.',  'wc-pakettikauppa'),
+	            esc_attr($shipping_postcode));
+	        echo '</p>';
         } else {
             printf(
             /* translators: %s: Postcode */
