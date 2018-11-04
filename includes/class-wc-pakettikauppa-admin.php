@@ -2,7 +2,7 @@
 
 // Prevent direct access to this script
 if (!defined('ABSPATH')) {
-    exit;
+    exit();
 }
 
 require_once WC_PAKETTIKAUPPA_DIR . 'includes/class-wc-pakettikauppa-shipping-method.php';
@@ -141,7 +141,6 @@ class WC_Pakettikauppa_Admin
     public function admin_enqueue_scripts()
     {
         wp_enqueue_style('wc_pakettikauppa_admin', plugin_dir_url(__FILE__) . '../assets/css/wc-pakettikauppa-admin.css');
-        wp_enqueue_script('wc_pakettikauppa_admin_js', plugin_dir_url(__FILE__) . '../assets/js/wc-pakettikauppa-admin.js', array('jquery'));
     }
 
     /**
@@ -429,18 +428,18 @@ class WC_Pakettikauppa_Admin
     {
         // Find shipment ID either from GET parameters or from the order
         // data.
-        if (isset($_REQUEST['sid'])) {
-            $tracking_code = $_REQUEST['sid'];
-        } else {
+        if (empty($_REQUEST['sid'])) {
             esc_attr_e('Shipment tracking code is not defined.', 'wc-pakettikauppa');
             return;
         }
+
+	    $tracking_code = $_REQUEST['sid'];
 
         $contents = $this->wc_pakettikauppa_shipment->fetch_shipping_label($tracking_code);
 
         if($contents->{"response.file"}->__toString() == '') {
 	        esc_attr_e( 'Cannot find shipment with given shipment number.', 'wc-pakettikauppa' );
-	        exit;
+	        return;
         }
 
         // Output
@@ -448,7 +447,7 @@ class WC_Pakettikauppa_Admin
         header("Content-Disposition:inline;filename={$tracking_code}.pdf");
         echo base64_decode($contents->{"response.file"});
 
-        exit;
+        exit();
     }
 
 	/**
