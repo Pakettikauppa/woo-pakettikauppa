@@ -448,25 +448,26 @@ class WC_Pakettikauppa_Shipment
      * Calculate Finnish invoice reference from order ID
      * http://tarkistusmerkit.teppovuori.fi/tarkmerk.htm#viitenumero
      *
-     * @param int $id The id of the order to calculate the reference of
+     * @param string $id The id of the order to calculate the reference of
      * @return int The reference number calculated from the id
      */
     public static function calculate_reference($id)
     {
-        $weights = array(7, 3, 1, 7, 3, 1, 7, 3, 1, 7, 3, 1, 7, 3, 1, 7, 3, 1, 7);
-        $base = str_split(strval(($id + 100)));
+        $weights = array(7, 3, 1);
+	    $sum = 0;
+
+        $base = str_split(strval(($id)));
         $reversed_base = array_reverse($base);
-        $sum = 0;
         $reversed_base_length = count($reversed_base);
 
         for ($i = 0; $i < $reversed_base_length; $i++) {
-            $coefficient = array_shift($weights);
-            $sum += $reversed_base[$i] * $coefficient;
+            $sum += $reversed_base[$i] * $weights[$i%3];
         }
 
-        $checksum = ($sum % 10 === 0) ? 0 : (10 - $sum % 10);
+        $checksum = (10 - $sum % 10) % 10;
 
         $reference = implode('', $base) . $checksum;
+
         return $reference;
     }
 
