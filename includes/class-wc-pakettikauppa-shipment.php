@@ -42,11 +42,9 @@ class WC_Pakettikauppa_Shipment
         // Use option from database directly as WC_Pakettikauppa_Shipping_Method object is not accessible here
         $settings = get_option('woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null);
 
-        if (false === $settings) {
+        if ($settings === false) {
             throw new Exception(
-                'WooCommerce Pakettikauppa:
-        woocommerce_WC_Pakettikauppa_Shipping_Method_settings was not
-        found in the database!'
+                'WooCommerce Pakettikauppa: woocommerce_WC_Pakettikauppa_Shipping_Method_settings was not found in the database!'
             );
         }
 
