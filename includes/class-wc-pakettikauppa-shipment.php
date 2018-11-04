@@ -147,9 +147,8 @@ class WC_Pakettikauppa_Shipment
 
         $tracking_code = null;
         try {
-            if ($this->wc_pakettikauppa_client->createTrackingCode($shipment)) {
-                $tracking_code = $shipment->getTrackingCode()->__toString();
-            }
+            $this->wc_pakettikauppa_client->createTrackingCode($shipment);
+            $tracking_code = $shipment->getTrackingCode()->__toString();
         } catch (Exception $e) {
             /* translators: %s: Error message */
             throw new Exception(wp_sprintf(__('WooCommerce Pakettikauppa: tracking code creation failed: %s', 'wc-pakettikauppa'), $e->getMessage()));
