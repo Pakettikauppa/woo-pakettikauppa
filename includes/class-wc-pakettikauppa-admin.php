@@ -202,7 +202,9 @@ class WC_Pakettikauppa_Admin
 	        $shipping_methods = $order->get_shipping_methods();
 	        $service_id       = array_pop( $shipping_methods )->get_meta( 'service_code' );
 
-	        update_post_meta( $post->ID, '_wc_pakettikauppa_service_id', $service_id );
+	        if(!empty($service_id)) {
+		        update_post_meta( $post->ID, '_wc_pakettikauppa_service_id', $service_id );
+	        }
         }
 
         $pickup_point_id = $order->get_meta('_pakettikauppa_pickup_point_id');
@@ -301,7 +303,14 @@ class WC_Pakettikauppa_Admin
 	    $order = new WC_Order($post_id);
 
 	    if (isset($_POST['wc_pakettikauppa_create'])) {
-	        $this->wc_pakettikauppa_create($order);
+		    $service_id = get_post_meta($order->get_id(), '_wc_pakettikauppa_service_id', true);
+
+		    if(empty($service_id)) {
+		        $service_id = WC_Pakettikauppa_Shipment::get_default_service();
+			    update_post_meta( $order->get_id(), '_wc_pakettikauppa_service_id', $service_id );
+		    }
+
+            $this->wc_pakettikauppa_create($order);
         } elseif (isset($_POST['wc_pakettikauppa_get_status'])) {
 	        $this->wc_pakettikauppa_get_status($order);
         } elseif (isset($_POST['wc_pakettikauppa_delete_shipping_label'])) {
