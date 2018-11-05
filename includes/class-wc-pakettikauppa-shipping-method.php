@@ -162,117 +162,132 @@ function wc_pakettikauppa_shipping_method_init()
                 // Save settings in admin if you have any defined
                 add_action('woocommerce_update_options_shipping_' . $this->id, array($this, 'process_admin_options'));
 
-                // Load the settings.
-                $this->init_form_fields();
-                $this->init_settings();
 
             }
 
             /**
              * Init form fields.
              */
-            public function init_form_fields()
+            public function init_form_fields() {
+	            $this->form_fields = array(
+		            'mode' => array(
+			            'title' => __('Mode', 'wc-pakettikauppa'),
+			            'type' => 'select',
+			            'default' => 'test',
+			            'options' => array(
+				            'test' => __('Test environment', 'wc-pakettikauppa'),
+				            'production' => __('Production environment', 'wc-pakettikauppa'),
+			            ),
+		            ),
+
+		            'account_number' => array(
+			            'title' => __('API key', 'wc-pakettikauppa'),
+			            'desc' => __('API key provided by Pakettikauppa', 'wc-pakettikauppa'),
+			            'type' => 'text',
+			            'default' => '',
+			            'desc_tip' => true,
+		            ),
+
+		            'secret_key' => array(
+			            'title' => __('API secret', 'wc-pakettikauppa'),
+			            'desc' => __('API Secret provided by Pakettikauppa', 'wc-pakettikauppa'),
+			            'type' => 'text',
+			            'default' => '',
+			            'desc_tip' => true,
+		            ),
+
+		            /* Start new section */
+		            array(
+			            'title' => __('Shipping methods', 'wc-pakettikauppa'),
+			            'type' => 'title',
+		            ),
+
+		            'active_shipping_options' => array(
+			            'type' => 'pkprice',
+			            'options' => $this->wc_pakettikauppa_shipment->services(true),
+		            ),
+
+		            array(
+			            'title' => __('Shipping settings', 'wc-pakettikauppa'),
+			            'type' => 'title',
+		            ),
+
+		            'add_tracking_to_email' => array(
+			            'title' => __('Add tracking link to the order completed email', 'wc-pakettikauppa'),
+			            'type' => 'checkbox',
+			            'default' => 'no',
+		            ),
+
+		            'pickup_points_search_limit' => array(
+			            'title' => __('Pickup point search limit', 'wc-pakettikauppa'),
+			            'type' => 'number',
+			            'default' => 5,
+			            'description' => __('Limit the amount of nearest pickup points shown.', 'wc-pakettikauppa'),
+			            'desc_tip' => true,
+		            ),
+
+		            /* Start new section */
+		            array(
+			            'title' => __('Store owner information', 'wc-pakettikauppa'),
+			            'type' => 'title',
+		            ),
+
+		            'sender_name' => array(
+			            'title' => __('Sender name', 'wc-pakettikauppa'),
+			            'type' => 'text',
+			            'default' => '',
+		            ),
+
+		            'sender_address' => array(
+			            'title' => __('Sender address', 'wc-pakettikauppa'),
+			            'type' => 'text',
+			            'default' => '',
+		            ),
+
+		            'sender_postal_code' => array(
+			            'title' => __('Sender postal code', 'wc-pakettikauppa'),
+			            'type' => 'text',
+			            'default' => '',
+		            ),
+
+		            'sender_city' => array(
+			            'title' => __('Sender city', 'wc-pakettikauppa'),
+			            'type' => 'text',
+			            'default' => '',
+		            ),
+
+		            'cod_iban' => array(
+			            'title' => __('Bank account number for Cash on Delivery (IBAN)', 'wc-pakettikauppa'),
+			            'type' => 'text',
+			            'default' => '',
+		            ),
+
+		            'cod_bic' => array(
+			            'title' => __('BIC code for Cash on Delivery', 'wc-pakettikauppa'),
+			            'type' => 'text',
+			            'default' => '',
+		            ),
+
+		            'info_code' => array(
+			            'title' => __('Info-code for shipments'),
+			            'type' => 'text',
+			            'default' => '',
+		            ),
+	            );
+            }
+
+            public function process_admin_options() {
+	            $this->init_form_fields();
+
+	            parent::process_admin_options();
+            }
+            public function get_admin_options_html()
             {
-                $this->form_fields = array(
-                    'mode' => array(
-                        'title' => __('Mode', 'wc-pakettikauppa'),
-                        'type' => 'select',
-                        'default' => 'test',
-                        'options' => array(
-                            'test' => __('Test environment', 'wc-pakettikauppa'),
-                            'production' => __('Production environment', 'wc-pakettikauppa'),
-                        ),
-                    ),
+	            $this->init_form_fields();
 
-                    'account_number' => array(
-                        'title' => __('API key', 'wc-pakettikauppa'),
-                        'desc' => __('API key provided by Pakettikauppa', 'wc-pakettikauppa'),
-                        'type' => 'text',
-                        'default' => '',
-                        'desc_tip' => true,
-                    ),
+	            $this->init_settings();
 
-                    'secret_key' => array(
-                        'title' => __('API secret', 'wc-pakettikauppa'),
-                        'desc' => __('API Secret provided by Pakettikauppa', 'wc-pakettikauppa'),
-                        'type' => 'text',
-                        'default' => '',
-                        'desc_tip' => true,
-                    ),
-
-                    /* Start new section */
-                    array(
-                        'title' => __('Shipping settings', 'wc-pakettikauppa'),
-                        'type' => 'title',
-                    ),
-
-                    'active_shipping_options' => array(
-                        'type' => 'pkprice',
-                        'options' => $this->wc_pakettikauppa_shipment->services(true),
-                    ),
-
-                    'add_tracking_to_email' => array(
-                        'title' => __('Add tracking link to the order completed email', 'wc-pakettikauppa'),
-                        'type' => 'checkbox',
-                        'default' => 'no',
-                    ),
-
-                    'pickup_points_search_limit' => array(
-                        'title' => __('Pickup point search limit', 'wc-pakettikauppa'),
-                        'type' => 'number',
-                        'default' => 5,
-                        'description' => __('Limit the amount of nearest pickup points shown.', 'wc-pakettikauppa'),
-                        'desc_tip' => true,
-                    ),
-
-                    /* Start new section */
-                    array(
-                        'title' => __('Store owner information', 'wc-pakettikauppa'),
-                        'type' => 'title',
-                    ),
-
-                    'sender_name' => array(
-                        'title' => __('Sender name', 'wc-pakettikauppa'),
-                        'type' => 'text',
-                        'default' => '',
-                    ),
-
-                    'sender_address' => array(
-                        'title' => __('Sender address', 'wc-pakettikauppa'),
-                        'type' => 'text',
-                        'default' => '',
-                    ),
-
-                    'sender_postal_code' => array(
-                        'title' => __('Sender postal code', 'wc-pakettikauppa'),
-                        'type' => 'text',
-                        'default' => '',
-                    ),
-
-                    'sender_city' => array(
-                        'title' => __('Sender city', 'wc-pakettikauppa'),
-                        'type' => 'text',
-                        'default' => '',
-                    ),
-
-                    'cod_iban' => array(
-                        'title' => __('Bank account number for Cash on Delivery (IBAN)', 'wc-pakettikauppa'),
-                        'type' => 'text',
-                        'default' => '',
-                    ),
-
-                    'cod_bic' => array(
-                        'title' => __('BIC code for Cash on Delivery', 'wc-pakettikauppa'),
-                        'type' => 'text',
-                        'default' => '',
-                    ),
-
-                    'info_code' => array(
-                        'title' => __('Info-code for shipments'),
-                        'type' => 'text',
-                        'default' => '',
-                    ),
-                );
+	            return parent::get_admin_options_html();
             }
 
             /**
@@ -298,20 +313,17 @@ function wc_pakettikauppa_shipping_method_init()
                     $costs[$item['key']] = $shippingCost * $item['line_total'] / $cart_total;
                 }
 
-                // If we have an array of costs we can look up each items tax class and add tax accordingly.
-                if (is_array($costs)) {
-                    foreach ($costs as $cost_key => $amount) {
-                        if (!isset($cart[$cost_key])) {
-                            continue;
-                        }
+                foreach ($costs as $cost_key => $amount) {
+                    if (!isset($cart[$cost_key])) {
+                        continue;
+                    }
 
-                        $taxObj = WC_Tax::get_shipping_tax_rates($cart[$cost_key]['data']->get_tax_class());
-                        $item_taxes = WC_Tax::calc_shipping_tax($amount, $taxObj);
+                    $taxObj = WC_Tax::get_shipping_tax_rates($cart[$cost_key]['data']->get_tax_class());
+                    $item_taxes = WC_Tax::calc_shipping_tax($amount, $taxObj);
 
-                        // Sum the item taxes.
-                        foreach (array_keys($taxes + $item_taxes) as $key) {
-                            $taxes[$key] = round((isset($item_taxes[$key]) ? $item_taxes[$key] : 0) + (isset($taxes[$key]) ? $taxes[$key] : 0), 2);
-                        }
+                    // Sum the item taxes.
+                    foreach (array_keys($taxes + $item_taxes) as $key) {
+                        $taxes[$key] = round((isset($item_taxes[$key]) ? $item_taxes[$key] : 0) + (isset($taxes[$key]) ? $taxes[$key] : 0), 2);
                     }
                 }
 
@@ -337,31 +349,31 @@ function wc_pakettikauppa_shipping_method_init()
                 $shipping_settings = json_decode($this->get_option('active_shipping_options'), true);
 
                 foreach ($shipping_settings as $service_code => $service_settings) {
-                    if ($service_settings['active'] === 'yes') {
-                        $shipping_cost = $service_settings['price'];
-
-                        if ($service_settings['price_free'] <= $cart_total && $service_settings['price_free'] > 0) {
-                            $shipping_cost = 0;
-                        }
-
-                        $taxes = $this->calculate_shipping_tax($shipping_cost);
-
-                        $shipping_cost = $shipping_cost - $taxes['total'];
-
-                        $this->add_rate(
-                            array(
-                                'id' => 'pk:'.$service_code,
-                                'meta_data' => ['service_code' => $service_code],
-                                'label' => $this->wc_pakettikauppa_shipment->service_title($service_code),
-                                'cost' => (string)$shipping_cost,
-                                'taxes' => $taxes['taxes'],
-                            )
-                        );
+                    if ($service_settings['active'] !== 'yes') {
+                        continue;
                     }
+
+                    $shipping_cost = $service_settings['price'];
+
+                    if ($service_settings['price_free'] <= $cart_total && $service_settings['price_free'] > 0) {
+                        $shipping_cost = 0;
+                    }
+
+                    $taxes = $this->calculate_shipping_tax($shipping_cost);
+
+                    $shipping_cost = $shipping_cost - $taxes['total'];
+
+                    $this->add_rate(
+                        array(
+                            'id' => 'pk:'.$service_code,
+                            'meta_data' => ['service_code' => $service_code],
+                            'label' => $this->wc_pakettikauppa_shipment->service_title($service_code),
+                            'cost' => (string)$shipping_cost,
+                            'taxes' => $taxes['taxes'],
+                        )
+                    );
                 }
-
             }
-
         }
     }
 }

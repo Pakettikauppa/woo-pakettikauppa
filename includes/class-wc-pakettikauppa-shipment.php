@@ -42,11 +42,9 @@ class WC_Pakettikauppa_Shipment
         // Use option from database directly as WC_Pakettikauppa_Shipping_Method object is not accessible here
         $settings = get_option('woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null);
 
-        if (false === $settings) {
+        if ($settings === false) {
             throw new Exception(
-                'WooCommerce Pakettikauppa:
-        woocommerce_WC_Pakettikauppa_Shipping_Method_settings was not
-        found in the database!'
+                'WooCommerce Pakettikauppa: woocommerce_WC_Pakettikauppa_Shipping_Method_settings was not found in the database!'
             );
         }
 
@@ -64,6 +62,7 @@ class WC_Pakettikauppa_Shipment
         );
 
         $this->wc_pakettikauppa_client = new Pakettikauppa\Client($options_array);
+        $this->wc_pakettikauppa_client->setComment("From WooCommerce");
     }
 
     /**
@@ -86,19 +85,20 @@ class WC_Pakettikauppa_Shipment
             }
             return '';
         }
-
     }
 
-    /**
-     * Create Pakettikauppa shipment from order
-     *
-     * @param int $post_id The post id of the order to ship
-     * @return array Shipment details
-     */
-    public function create_shipment($post_id)
+	/**
+	 * Create Pakettikauppa shipment from order
+	 *
+	 * @param WC_Order $order
+	 *
+	 * @return array Shipment details
+	 * @throws Exception
+	 */
+    public function create_shipment($order)
     {
         $shipment = new Shipment();
-	    $service_id = get_post_meta($post_id, '_wc_pakettikauppa_service_id', true);
+	    $service_id = get_post_meta($order->get_id(), '_wc_pakettikauppa_service_id', true);
 
 	    $shipment->setShippingMethod($service_id);
 
@@ -109,8 +109,6 @@ class WC_Pakettikauppa_Shipment
         $sender->setCity($this->wc_pakettikauppa_settings['sender_city']);
         $sender->setCountry('FI');
         $shipment->setSender($sender);
-
-        $order = new WC_Order($post_id);
 
         $receiver = new Receiver();
         $receiver->setName1($order->get_formatted_shipping_full_name());
@@ -129,27 +127,23 @@ class WC_Pakettikauppa_Shipment
         $shipment->setShipmentInfo($info);
 
         $parcel = new Parcel();
-        $parcel->setWeight($this::order_weight($order));
-        $parcel->setVolume($this::order_volume($order));
+        $parcel->setWeight(self::order_weight($order));
+        $parcel->setVolume(self::order_volume($order));
 
         if (isset($this->wc_pakettikauppa_settings['info_code']) && $this->wc_pakettikauppa_settings['info_code'] != null && $this->wc_pakettikauppa_settings['info_code'] != '') {
             $parcel->setInfocode($this->wc_pakettikauppa_settings['info_code']);
         }
         $shipment->addParcel($parcel);
 
-        if (isset($_REQUEST['wc_pakettikauppa_pickup_points']) && $_REQUEST['wc_pakettikauppa_pickup_points']) {
-            $pickup_point_id = intval($_REQUEST['wc_pakettikauppa_pickup_point_id']);
+        $pickup_point_id = $order->get_meta('_pakettikauppa_pickup_point_id');
 
-            if($pickup_point_id > 1) {
-	            $shipment->setPickupPoint( $_REQUEST['wc_pakettikauppa_pickup_point_id'] );
-            }
+        if(!empty($pickup_point_id)) {
+            $shipment->setPickupPoint( $pickup_point_id );
         }
 
-        $tracking_code = null;
         try {
-            if ($this->wc_pakettikauppa_client->createTrackingCode($shipment)) {
-                $tracking_code = $shipment->getTrackingCode()->__toString();
-            }
+            $this->wc_pakettikauppa_client->createTrackingCode($shipment);
+            $tracking_code = $shipment->getTrackingCode()->__toString();
         } catch (Exception $e) {
             /* translators: %s: Error message */
             throw new Exception(wp_sprintf(__('WooCommerce Pakettikauppa: tracking code creation failed: %s', 'wc-pakettikauppa'), $e->getMessage()));
@@ -164,15 +158,17 @@ class WC_Pakettikauppa_Shipment
 
     }
 
-    /**
-     * Return pickup points near a location specified by the parameters.
-     *
-     * @param int $postcode The postcode of the pickup point
-     * @param string $street_address The street address of the pickup point
-     * @param string $country The country in which the pickup point is located
-     * @param string $service_provider A service that should be provided by the pickup point
-     * @return array The pickup points based on the parameters, or empty array if none were found
-     */
+	/**
+	 * Return pickup points near a location specified by the parameters.
+	 *
+	 * @param int $postcode The postcode of the pickup point
+	 * @param string $street_address The street address of the pickup point
+	 * @param string $country The country in which the pickup point is located
+	 * @param string $service_provider A service that should be provided by the pickup point
+	 *
+	 * @return array The pickup points based on the parameters, or empty array if none were found
+	 * @throws Exception
+	 */
     public function get_pickup_points($postcode, $street_address = null, $country = null, $service_provider = null)
     {
         $pickup_point_limit = 5; // Default limit value for pickup point search
@@ -188,14 +184,18 @@ class WC_Pakettikauppa_Shipment
         return $pickup_point_data;
     }
 
-    /**
-     * Get all available shipping services.
-     *
-     * @return array Available shipping services
-     */
+	/**
+	 * Get all available shipping services.
+	 *
+	 * @param bool $admin_page
+	 *
+	 * @return array Available shipping services
+	 */
     public function services($admin_page = false)
     {
         $services = array();
+
+        $shippingCountry = null;
 
         if (WC()->customer != null) {
             $shippingCountry = WC()->customer->get_shipping_country();
@@ -205,30 +205,54 @@ class WC_Pakettikauppa_Shipment
             $shippingCountry = 'FI';
         }
 
-        // @TODO: File bug upstream about result being string instead of object by default
-        $transient_name = 'wc_pakettikauppa_shipping_methods';
-        $transient_time = 86400; // 24 hours
-        $all_shipping_methods = get_transient($transient_name);
-
-        if ($admin_page || $all_shipping_methods === false || empty($all_shipping_methods)) {
-            $all_shipping_methods = json_decode($this->wc_pakettikauppa_client->listShippingMethods());
-
-            if(!($all_shipping_methods === false || empty($all_shipping_methods))) {
-	            set_transient( $transient_name, $all_shipping_methods, $transient_time );
-            }
-        }
+        $all_shipping_methods = $this->get_shipping_methods(!$admin_page);
 
         // List all available methods as shipping options on checkout page
-        if (!empty($all_shipping_methods)) {
-            foreach ($all_shipping_methods as $shipping_method) {
-                if($admin_page || in_array($shippingCountry, $shipping_method->supported_countries)) {
-                    $services[$shipping_method->shipping_method_code] = sprintf('%1$s %2$s', $shipping_method->service_provider, $shipping_method->name);
-                }
+        if ($all_shipping_methods == null) {
+	        // returning null seems to invalidate services cache
+	        return null;
+        }
+
+        foreach ($all_shipping_methods as $shipping_method) {
+            if($admin_page || in_array($shippingCountry, $shipping_method->supported_countries)) {
+                $services[$shipping_method->shipping_method_code] = sprintf('%1$s %2$s', $shipping_method->service_provider, $shipping_method->name);
             }
         }
+
         return $services;
     }
 
+	/**
+	 * Fetch shipping methods from the Pakettikauppa and returns it as objects
+	 *
+	 * @param boolean $fromCache should we try to fetch results from cache?
+	 *
+	 * @return mixed
+	 */
+	private function get_shipping_methods($fromCache = true) {
+		$transient_name = 'wc_pakettikauppa_shipping_methods';
+		$transient_time = 86400; // 24 hours
+
+		$all_shipping_methods = null;
+
+		if ($fromCache) {
+			$all_shipping_methods = get_transient($transient_name);
+		}
+
+		if(!$fromCache || empty($all_shipping_methods)) {
+			$all_shipping_methods = json_decode($this->wc_pakettikauppa_client->listShippingMethods());
+
+			if(!empty($all_shipping_methods)) {
+				set_transient( $transient_name, $all_shipping_methods, $transient_time );
+			}
+		}
+
+		if(empty($all_shipping_methods)) {
+			return null;
+		}
+
+		return $all_shipping_methods;
+    }
     /**
      * Get the title of a service by providing its code.
      *
@@ -253,26 +277,15 @@ class WC_Pakettikauppa_Shipment
      */
     public function service_provider($service_code)
     {
-        $transient_name = 'wc_pakettikauppa_shipping_methods';
-        $transient_time = 86400; // 24 hours
-        $all_shipping_methods = get_transient($transient_name);
+        $all_shipping_methods = $this->get_shipping_methods();
 
-        if (false === $all_shipping_methods) {
-            try {
-                $all_shipping_methods = json_decode($this->wc_pakettikauppa_client->listShippingMethods());
-                set_transient($transient_name, $all_shipping_methods, $transient_time);
-
-            } catch (Exception $e) {
-                /* translators: %s: Error message */
-                throw new Exception(wp_sprintf(__('WooCommerce Pakettikauppa: an error occured when accessing service providers: %s', 'wc-pakettikauppa'), $e->getMessage()));
-            }
+        if ($all_shipping_methods == null) {
+        	return false;
         }
 
-        if (!empty($all_shipping_methods)) {
-            foreach ($all_shipping_methods as $shipping_method) {
-                if ($service_code == $shipping_method->shipping_method_code) {
-                    return $shipping_method->service_provider;
-                }
+        foreach ($all_shipping_methods as $shipping_method) {
+            if ($service_code == $shipping_method->shipping_method_code) {
+                return $shipping_method->service_provider;
             }
         }
         return false;
@@ -346,18 +359,25 @@ class WC_Pakettikauppa_Shipment
     {
         $weight = 0;
 
-        if (count($order->get_items()) > 0) {
-            foreach ($order->get_items() as $item) {
-                if ($item['product_id'] > 0) {
-                    $product = $order->get_product_from_item($item);
-                    if (!$product->is_virtual()) {
-                        $weight += wc_get_weight($product->get_weight() * $item['qty'], 'kg');
-                    }
-                }
+        foreach ($order->get_items() as $item) {
+            if (empty($item['product_id'])) {
+	            continue;
             }
+
+            $product = $order->get_product_from_item($item);
+
+            if ($product->is_virtual()) {
+	            continue;
+            }
+
+            if(!is_numeric($product->get_weight())) {
+	            continue;
+            }
+
+            $weight += wc_get_weight($product->get_weight() * $item['qty'], 'kg');
         }
 
-        return $weight;
+	    return $weight;
     }
 
     /**
@@ -370,32 +390,41 @@ class WC_Pakettikauppa_Shipment
     {
         $volume = 0;
 
-        if (count($order->get_items()) > 0) {
-            foreach ($order->get_items() as $item) {
-                if ($item['product_id'] > 0) {
-                    $product = $order->get_product_from_item($item);
-                    if (!$product->is_virtual()) {
-                        // Ensure that the volume is in metres
-                        $woo_dim_unit = strtolower(get_option('woocommerce_dimension_unit'));
-                        switch ($woo_dim_unit) {
-                            case 'mm':
-                                $dim_multiplier = 0.001;
-                                break;
-                            case 'cm':
-                                $dim_multiplier = 0.01;
-                                break;
-                            case 'dm':
-                                $dim_multiplier = 0.1;
-                                break;
-                            default:
-                                $dim_multiplier = 1;
-                        }
-                        // Calculate total volume
-                        $volume += pow($dim_multiplier, 3) * $product->get_width()
-                            * $product->get_height() * $product->get_length() * $item['qty'];
-                    }
-                }
+        foreach ($order->get_items() as $item) {
+            if (empty($item['product_id'])) {
+                continue;
             }
+
+            $product = $order->get_product_from_item($item);
+
+	        if ($product->is_virtual()) {
+		        continue;
+	        }
+
+
+	        if(!is_numeric($product->get_width())
+	           || !is_numeric($product->get_height())
+	           || !is_numeric($product->get_length())) {
+                continue;
+            }
+
+            // Ensure that the volume is in metres
+            $woo_dim_unit = strtolower(get_option('woocommerce_dimension_unit'));
+            switch ($woo_dim_unit) {
+                case 'mm':
+                    $dim_multiplier = 0.001;
+                    break;
+                case 'cm':
+                    $dim_multiplier = 0.01;
+                    break;
+                case 'dm':
+                    $dim_multiplier = 0.1;
+                    break;
+                default:
+                    $dim_multiplier = 1;
+            }
+            // Calculate total volume
+            $volume += pow($dim_multiplier, 3) * $product->get_width() * $product->get_height() * $product->get_length() * $item['qty'];
         }
 
         return $volume;
@@ -419,25 +448,26 @@ class WC_Pakettikauppa_Shipment
      * Calculate Finnish invoice reference from order ID
      * http://tarkistusmerkit.teppovuori.fi/tarkmerk.htm#viitenumero
      *
-     * @param int $id The id of the order to calculate the reference of
+     * @param string $id The id of the order to calculate the reference of
      * @return int The reference number calculated from the id
      */
     public static function calculate_reference($id)
     {
-        $weights = array(7, 3, 1, 7, 3, 1, 7, 3, 1, 7, 3, 1, 7, 3, 1, 7, 3, 1, 7);
-        $base = str_split(strval(($id + 100)));
+        $weights = array(7, 3, 1);
+	    $sum = 0;
+
+        $base = str_split(strval(($id)));
         $reversed_base = array_reverse($base);
-        $sum = 0;
         $reversed_base_length = count($reversed_base);
 
         for ($i = 0; $i < $reversed_base_length; $i++) {
-            $coefficient = array_shift($weights);
-            $sum += $reversed_base[$i] * $coefficient;
+            $sum += $reversed_base[$i] * $weights[$i%3];
         }
 
-        $checksum = ($sum % 10 === 0) ? 0 : (10 - $sum % 10);
+        $checksum = (10 - $sum % 10) % 10;
 
         $reference = implode('', $base) . $checksum;
+
         return $reference;
     }
 
@@ -447,7 +477,7 @@ class WC_Pakettikauppa_Shipment
      * @TODO: Does this method really need $post or $order, as the default service should
      * not be order-specific?
      */
-    public static function get_default_service($post, $order)
+    public static function get_default_service()
     {
         // @TODO: Maybe use an option in database so the merchant can set it in settings
         $service = '2103';
@@ -474,20 +504,25 @@ class WC_Pakettikauppa_Shipment
         return true;
     }
 
-    public static function service_has_pickup_points($service_id)
+	/**
+	 * Returns information if this shipping service supports pickup points
+	 *
+	 * @param $service_id
+	 *
+	 * @return bool
+	 */
+	public function service_has_pickup_points($service_id)
     {
-        // @TODO: Find out if the Pakettikauppa API can be used to check if the service uses
-        // pickup points instead of hard coding them here.
-        $services_with_pickup_points = array(
-            '2103',
-            '80010',
-            '90080',
-        );
+    	$all_shipping_methods = $this->get_shipping_methods();
 
-        if (in_array($service_id, $services_with_pickup_points, true)) {
-            return true;
-        }
-        return false;
+		if($all_shipping_methods == null) {
+			return false;
+		}
+
+		foreach($all_shipping_methods as $shipping_method) {
+			if($shipping_method->shipping_method_code == $service_id) {
+				return $shipping_method->has_pickup_points;
+			}
+		}
     }
-
 }
