@@ -299,9 +299,9 @@ class WC_Pakettikauppa_Admin
             return;
         }
 
-	    $order = new WC_Order($post_id);
-
 	    if (isset($_POST['wc_pakettikauppa_create'])) {
+		    $order = new WC_Order($post_id);
+
 		    $service_id = get_post_meta($order->get_id(), '_wc_pakettikauppa_service_id', true);
 
 		    if(empty($service_id)) {
@@ -321,8 +321,10 @@ class WC_Pakettikauppa_Admin
 
 		    $this->wc_pakettikauppa_create($order);
         } elseif (isset($_POST['wc_pakettikauppa_get_status'])) {
+		    $order = new WC_Order($post_id);
 	        $this->wc_pakettikauppa_get_status($order);
         } elseif (isset($_POST['wc_pakettikauppa_delete_shipping_label'])) {
+		    $order = new WC_Order($post_id);
 	        $this->wc_pakettikauppa_delete_shipping_label($order);
         }
     }
