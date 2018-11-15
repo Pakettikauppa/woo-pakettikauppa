@@ -29,7 +29,10 @@ use Pakettikauppa\Client;
  */
 class WC_Pakettikauppa_Shipment
 {
-    private $wc_pakettikauppa_client = null;
+	/**
+	 * @var Client
+	 */
+	private $wc_pakettikauppa_client = null;
     private $wc_pakettikauppa_settings = null;
 
     public function __construct()
