@@ -292,7 +292,7 @@ function wc_pakettikauppa_shipping_method_init()
 
             /**
              * Mostly copy pasted from WooCommerce: woocommerce/includes/abstracts/abstract-wc-shipping-method.php
-             *   protected function get_taxes_per_item( $costs )
+             *   protected function get_taxes_per_item( $costs ) and edited it ALOT
              *
              * @param $shippingCost
              * @return array
@@ -307,23 +307,19 @@ function wc_pakettikauppa_shipping_method_init()
 
                 $cart = $cartObj->get_cart();
 
-                $costs = array();
-
                 foreach ($cart as $item) {
-                    $costs[$item['key']] = $shippingCost * $item['line_total'] / $cart_total;
-                }
+                    $cost_key = $item['key'];
+	                if (!isset($cart[$cost_key])) {
+		                continue;
+	                }
 
-                foreach ($costs as $cost_key => $amount) {
-                    if (!isset($cart[$cost_key])) {
-                        continue;
-                    }
+                    $costItem = $shippingCost * $item['line_total'] / $cart_total;
 
                     $taxObj = WC_Tax::get_shipping_tax_rates($cart[$cost_key]['data']->get_tax_class());
-                    $item_taxes = WC_Tax::calc_shipping_tax($amount, $taxObj);
 
-                    // Sum the item taxes.
-                    foreach (array_keys($taxes + $item_taxes) as $key) {
-                        $taxes[$key] = round((isset($item_taxes[$key]) ? $item_taxes[$key] : 0) + (isset($taxes[$key]) ? $taxes[$key] : 0), 2);
+
+                    foreach($taxObj as $key => $value) {
+                        $taxes[$key] = round( $costItem - $costItem/(1+$value['rate']/100.0), 2);
                     }
                 }
 
