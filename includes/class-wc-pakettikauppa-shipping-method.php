@@ -309,6 +309,7 @@ function wc_pakettikauppa_shipping_method_init()
 
                 foreach ($cart as $item) {
                     $cost_key = $item['key'];
+                    
 	                if (!isset($cart[$cost_key])) {
 		                continue;
 	                }
@@ -317,15 +318,18 @@ function wc_pakettikauppa_shipping_method_init()
 
                     $taxObj = WC_Tax::get_shipping_tax_rates($cart[$cost_key]['data']->get_tax_class());
 
-
                     foreach($taxObj as $key => $value) {
-                        $taxes[$key] = round( $costItem - $costItem/(1+$value['rate']/100.0), 2);
+                        if (!isset($taxes[$key])) {
+                            $taxes[$key]=0.0;
+                        }
+                        $taxes[$key] += round( $costItem - $costItem/(1+$value['rate']/100.0), 2);
                     }
                 }
 
                 foreach ($taxes as $_tax) {
                     $taxesTotal += $_tax;
                 }
+
                 return array('total' => $taxesTotal, 'taxes' => $taxes);
             }
 
