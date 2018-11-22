@@ -309,10 +309,6 @@ function wc_pakettikauppa_shipping_method_init()
 
                 foreach ($cart as $item) {
                     $cost_key = $item['key'];
-                    
-	                if (!isset($cart[$cost_key])) {
-		                continue;
-	                }
 
                     $costItem = $shippingCost * $item['line_total'] / $cart_total;
 

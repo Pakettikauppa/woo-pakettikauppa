@@ -343,7 +343,6 @@ class WC_Pakettikauppa_Admin
             case 'delete_shipping_label':
     	        $this->delete_shipping_label($order);
     	        break;
-	        break;
         }
     }
 
