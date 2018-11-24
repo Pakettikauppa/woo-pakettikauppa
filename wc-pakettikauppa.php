@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: WooCommerce Pakettikauppa
- * Version: 1.1.4
+ * Version: 1.1.5
  * Plugin URI: https://github.com/Seravo/woocommerce-pakettikauppa
  * Description: Pakettikauppa shipping service for WooCommerce. Integrates Prinetti, Matkahuolto, DB Schenker and others.
  * Author: Seravo

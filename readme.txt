@@ -50,6 +50,9 @@ Yes! If you encounter any issues related to this plugin, please report at https:
 
 == Changelog ==
 
+= 1.1.5 =
+* Possibility to choose which shiment method to use when none is selected
+
 = 1.1.4 =
 * Fixes issues with VAT calculation with shipping costs. You have to enter shipping costs in the settings including VAT. In the Tax -settings page, when chosen option "Shipping tax class based on cart items", it will calculate the shipping taxes "backwards" from the given price correctly. For instance if you have 14% and 24% VAT products in the cart then shipping costs will have also 14% and 24% VAT in the correct proportions.
 * Small internal code refactoring changes

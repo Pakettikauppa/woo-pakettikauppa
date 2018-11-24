@@ -321,7 +321,14 @@ class WC_Pakettikauppa_Admin
                 $service_id = get_post_meta($order->get_id(), '_wc_pakettikauppa_service_id', true);
 
                 if(empty($service_id)) {
-                    $service_id = WC_Pakettikauppa_Shipment::get_default_service();
+                    if(!empty($_REQUEST['wc_pakettikauppa_service_id'])) {
+                        $service_id = $_REQUEST['wc_pakettikauppa_service_id'];
+                    }
+
+                    if(empty($service_id)) {
+	                    $service_id = WC_Pakettikauppa_Shipment::get_default_service();
+                    }
+
                     update_post_meta( $order->get_id(), '_wc_pakettikauppa_service_id', $service_id );
                 }
 
