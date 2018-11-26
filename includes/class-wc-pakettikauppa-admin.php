@@ -214,7 +214,7 @@ class WC_Pakettikauppa_Admin
         $pickup_point_id = $order->get_meta('_pakettikauppa_pickup_point_id');
         $status = get_post_meta($post->ID, '_wc_pakettikauppa_shipment_status', true);
 
-        $document_url = admin_url('admin-post.php?post=' . $post->ID . '&action=show_pakettikauppa&sid=' . $tracking_code);
+        $document_url = admin_url('admin-post.php?post=' . $post->ID . '&action=show_pakettikauppa&tracking_code=' . $tracking_code);
         $tracking_url = WC_Pakettikauppa_Shipment::tracking_url($tracking_code);
 
         ?>
