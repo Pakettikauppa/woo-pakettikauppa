@@ -50,6 +50,9 @@ Yes! If you encounter any issues related to this plugin, please report at https:
 
 == Changelog ==
 
+= 1.1.6 =
+* Fixed printing of label
+
 = 1.1.5 =
 * Possibility to choose which shiment method to use when none is selected
 
