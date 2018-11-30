@@ -62,3 +62,15 @@ Before submitting your patch, please make sure it is of high quality:
 ## Developer docs
 
 Please note that the official docs at https://docs.woocommerce.com/document/shipping-method-api/ contain partially outdated information. For more information, see wiki at https://github.com/woocommerce/woocommerce/wiki/Shipping-Method-API or dive directly into the source using [GitHub search](https://github.com/woocommerce/woocommerce/search?utf8=%E2%9C%93&q=extends+WC_Shipping_Method&type=) to find up-to-date examples on how to extend the shipping method class.
+
+## Travis CI and automatic testing
+
+This project has a `.travis-ci.yml` definition which can be used by anybody. Just follow these steps:
+1. Create an account at [Travis-CI.org](https://travis-ci.org/) by logging in with your Github.com account.
+2. Make sure you have a fork of this repository in your own Github.com account.
+3. Open the [Travis-CI.org settings page](https://travis-ci.org/account/repositories) and click "Sync repositories"
+![Travis CI: Sync repositories](docs/travis-ci-sync.png)
+4. Search for `woo-pakettikauppa` in your repository list and enable automatic testing for the repository it.
+![Travis CI: Activate](docs/travis-ci-repo-active.png)
+5. Initially the page `https://travis-ci.org/<username>/woo-pakettikauppa` will be empty, but as soon as you push your first commit Travis-CI will run the first built. You can also manually trigger a build to get it started.
+![Travis CI: Trigger manual build](docs/travis-ci-manual-trigger.png)
