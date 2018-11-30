@@ -52,9 +52,8 @@ script:
   # Syntax check all PHP files and fail for any error text in STDERR
   - '! find . -type f -name "*.php" -exec php -d error_reporting=32767 -l {} \; 2>&1 >&- | grep "^"'
 
-  # Run PHPUnit tests
-  - find -name '*.php' -exec php -d error_reporting=32767 -l {} \;
-  - phpunit
+  # More extensive PHP Style Check
+  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -i; $PHPCS_DIR/bin/phpcs -n --standard=phpcs.xml; fi
 
-  # Run PHP style check via PHPCS
-  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -i; $PHPCS_DIR/bin/phpcs -n --standard=phpcs.xml wc-pakettikauppa.php; fi
+  # Run PHPUnit tests
+  - phpunit
