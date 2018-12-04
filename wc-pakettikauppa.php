@@ -26,6 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // @TODO: Also check for other solutions to refer to plugin_basename and plugin_dir_path in includes/ directory
 define( 'WC_PAKETTIKAUPPA_BASENAME', plugin_basename( __FILE__ ) );
 define( 'WC_PAKETTIKAUPPA_DIR', plugin_dir_path( __FILE__ ) );
+define( 'WC_PAKETTIKAUPPA_VERSION', get_file_data(plugin_dir_path(dirname(__FILE__)) . 'wc-pakettikauppa.php', array( 'Version' ), 'plugin')[0] );
 
 /**
  * Load plugin textdomain
@@ -44,11 +45,11 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-wc-pakettikauppa-ship
  * Load the WC_Pakettikauppa class when in frontend
  */
 function wc_pakettikauppa_load() {
-	if ( ! is_admin() ) {
-		require_once plugin_dir_path( __FILE__ ) . 'includes/class-wc-pakettikauppa.php';
-		$wc_pakettikauppa = new WC_Pakettikauppa();
-		$wc_pakettikauppa->load();
-	}
+  if ( ! is_admin() ) {
+    require_once plugin_dir_path( __FILE__ ) . 'includes/class-wc-pakettikauppa.php';
+    $wc_pakettikauppa = new WC_Pakettikauppa();
+    $wc_pakettikauppa->load();
+  }
 }
 
 add_action( 'init', 'wc_pakettikauppa_load' );
