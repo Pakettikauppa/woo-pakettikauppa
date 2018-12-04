@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // @TODO: Also check for other solutions to refer to plugin_basename and plugin_dir_path in includes/ directory
 define( 'WC_PAKETTIKAUPPA_BASENAME', plugin_basename( __FILE__ ) );
 define( 'WC_PAKETTIKAUPPA_DIR', plugin_dir_path( __FILE__ ) );
-define( 'WC_PAKETTIKAUPPA_VERSION', get_file_data(plugin_dir_path(dirname(__FILE__)) . 'wc-pakettikauppa.php', array( 'Version' ), 'plugin')[0] );
+define( 'WC_PAKETTIKAUPPA_VERSION', get_file_data(__FILE__, array( 'Version' ), 'plugin')[0] );
 
 /**
  * Load plugin textdomain
