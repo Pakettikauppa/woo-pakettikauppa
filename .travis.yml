@@ -41,8 +41,8 @@ before_script:
   # Install WordPress Coding Standards
   - if [[ "$SNIFF" == "1" ]]; then wget https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/archive/$SNIFFS_VERSION.tar.gz -O $SNIFFS_VERSION.tar.gz && tar -xf $SNIFFS_VERSION.tar.gz && mv WordPress-Coding-Standards-$SNIFFS_VERSION $SNIFFS_DIR; fi
 
-  - find $HOME
-  
+  - find $HOME/.composer
+
   # Set install path for WordPress Coding Standards.
   - if [[ "$SNIFF" == "1" ]]; then phpcs --config-set installed_paths $SNIFFS_DIR; fi
   - if [[ "$SNIFF" == "1" ]]; then phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs; fi
