@@ -32,7 +32,6 @@ before_script:
     fi
   - |
     composer global require wp-coding-standards/wpcs
-    phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
 
   # Install PHP_CodeSniffer with a specific version defined so that devs and Travis-CI will have exactly same standards
   - if [[ "$SNIFF" == "1" ]]; then export PHPCS_DIR=/tmp/phpcs; export PHPCS_VERSION=3.3.2; fi
@@ -48,6 +47,7 @@ before_script:
   # After CodeSniffer install you should refresh your path.
   - if [[ "$SNIFF" == "1" ]]; then phpenv rehash; fi
 
+    phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
 script:
   # Syntax check all PHP files and fail for any error text in STDERR
   - '! find . -type f -name "*.php" -exec php -d error_reporting=32767 -l {} \; 2>&1 >&- | grep "^"'
