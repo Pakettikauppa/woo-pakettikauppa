@@ -215,6 +215,8 @@ class WC_Pakettikauppa_Shipment {
       }
     }
 
+    ksort($services);
+    
     return $services;
   }
 

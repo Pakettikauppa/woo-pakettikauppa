@@ -1,7 +1,7 @@
 === WooCommerce Pakettikauppa ===
 Contributors: ottok, leotoikka, serter
 Donate link: https://seravo.com/
-Tags: woocommerce, shipping, toimitustavat, pakettikauppa, posti, smartpost, prinetti, matkahuolto, schenker, seravo
+Tags: woocommerce, shipping, toimitustavat, smartship, pakettikauppa, posti, smartpost, prinetti, matkahuolto, schenker, seravo, gls
 Requires at least: 4.6
 Tested up to: 4.9
 Requires PHP: 5.6.0
@@ -13,9 +13,13 @@ This plugin enables WooCommerce orders to ship using pretty much any shipping me
 
 == Description ==
 
-[Pakettikauppa](https://www.pakettikauppa.fi/) is a shipping service provider in Finland. This plugin integrates their service into WooCommerce. To start shipping, all your WooCommerce needs is this plugin and a merchant ID of your account registered with Pakettikauppa.
+[Pakettikauppa](https://www.pakettikauppa.fi/) is a shipping service provider in Finland. This plugin integrates their service into WooCommerce. To start shipping, all your WooCommerce needs is this plugin and a API credentials of your account registered with Pakettikauppa.
 
-> *Note!* If you already have shipping contracts with Posti, Matkahuolto, DB Schenker or GLS with reduced prices, you can contact the customer support of Pakettikauppa to get those contracts via Pakettikauppa so you can use the WooCommerce Pakettikauppa plugin with your current shipping contracts.
+> *Note!* If you already have shipping contracts with Posti, Matkahuolto, DB Schenker or GLS with reduced prices, you can contact the customer support of Pakettikauppa to get those contracts via Pakettikauppa so you can use the WooCommerce Pakettikauppa plugin with your current shipping contracts. Usage of own contracts is free of charge.
+
+# Register and start shipping
+
+Register through [www.pakettikauppa.fi](https://www.pakettikauppa.fi/). Process only takes few minutes.
 
 # Features
 
@@ -42,13 +46,18 @@ This plugin can also be installed directly from Github or using `composer requir
 
 = Is this ready for production use? =
 
-Yes! If you encounter any issues related to this plugin, please report at https://github.com/Seravo/woocommerce-pakettikauppa/issues
+Yes! If you encounter any issues related to this plugin, please report at https://github.com/Seravo/woocommerce-pakettikauppa/issues or to asiakaspalvelu@pakettikauppa.fi
 
 == Screenshots ==
 
 1. Examples of settings screens
 
 == Changelog ==
+
+= 1.1.7 =
+* Updated readme -file with new tags
+* Travis-CI Updates
+* Sort shipping methods based on shipping code
 
 = 1.1.6 =
 * Fixed printing of label

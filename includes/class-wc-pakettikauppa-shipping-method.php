@@ -340,6 +340,8 @@ function wc_pakettikauppa_shipping_method_init() {
 
         $shipping_settings = json_decode($this->get_option('active_shipping_options'), true);
 
+        ksort($shipping_settings);
+
         foreach ( $shipping_settings as $service_code => $service_settings ) {
           if ( $service_settings['active'] !== 'yes' ) {
             continue;
