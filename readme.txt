@@ -54,6 +54,9 @@ Yes! If you encounter any issues related to this plugin, please report at https:
 
 == Changelog ==
 
+= 1.1.8 =
+* Alternative name for the shipping method
+
 = 1.1.7 =
 * Updated readme -file with new tags
 * Travis-CI Updates
