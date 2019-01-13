@@ -56,6 +56,7 @@ Yes! If you encounter any issues related to this plugin, please report at https:
 
 = 1.1.7 =
 * Updated readme -file with new tags
+* Travis-CI Updates
 
 = 1.1.6 =
 * Fixed printing of label
