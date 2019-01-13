@@ -93,6 +93,7 @@ function wc_pakettikauppa_shipping_method_init() {
                 <th style="width: 60px;"><?php esc_attr_e('Active', 'wc-pakettikauppa'); ?></th>
                 <th style="text-align: center;"><?php esc_attr_e('Price', 'wc-pakettikauppa'); ?></th>
                 <th style="text-align: center;"><?php esc_attr_e('Free shipping tier', 'wc-pakettikauppa'); ?></th>
+                  <th style="text-align: center;"><?php esc_attr_e('Alternative name', 'wc-pakettikauppa'); ?></th>
               </tr>
               </thead>
               <tbody>
@@ -102,6 +103,7 @@ function wc_pakettikauppa_shipping_method_init() {
                     <?php $values[ $service_code ]['active'] = false; ?>
                     <?php $values[ $service_code ]['price'] = $this->fee; ?>
                     <?php $values[ $service_code ]['price_free'] = '0'; ?>
+			              <?php $values[ $service_code ]['alternative_name'] = ''; ?>
                   <?php endif; ?>
 
                   <tr valign="top">
@@ -128,6 +130,11 @@ function wc_pakettikauppa_shipping_method_init() {
                              step="0.01"
                              value="<?php echo esc_html($values[ $service_code ]['price_free']); ?>">
                     </td>
+                      <td>
+                          <input type="text"
+                                 name="<?php echo esc_html($field_key) . '[' . esc_html($service_code) . '][alternative_name]'; ?>"
+                                 value="<?php echo esc_html($values[ $service_code ]['alternative_name']); ?>">
+                      </td>
                   </tr>
                 <?php endforeach; ?>
               <?php endif; ?>
@@ -357,11 +364,17 @@ function wc_pakettikauppa_shipping_method_init() {
 
           $shipping_cost = $shipping_cost - $taxes['total'];
 
+          $service_title = $this->wc_pakettikauppa_shipment->service_title($service_code);
+
+          if(!empty($service_settings['alternative_name'])) {
+              $service_title = trim($service_settings['alternative_name']);
+          }
+
           $this->add_rate(
             array(
               'id'        => 'pk:' . $service_code,
               'meta_data' => [ 'service_code' => $service_code ],
-              'label'     => $this->wc_pakettikauppa_shipment->service_title($service_code),
+              'label'     => $service_title,
               'cost'      => (string) $shipping_cost,
               'taxes'     => $taxes['taxes'],
             )
