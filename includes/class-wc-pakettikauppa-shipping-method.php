@@ -85,7 +85,7 @@ function wc_pakettikauppa_shipping_method_init() {
 			 */
 			private function my_instance_form_fields() {
 
-				$all_shipping_methods = $this->wc_pakettikauppa_shipment->services( true );
+				$all_shipping_methods = $this->wc_pakettikauppa_shipment->services();
 
 				$fields = array(
 					'title' => array(
