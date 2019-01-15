@@ -274,7 +274,7 @@ function wc_pakettikauppa_shipping_method_init() {
 					),
 
 					'info_code' => array(
-						'title'   => __( 'Info-code for shipments' ),
+						'title'   => __( 'Info-code for shipments', 'wc-pakettikauppa' ),
 						'type'    => 'text',
 						'default' => '',
 					),

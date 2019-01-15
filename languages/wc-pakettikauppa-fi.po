@@ -6,7 +6,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woocommerce-"
 "pakettikauppa\n"
 "POT-Creation-Date: 2019-01-15 11:56+0200\n"
-"PO-Revision-Date: 2019-01-15 11:56+0200\n"
+"PO-Revision-Date: 2019-01-15 12:07+0200\n"
 "Last-Translator: Otto Kekäläinen <otto@seravo.com>\n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -58,7 +58,6 @@ msgid "Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s"
 msgstr "Luotiin Pakettikauppa %1$s-lähetys.<br>%2$s<br>%1$s - %3$s<br>%4$s"
 
 #: class-wc-pakettikauppa-admin.php:481
-#, fuzzy
 msgid "Shipment tracking code is not defined."
 msgstr "Lähetystä ei löytynyt annetulla seurantanumerolla."
 
@@ -223,8 +222,6 @@ msgid "Mode"
 msgstr "Tila"
 
 #: class-wc-pakettikauppa-shipping-method.php:194
-#, fuzzy
-#| msgid "Test environment"
 msgid "Testing environment"
 msgstr "Testaustila"
 
