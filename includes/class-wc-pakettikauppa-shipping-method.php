@@ -42,8 +42,9 @@ function wc_pakettikauppa_shipping_method_init() {
 			 * @return void
 			 */
 			public function __construct( $instance_id = 0 ) {
+				parent::__construct($instance_id);
+
 				$this->id          = 'pakettikauppa_shipping_method'; // ID for your shipping method. Should be unique.
-				$this->instance_id = absint( $instance_id );
 
 				$this->method_title       = 'Pakettikauppa'; // Title shown in admin
 				$this->method_description = __( 'All shipping methods with one contract. For more information visit <a href="https://www.pakettikauppa.fi/">Pakettikauppa</a>.', 'wc-pakettikauppa' ); // Description shown in admin
