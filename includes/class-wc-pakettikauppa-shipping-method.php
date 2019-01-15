@@ -31,7 +31,7 @@ function wc_pakettikauppa_shipping_method_init() {
 			/**
 			 * Default shipping fee
 			 *
-			 * @var int
+			 * @var string
 			 */
 			public $fee = 5.95;
 
@@ -75,6 +75,7 @@ function wc_pakettikauppa_shipping_method_init() {
 			 */
 			public function init() {
 				$this->instance_form_fields = $this->my_instance_form_fields();
+				$this->form_fields          = $this->my_global_form_fields();
 				$this->title                = $this->get_option( 'title' );
 			}
 
@@ -279,21 +280,6 @@ function wc_pakettikauppa_shipping_method_init() {
 				);
 			}
 
-			public function process_admin_options() {
-				$this->form_fields = $this->my_global_form_fields();
-
-				$this->init_settings();
-				parent::process_admin_options();
-			}
-
-			public function get_admin_options_html() {
-				$this->form_fields = $this->my_global_form_fields();
-
-				$this->init_settings();
-
-				return parent::get_admin_options_html();
-			}
-
 			/**
 			 * Mostly copy-pasted from WooCommerce:
 			 *   woocommerce/includes/abstracts/abstract-wc-shipping-method.php
@@ -381,6 +367,9 @@ function wc_pakettikauppa_shipping_method_init() {
 			 * Rates can be added using the add_rate() method.
 			 * Return only active shipping methods.
 			 *
+			 * Part doing the calculation of shipping classes is copied from flatrate shipping module and edited to
+			 * fit and work with this code.
+			 *
 			 * @uses WC_Shipping_Method::add_rate()
 			 *
 			 * @param array $package Shipping package.
@@ -425,7 +414,6 @@ function wc_pakettikauppa_shipping_method_init() {
 
 				$this->add_rate(
 					array(
-						'id'        => 'pk:' . $service_code,
 						'meta_data' => [ 'service_code' => $service_code ],
 						'label'     => $service_title,
 						'cost'      => (string) $shipping_cost,
