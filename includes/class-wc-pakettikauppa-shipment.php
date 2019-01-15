@@ -146,6 +146,8 @@ class WC_Pakettikauppa_Shipment {
 			$additional_service->addSpecifier( 'account', $this->wc_pakettikauppa_settings['cod_iban'] );
 			$additional_service->addSpecifier( 'codbic', $this->wc_pakettikauppa_settings['cod_bic'] );
 			$additional_service->addSpecifier( 'reference', $this->calculate_reference( $order->get_id() ) );
+
+			$shipment->addAdditionalService($additional_service);
 		}
 
 		if ( ! empty( $pickup_point_id ) ) {
