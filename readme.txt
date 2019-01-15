@@ -25,12 +25,13 @@ Register through [www.pakettikauppa.fi](https://www.pakettikauppa.fi/). Process 
 
 *   Integrates Pakettikauppa with WooCommerce
 *   Based on the official [Pakettikauppa API library](https://github.com/Pakettikauppa/api-library)
-*   Supports WooCommerce shipping zones (though Pakettikauppa is currently only available in Finland)
+*   Supports WooCommerce shipping zones and classes (though Pakettikauppa is currently only available in Finland)
 *   Store owners can specify themselves any fixed rate for a shipping or have free shipping if the order value is above a certain limit
 *   Customers can choose to ship products to an address or to any pickup point available from the Pakettikauppa shipping methods
 *   Store owner can generate the shipping label in one click
 *   Store owners and customers get tracking code links and status information
-*   Test mode available that uses the testing API
+*   Support for Cash-On-Delivery
+*   Test mode available that uses the testing API without registeration
 
 == Installation ==
 
@@ -53,6 +54,10 @@ Yes! If you encounter any issues related to this plugin, please report at https:
 1. Examples of settings screens
 
 == Changelog ==
+
+= 2.0.0 =
+* Shipping zone and shipping class support!
+* COD-support if payment method is woocommerce cod payment method (or extended class)
 
 = 1.1.8 =
 * Alternative name for the shipping method
