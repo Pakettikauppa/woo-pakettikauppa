@@ -94,7 +94,12 @@ class WC_Pakettikauppa {
    * listings, when we want to have only one single pickup point per order.
    */
   public function pickup_point_field_html() {
-    $shipping_method_id = explode(':', WC()->session->get('chosen_shipping_methods')[0])[1];
+  	$shipping_methods = WC()->shipping()->get_shipping_methods();
+
+	$chosen_shipping_id = explode(':', WC()->session->get('chosen_shipping_methods')[0])[1];
+
+	$shipping_method_id = $shipping_methods[$chosen_shipping_id]->instance_settings['shipping_method'];
+
     $shipping_method_provider = $this->wc_pakettikauppa_shipment->service_provider($shipping_method_id);
 
     // Bail out if the shipping method is not one of the pickup point services
