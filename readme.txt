@@ -58,6 +58,7 @@ Yes! If you encounter any issues related to this plugin, please report at https:
 = 2.0.0 =
 * Shipping zone and shipping class support!
 * COD-support if payment method is woocommerce cod payment method (or extended class)
+* This update breaks pricing from 1.x branches - You have to create new prices by adding Pakettikauppa as a new shipping method to Shipping zones
 
 = 1.1.8 =
 * Alternative name for the shipping method
