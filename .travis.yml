@@ -3,21 +3,27 @@ sudo: false
 language: php
 
 env:
-  - WP_VERSION=latest WP_MULTISITE=0
+  - WP_VERSION=latest
+
+php:
+  - '7.2'
+  - '7.3'
+  - nightly
 
 matrix:
   include:
-    - 7.2
-    - 7.3
     # Arbitrary PHP version to run the sniffs against.
-    - php: '7.2'
-      env: WP_VERSION=latest WP_MULTISITE=1 SNIFF=1
+    - php: '5.6'
+      env: WP_VERSION=4.9.9 WP_MULTISITE=1 SNIFF=1
+  allow_failures:
+  - php: nightly  # Old phpunit not compatible with PHP 8.0.0 yet
 
 before_script:
+  # Install phpunit 7.x as WordPress does not support 8.x yet
+  - if [[ "$TRAVIS_PHP_VERSION" == "5.6" ]]; then PHPUNIT_VERSION=5.7.9; else PHPUNIT_VERSION=6.5.9; fi
+  - wget https://phar.phpunit.de/phpunit-$PHPUNIT_VERSION.phar -O /tmp/phpunit; chmod +x /tmp/phpunit
   # Install WordPress PHPUnit tests
   - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
-  - export PATH="$HOME/.composer/vendor/bin:$PATH"
-  - composer global require --no-interaction --no-ansi "phpunit/phpunit=5.7.*"
   # Install PHP_CodeSniffer with a specific version defined so that devs and Travis-CI will have exactly same standards
   - if [[ "$SNIFF" == "1" ]]; then export PHPCS_DIR=/tmp/phpcs; export PHPCS_VERSION=3.3.2; fi
   - if [[ "$SNIFF" == "1" ]]; then export SNIFFS_DIR=/tmp/sniffs; export SNIFFS_VERSION=1.0.0; fi
@@ -36,4 +42,4 @@ script:
   # More extensive PHP Style Check
   - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -i; $PHPCS_DIR/bin/phpcs -n --standard=phpcs.xml; fi
   # Run PHPUnit tests, disabled due to permanent Travis failure
-  # - phpunit
+  - /tmp/phpunit --verbose
