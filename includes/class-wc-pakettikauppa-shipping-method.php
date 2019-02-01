@@ -366,7 +366,7 @@ function wc_pakettikauppa_shipping_method_init() {
 
           $service_title = $this->wc_pakettikauppa_shipment->service_title($service_code);
 
-          if(!empty($service_settings['alternative_name'])) {
+          if ( ! empty( $service_settings['alternative_name'] ) ) {
               $service_title = trim($service_settings['alternative_name']);
           }
 
