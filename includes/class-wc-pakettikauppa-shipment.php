@@ -101,12 +101,15 @@ class WC_Pakettikauppa_Shipment {
 	 * Get the full-length tracking url of a shipment by providing its service id and tracking code.
 	 * Use tracking url provided by pakettikauppa.fi.
 	 *
-	 * @param int $service_id The id of the service that is used for the shipment
-	 * @param int $tracking_code The tracking code of the shipment
+	 * @param string $tracking_code The tracking code of the shipment
 	 *
 	 * @return string The full tracking url for the order
 	 */
 	public static function tracking_url( $tracking_code ) {
+
+		if(empty($tracking_code)) {
+			return '';
+		}
 		$tracking_url = 'https://www.pakettikauppa.fi/seuranta/?' . $tracking_code;
 
 		return $tracking_url;
@@ -148,11 +151,11 @@ class WC_Pakettikauppa_Shipment {
 
 	public function load() {
 		// Use option from database directly as WC_Pakettikauppa_Shipping_Method object is not accessible here
-		$settings = get_option( 'woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null );
+		$settings = get_option( 'woocommerce_pakettikauppa_shipping_method_settings', null );
 
 		if ( $settings === false ) {
 			throw new Exception(
-				'WooCommerce Pakettikauppa: woocommerce_WC_Pakettikauppa_Shipping_Method_settings was not found in the database!'
+				'WooCommerce Pakettikauppa: woocommerce_pakettikauppa_shipping_method_settings was not found in the database!'
 			);
 		}
 
@@ -201,7 +204,7 @@ class WC_Pakettikauppa_Shipment {
 	 *
 	 * @param WC_Order $order
 	 *
-	 * @return array Shipment details
+	 * @return string tracking_code Shipment tracking code
 	 * @throws Exception
 	 */
 	public function create_shipment( $order ) {
@@ -418,6 +421,7 @@ class WC_Pakettikauppa_Shipment {
 	 * @return string The service title matching with the provided code, or false if not found
 	 */
 	public function service_title( $service_code ) {
+
 		$services = $this->services();
 		if ( isset( $services[ $service_code ] ) ) {
 			return $services[ $service_code ];

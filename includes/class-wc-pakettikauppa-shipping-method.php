@@ -87,6 +87,19 @@ function wc_pakettikauppa_shipping_method_init() {
 
 				$all_shipping_methods = $this->wc_pakettikauppa_shipment->services();
 
+				if(empty($all_shipping_methods)) {
+					$fields = array(
+						'title' => array(
+							'title'       => __( 'Title', 'woocommerce' ),
+							'type'        => 'text',
+							'description' => __( 'Can not connect to Pakettikauppa server - please check Pakettikauppa API credentials, servers error log and firewall settings.', 'wc-pakettikauppa' ),
+							'default'     => 'Pakettikauppa',
+							'desc_tip'    => true,
+						)
+					);
+
+					return $fields;
+				}
 				$fields = array(
 					'title' => array(
 						'title'       => __( 'Title', 'woocommerce' ),
@@ -422,6 +435,14 @@ function wc_pakettikauppa_shipping_method_init() {
 						'package'   => $package,
 					)
 				);
+			}
+
+			public function process_admin_options() {
+				if ( ! $this->instance_id ) {
+					delete_transient( 'wc_pakettikauppa_shipping_methods');
+				}
+
+				return parent::process_admin_options();
 			}
 		}
 	}
