@@ -31,7 +31,8 @@ Register through [www.pakettikauppa.fi](https://www.pakettikauppa.fi/). Process 
 *   Store owner can generate the shipping label in one click
 *   Store owners and customers get tracking code links and status information
 *   Support for Cash-On-Delivery
-*   Test mode available that uses the testing API without registeration
+*   Test mode available that uses the testing API without registration
+
 
 == Installation ==
 
@@ -48,6 +49,10 @@ This plugin can also be installed directly from Github or using `composer requir
 = Is this ready for production use? =
 
 Yes! If you encounter any issues related to this plugin, please report at https://github.com/Seravo/woocommerce-pakettikauppa/issues or to asiakaspalvelu@pakettikauppa.fi
+
+= Can Shipipping method names be translated? =
+
+You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Screenshots ==
 
