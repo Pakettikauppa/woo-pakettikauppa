@@ -455,7 +455,7 @@ class WC_Pakettikauppa_Shipment {
 		ksort( $services );
 
 		return $services;
-	}
+  }
 
 	/**
 	 * Fetch shipping methods from the Pakettikauppa and returns it as objects
