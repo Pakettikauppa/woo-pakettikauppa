@@ -42,9 +42,9 @@ function wc_pakettikauppa_shipping_method_init() {
 			 * @return void
 			 */
 			public function __construct( $instance_id = 0 ) {
-				parent::__construct($instance_id);
+				parent::__construct( $instance_id );
 
-				$this->id          = 'pakettikauppa_shipping_method'; // ID for your shipping method. Should be unique.
+				$this->id = 'pakettikauppa_shipping_method'; // ID for your shipping method. Should be unique.
 
 				$this->method_title       = 'Pakettikauppa'; // Title shown in admin
 				$this->method_description = __( 'All shipping methods with one contract. For more information visit <a href="https://www.pakettikauppa.fi/">Pakettikauppa</a>.', 'wc-pakettikauppa' ); // Description shown in admin
@@ -87,7 +87,7 @@ function wc_pakettikauppa_shipping_method_init() {
 
 				$all_shipping_methods = $this->wc_pakettikauppa_shipment->services();
 
-				if(empty($all_shipping_methods)) {
+				if ( empty( $all_shipping_methods ) ) {
 					$fields = array(
 						'title' => array(
 							'title'       => __( 'Title', 'woocommerce' ),
@@ -146,9 +146,9 @@ function wc_pakettikauppa_shipping_method_init() {
 
 						$fields[ 'class_cost_' . $shipping_class->term_id . '_price' ] = array(
 							/* translators: %s: shipping class name */
-							'title'       => __( 'Price', 'wc-pakettikauppa' ),
+							'title'       => __( 'Price (vat included)', 'wc-pakettikauppa' ),
 							'type'        => 'number',
-							'default'     => $this->fee,
+							'default'     => null,
 							'placeholder' => __( 'N/A', 'woocommerce' ),
 							'description' => __( 'Shipping cost', 'wc-pakettikauppa' ),
 							'desc_tip'    => true,
@@ -157,7 +157,7 @@ function wc_pakettikauppa_shipping_method_init() {
 						$fields[ 'class_cost_' . $shipping_class->term_id . '_price_free' ] = array(
 							'title'       => __( 'Free shipping tier', 'wc-pakettikauppa' ),
 							'type'        => 'number',
-							'default'     => '',
+							'default'     => null,
 							'description' => __( 'After which amount shipping is free.', 'wc-pakettikauppa' ),
 							'desc_tip'    => true,
 						);
@@ -176,12 +176,18 @@ function wc_pakettikauppa_shipping_method_init() {
 
 				}
 
+				$fields[] = array(
+					'title'   => __( 'Default shipping class cost', 'wc-pakettikauppa' ),
+					'type'    => 'title',
+					'default' => '',
+				);
+
 				$fields['price'] = array(
 					'title'       => __( 'No shipping class cost', 'woocommerce' ),
 					'type'        => 'number',
 					'default'     => $this->fee,
 					'placeholder' => __( 'N/A', 'woocommerce' ),
-					'description' => __( 'Shipping cost', 'wc-pakettikauppa' ),
+					'description' => __( 'Shipping cost  (vat included)', 'wc-pakettikauppa' ),
 					'desc_tip'    => true,
 				);
 
@@ -367,7 +373,11 @@ function wc_pakettikauppa_shipping_method_init() {
 					$key_base = "class_cost_{$key_base}_";
 				}
 
-				$shipping_cost = $this->get_option( $key_base . 'price', 0 );
+				$shipping_cost = $this->get_option( $key_base . 'price', -1 );
+
+				if ( $shipping_cost < 0 ) {
+					$shipping_cost = null;
+				}
 
 				if ( $this->get_option( $key_base . 'price_free', 0 ) <= $cart_total && $this->get_option( $key_base . 'price_free', 0 ) > 0 ) {
 					$shipping_cost = 0;
@@ -395,29 +405,39 @@ function wc_pakettikauppa_shipping_method_init() {
 
 				$service_code = $this->get_option( 'shipping_method' );
 
-				$shipping_cost = $this->get_shipping_cost( $cart_total );
+				$shipping_cost = null;
 
 				$shipping_classes = WC()->shipping->get_shipping_classes();
+
 				if ( ! empty( $shipping_classes ) ) {
 					$found_shipping_classes = $this->find_shipping_classes( $package );
 					$highest_class_cost     = 0;
-					$shipping_cost          = 0;
 
 					foreach ( $found_shipping_classes as $shipping_class => $products ) {
 						$shipping_zone = get_term_by( 'slug', $shipping_class, 'product_shipping_class' );
 
 						$class_shipping_cost = $this->get_shipping_cost( $cart_total, $shipping_zone->term_id );
 
-						if ( 'class' === $this->get_option( 'type' ) ) {
-							$shipping_cost += $class_shipping_cost;
-						} else {
-							$highest_class_cost = $class_shipping_cost > $highest_class_cost ? $class_shipping_cost : $highest_class_cost;
+						if ( $class_shipping_cost !== null ) {
+							if ( $shipping_cost === null ) {
+								$shipping_cost = 0;
+							}
+
+							if ( 'class' === $this->get_option( 'type' ) ) {
+								$shipping_cost += $class_shipping_cost;
+							} else {
+								$highest_class_cost = $class_shipping_cost > $highest_class_cost ? $class_shipping_cost : $highest_class_cost;
+							}
 						}
 					}
 
 					if ( 'order' === $this->get_option( 'type' ) && $highest_class_cost ) {
 						$shipping_cost += $highest_class_cost;
 					}
+				}
+
+				if ( $shipping_cost === null ) {
+					$shipping_cost = $this->get_shipping_cost( $cart_total );
 				}
 
 				$taxes = $this->calculate_shipping_tax( $shipping_cost );
@@ -439,7 +459,7 @@ function wc_pakettikauppa_shipping_method_init() {
 
 			public function process_admin_options() {
 				if ( ! $this->instance_id ) {
-					delete_transient( 'wc_pakettikauppa_shipping_methods');
+					delete_transient( 'wc_pakettikauppa_shipping_methods' );
 				}
 
 				return parent::process_admin_options();
