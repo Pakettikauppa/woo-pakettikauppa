@@ -107,7 +107,7 @@ class WC_Pakettikauppa_Shipment {
 	 */
 	public static function tracking_url( $tracking_code ) {
 
-		if(empty($tracking_code)) {
+		if ( empty( $tracking_code ) ) {
 			return '';
 		}
 		$tracking_url = 'https://www.pakettikauppa.fi/seuranta/?' . $tracking_code;
@@ -455,7 +455,7 @@ class WC_Pakettikauppa_Shipment {
 		ksort( $services );
 
 		return $services;
-  }
+	}
 
 	/**
 	 * Fetch shipping methods from the Pakettikauppa and returns it as objects

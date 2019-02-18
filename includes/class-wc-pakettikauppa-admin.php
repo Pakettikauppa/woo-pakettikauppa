@@ -225,76 +225,76 @@ class WC_Pakettikauppa_Admin {
 			$additional_services[] = 'Cash-on-delivery';
 		}
 		?>
-        <div>
-			<?php if ( ! empty( $tracking_code ) ) : ?>
-                <p class="pakettikauppa-shipment">
-                    <strong>
-						<?php
-						printf(
-							'%1$s<br>%2$s<br>%3$s',
-							esc_attr( $this->wc_pakettikauppa_shipment->service_title( $service_id ) ),
-							esc_attr( $tracking_code ),
-							esc_attr( WC_Pakettikauppa_Shipment::get_status_text( $status ) )
-						);
-						?>
-                    </strong><br>
+      <div>
+				<?php if ( ! empty( $tracking_code ) ) : ?>
+            <p class="pakettikauppa-shipment">
+                <strong>
+									<?php
+									printf(
+										'%1$s<br>%2$s<br>%3$s',
+										esc_attr( $this->wc_pakettikauppa_shipment->service_title( $service_id ) ),
+										esc_attr( $tracking_code ),
+										esc_attr( WC_Pakettikauppa_Shipment::get_status_text( $status ) )
+									);
+									?>
+                </strong><br>
 
-                    <a href="<?php echo esc_url( $document_url ); ?>" target="_blank"
-                       class="download"><?php esc_attr_e( 'Print document', 'wc-pakettikauppa' ); ?></a>&nbsp;-&nbsp;
+                <a href="<?php echo esc_url( $document_url ); ?>" target="_blank"
+                   class="download"><?php esc_attr_e( 'Print document', 'wc-pakettikauppa' ); ?></a>&nbsp;-&nbsp;
 
-					<?php if ( ! empty( $tracking_url ) ) : ?>
-                        <a href="<?php echo esc_url( $tracking_url ); ?>" target="_blank"
-                           class="tracking"><?php esc_attr_e( 'Track', 'wc-pakettikauppa' ); ?></a>
-					<?php endif; ?>
-                </p>
-			<?php endif; ?>
-
-			<?php if ( empty( $tracking_code ) ): ?>
-				<?php if ( ! empty( $service_id ) ): ?>
-                    <div class="pakettikauppa-services">
-                        <fieldset class="pakettikauppa-metabox-fieldset">
-                            <h4><?php esc_attr_e( 'Service', 'wc-pakettikauppa' ); ?></h4>
-
-                            <label for="service-<?php echo esc_attr( $service_id ); ?>">
-                                <input type="radio"
-                                       name="wc_pakettikauppa_service_id"
-                                       value="<?php echo esc_attr( $service_id ); ?>"
-                                       id="service-<?php echo esc_attr( $service_id ); ?>"
-                                       checked="checked"
-                                />
-                                <span>
-                                        <?php echo esc_attr( $this->wc_pakettikauppa_shipment->service_title( $service_id ) ); ?>
-									<?php if ( ! empty( $additional_services ) ): ?>
-                                        (<?php foreach ( $additional_services as $i => $additional_service ):
-											?><?php if ( $i > 0 ): ?>,<?php endif;
-											?><?php esc_attr_e( $additional_service, 'wc-pakettikauppa' );
-											?><?php endforeach; ?>)
-									<?php endif; ?>
-                                    </span>
-                            </label>
-                            <br>
-							<?php if ( $pickup_point_id ) : ?>
-                                <input type="hidden" name="wc_pakettikauppa_pickup_points" value="1">
-                                <input type="hidden" name="wc_pakettikauppa_pickup_point_id"
-                                       value="<?php echo $pickup_point_id; ?>">
+							<?php if ( ! empty( $tracking_url ) ) : ?>
+                  <a href="<?php echo esc_url( $tracking_url ); ?>" target="_blank"
+                     class="tracking"><?php esc_attr_e( 'Track', 'wc-pakettikauppa' ); ?></a>
 							<?php endif; ?>
-                        </fieldset>
-                    </div>
-                    <p>
-                        <input type="submit" value="<?php esc_attr_e( 'Create', 'wc-pakettikauppa' ); ?>"
-                               name="wc_pakettikauppa[create]" class="button"/>
-                    </p>
+            </p>
 				<?php endif; ?>
-			<?php else: ?>
+
+				<?php if ( empty( $tracking_code ) ): ?>
+					<?php if ( ! empty( $service_id ) ): ?>
+                <div class="pakettikauppa-services">
+                    <fieldset class="pakettikauppa-metabox-fieldset">
+                        <h4><?php esc_attr_e( 'Service', 'wc-pakettikauppa' ); ?></h4>
+
+                        <label for="service-<?php echo esc_attr( $service_id ); ?>">
+                            <input type="radio"
+                                   name="wc_pakettikauppa_service_id"
+                                   value="<?php echo esc_attr( $service_id ); ?>"
+                                   id="service-<?php echo esc_attr( $service_id ); ?>"
+                                   checked="checked"
+                            />
+                            <span>
+                                        <?php echo esc_attr( $this->wc_pakettikauppa_shipment->service_title( $service_id ) ); ?>
+															<?php if ( ! empty( $additional_services ) ): ?>
+                                  (<?php foreach ( $additional_services as $i => $additional_service ):
+																	?><?php if ( $i > 0 ): ?>,<?php endif;
+																	?><?php esc_attr_e( $additional_service, 'wc-pakettikauppa' );
+																	?><?php endforeach; ?>)
+															<?php endif; ?>
+                                    </span>
+                        </label>
+                        <br>
+											<?php if ( $pickup_point_id ) : ?>
+                          <input type="hidden" name="wc_pakettikauppa_pickup_points" value="1">
+                          <input type="hidden" name="wc_pakettikauppa_pickup_point_id"
+                                 value="<?php echo $pickup_point_id; ?>">
+											<?php endif; ?>
+                    </fieldset>
+                </div>
                 <p>
-                    <input type="submit" value="<?php esc_attr_e( 'Update Status', 'wc-pakettikauppa' ); ?>"
-                           name="wc_pakettikauppa[get_status]" class="button"/>
-                    <input type="submit" value="<?php esc_attr_e( 'Delete Shipping Label', 'wc-pakettikauppa' ); ?>"
-                           name="wc_pakettikauppa[delete_shipping_label]"
-                           class="button wc-pakettikauppa-delete-button"/>
+                    <input type="submit" value="<?php esc_attr_e( 'Create', 'wc-pakettikauppa' ); ?>"
+                           name="wc_pakettikauppa[create]" class="button"/>
                 </p>
-			<?php endif; ?>
-        </div>
+					<?php endif; ?>
+				<?php else: ?>
+            <p>
+                <input type="submit" value="<?php esc_attr_e( 'Update Status', 'wc-pakettikauppa' ); ?>"
+                       name="wc_pakettikauppa[get_status]" class="button"/>
+                <input type="submit" value="<?php esc_attr_e( 'Delete Shipping Label', 'wc-pakettikauppa' ); ?>"
+                       name="wc_pakettikauppa[delete_shipping_label]"
+                       class="button wc-pakettikauppa-delete-button"/>
+            </p>
+				<?php endif; ?>
+      </div>
 		<?php
 	}
 

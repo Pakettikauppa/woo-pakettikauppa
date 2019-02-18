@@ -373,7 +373,7 @@ function wc_pakettikauppa_shipping_method_init() {
 					$key_base = "class_cost_{$key_base}_";
 				}
 
-				$shipping_cost = $this->get_option( $key_base . 'price', -1 );
+				$shipping_cost = $this->get_option( $key_base . 'price', - 1 );
 
 				if ( $shipping_cost < 0 ) {
 					$shipping_cost = null;
