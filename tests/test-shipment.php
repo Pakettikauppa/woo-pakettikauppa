@@ -128,9 +128,9 @@ class Test_WC_Pakettikauppa_Shipment extends WP_UnitTestCase {
     $reference_xml = $this->generate_test_xml();
 
     // Remove timestamp from the actual XML file before assert
-    $time = $xml->ROUTING;
+    $time = $xml->ROUTING; // @codingStandardsIgnoreLine
     $dom  = dom_import_simplexml($time);
-    $dom->parentNode->removeChild($dom);
+    $dom->parentNode->removeChild($dom); // @codingStandardsIgnoreLine
 
     $this->assertXmlStringEqualsXmlString($reference_xml->asXML(), $xml->asXML());
   }
