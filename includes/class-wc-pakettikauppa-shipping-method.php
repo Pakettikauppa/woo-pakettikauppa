@@ -183,7 +183,7 @@ function wc_pakettikauppa_shipping_method_init() {
 				);
 
 				$fields['price'] = array(
-					'title'       => __( 'No shipping class cost', 'woocommerce' ),
+					'title'       => __( 'No shipping class cost (vat included)', 'wc-pakettikauppa' ),
 					'type'        => 'number',
 					'default'     => $this->fee,
 					'placeholder' => __( 'N/A', 'woocommerce' ),
