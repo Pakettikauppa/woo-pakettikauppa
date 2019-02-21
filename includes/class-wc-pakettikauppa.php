@@ -117,25 +117,6 @@ class WC_Pakettikauppa {
         $shipping_country = 'FI';
     }
 
-    try {
-        $pickup_point_data = $this->wc_pakettikauppa_shipment->get_pickup_points( $shipping_postcode, $shipping_address, $shipping_country, $shipping_method_provider );
-
-    } catch ( Exception $e ) {
-        $this->add_error( $e->getMessage() );
-        $this->display_error();
-
-        return;
-    }
-
-      $pickup_points = json_decode( $pickup_point_data );
-      $options_array = array( '' => '- ' . __( 'Select a pickup point', 'wc-pakettikauppa' ) . ' -' );
-
-    foreach ( $pickup_points as $key => $value ) {
-        $pickup_point_key                   = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ')';
-        $pickup_point_value                 = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
-        $options_array[ $pickup_point_key ] = $pickup_point_value;
-    }
-
       echo '<tr class="shipping-pickup-point">';
       echo '<th>' . esc_attr__( 'Pickup point', 'wc-pakettikauppa' ) . '</th>';
       echo '<td data-title="' . esc_attr__( 'Pickup point', 'wc-pakettikauppa' ) . '">';
@@ -146,32 +127,62 @@ class WC_Pakettikauppa {
         esc_attr_e( 'Insert your shipping details to view nearby pickup points', 'wc-pakettikauppa' );
         echo '</p>';
     } elseif ( ! is_numeric( $shipping_postcode ) ) {
-        echo '<p>';
+    	echo '<p>';
         printf(
         /* translators: %s: Postcode */
             esc_attr__( 'Invalid postcode "%1$s". Please check your address information.', 'wc-pakettikauppa' ),
             esc_attr( $shipping_postcode ) );
         echo '</p>';
     } else {
+
+      try {
+          $options_array = $this->fetch_pickup_point_options($shipping_postcode, $shipping_address, $shipping_country, $shipping_method_provider);
+      } catch ( Exception $e ) {
+          $options_array = false;
+        $this->add_error( $e->getMessage() );
+        $this->display_error();
+      }
+
+      if ( $options_array !== false ) {
+
         printf(
         /* translators: %s: Postcode */
-            esc_html__( 'Choose one of the pickup points close to your postcode %1$s below:', 'wc-pakettikauppa' ),
-            '<span class="shipping_postcode_for_pickup">' . esc_attr( $shipping_postcode ) . '</span>'
+          esc_html__( 'Choose one of the pickup points close to your postcode %1$s below:', 'wc-pakettikauppa' ),
+          '<span class="shipping_postcode_for_pickup">' . esc_attr( $shipping_postcode ) . '</span>'
         );
 
         woocommerce_form_field(
-            'pakettikauppa_pickup_point',
-            array(
-              'clear'             => true,
-              'type'              => 'select',
-              'custom_attributes' => array( 'style' => 'word-wrap: normal;' ),
-              'options'           => $options_array,
-            ),
-            null
+          'pakettikauppa_pickup_point',
+          array(
+            'clear'             => true,
+            'type'              => 'select',
+            'custom_attributes' => array( 'style' => 'word-wrap: normal;' ),
+            'options'           => $options_array,
+          ),
+          null
         );
+      }
+    }
+      echo '</td></tr>';
+  }
+
+  private function fetch_pickup_point_options( $shipping_postcode, $shipping_address, $shipping_country, $shipping_method_provider ) {
+		  $pickup_point_data = $this->wc_pakettikauppa_shipment->get_pickup_points( $shipping_postcode, $shipping_address, $shipping_country, $shipping_method_provider );
+
+	  return $this->process_pickup_points_to_option_array($pickup_point_data);
+  }
+
+  private function process_pickup_points_to_option_array( $pickup_point_data ) {
+	  $pickup_points = json_decode( $pickup_point_data );
+	  $options_array = array( '' => '- ' . __( 'Select a pickup point', 'wc-pakettikauppa' ) . ' -' );
+
+    foreach ( $pickup_points as $key => $value ) {
+        $pickup_point_key                   = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ')';
+        $pickup_point_value                 = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
+        $options_array[ $pickup_point_key ] = $pickup_point_value;
     }
 
-      echo '</td></tr>';
+	  return $options_array;
   }
 
 	/**

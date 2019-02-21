@@ -1,307 +1,423 @@
-# Copyright (C) 2017 WooCommerce Pakettikauppa
+# Copyright (C) 2019 WooCommerce Pakettikauppa
 # This file is distributed under the same license as the WooCommerce Pakettikauppa package.
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Pakettikauppa 0.9.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woocommerce-"
-"pakettikauppa\n"
-"POT-Creation-Date: 2019-01-15 11:56+0200\n"
+"Project-Id-Version: WooCommerce Pakettikauppa 2.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-pakettikauppa\n"
+"POT-Creation-Date: 2019-02-21 09:46:09+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"X-Generator: Poedit 2.2.1\n"
-"X-Poedit-Basepath: ../includes\n"
-"X-Poedit-KeywordsList: __;_e;esc_attr_e\n"
-"X-Poedit-SearchPath-0: .\n"
 
-#: class-wc-pakettikauppa-admin.php:94
-#, php-format
+#. translators: %s: Error message
+
+#: includes/class-wc-pakettikauppa-admin.php:93
+#: includes/class-wc-pakettikauppa-admin.php:390
+#: includes/class-wc-pakettikauppa-admin.php:414
+#: includes/class-wc-pakettikauppa-admin.php:443
 msgid "An error occured: %s"
 msgstr ""
 
-#: class-wc-pakettikauppa-admin.php:194
-msgid ""
-"Please add shipping info to the order to manage Pakettikauppa shipments."
+#: includes/class-wc-pakettikauppa-admin.php:111
+msgid "Visit Pakettikauppa"
 msgstr ""
 
-#: class-wc-pakettikauppa-admin.php:242
+#: includes/class-wc-pakettikauppa-admin.php:112
+msgid "Show site Pakettikauppa"
+msgstr ""
+
+#: includes/class-wc-pakettikauppa-admin.php:129
+msgid "Pakettikauppa"
+msgstr ""
+
+#: includes/class-wc-pakettikauppa-admin.php:163
+msgid "Settings"
+msgstr ""
+
+#: includes/class-wc-pakettikauppa-admin.php:175
+msgid "Requested pickup point"
+msgstr ""
+
+#: includes/class-wc-pakettikauppa-admin.php:179
+msgid "None"
+msgstr ""
+
+#: includes/class-wc-pakettikauppa-admin.php:193
+msgid "Please add shipping info to the order to manage Pakettikauppa shipments."
+msgstr ""
+
+#: includes/class-wc-pakettikauppa-admin.php:242
+#: includes/class-wc-pakettikauppa-admin.php:465
 msgid "Print document"
 msgstr ""
 
-#: class-wc-pakettikauppa-admin.php:246 class-wc-pakettikauppa-admin.php:459
+#: includes/class-wc-pakettikauppa-admin.php:246
+#: includes/class-wc-pakettikauppa-admin.php:466
 msgid "Track"
 msgstr ""
 
-#: class-wc-pakettikauppa-admin.php:254
+#: includes/class-wc-pakettikauppa-admin.php:255
 msgid "Service"
 msgstr ""
 
-#: class-wc-pakettikauppa-admin.php:288
+#: includes/class-wc-pakettikauppa-admin.php:290
 msgid "Create"
 msgstr ""
 
-#: class-wc-pakettikauppa-admin.php:293
+#: includes/class-wc-pakettikauppa-admin.php:296
 msgid "Update Status"
 msgstr ""
 
-#: class-wc-pakettikauppa-admin.php:295
+#: includes/class-wc-pakettikauppa-admin.php:298
 msgid "Delete Shipping Label"
 msgstr ""
 
-#: class-wc-pakettikauppa-admin.php:465
-#, php-format
+#: includes/class-wc-pakettikauppa-admin.php:384
+msgid "Successfully deleted Pakettikauppa shipping label."
+msgstr ""
+
+#. translators: %s: Error message
+
+#: includes/class-wc-pakettikauppa-admin.php:396
+msgid "Deleting Pakettikauppa shipment failed! Errors: %s"
+msgstr ""
+
+#: includes/class-wc-pakettikauppa-admin.php:428
+msgid "The shipping label was not created because the order does not contain valid shipping details."
+msgstr ""
+
+#. translators: %s: Error message
+
+#: includes/class-wc-pakettikauppa-admin.php:440
+msgid "Failed to create Pakettikauppa shipment. Errors: %s"
+msgstr ""
+
+#. translators: %s: Error message
+
+#: includes/class-wc-pakettikauppa-admin.php:450
+#: includes/class-wc-pakettikauppa-admin.php:453
+msgid "Failed to create Pakettikauppa shipment."
+msgstr ""
+
+#. translators: 1: Shipping service title 2: Shipment tracking code 3: Shipping
+#. label URL 4: Shipment tracking URL
+
+#: includes/class-wc-pakettikauppa-admin.php:472
 msgid "Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s"
 msgstr ""
 
-#: class-wc-pakettikauppa-admin.php:481
+#: includes/class-wc-pakettikauppa-admin.php:488
 msgid "Shipment tracking code is not defined."
 msgstr ""
 
-#: class-wc-pakettikauppa-admin.php:491
+#: includes/class-wc-pakettikauppa-admin.php:498
 msgid "Cannot find shipment with given shipment number."
 msgstr ""
 
-#: class-wc-pakettikauppa-admin.php:534
-#, php-format
+#. translators: %s: Shipment tracking URL
+
+#: includes/class-wc-pakettikauppa-admin.php:537
+msgid ""
+"You can track your order at %1$s.\n"
+"\n"
+msgstr ""
+
+#: includes/class-wc-pakettikauppa-admin.php:539
+msgid "Tracking"
+msgstr ""
+
+#. translators: 1: Shipment tracking URL 2: Shipment tracking code
+
+#: includes/class-wc-pakettikauppa-admin.php:541
 msgid "You can <a href=\"%1$s\">track your order</a> with tracking code %2$s."
 msgstr ""
 
-#: class-wc-pakettikauppa-shipment.php:53
+#: includes/class-wc-pakettikauppa-shipment.php:53
 msgid "Item is collected from sender - picked up"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipment.php:56
+#: includes/class-wc-pakettikauppa-shipment.php:56
 msgid "Exception"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipment.php:59
+#: includes/class-wc-pakettikauppa-shipment.php:59
 msgid "Item has been handed over to the recipient"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipment.php:62
+#: includes/class-wc-pakettikauppa-shipment.php:62
 msgid "Item is in transport"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipment.php:65
+#: includes/class-wc-pakettikauppa-shipment.php:65
 msgid "C.O.D payment is paid to the sender"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipment.php:68
+#: includes/class-wc-pakettikauppa-shipment.php:68
 msgid "Informed consignee of arrival"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipment.php:71
+#: includes/class-wc-pakettikauppa-shipment.php:71
 msgid "Item is loaded onto a means of transport"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipment.php:74
+#: includes/class-wc-pakettikauppa-shipment.php:74
 msgid "Item not delivered – delivery attempt made"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipment.php:77
+#: includes/class-wc-pakettikauppa-shipment.php:77
 msgid "Pre-information is received from sender"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipment.php:80
+#: includes/class-wc-pakettikauppa-shipment.php:80
 msgid "Item is ready for delivery transportation"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipment.php:83
+#: includes/class-wc-pakettikauppa-shipment.php:83
 msgid "Item is returning to the sender"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipment.php:86
+#: includes/class-wc-pakettikauppa-shipment.php:86
 msgid "Item is arrived to a post office"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipment.php:89
+#: includes/class-wc-pakettikauppa-shipment.php:89
 msgid "Outbound"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipment.php:93
-#, php-format
+#. translators: %s: Status code
+
+#: includes/class-wc-pakettikauppa-shipment.php:93
 msgid "Unknown status: %s"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipment.php:269
-#, php-format
+#. translators: %s: Error message
+
+#: includes/class-wc-pakettikauppa-shipment.php:272
 msgid "WooCommerce Pakettikauppa: tracking code creation failed: %s"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipment.php:407
+#: includes/class-wc-pakettikauppa-shipment.php:410
 msgid "WC_Pakettikauppa: An error occured when searching pickup points."
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:50
-msgid ""
-"All shipping methods with one contract. For more information visit <a href="
-"\"https://www.pakettikauppa.fi/\">Pakettikauppa</a>."
+#: includes/class-wc-pakettikauppa-shipping-method.php:50
+msgid "All shipping methods with one contract. For more information visit <a href=\"https://www.pakettikauppa.fi/\">Pakettikauppa</a>."
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:92
+#: includes/class-wc-pakettikauppa-shipping-method.php:92
+#: includes/class-wc-pakettikauppa-shipping-method.php:104
 msgid "Title"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:94
+#: includes/class-wc-pakettikauppa-shipping-method.php:94
+msgid "Can not connect to Pakettikauppa server - please check Pakettikauppa API credentials, servers error log and firewall settings."
+msgstr ""
+
+#: includes/class-wc-pakettikauppa-shipping-method.php:106
 msgid "This controls the title which the user sees during checkout."
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:100
+#: includes/class-wc-pakettikauppa-shipping-method.php:112
 msgid "Shipping methods"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:105
+#: includes/class-wc-pakettikauppa-shipping-method.php:117
 msgid "Shipping method"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:112
+#: includes/class-wc-pakettikauppa-shipping-method.php:123
 msgid "Shipping class costs"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:116
-#, php-format
-msgid ""
-"These costs can optionally be added based on the <a href=\"%s\">product "
-"shipping class</a>."
+#. translators: %s: URL for link.
+
+#: includes/class-wc-pakettikauppa-shipping-method.php:127
+msgid "These costs can optionally be added based on the <a href=\"%s\">product shipping class</a>."
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:129
-#, php-format
+#. translators: %s: shipping class cost
+
+#: includes/class-wc-pakettikauppa-shipping-method.php:141
 msgid "\"%s\" shipping class cost"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:136
-msgid "Price"
+#. translators: %s: shipping class name
+
+#: includes/class-wc-pakettikauppa-shipping-method.php:148
+msgid "Price (vat included)"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:139
-#: class-wc-pakettikauppa-shipping-method.php:170
+#: includes/class-wc-pakettikauppa-shipping-method.php:151
+#: includes/class-wc-pakettikauppa-shipping-method.php:188
 msgid "N/A"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:140
-#: class-wc-pakettikauppa-shipping-method.php:171
+#: includes/class-wc-pakettikauppa-shipping-method.php:152
 msgid "Shipping cost"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:145
-#: class-wc-pakettikauppa-shipping-method.php:176
+#: includes/class-wc-pakettikauppa-shipping-method.php:157
+#: includes/class-wc-pakettikauppa-shipping-method.php:194
 msgid "Free shipping tier"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:148
-#: class-wc-pakettikauppa-shipping-method.php:179
+#: includes/class-wc-pakettikauppa-shipping-method.php:160
+#: includes/class-wc-pakettikauppa-shipping-method.php:197
 msgid "After which amount shipping is free."
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:154
+#: includes/class-wc-pakettikauppa-shipping-method.php:166
 msgid "Calculation type"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:159
+#: includes/class-wc-pakettikauppa-shipping-method.php:171
 msgid "Per class: Charge shipping for each shipping class individually"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:160
+#: includes/class-wc-pakettikauppa-shipping-method.php:172
 msgid "Per order: Charge shipping for the most expensive shipping class"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:167
-msgid "No shipping class cost"
+#: includes/class-wc-pakettikauppa-shipping-method.php:179
+msgid "Default shipping class cost"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:190
+#: includes/class-wc-pakettikauppa-shipping-method.php:185
+msgid "No shipping class cost (vat included)"
+msgstr ""
+
+#: includes/class-wc-pakettikauppa-shipping-method.php:189
+msgid "Shipping cost  (vat included)"
+msgstr ""
+
+#: includes/class-wc-pakettikauppa-shipping-method.php:207
 msgid "Mode"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:194
+#: includes/class-wc-pakettikauppa-shipping-method.php:211
 msgid "Testing environment"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:195
+#: includes/class-wc-pakettikauppa-shipping-method.php:212
 msgid "Production environment"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:200
+#: includes/class-wc-pakettikauppa-shipping-method.php:217
 msgid "API key"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:201
+#: includes/class-wc-pakettikauppa-shipping-method.php:218
 msgid "API key provided by Pakettikauppa"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:208
+#: includes/class-wc-pakettikauppa-shipping-method.php:225
 msgid "API secret"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:209
+#: includes/class-wc-pakettikauppa-shipping-method.php:226
 msgid "API Secret provided by Pakettikauppa"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:217
+#: includes/class-wc-pakettikauppa-shipping-method.php:234
 msgid "Shipping settings"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:222
+#: includes/class-wc-pakettikauppa-shipping-method.php:239
 msgid "Add tracking link to the order completed email"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:228
+#: includes/class-wc-pakettikauppa-shipping-method.php:245
 msgid "Pickup point search limit"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:231
+#: includes/class-wc-pakettikauppa-shipping-method.php:248
 msgid "Limit the amount of nearest pickup points shown."
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:236
+#: includes/class-wc-pakettikauppa-shipping-method.php:253
 msgid "Store owner information"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:241
+#: includes/class-wc-pakettikauppa-shipping-method.php:258
 msgid "Sender name"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:247
+#: includes/class-wc-pakettikauppa-shipping-method.php:264
 msgid "Sender address"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:253
+#: includes/class-wc-pakettikauppa-shipping-method.php:270
 msgid "Sender postal code"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:259
+#: includes/class-wc-pakettikauppa-shipping-method.php:276
 msgid "Sender city"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:265
+#: includes/class-wc-pakettikauppa-shipping-method.php:282
 msgid "Bank account number for Cash on Delivery (IBAN)"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:271
+#: includes/class-wc-pakettikauppa-shipping-method.php:288
 msgid "BIC code for Cash on Delivery"
 msgstr ""
 
-#: class-wc-pakettikauppa-shipping-method.php:277
+#: includes/class-wc-pakettikauppa-shipping-method.php:294
 msgid "Info-code for shipments"
 msgstr ""
 
-#: class-wc-pakettikauppa.php:61
+#: includes/class-wc-pakettikauppa.php:63
 msgid "An error occured. Please try again later."
 msgstr ""
 
-#: class-wc-pakettikauppa.php:123
-msgid "Select a pickup point"
+#: includes/class-wc-pakettikauppa.php:121
+#: includes/class-wc-pakettikauppa.php:122
+#: includes/class-wc-pakettikauppa.php:202
+msgid "Pickup point"
 msgstr ""
 
-#: class-wc-pakettikauppa.php:138
+#: includes/class-wc-pakettikauppa.php:127
 msgid "Insert your shipping details to view nearby pickup points"
 msgstr ""
 
-#: class-wc-pakettikauppa.php:189
+#. translators: %s: Postcode
+
+#: includes/class-wc-pakettikauppa.php:133
+msgid "Invalid postcode \"%1$s\". Please check your address information."
+msgstr ""
+
+#. translators: %s: Postcode
+
+#: includes/class-wc-pakettikauppa.php:151
+msgid "Choose one of the pickup points close to your postcode %1$s below:"
+msgstr ""
+
+#: includes/class-wc-pakettikauppa.php:181
+msgid "Select a pickup point"
+msgstr ""
+
+#: includes/class-wc-pakettikauppa.php:214
 msgid "Please choose a pickup point."
+msgstr ""
+#. Plugin Name of the plugin/theme
+msgid "WooCommerce Pakettikauppa"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://github.com/Seravo/woocommerce-pakettikauppa"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Pakettikauppa shipping service for WooCommerce. Integrates Posti, Smartship, Matkahuolto, DB Schenker and others. Version 2 breaks 1.x pricing settings."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Seravo"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://seravo.com/"
 msgstr ""
