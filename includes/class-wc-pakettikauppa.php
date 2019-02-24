@@ -92,7 +92,7 @@ class WC_Pakettikauppa {
 	 * Customize the layout of the checkout screen so that there is a section
 	 * where the pickup point can be defined. Don't use the woocommerce_checkout_fields
 	 * filter, it only lists fields without values, and we need to know the postcode.
-	 * Also the woocommerce_checkout_fields has separate billing and shipping address
+	 * Also the WooCommerce_checkout_fields has separate billing and shipping address
 	 * listings, when we want to have only one single pickup point per order.
 	 */
   public function pickup_point_field_html() {

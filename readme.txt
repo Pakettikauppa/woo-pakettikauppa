@@ -3,7 +3,7 @@ Contributors: ottok, leotoikka, serter
 Donate link: https://seravo.com/
 Tags: woocommerce, shipping, toimitustavat, smartship, pakettikauppa, posti, smartpost, prinetti, matkahuolto, schenker, seravo, gls
 Requires at least: 4.6
-Tested up to: 4.9
+Tested up to: 5.1
 Requires PHP: 5.6.0
 Stable tag: trunk
 License: GPLv3 or later
@@ -23,19 +23,17 @@ Register through [www.pakettikauppa.fi](https://www.pakettikauppa.fi/). Process 
 
 # Features
 
-*   Integrates Pakettikauppa with WooCommerce
-*   Based on the official [Pakettikauppa API library](https://github.com/Pakettikauppa/api-library)
-*   Supports WooCommerce shipping zones and classes (though Pakettikauppa is currently only available in Finland)
-*   Store owners can specify themselves any fixed rate for a shipping or have free shipping if the order value is above a certain limit
-*   Customers can choose to ship products to an address or to any pickup point available from the Pakettikauppa shipping methods
-*   Store owner can generate the shipping label in one click
-*   Store owners and customers get tracking code links and status information
-*   Support for Cash-On-Delivery
-*   Test mode available that uses the testing API without registration
-
+* Integrates Pakettikauppa with WooCommerce
+* Based on the official [Pakettikauppa API library](https://github.com/Pakettikauppa/api-library)
+* Supports WooCommerce shipping zones and classes (though Pakettikauppa is currently only available in Finland)
+* Store owners can specify themselves any fixed rate for a shipping or have free shipping if the order value is above a certain limit
+* Customers can choose to ship products to an address or to any pickup point available from the Pakettikauppa shipping methods
+* Store owner can generate the shipping label in one click
+* Store owners and customers get tracking code links and status information
+* Support for Cash-On-Delivery
+* Test mode available that uses the testing API without registration
 
 == Installation ==
-
 
 1. Upload the plugin files to the `/wp-content/plugins/woocommerce-pakettikauppa` directory, or install the plugin through the WordPress plugins screen directly.
 1. Activate the plugin through the 'Plugins' screen in WordPress
@@ -62,7 +60,7 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 = 2.0.0 =
 * Shipping zone and shipping class support!
-* COD-support if payment method is woocommerce cod payment method (or extended class)
+* COD-support if payment method is WooCommerce COD (cash-on-delivery) payment method (or extended class)
 * This update breaks pricing from 1.x branches - You have to create new prices by adding Pakettikauppa as a new shipping method to Shipping zones
 
 = 1.1.8 =
