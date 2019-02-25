@@ -42,6 +42,7 @@ class WC_Pakettikauppa_Admin {
         $this,
         'show_pickup_point_in_admin_order_meta',
       ), 10, 1 );
+      add_action( 'admin_notices', array( $this, 'wc_pakettikauppa_updated' ), 10, 2);
 
     try {
         $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
@@ -55,6 +56,24 @@ class WC_Pakettikauppa_Admin {
     }
   }
 
+  public function wc_pakettikauppa_updated() {
+      $shipping_method_found = false;
+	  $shipping_zones = WC_Shipping_Zones::get_zones();
+
+    foreach ( $shipping_zones as $shipping_zone ) {
+      foreach ( $shipping_zone['shipping_methods'] as $shipping_object ) {
+        if ( get_class($shipping_object) === 'WC_Pakettikauppa_Shipping_Method' ) {
+          $shipping_method_found = true;
+        }
+      }
+    }
+
+    if ( ! $shipping_method_found ) {
+            echo '<div class="updated warning">';
+            echo sprintf('<p>%s</p>', __( 'Pakettikauppa plugin has been installed/updated and no shipping methods are activated!'));
+            echo '</div>';
+    }
+  }
 	/**
 	 * Add an error with a specified error message.
 	 *
