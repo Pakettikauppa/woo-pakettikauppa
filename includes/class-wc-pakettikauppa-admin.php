@@ -30,18 +30,19 @@ class WC_Pakettikauppa_Admin {
   }
 
   public function load() {
-    add_filter( 'plugin_action_links_' . WC_PAKETTIKAUPPA_BASENAME, array( $this, 'add_settings_link' ) );
-    add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
+      add_filter( 'plugin_action_links_' . WC_PAKETTIKAUPPA_BASENAME, array( $this, 'add_settings_link' ) );
+      add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
 
-    add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
-    add_action( 'add_meta_boxes', array( $this, 'register_meta_boxes' ) );
-    add_action( 'save_post', array( $this, 'save_metabox' ), 10, 2 );
-    add_action( 'admin_post_show_pakettikauppa', array( $this, 'show' ), 10 );
-    add_action( 'woocommerce_email_order_meta', array( $this, 'attach_tracking_to_email' ), 10, 4 );
-    add_action( 'woocommerce_admin_order_data_after_shipping_address', array(
-      $this,
-      'show_pickup_point_in_admin_order_meta',
-    ), 10, 1 );
+      add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+      add_action( 'add_meta_boxes', array( $this, 'register_meta_boxes' ) );
+      add_action( 'save_post', array( $this, 'save_metabox' ), 10, 2 );
+      add_action( 'admin_post_show_pakettikauppa', array( $this, 'show' ), 10 );
+      add_action( 'woocommerce_email_order_meta', array( $this, 'attach_tracking_to_email' ), 10, 4 );
+      add_action( 'woocommerce_admin_order_data_after_shipping_address', array(
+        $this,
+        'show_pickup_point_in_admin_order_meta',
+      ), 10, 1 );
+      add_action( 'admin_notices', array( $this, 'wc_pakettikauppa_updated' ), 10, 2);
 
     try {
       $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
@@ -55,11 +56,29 @@ class WC_Pakettikauppa_Admin {
     }
   }
 
-  /**
-   * Add an error with a specified error message.
-   *
-   * @param string $message A message containing details about the error.
-   */
+  public function wc_pakettikauppa_updated() {
+      $shipping_method_found = false;
+	  $shipping_zones = WC_Shipping_Zones::get_zones();
+
+    foreach ( $shipping_zones as $shipping_zone ) {
+      foreach ( $shipping_zone['shipping_methods'] as $shipping_object ) {
+        if ( get_class($shipping_object) === 'WC_Pakettikauppa_Shipping_Method' ) {
+          $shipping_method_found = true;
+        }
+      }
+    }
+
+    if ( ! $shipping_method_found ) {
+            echo '<div class="updated warning">';
+            echo sprintf('<p>%s</p>', __( 'Pakettikauppa plugin has been installed/updated and no shipping methods are activated!'));
+            echo '</div>';
+    }
+  }
+	/**
+	 * Add an error with a specified error message.
+	 *
+	 * @param string $message A message containing details about the error.
+	 */
   public function add_error( $message ) {
     if ( ! empty( $message ) ) {
       array_push( $this->errors, $message );
