@@ -46,14 +46,14 @@ function wc_pakettikauppa_shipping_method_init() {
 
         $this->id = 'pakettikauppa_shipping_method'; // ID for your shipping method. Should be unique.
 
-	      $this->method_title = 'Pakettikauppa';
+        $this->method_title = 'Pakettikauppa';
 
-	      $this->method_description = __( 'Edit to select shipping company and shipping prices.', 'wc-pakettikauppa' ); // Description shown in admin
+        $this->method_description = __( 'Edit to select shipping company and shipping prices.', 'wc-pakettikauppa' ); // Description shown in admin
         //        $this->method_description = __( 'All shipping methods with one contract. For more information visit <a href="https://www.pakettikauppa.fi/">Pakettikauppa</a>.', 'wc-pakettikauppa' ); // Description shown in admin
 
-	      // Make Pakettikauppa API accessible via WC_Pakettikauppa_Shipment
-	      $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
-	      $this->wc_pakettikauppa_shipment->load();
+        // Make Pakettikauppa API accessible via WC_Pakettikauppa_Shipment
+        $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
+        $this->wc_pakettikauppa_shipment->load();
 
         $this->supports = array(
           'shipping-zones',
@@ -62,7 +62,7 @@ function wc_pakettikauppa_shipping_method_init() {
           'instance-settings-modal',
         );
 
-	      $this->init();
+        $this->init();
 
         // Save settings in admin if you have any defined
         add_action( 'woocommerce_update_options_shipping_' . $this->id, array(
@@ -71,8 +71,8 @@ function wc_pakettikauppa_shipping_method_init() {
         ) );
 
         if ( ! empty($this->get_instance_option('shipping_method')) ) {
-	        /* translators: %s: shipping method */
-	        $this->method_description = sprintf(__( 'Selected shipping method: %s', 'wc-pakettikauppa'), $this->wc_pakettikauppa_shipment->service_title($this->get_instance_option('shipping_method')));
+          /* translators: %s: shipping method */
+          $this->method_description = sprintf(__( 'Selected shipping method: %s', 'wc-pakettikauppa'), $this->wc_pakettikauppa_shipment->service_title($this->get_instance_option('shipping_method')));
         }
 
       }
@@ -92,8 +92,8 @@ function wc_pakettikauppa_shipping_method_init() {
       private function my_instance_form_fields() {
 
           $all_shipping_methods = array_merge(
-          	array( '' => 'Select one shipping method' ),
-	          $this->wc_pakettikauppa_shipment->services()
+            array( '' => 'Select one shipping method' ),
+            $this->wc_pakettikauppa_shipment->services()
           );
 
         if ( empty( $all_shipping_methods ) ) {
@@ -244,7 +244,7 @@ function wc_pakettikauppa_shipping_method_init() {
           array(
             'title' => __( 'Shipping settings', 'wc-pakettikauppa' ),
             'type'  => 'title',
-	          /* translators: %s: url to documentation */
+            /* translators: %s: url to documentation */
             'description' => sprintf(__( 'You can activate new shipping method to checkout in <b>WooCommerce > Settings > Shipping > Shipping zones</b>. For more information, see <a target="_blank" href="%1$s">%1$s</a>', 'wc-pakettikauppa'), 'https://docs.woocommerce.com/document/setting-up-shipping-zones/'),
 
           ),

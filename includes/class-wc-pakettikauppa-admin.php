@@ -58,7 +58,7 @@ class WC_Pakettikauppa_Admin {
 
   public function wc_pakettikauppa_updated() {
       $shipping_method_found = false;
-	  $shipping_zones = WC_Shipping_Zones::get_zones();
+    $shipping_zones = WC_Shipping_Zones::get_zones();
 
     foreach ( $shipping_zones as $shipping_zone ) {
       foreach ( $shipping_zone['shipping_methods'] as $shipping_object ) {
@@ -74,11 +74,11 @@ class WC_Pakettikauppa_Admin {
             echo '</div>';
     }
   }
-	/**
-	 * Add an error with a specified error message.
-	 *
-	 * @param string $message A message containing details about the error.
-	 */
+  /**
+   * Add an error with a specified error message.
+   *
+   * @param string $message A message containing details about the error.
+   */
   public function add_error( $message ) {
     if ( ! empty( $message ) ) {
       array_push( $this->errors, $message );
