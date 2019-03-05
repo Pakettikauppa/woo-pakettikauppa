@@ -100,7 +100,7 @@ class WC_Pakettikauppa {
 
     $chosen_shipping_id = explode( ':', WC()->session->get( 'chosen_shipping_methods' )[0] )[1];
 
-    $shipping_method_id = $shipping_methods[ $chosen_shipping_id ]->instance_settings['shipping_method'];
+    $shipping_method_id = $shipping_methods[ strval($chosen_shipping_id) ]->instance_settings['shipping_method'];
 
     $shipping_method_provider = $this->wc_pakettikauppa_shipment->service_provider( $shipping_method_id );
 
@@ -164,7 +164,7 @@ class WC_Pakettikauppa {
         );
       }
     }
-      echo '</td></tr>';
+    echo '</td></tr>';
   }
 
   private function fetch_pickup_point_options( $shipping_postcode, $shipping_address, $shipping_country, $shipping_method_provider ) {
