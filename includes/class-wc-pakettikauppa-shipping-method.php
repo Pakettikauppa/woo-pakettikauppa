@@ -242,8 +242,8 @@ function wc_pakettikauppa_shipping_method_init() {
 
             /* Start new section */
           array(
-            'title' => __( 'Shipping settings', 'wc-pakettikauppa' ),
-            'type'  => 'title',
+            'title'       => __( 'Shipping settings', 'wc-pakettikauppa' ),
+            'type'        => 'title',
             /* translators: %s: url to documentation */
             'description' => sprintf(__( 'You can activate new shipping method to checkout in <b>WooCommerce > Settings > Shipping > Shipping zones</b>. For more information, see <a target="_blank" href="%1$s">%1$s</a>', 'wc-pakettikauppa'), 'https://docs.woocommerce.com/document/setting-up-shipping-zones/'),
 

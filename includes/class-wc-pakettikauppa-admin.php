@@ -57,7 +57,7 @@ class WC_Pakettikauppa_Admin {
   }
 
   public function wc_pakettikauppa_updated() {
-      $shipping_method_found = false;
+    $shipping_method_found = false;
     $shipping_zones = WC_Shipping_Zones::get_zones();
 
     foreach ( $shipping_zones as $shipping_zone ) {
@@ -69,9 +69,9 @@ class WC_Pakettikauppa_Admin {
     }
 
     if ( ! $shipping_method_found ) {
-            echo '<div class="updated warning">';
-            echo sprintf('<p>%s</p>', __( 'Pakettikauppa plugin has been installed/updated and no shipping methods are activated!'));
-            echo '</div>';
+      echo '<div class="updated warning">';
+      echo sprintf('<p>%s</p>', __( 'Pakettikauppa plugin has been installed/updated and no shipping methods are activated!'));
+      echo '</div>';
     }
   }
   /**
@@ -126,9 +126,9 @@ class WC_Pakettikauppa_Admin {
     if ( $file === WC_PAKETTIKAUPPA_BASENAME ) {
       $row_meta = array(
         'service' => sprintf( '<a href="%1$s" aria-label="%2$s">%3$s</a>',
-            esc_url( 'https://www.pakettikauppa.fi' ),
-            esc_attr__( 'Visit Pakettikauppa', 'wc-pakettikauppa' ),
-            esc_html__( 'Show site Pakettikauppa', 'wc-pakettikauppa' )
+          esc_url( 'https://www.pakettikauppa.fi' ),
+          esc_attr__( 'Visit Pakettikauppa', 'wc-pakettikauppa' ),
+          esc_html__( 'Show site Pakettikauppa', 'wc-pakettikauppa' )
         ),
       );
 

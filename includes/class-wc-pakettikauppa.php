@@ -164,7 +164,7 @@ class WC_Pakettikauppa {
         );
       }
     }
-      echo '</td></tr>';
+    echo '</td></tr>';
   }
 
   private function fetch_pickup_point_options( $shipping_postcode, $shipping_address, $shipping_country, $shipping_method_provider ) {
