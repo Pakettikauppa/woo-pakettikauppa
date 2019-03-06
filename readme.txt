@@ -58,6 +58,10 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 
+= 2.0.2 =
+* Internal changes / fixes / improvements
+* In latest woo pickup points only worked if shipping had testing on
+
 = 2.0.1 =
 * Fixed shipping method id in the settings
 

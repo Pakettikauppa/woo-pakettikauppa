@@ -96,11 +96,28 @@ class WC_Pakettikauppa {
    * listings, when we want to have only one single pickup point per order.
    */
   public function pickup_point_field_html() {
-    $shipping_methods = WC()->shipping()->get_shipping_methods();
+    $packages = WC()->shipping()->get_packages();
 
-    $chosen_shipping_id = explode( ':', WC()->session->get( 'chosen_shipping_methods' )[0] )[1];
+    $chosen_shipping_id = WC()->session->get( 'chosen_shipping_methods' )[0];
 
-    $shipping_method_id = $shipping_methods[ strval($chosen_shipping_id) ]->instance_settings['shipping_method'];
+    /** @var WC_Shipping_Rate $shipping_rate */
+    $shipping_rate = null;
+    foreach ( $packages as $package ) {
+      if ( isset ( $package['rates'][ $chosen_shipping_id ] ) ) {
+        $shipping_rate = $package['rates'][ $chosen_shipping_id ];
+      }
+    }
+
+    if ( $shipping_rate === null ) {
+      return;
+    }
+
+    $shipment_meta_data = $shipping_rate->get_meta_data();
+    if ( ! isset($shipment_meta_data['service_code'] ) ) {
+      return;
+    }
+
+    $shipping_method_id = $shipment_meta_data['service_code'];
 
     $shipping_method_provider = $this->wc_pakettikauppa_shipment->service_provider( $shipping_method_id );
 
