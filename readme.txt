@@ -58,6 +58,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 
+= 2.0.1 =
+* Fixed shipping method id in the settings
+
 = 2.0.0 =
 * Shipping zone and shipping class support!
 * COD-support if payment method is WooCommerce COD (cash-on-delivery) payment method (or extended class)

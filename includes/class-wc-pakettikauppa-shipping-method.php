@@ -90,11 +90,7 @@ function wc_pakettikauppa_shipping_method_init() {
        * Initialize form fields
        */
       private function my_instance_form_fields() {
-
-          $all_shipping_methods = array_merge(
-            array( '' => 'Select one shipping method' ),
-            $this->wc_pakettikauppa_shipment->services()
-          );
+        $all_shipping_methods = array( '' => __( 'Select one shipping method', 'wc-pakettikauppa' ) + $this->wc_pakettikauppa_shipment->services();
 
         if ( empty( $all_shipping_methods ) ) {
           $fields = array(
