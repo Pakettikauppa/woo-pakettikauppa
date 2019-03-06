@@ -449,7 +449,7 @@ class WC_Pakettikauppa_Shipment {
     }
 
     foreach ( $all_shipping_methods as $shipping_method ) {
-      $services[ $shipping_method->shipping_method_code ] = sprintf( '%1$s %2$s', $shipping_method->service_provider, $shipping_method->name );
+      $services[ strval($shipping_method->shipping_method_code) ] = sprintf( '%1$s %2$s', $shipping_method->service_provider, $shipping_method->name );
     }
 
     ksort( $services );
