@@ -131,7 +131,8 @@ class WC_Pakettikauppa {
 
       $pickup_points = json_decode($settings['pickup_points'], true);
 
-      $instance_id = ( explode (':', $chosen_shipping_id ) )[1];
+      $temp_array = explode (':', $chosen_shipping_id ); // for php 5.6 compatibility
+      $instance_id = $temp_array[1];
 
       $methods = array(
         '2103'  => 'Posti',
