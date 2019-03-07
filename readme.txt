@@ -58,6 +58,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 
+= 2.0.4 =
+* Added possibility to add pickup point chooser to any shipping method defined as shipping zone shipping method
+
 = 2.0.3 =
 * Allow Pakettikauppa to create shipping labels even if original shipping method is not from Pakettikauppa shipping method.
 * Allow shipping method to be changed (does not allow pickup point to be changed).
