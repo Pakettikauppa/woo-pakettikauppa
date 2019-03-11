@@ -85,6 +85,12 @@ class WC_Pakettikauppa {
       // Cut the number out from a string of the form '(#6681)'
       $pakettikauppa_pickup_point_id = substr( $matches[0], 2, - 1 );
       update_post_meta( $order_id, '_pakettikauppa_pickup_point_id', $pakettikauppa_pickup_point_id );
+
+      preg_match( '/\(\%[0-9]+\)/', $_POST['pakettikauppa_pickup_point'], $matches );
+      // Cut the number out from a string of the form '(#6681)'
+      $pakettikauppa_pickup_point_provider_id = substr( $matches[0], 2, - 1 );
+
+      update_post_meta( $order_id, '_pakettikauppa_pickup_point_provider_id', $pakettikauppa_pickup_point_provider_id );
     }
   }
 
@@ -112,17 +118,38 @@ class WC_Pakettikauppa {
       return;
     }
 
+    $shipping_method_providers = array();
     $shipment_meta_data = $shipping_rate->get_meta_data();
-    if ( ! isset($shipment_meta_data['service_code'] ) ) {
-      return;
+    if ( isset($shipment_meta_data['service_code'] ) ) {
+      $shipping_method_id = $shipment_meta_data['service_code'];
+
+      if ( $this->wc_pakettikauppa_shipment->service_has_pickup_points( $shipping_method_id ) ) {
+        $shipping_method_providers[] = $this->wc_pakettikauppa_shipment->service_provider( $shipping_method_id );
+      }
+    } else {
+      $settings = $this->wc_pakettikauppa_shipment->get_settings();
+
+      $pickup_points = json_decode($settings['pickup_points'], true);
+
+      $temp_array = explode (':', $chosen_shipping_id ); // for php 5.6 compatibility
+      $instance_id = $temp_array[1];
+
+      $methods = array(
+        '2103'  => 'Posti',
+        '90080' => 'Matkahuolto',
+        '80010' => 'DB Schenker',
+        '2711'  => 'Posti International',
+      );
+
+      foreach ( $pickup_points[ $instance_id ] as $shipping_method => $shipping_method_data ) {
+        if ( $shipping_method_data['active'] === 'yes' ) {
+          $shipping_method_providers[] = $methods[ $shipping_method ];
+        }
+      }
     }
 
-    $shipping_method_id = $shipment_meta_data['service_code'];
-
-    $shipping_method_provider = $this->wc_pakettikauppa_shipment->service_provider( $shipping_method_id );
-
     // Bail out if the shipping method is not one of the pickup point services
-    if ( ! $this->wc_pakettikauppa_shipment->service_has_pickup_points( $shipping_method_id ) ) {
+    if ( empty( $shipping_method_providers ) ) {
       return;
     }
 
@@ -154,7 +181,7 @@ class WC_Pakettikauppa {
     } else {
 
       try {
-        $options_array = $this->fetch_pickup_point_options($shipping_postcode, $shipping_address, $shipping_country, $shipping_method_provider);
+        $options_array = $this->fetch_pickup_point_options($shipping_postcode, $shipping_address, $shipping_country, implode(',', $shipping_method_providers));
       } catch ( Exception $e ) {
         $options_array = false;
         $this->add_error( $e->getMessage() );
@@ -194,8 +221,15 @@ class WC_Pakettikauppa {
     $pickup_points = json_decode( $pickup_point_data );
     $options_array = array( '' => '- ' . __( 'Select a pickup point', 'wc-pakettikauppa' ) . ' -' );
 
+    $methods = array(
+      'Posti'               => '2103',
+      'Matkahuolto'         => '90080',
+      'DB Schenker'         => '80010',
+      'Posti International' => '2711',
+    );
+
     foreach ( $pickup_points as $key => $value ) {
-      $pickup_point_key                   = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ')';
+      $pickup_point_key                   = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ') (%' . $methods[ $value->provider ] . ')';
       $pickup_point_value                 = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
       $options_array[ $pickup_point_key ] = $pickup_point_value;
     }

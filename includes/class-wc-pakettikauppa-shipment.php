@@ -530,4 +530,12 @@ class WC_Pakettikauppa_Shipment {
 
     return false;
   }
+
+  /**
+   * Returns global settings
+   * @return null
+   */
+  public function get_settings() {
+    return $this->wc_pakettikauppa_settings;
+  }
 }

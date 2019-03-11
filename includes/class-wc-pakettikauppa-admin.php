@@ -216,7 +216,6 @@ class WC_Pakettikauppa_Admin {
 
     // Get active services from active_shipping_options
     $settings                = get_option( 'woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null );
-    $active_shipping_options = json_decode( $settings['active_shipping_options'], true );
 
     // The tracking code will only be available if the shipment label has been generated
     $tracking_code = get_post_meta( $post->ID, '_wc_pakettikauppa_tracking_code', true );
@@ -233,6 +232,10 @@ class WC_Pakettikauppa_Admin {
     }
 
     if ( empty ( $service_id ) ) {
+      $service_id = get_post_meta( $post->ID, '_pakettikauppa_pickup_point_provider_id', true );
+    }
+
+    if ( empty ( $service_id ) ) {
       $service_id = WC_Pakettikauppa_Shipment::get_default_service();
     }
     $pickup_point_id = $order->get_meta( '_pakettikauppa_pickup_point_id' );
@@ -245,6 +248,7 @@ class WC_Pakettikauppa_Admin {
     if ( 'cod' === $order->get_payment_method() ) {
       $additional_services[] = 'Cash-on-delivery';
     }
+
     ?>
 <div>
     <?php if ( ! empty( $tracking_code ) ) : ?>

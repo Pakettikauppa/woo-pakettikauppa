@@ -86,6 +86,70 @@ function wc_pakettikauppa_shipping_method_init() {
         $this->title                = $this->get_option( 'title' );
       }
 
+      public function validate_pickuppoints_field( $key, $value ) {
+        $values = wp_json_encode( $value );
+        return $values;
+      }
+
+      public function generate_pickuppoints_html( $key, $value ) {
+        $field_key = $this->get_field_key( $key );
+        if ( $this->get_option( $key ) !== '' ) {
+          $values = $this->get_option( $key );
+          if ( is_string( $values ) ) {
+            $values = json_decode( $this->get_option( $key ), true );
+          }
+        } else {
+          $values = array();
+        }
+
+        ob_start();
+        ?>
+          <tr>
+              <th class="titledesc" scope="row"><?php echo esc_html( $value['title'] ); ?></th>
+              <td>
+                  <table>
+                    <?php foreach ( WC_Shipping_Zones::get_zones( 'admin' ) as $zone_index => $zone ) : ?>
+                      <?php foreach ( $zone['shipping_methods'] as $method_id => $shipping_method ) : ?>
+                        <?php if ( $shipping_method->enabled === 'yes' && $shipping_method->id !== 'pakettikauppa_shipping_method' ) : ?>
+                                <tr>
+                                    <th>
+                                      <?php echo $zone['zone_name'] . ': ' . $shipping_method->title; ?></dd>
+                                    </th>
+                                    <td>
+                                      <?php
+                                      $methods = array(
+                                        '2103'  => 'Posti',
+                                        '90080' => 'Matkahuolto',
+                                        '80010' => 'DB Schenker',
+                                        '2711'  => 'Posti International',
+                                      );
+                                      ?>
+                                      <?php foreach ( $methods as $method_code => $method_name ) : ?>
+                                          <input type="hidden"
+                                                 name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][' . $method_code . '][active]'; ?>"
+                                                 value="no">
+                                          <p>
+                                              <input type="checkbox"
+                                                     name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][' . $method_code . '][active]'; ?>"
+                                                     value="yes" <?php echo $values[ $method_id ][ $method_code ]['active'] === 'yes' ? 'checked' : ''; ?>>
+                                            <?php echo $method_name; ?>
+                                          </p>
+                                      <?php endforeach; ?>
+                                    </td>
+                                </tr>
+                        <?php endif; ?>
+                      <?php endforeach; ?>
+                    <?php endforeach; ?>
+                  </table>
+              </td>
+          </tr>
+
+          <?php
+          $html = ob_get_contents();
+          ob_end_clean();
+          return $html;
+      }
+
       /**
        * Initialize form fields
        */
@@ -234,6 +298,11 @@ function wc_pakettikauppa_shipping_method_init() {
             'type'     => 'text',
             'default'  => '',
             'desc_tip' => true,
+          ),
+
+          'pickup_points'              => array(
+            'title' => __( 'Show pickup points for non-Pakettikauppa shipments', 'wc-pakettikauppa' ),
+            'type'  => 'pickuppoints',
           ),
 
             /* Start new section */
