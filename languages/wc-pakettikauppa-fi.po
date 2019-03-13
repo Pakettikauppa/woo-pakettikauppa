@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: WooCommerce pakettikauppa 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pk\n"
 "POT-Creation-Date: 2019-03-07 14:58:24+00:00\n"
-"PO-Revision-Date: 2019-03-07 17:00+0200\n"
+"PO-Revision-Date: 2019-03-13 15:12+0200\n"
 "Last-Translator: Otto Kekäläinen <otto@seravo.com>\n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -225,7 +225,7 @@ msgstr "Valittu toimitustapa: %s"
 
 #: includes/class-wc-pakettikauppa-shipping-method.php:157
 msgid "Select one shipping method"
-msgstr "Valitse yksi toimitustapa: %s"
+msgstr "Valitse yksi toimitustapa"
 
 #: includes/class-wc-pakettikauppa-shipping-method.php:162
 #: includes/class-wc-pakettikauppa-shipping-method.php:175

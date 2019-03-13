@@ -58,6 +58,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 
+= 2.0.5 =
+* Changed the way array is merged with another array
+
 = 2.0.4 =
 * Added possibility to add pickup point chooser to any shipping method defined as shipping zone shipping method
 
