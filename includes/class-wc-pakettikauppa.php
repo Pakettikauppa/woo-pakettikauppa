@@ -141,9 +141,11 @@ class WC_Pakettikauppa {
         '2711'  => 'Posti International',
       );
 
-      foreach ( $pickup_points[ $instance_id ] as $shipping_method => $shipping_method_data ) {
-        if ( $shipping_method_data['active'] === 'yes' ) {
-          $shipping_method_providers[] = $methods[ $shipping_method ];
+      if ( ! empty ( $pickup_points[ $instance_id ] ) ) {
+        foreach ( $pickup_points[ $instance_id ] as $shipping_method => $shipping_method_data ) {
+          if ( $shipping_method_data['active'] === 'yes' ) {
+            $shipping_method_providers[] = $methods[ $shipping_method ];
+          }
         }
       }
     }
