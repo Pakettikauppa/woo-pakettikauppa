@@ -15,13 +15,13 @@ This plugin enables WooCommerce orders to ship using pretty much any shipping me
 
 [Pakettikauppa](https://www.pakettikauppa.fi/) is a shipping service provider in Finland. This plugin integrates their service into WooCommerce. To start shipping, all your WooCommerce needs is this plugin and a API credentials of your account registered with Pakettikauppa.
 
-> *Note!* If you already have shipping contracts with Posti, Matkahuolto, DB Schenker or GLS with reduced prices, you can contact the customer support of Pakettikauppa to get those contracts via Pakettikauppa so you can use the WooCommerce Pakettikauppa plugin with your current shipping contracts. Usage of own contracts is free of charge.
+> *Note!* If you already have shipping contracts with Posti, Matkahuolto, DB Schenker or GLS with reduced prices, you can contact the customer support of Pakettikauppa to get those contracts via Pakettikauppa so you can use the WooCommerce Pakettikauppa plugin with your current shipping contracts. Usage of own contracts is free of charge. No need to use logistics services own integrations (e.g. Posti SmartShip / Prinetti )
 
-# Register and start shipping
+== Register and start shipping ==
 
 Register through [www.pakettikauppa.fi](https://www.pakettikauppa.fi/). Process only takes few minutes.
 
-# Features
+== Features ==
 
 * Integrates Pakettikauppa with WooCommerce
 * Based on the official [Pakettikauppa API library](https://github.com/Pakettikauppa/api-library)
@@ -57,6 +57,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 1. Examples of settings screens
 
 == Changelog ==
+
+= 2.0.6 =
+* Fix an error message when there is no settings available for shipping method
 
 = 2.0.5 =
 * Changed the way array is merged with another array
