@@ -34,3 +34,8 @@ p.pakettikauppa-shipment {
 .wc-pakettikauppa-metabox-error {
   color: #a00;
 }
+
+.widefat .column-wc_actions a.pakettikauppa_create_shipping_label::after {
+  content: '\f491';
+}
+
