@@ -60,6 +60,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 
+= 2.0.7 =
+* New feature: Create and fetch shipping labels from multiple orders
+
 = 2.0.6 =
 * Fix an error message when there is no settings available for shipping method
 

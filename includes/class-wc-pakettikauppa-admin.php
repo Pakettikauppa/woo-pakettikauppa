@@ -32,6 +32,7 @@ class WC_Pakettikauppa_Admin {
   public function load() {
     add_filter( 'plugin_action_links_' . WC_PAKETTIKAUPPA_BASENAME, array( $this, 'add_settings_link' ) );
     add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
+    add_filter( 'bulk_actions-edit-shop_order', array( $this, 'register_multi_create_orders' ) ); // edit-shop_order is the screen ID of the orders page
 
     add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
     add_action( 'add_meta_boxes', array( $this, 'register_meta_boxes' ) );
@@ -42,7 +43,8 @@ class WC_Pakettikauppa_Admin {
       $this,
       'show_pickup_point_in_admin_order_meta',
     ), 10, 1 );
-      add_action( 'admin_notices', array( $this, 'wc_pakettikauppa_updated' ), 10, 2);
+    add_action( 'admin_notices', array( $this, 'wc_pakettikauppa_updated' ), 10, 2);
+    add_action( 'admin_action_pakettikauppa_create_multiple_shipping_labels', array( $this, 'create_multiple_shipments' ) ); // admin_action_{action name}
 
     try {
       $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
@@ -54,6 +56,61 @@ class WC_Pakettikauppa_Admin {
 
       return;
     }
+  }
+
+  /**
+   * @param $bulk_actions
+   *
+   * @return mixed
+   */
+  public function register_multi_create_orders( $bulk_actions ) {
+    $bulk_actions['pakettikauppa_create_multiple_shipping_labels'] = __( 'Create and fetch shipping labels', 'wc-pakettikauppa' );
+
+    return $bulk_actions;
+  }
+
+  /**
+   * This function exits on success, returns on error
+   *
+   * @throws Exception
+   */
+  public function create_multiple_shipments() {
+    if ( ! isset( $_REQUEST['post'] ) ) {
+      return;
+    }
+
+    if ( ! is_array( $_REQUEST['post'] ) ) {
+      return;
+    }
+
+    if ( wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'admin_action' ) ) {
+      return;
+    }
+
+    $tracking_codes = array();
+
+    foreach ( $_REQUEST['post'] as $order_id ) {
+      $order = new WC_Order( $order_id );
+      $tracking_code = get_post_meta( $order->get_id(), '_wc_pakettikauppa_tracking_code', true );
+
+      if ( empty ( $tracking_code ) ) {
+          $tracking_code = $this->create_shipment( $order );
+      }
+
+      if ( $tracking_code != null ) {
+        $tracking_codes[] = $tracking_code;
+      }
+    }
+
+    $contents = $this->wc_pakettikauppa_shipment->fetch_shipping_labels( $tracking_codes );
+
+    if ( $contents->{'response.file'}->__toString() === '' ) {
+      esc_attr_e( 'Cannot find shipments with given shipment numbers.', 'wc-pakettikauppa' );
+
+      return;
+    }
+
+    $this->output_shipping_label( $contents, 'multiple-shipping-labels' );
   }
 
   public function wc_pakettikauppa_updated() {
@@ -351,28 +408,18 @@ class WC_Pakettikauppa_Admin {
 
     switch ( $command ) {
       case 'create':
-        if ( empty( $service_id ) ) {
-          if ( ! empty( $_REQUEST['wc_pakettikauppa_service_id'] ) ) {
-            $service_id = $_REQUEST['wc_pakettikauppa_service_id'];
-          } else {
-            $service_id = get_post_meta( $order->get_id(), '_wc_pakettikauppa_service_id', true );
-          }
-
-          if ( empty( $service_id ) ) {
-            $service_id = WC_Pakettikauppa_Shipment::get_default_service();
-          }
+        if ( ! empty( $_REQUEST['wc_pakettikauppa_service_id'] ) ) {
+          $service_id = $_REQUEST['wc_pakettikauppa_service_id'];
 
           update_post_meta( $order->get_id(), '_wc_pakettikauppa_service_id', $service_id );
         }
 
         $pickup_point_id = $order->get_meta( '_pakettikauppa_pickup_point_id' );
 
-        if ( empty( $pickup_point_id ) && isset( $_REQUEST['wc_pakettikauppa_pickup_point_id'] ) ) {
+        if ( empty( $pickup_point_id ) && ! empty( $_REQUEST['wc_pakettikauppa_pickup_point_id'] ) ) {
           $pickup_point_id = $_REQUEST['wc_pakettikauppa_pickup_point_id'];
 
-          if ( ! empty( $pickup_point_id ) ) {
-            update_post_meta( $order->get_id(), '_pakettikauppa_pickup_point_id', $pickup_point_id );
-          }
+          update_post_meta( $order->get_id(), '_pakettikauppa_pickup_point_id', $pickup_point_id );
         }
 
         $this->create_shipment( $order );
@@ -433,6 +480,12 @@ class WC_Pakettikauppa_Admin {
    * @param WC_Order $order
    */
   private function create_shipment( WC_Order $order ) {
+    $service_id = get_post_meta( $order->get_id(), '_wc_pakettikauppa_service_id', true );
+
+    if ( empty( $service_id ) ) {
+      $service_id = WC_Pakettikauppa_Shipment::get_default_service();
+      update_post_meta( $order->get_id(), '_wc_pakettikauppa_service_id', $service_id );
+    }
 
     // Bail out if the receiver has not been properly configured
     if ( ! WC_Pakettikauppa_Shipment::validate_order_shipping_receiver( $order ) ) {
@@ -442,7 +495,7 @@ class WC_Pakettikauppa_Admin {
              '</div>';
       } );
 
-      return;
+      return null;
     }
 
     try {
@@ -456,7 +509,7 @@ class WC_Pakettikauppa_Admin {
         $this->add_error_notice( wp_sprintf( esc_attr__( 'An error occured: %s', 'wc-pakettikauppa' ), $e->getMessage() ) );
       } );
 
-      return;
+      return null;
     }
 
     if ( $tracking_code === null ) {
@@ -466,7 +519,7 @@ class WC_Pakettikauppa_Admin {
         $this->add_error_notice( esc_attr__( 'Failed to create Pakettikauppa shipment.', 'wc-pakettikauppa' ) );
       } );
 
-      return;
+      return null;
     }
 
     update_post_meta( $order->get_id(), '_wc_pakettikauppa_tracking_code', $tracking_code );
@@ -489,6 +542,7 @@ class WC_Pakettikauppa_Admin {
       $tracking_link
     ) );
 
+    return $tracking_code;
   }
 
   /**
@@ -513,9 +567,17 @@ class WC_Pakettikauppa_Admin {
       return;
     }
 
-    // Output
+    $this->output_shipping_label( $contents, $tracking_code);
+  }
+
+  /**
+   * Fetches PDF from the XML and outputs it. Ends execution.
+   * @param $contents
+   */
+  private function output_shipping_label( $contents, $filename ) {
     header( 'Content-type:application/pdf' );
-    header( "Content-Disposition:inline;filename={$tracking_code}.pdf" );
+    header( "Content-Disposition:inline;filename={$filename}.pdf" );
+
     echo base64_decode( $contents->{'response.file'} ); // @codingStandardsIgnoreLine
 
     exit();
