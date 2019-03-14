@@ -81,9 +81,9 @@ class WC_Pakettikauppa_Admin {
     $document_url = wp_nonce_url( admin_url( 'admin-post.php?post[]=' . $order->get_id () . '&action=quick_create_label'), 'bulk-posts');
 
     $actions[] = array(
-        'name'   => __( 'Create shipping label' ,'wc-pakettikauppa' ),
-        'action' => 'pakettikauppa_create_shipping_label',
-        'url'    => $document_url
+      'name'   => __( 'Create shipping label', 'wc-pakettikauppa' ),
+      'action' => 'pakettikauppa_create_shipping_label',
+      'url'    => $document_url,
     );
 
     return $actions;
