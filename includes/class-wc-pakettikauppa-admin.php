@@ -33,11 +33,13 @@ class WC_Pakettikauppa_Admin {
     add_filter( 'plugin_action_links_' . WC_PAKETTIKAUPPA_BASENAME, array( $this, 'add_settings_link' ) );
     add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
     add_filter( 'bulk_actions-edit-shop_order', array( $this, 'register_multi_create_orders' ) ); // edit-shop_order is the screen ID of the orders page
+    add_filter( 'woocommerce_admin_order_actions', array( $this, 'register_quick_create_order' ), 10, 2); //to add print option at the end of each orders in orders page
 
     add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
     add_action( 'add_meta_boxes', array( $this, 'register_meta_boxes' ) );
     add_action( 'save_post', array( $this, 'save_metabox' ), 10, 2 );
     add_action( 'admin_post_show_pakettikauppa', array( $this, 'show' ), 10 );
+    add_action( 'admin_post_quick_create_label', array( $this, 'create_multiple_shipments' ), 10 );
     add_action( 'woocommerce_email_order_meta', array( $this, 'attach_tracking_to_email' ), 10, 4 );
     add_action( 'woocommerce_admin_order_data_after_shipping_address', array(
       $this,
@@ -70,6 +72,24 @@ class WC_Pakettikauppa_Admin {
   }
 
   /**
+   * @param $actions
+   * @param WC_Order $order
+   *
+   * @return array
+   */
+  public function register_quick_create_order( $actions, $order ) {
+    $document_url = wp_nonce_url( admin_url( 'admin-post.php?post[]=' . $order->get_id () . '&action=quick_create_label'), 'bulk-posts');
+
+    $actions[] = array(
+      'name'   => __( 'Create shipping label', 'wc-pakettikauppa' ),
+      'action' => 'pakettikauppa_create_shipping_label',
+      'url'    => $document_url,
+    );
+
+    return $actions;
+  }
+
+  /**
    * This function exits on success, returns on error
    *
    * @throws Exception
@@ -83,7 +103,8 @@ class WC_Pakettikauppa_Admin {
       return;
     }
 
-    if ( wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'admin_action' ) ) {
+    if ( ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'bulk-posts' ) ) {
+
       return;
     }
 
@@ -125,12 +146,27 @@ class WC_Pakettikauppa_Admin {
       }
     }
 
+    $settings = $this->wc_pakettikauppa_shipment->get_settings();
+
+    if ( ! empty ( $settings['pickup_points'] ) ) {
+      $pickup_points = json_decode( $settings['pickup_points'], true );
+
+      foreach ( $pickup_points as $shipping_method ) {
+        foreach ( $shipping_method as $provider ) {
+          if ( $provider['active'] === 'yes' ) {
+            $shipping_method_found = true;
+          }
+        }
+      }
+    }
+
     if ( ! $shipping_method_found ) {
       echo '<div class="updated warning">';
       echo sprintf('<p>%s</p>', __( 'Pakettikauppa plugin has been installed/updated and no shipping methods are activated!'));
       echo '</div>';
     }
   }
+
   /**
    * Add an error with a specified error message.
    *
