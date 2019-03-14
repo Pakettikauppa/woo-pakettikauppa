@@ -31,7 +31,8 @@
   ],
   "require": {
     "composer/installers": "v1.0.12",
-    "pakettikauppa/api-library": "*"
+    "pakettikauppa/api-library": "*",
+    "ext-simplexml": "*"
   },
   "minimum-stability": "dev"
 }

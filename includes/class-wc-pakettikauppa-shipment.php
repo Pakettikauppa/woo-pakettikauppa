@@ -383,8 +383,24 @@ class WC_Pakettikauppa_Shipment {
     return $reference;
   }
 
+  /**
+   * @param array $tracking_codes
+   *
+   * @return SimpleXMLElement
+   * @throws Exception
+   */
+  public function fetch_shipping_labels( $tracking_codes ) {
+    return $this->wc_pakettikauppa_client->fetchShippingLabels( $tracking_codes );
+  }
+
+  /**
+   * @param string $tracking_code
+   *
+   * @return SimpleXMLElement
+   * @throws Exception
+   */
   public function fetch_shipping_label( $tracking_code ) {
-    return $this->wc_pakettikauppa_client->fetchShippingLabels( array( $tracking_code ) );
+    return $this->fetch_shipping_labels( array( $tracking_code ) );
   }
 
   /**
