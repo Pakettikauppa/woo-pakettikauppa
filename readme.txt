@@ -60,6 +60,10 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 
+= 2.0.9 =
+* New feature: support for free shipping coupon code
+* Bug fix: Quick action printing of shipping label now prints with correct shipping service
+
 = 2.0.8 =
 * New feature: Create quick action to print shipping label for a order
 

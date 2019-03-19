@@ -406,13 +406,16 @@ function wc_pakettikauppa_shipping_method_init() {
 
           $cost_item = $shipping_cost * $item['line_total'] / $cart_total;
 
-          $tax_obj = WC_Tax::get_shipping_tax_rates( $cart[ $cost_key ]['data']->get_tax_class() );
+          if ( $cart[ $cost_key ]['data'] !== null ) {
+            $tax_obj = WC_Tax::get_shipping_tax_rates( $cart[ $cost_key ]['data']->get_tax_class() );
 
-          foreach ( $tax_obj as $key => $value ) {
-            if ( ! isset( $taxes[ $key ] ) ) {
-              $taxes[ $key ] = 0.0;
+            foreach ( $tax_obj as $key => $value ) {
+              if ( ! isset( $taxes[ $key ] ) ) {
+                $taxes[ $key ] = 0.0;
+              }
+
+              $taxes[ $key ] += round( $cost_item - $cost_item / ( 1 + $value['rate'] / 100.0 ), 2 );
             }
-            $taxes[ $key ] += round( $cost_item - $cost_item / ( 1 + $value['rate'] / 100.0 ), 2 );
           }
         }
 
@@ -487,6 +490,27 @@ function wc_pakettikauppa_shipping_method_init() {
         $cart_total = $cart->get_cart_contents_total() + $cart->get_cart_contents_tax();
 
         $service_code = $this->get_option( 'shipping_method' );
+        $service_title = $this->get_option( 'title' );
+
+        $all_applied_coupons = $cart->get_applied_coupons();
+        if ( $all_applied_coupons ) {
+          foreach ( $all_applied_coupons as $coupon_code ) {
+            $this_coupon = new WC_Coupon( $coupon_code );
+            if ( $this_coupon->get_free_shipping() ) {
+
+              $this->add_rate(
+                array(
+                  'meta_data' => [ 'service_code' => $service_code ],
+                  'label'     => $service_title,
+                  'cost'      => (string) 0,
+                  'package'   => $package,
+                )
+              );
+
+              return;
+            }
+          }
+        }
 
         $shipping_cost = null;
 
@@ -526,8 +550,6 @@ function wc_pakettikauppa_shipping_method_init() {
         $taxes = $this->calculate_shipping_tax( $shipping_cost );
 
         $shipping_cost = $shipping_cost - $taxes['total'];
-
-        $service_title = $this->get_option( 'title' );
 
         $this->add_rate(
             array(
