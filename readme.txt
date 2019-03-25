@@ -60,6 +60,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 
+= 2.0.10 =
+* New feature: Implement hooks to be able to implement Pakettikauppa features in another plugins
+
 = 2.0.9 =
 * New feature: support for free shipping coupon code
 * Bug fix: Quick action printing of shipping label now prints with correct shipping service
