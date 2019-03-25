@@ -47,6 +47,9 @@ class WC_Pakettikauppa_Admin {
     ), 10, 1 );
     add_action( 'admin_notices', array( $this, 'wc_pakettikauppa_updated' ), 10, 2);
     add_action( 'admin_action_pakettikauppa_create_multiple_shipping_labels', array( $this, 'create_multiple_shipments' ) ); // admin_action_{action name}
+    add_action( 'pakettikauppa_create_shipments', array( $this, 'hook_create_shipments' ), 10, 2);
+    add_action( 'pakettikauppa_fetch_shipping_labels', array( $this, 'hook_fetch_shipping_labels' ), 10, 2);
+    add_action( 'pakettikauppa_fetch_tracking_code', array( $this, 'hook_fetch_tracking_code' ), 10, 2);
 
     try {
       $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
@@ -58,6 +61,57 @@ class WC_Pakettikauppa_Admin {
 
       return;
     }
+  }
+
+  /**
+   * action -hook to fetch tracking code of the order.
+   *
+   * Call for example:
+   *
+   * $tracking_code='';
+   * $args = array( $order_id, &$tracking_code );
+   * do_action_ref_array('pakettikauppa_fetch_tracking_code', $args);"
+   *
+   * @param $order_id
+   * @param $tracking_code
+   */
+  public function hook_fetch_tracking_code( $order_id, &$tracking_code ) {
+    $order = new WC_Order( $order_id );
+    $tracking_code = get_post_meta( $order->get_id(), '_wc_pakettikauppa_tracking_code', true );
+  }
+
+  /**
+   * action -hook to create shipments to orders.
+   *
+   * Call for example:
+   *
+   * $args = array( $order_id, $order_id2, ... );
+   * do_action('pakettikauppa_create_shipments', $args);"
+   *
+   * @param $order_ids
+   */
+  public function hook_create_shipments( $order_ids ) {
+    $this->create_shipments($order_ids);
+  }
+
+  /**
+   * action -hook to create shipments to orders.
+   *
+   * Call for example:
+   * $pdf = '';
+   * $order_ids = array (15, 16, 17);
+   * $args = array( $order_ids, &$pdf );
+   * do_action_ref_array('pakettikauppa_create_shipments', $args);"
+   *
+   * @param $order_ids
+   * @param $pdf
+   */
+  public function hook_fetch_shipping_labels( $order_ids, &$pdf ) {
+    $tracking_codes = $this->create_shipments( $order_ids );
+
+    $contents = $this->fetch_shipping_labels( $tracking_codes );
+
+    $pdf = base64_decode( $contents->{'response.file'} );
   }
 
   /**
@@ -108,22 +162,9 @@ class WC_Pakettikauppa_Admin {
       return;
     }
 
-    $tracking_codes = array();
+    $tracking_codes = $this->create_shipments($_REQUEST['post']);
 
-    foreach ( $_REQUEST['post'] as $order_id ) {
-      $order = new WC_Order( $order_id );
-      $tracking_code = get_post_meta( $order->get_id(), '_wc_pakettikauppa_tracking_code', true );
-
-      if ( empty ( $tracking_code ) ) {
-          $tracking_code = $this->create_shipment( $order );
-      }
-
-      if ( $tracking_code != null ) {
-        $tracking_codes[] = $tracking_code;
-      }
-    }
-
-    $contents = $this->wc_pakettikauppa_shipment->fetch_shipping_labels( $tracking_codes );
+    $contents = $this->fetch_shipping_labels($tracking_codes);
 
     if ( $contents->{'response.file'}->__toString() === '' ) {
       esc_attr_e( 'Cannot find shipments with given shipment numbers.', 'wc-pakettikauppa' );
@@ -133,6 +174,30 @@ class WC_Pakettikauppa_Admin {
 
     $this->output_shipping_label( $contents, 'multiple-shipping-labels' );
   }
+
+  private function fetch_shipping_labels( $tracking_codes ) {
+    return $this->wc_pakettikauppa_shipment->fetch_shipping_labels( $tracking_codes );
+  }
+
+  private function create_shipments( $order_ids ) {
+    $tracking_codes = array();
+
+    foreach ( $order_ids as $order_id ) {
+      $order = new WC_Order( $order_id );
+      $tracking_code = get_post_meta( $order->get_id(), '_wc_pakettikauppa_tracking_code', true );
+
+      if ( empty ( $tracking_code ) ) {
+        $tracking_code = $this->create_shipment( $order );
+      }
+
+      if ( $tracking_code != null ) {
+        $tracking_codes[] = $tracking_code;
+      }
+    }
+
+    return $tracking_codes;
+  }
+
 
   public function wc_pakettikauppa_updated() {
     $shipping_method_found = false;
