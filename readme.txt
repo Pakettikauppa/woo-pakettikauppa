@@ -62,6 +62,7 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 = 2.0.10 =
 * New feature: Implement hooks to be able to implement Pakettikauppa features in another plugins
+* Bug fix: Validate pickup point selection in non-Pakettikauppa shipping methods
 
 = 2.0.9 =
 * New feature: support for free shipping coupon code
