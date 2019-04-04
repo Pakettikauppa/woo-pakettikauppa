@@ -129,6 +129,14 @@ class WC_Pakettikauppa_Admin {
    * @return array
    */
   public function register_quick_create_order( $actions, $order ) {
+    $shipping_methods = $order->get_shipping_methods();
+
+    $method_id = array_pop( $shipping_methods )->get_meta( 'method_id' );
+
+    if ($method_id === 'local_pickup') {
+        return $actions;
+    }
+
     $document_url = wp_nonce_url( admin_url( 'admin-post.php?post[]=' . $order->get_id () . '&action=quick_create_label'), 'bulk-posts');
 
     $actions[] = array(
@@ -580,6 +588,7 @@ class WC_Pakettikauppa_Admin {
   private function create_shipment( WC_Order $order ) {
     $service_id = get_post_meta( $order->get_id(), '_wc_pakettikauppa_service_id', true );
 
+
     if ( empty( $service_id ) ) {
       $shipping_methods = $order->get_shipping_methods();
 
@@ -599,8 +608,17 @@ class WC_Pakettikauppa_Admin {
     }
 
     if ( empty( $service_id ) ) {
-      $service_id = WC_Pakettikauppa_Shipment::get_default_service();
-      update_post_meta( $order->get_id(), '_wc_pakettikauppa_service_id', $service_id );
+
+      $shipping_methods = $order->get_shipping_methods();
+
+      $method_id = array_pop( $shipping_methods )->get_meta( 'method_id' );
+
+      if ($method_id !== 'local_pickup') {
+        $service_id = WC_Pakettikauppa_Shipment::get_default_service();
+        update_post_meta( $order->get_id(), '_wc_pakettikauppa_service_id', $service_id );
+      } else {
+          return null;
+      }
     }
 
     // Bail out if the receiver has not been properly configured

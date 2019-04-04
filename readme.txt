@@ -60,6 +60,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 
+= 2.0.11 =
+* Enhancement: Don't create shipping label from orders page for local pickups
+
 = 2.0.10 =
 * New feature: Implement hooks to be able to implement Pakettikauppa features in another plugins
 * Bug fix: Validate pickup point selection in non-Pakettikauppa shipping methods
