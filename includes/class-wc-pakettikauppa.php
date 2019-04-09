@@ -132,6 +132,12 @@ class WC_Pakettikauppa {
       $pickup_points = json_decode($settings['pickup_points'], true);
 
       $temp_array = explode (':', $chosen_shipping_id ); // for php 5.6 compatibility
+
+      if (count($temp_array) < 2) {
+        // no instance_id available -> return
+        return;
+      }
+
       $instance_id = $temp_array[1];
 
       $methods = array(
@@ -142,9 +148,11 @@ class WC_Pakettikauppa {
       );
 
       if ( ! empty ( $pickup_points[ $instance_id ] ) ) {
-        foreach ( $pickup_points[ $instance_id ] as $shipping_method => $shipping_method_data ) {
-          if ( $shipping_method_data['active'] === 'yes' ) {
-            $shipping_method_providers[] = $methods[ $shipping_method ];
+        if(!empty($pickup_points[ $instance_id ]['service']) && $pickup_points[ $instance_id ]['service'] === '__PICKUPPOINTS__') {
+          foreach ( $pickup_points[ $instance_id ] as $shipping_method => $shipping_method_data ) {
+            if ( $shipping_method_data['active'] === 'yes' ) {
+              $shipping_method_providers[] = $methods[ $shipping_method ];
+            }
           }
         }
       }
