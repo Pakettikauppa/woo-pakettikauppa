@@ -132,6 +132,12 @@ class WC_Pakettikauppa {
       $pickup_points = json_decode($settings['pickup_points'], true);
 
       $temp_array = explode (':', $chosen_shipping_id ); // for php 5.6 compatibility
+
+      if ( count( $temp_array ) < 2 ) {
+        // no instance_id available -> return
+        return;
+      }
+
       $instance_id = $temp_array[1];
 
       $methods = array(
@@ -141,10 +147,12 @@ class WC_Pakettikauppa {
         '2711'  => 'Posti International',
       );
 
-      if ( ! empty ( $pickup_points[ $instance_id ] ) ) {
-        foreach ( $pickup_points[ $instance_id ] as $shipping_method => $shipping_method_data ) {
-          if ( $shipping_method_data['active'] === 'yes' ) {
-            $shipping_method_providers[] = $methods[ $shipping_method ];
+      if ( ! empty( $pickup_points[ $instance_id ] ) ) {
+        if ( ! empty( $pickup_points[ $instance_id ]['service'] ) && $pickup_points[ $instance_id ]['service'] === '__PICKUPPOINTS__' ) {
+          foreach ( $pickup_points[ $instance_id ] as $shipping_method => $shipping_method_data ) {
+            if ( $shipping_method_data['active'] === 'yes' ) {
+              $shipping_method_providers[] = $methods[ $shipping_method ];
+            }
           }
         }
       }
@@ -221,7 +229,7 @@ class WC_Pakettikauppa {
 
   private function process_pickup_points_to_option_array( $pickup_point_data ) {
     $pickup_points = json_decode( $pickup_point_data );
-    $options_array = array( '' => '- ' . __( 'Select a pickup point', 'wc-pakettikauppa' ) . ' -' );
+    $options_array = array( '__NULL__' => '- ' . __( 'Select a pickup point', 'wc-pakettikauppa' ) . ' -' );
 
     $methods = array(
       'Posti'               => '2103',
@@ -248,27 +256,18 @@ class WC_Pakettikauppa {
     $pickup_point = $order->get_meta( '_pakettikauppa_pickup_point' );
 
     if ( ! empty( $pickup_point ) ) {
-      echo '
-      <h2>' . esc_attr__( 'Pickup point', 'wc-pakettikauppa' ) . '</h2>
-      <p>' . esc_attr( $pickup_point ) . '</p>';
+      echo '<h2>' . esc_attr__( 'Pickup point', 'wc-pakettikauppa' ) . '</h2>';
+      echo '<p>' . esc_attr( $pickup_point ) . '</p>';
     }
   }
 
   public function validate_checkout_pickup_point() {
-    $shipping_method_id = explode( ':', WC()->session->get( 'chosen_shipping_methods' )[0] )[1];
-    // Check if the service has a pickup point
-    try {
-      if ( $this->wc_pakettikauppa_shipment->service_has_pickup_points( $shipping_method_id )
-           && empty( $_POST['pakettikauppa_pickup_point'] )
-           && wp_verify_nonce( sanitize_key( $_POST['woocommerce-process-checkout-nonce'] ), 'woocommerce-process_checkout' ) ) {
-        wc_add_notice( __( 'Please choose a pickup point.', 'wc-pakettikauppa' ), 'error' );
-      }
-    } catch ( Exception $e ) {
-      $this->add_error( $e->getMessage() );
-      $this->display_error();
-
+    if ( ! wp_verify_nonce( sanitize_key( $_POST['woocommerce-process-checkout-nonce'] ), 'woocommerce-process_checkout' ) ) {
       return;
     }
-  }
 
+    if ( $_POST['pakettikauppa_pickup_point'] === '__NULL__' ) {
+      wc_add_notice( __( 'Please choose a pickup point.', 'wc-pakettikauppa' ), 'error' );
+    }
+  }
 }

@@ -102,50 +102,112 @@ function wc_pakettikauppa_shipping_method_init() {
           $values = array();
         }
 
+        $all_shipping_methods = $this->wc_pakettikauppa_shipment->services();
+        $additional_services = array();
+
         ob_start();
         ?>
+        <script>
+            function pkChangeOptions(elem, methodId) {
+
+                var strUser = elem.options[elem.selectedIndex].value;
+
+                var elements = document.getElementsByClassName('pk-services-' + methodId);
+                for(var i=0; i<elements.length; ++i) {
+                    elements[i].style.display = "none";
+                }
+
+                if (strUser == '__PICKUPPOINTS__') {
+                    document.getElementById(methodId + '-pickuppoints').style.display = "block";
+                    document.getElementById(methodId + '-' + strUser + '-services').style.display = "none";
+                } else {
+                    document.getElementById(methodId + '-pickuppoints').style.display = "none";
+                    console.log(strUser + '-services');
+                    document.getElementById(methodId + '-' + strUser + '-services').style.display = "block";
+                }
+            }
+        </script>
           <tr>
-              <th class="titledesc" scope="row"><?php echo esc_html( $value['title'] ); ?></th>
-              <td>
-                  <table>
+              <th colspan="2" class="titledesc" scope="row"><?php echo esc_html( $value['title'] ); ?></th>
+          </tr>
+          <tr>
+              <td colspan="2">
                     <?php foreach ( WC_Shipping_Zones::get_zones( 'admin' ) as $zone_index => $zone ) : ?>
+                        <h2><?php echo $zone['zone_name']; ?></h2>
                       <?php foreach ( $zone['shipping_methods'] as $method_id => $shipping_method ) : ?>
-                        <?php if ( $shipping_method->enabled === 'yes' && $shipping_method->id !== 'pakettikauppa_shipping_method' ) : ?>
-                                <tr>
-                                    <th>
-                                      <?php echo $zone['zone_name'] . ': ' . $shipping_method->title; ?></dd>
-                                    </th>
-                                    <td>
-                                      <?php
-                                      $methods = array(
-                                        '2103'  => 'Posti',
-                                        '90080' => 'Matkahuolto',
-                                        '80010' => 'DB Schenker',
-                                        '2711'  => 'Posti International',
-                                      );
-                                      ?>
-                                      <?php foreach ( $methods as $method_code => $method_name ) : ?>
-                                          <input type="hidden"
+                        <?php if ( $shipping_method->enabled === 'yes' && $shipping_method->id !== 'pakettikauppa_shipping_method' && $shipping_method->id !== 'local_pickup' ) : ?>
+                          <?php
+                          $selected_service = $values[ $method_id ]['service'];
+                          if ( empty( $selected_service ) ) {
+                              $selected_service = '__PICKUPPOINTS__';
+                          }
+                          ?>
+                            <table style="border-collapse: collapse;" border="1">
+                                <th><?php echo $shipping_method->title; ?></th>
+                                <td style="vertical-align: top;">
+                                    <select id="<?php echo $method_id; ?>-select" name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][service]'; ?>" onchange="pkChangeOptions(this, '<?php echo $method_id; ?>');">
+                                        <option value="__NULL__"><?php esc_html_e( 'No shipping', 'wc-pakettikauppa'); ?></option>
+                                        <option value="__PICKUPPOINTS__" <?php echo ( $selected_service === '__PICKUPPOINTS__' ? 'selected' : '' ); ?>>Noutopisteet</option>
+                                        <?php foreach ( $all_shipping_methods as $service_id => $service_name ) : ?>
+                                          <?php if ( ! in_array ( $service_id, array( '2103', '80010', '90080' ) ) ) : ?>
+                                            <option value="<?php echo $service_id; ?>" <?php echo ( strval( $selected_service ) === strval( $service_id ) ? 'selected' : '' ); ?>><?php echo $service_name; ?></option>
+                                          <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </td>
+                                <td style="vertical-align: top;">
+                                    <div style='display: none;' id="<?php echo $method_id; ?>-pickuppoints">
+
+                                  <?php
+                                  $methods = array(
+                                    '2103'  => 'Posti',
+                                    '90080' => 'Matkahuolto',
+                                    '80010' => 'DB Schenker',
+                                    '2711'  => 'Posti International',
+                                  );
+                                  ?>
+                                  <?php foreach ( $methods as $method_code => $method_name ) : ?>
+                                      <input type="hidden"
+                                             name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][' . $method_code . '][active]'; ?>"
+                                             value="no">
+                                      <p>
+                                          <input type="checkbox"
                                                  name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][' . $method_code . '][active]'; ?>"
-                                                 value="no">
-                                          <p>
-                                              <input type="checkbox"
-                                                     name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][' . $method_code . '][active]'; ?>"
-                                                     value="yes" <?php echo $values[ $method_id ][ $method_code ]['active'] === 'yes' ? 'checked' : ''; ?>>
-                                            <?php echo $method_name; ?>
-                                          </p>
-                                      <?php endforeach; ?>
-                                    </td>
-                                </tr>
+                                                 value="yes" <?php echo $values[ $method_id ][ $method_code ]['active'] === 'yes' ? 'checked' : ''; ?>>
+                                        <?php echo $method_name; ?>
+                                      </p>
+                                  <?php endforeach; ?>
+                                    </div>
+
+                                    <?php $all_additional_services = $this->wc_pakettikauppa_shipment->get_additional_services(); ?>
+                                    <?php foreach ( $all_additional_services as $method_code => $additional_services ) : ?>
+                                    <div class="pk-services-<?php echo $method_id; ?>" style='display: none;' id="<?php echo $method_id; ?>-<?php echo $method_code; ?>-services">
+                                      <?php foreach ( $additional_services as $additional_service ) : ?>
+                                        <?php if ( empty( $additional_service->specifiers ) ) : ?>
+                                        <input type="hidden"
+                                               name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][' . esc_attr( $method_code ) . '][additional_services][' . $additional_service->service_code . ']'; ?>"
+                                               value="no">
+                                        <p>
+                                            <input type="checkbox"
+                                                   name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][' . esc_attr( $method_code ) . '][additional_services][' . $additional_service->service_code . ']'; ?>"
+                                                   value="yes" <?php echo $values[ $method_id ][ $method_code ]['additional_services'][ $additional_service->service_code ] === 'yes' ? 'checked' : ''; ?>>
+                                          <?php echo $additional_service->name; ?>
+                                        </p>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                    </div>
+                                    <?php endforeach; ?>
+                                </td>
+                            </table>
+                        <script>pkChangeOptions(document.getElementById("<?php echo $method_id; ?>-select"), '<?php echo $method_id; ?>');</script>
                         <?php endif; ?>
                       <?php endforeach; ?>
                     <?php endforeach; ?>
-                  </table>
               </td>
           </tr>
 
           <?php
-          $html = ob_get_contents();
+              $html = ob_get_contents();
           ob_end_clean();
           return $html;
       }

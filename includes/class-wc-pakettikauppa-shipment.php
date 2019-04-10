@@ -207,7 +207,7 @@ class WC_Pakettikauppa_Shipment {
    * @return string tracking_code Shipment tracking code
    * @throws Exception
    */
-  public function create_shipment( $order ) {
+  public function create_shipment( $order, $additional_services = array() ) {
     $shipment   = new Shipment();
     $service_id = get_post_meta( $order->get_id(), '_wc_pakettikauppa_service_id', true );
 
@@ -256,6 +256,13 @@ class WC_Pakettikauppa_Shipment {
       $additional_service->addSpecifier( 'account', $this->wc_pakettikauppa_settings['cod_iban'] );
       $additional_service->addSpecifier( 'codbic', $this->wc_pakettikauppa_settings['cod_bic'] );
       $additional_service->addSpecifier( 'reference', $this->calculate_reference( $order->get_id() ) );
+
+      $shipment->addAdditionalService( $additional_service );
+    }
+
+    foreach ( $additional_services as $additional_service_code ) {
+      $additional_service = new AdditionalService();
+      $additional_service->setServiceCode( $additional_service_code );
 
       $shipment->addAdditionalService( $additional_service );
     }
@@ -471,6 +478,21 @@ class WC_Pakettikauppa_Shipment {
     ksort( $services );
 
     return $services;
+  }
+
+  public function get_additional_services() {
+    $all_shipping_methods = $this->get_shipping_methods();
+
+    if ( $all_shipping_methods === null ) {
+      return null;
+    }
+
+    $additional_services = array();
+    foreach ( $all_shipping_methods as $shipping_method ) {
+      $additional_services[ strval( $shipping_method->shipping_method_code ) ] = $shipping_method->additional_services;
+    }
+
+    return $additional_services;
   }
 
   /**
