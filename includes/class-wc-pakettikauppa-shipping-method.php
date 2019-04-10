@@ -112,18 +112,18 @@ function wc_pakettikauppa_shipping_method_init() {
 
                 var strUser = elem.options[elem.selectedIndex].value;
 
-                var elements = document.getElementsByClassName('pk-services');
+                var elements = document.getElementsByClassName('pk-services-' + methodId);
                 for(var i=0; i<elements.length; ++i) {
                     elements[i].style.display = "none";
                 }
 
                 if (strUser == '__PICKUPPOINTS__') {
                     document.getElementById(methodId + '-pickuppoints').style.display = "block";
-                    document.getElementById(strUser + '-services').style.display = "none";
+                    document.getElementById(methodId + '-' + strUser + '-services').style.display = "none";
                 } else {
                     document.getElementById(methodId + '-pickuppoints').style.display = "none";
                     console.log(strUser + '-services');
-                    document.getElementById(strUser + '-services').style.display = "block";
+                    document.getElementById(methodId + '-' + strUser + '-services').style.display = "block";
                 }
             }
         </script>
@@ -142,7 +142,7 @@ function wc_pakettikauppa_shipping_method_init() {
                               $selected_service = '__PICKUPPOINTS__';
                           }
                           ?>
-                            <table>
+                            <table style="border-collapse: collapse;" border="1">
                                 <th><?php echo $shipping_method->title; ?></th>
                                 <td style="vertical-align: top;">
                                     <select id="<?php echo $method_id; ?>-select" name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][service]'; ?>" onchange="pkChangeOptions(this, '<?php echo $method_id; ?>');">
@@ -181,7 +181,7 @@ function wc_pakettikauppa_shipping_method_init() {
 
                                     <?php $all_additional_services = $this->wc_pakettikauppa_shipment->get_additional_services(); ?>
                                     <?php foreach ( $all_additional_services as $method_code => $additional_services ) : ?>
-                                    <div class="pk-services" style='display: none;' id="<?php echo $method_code; ?>-services">
+                                    <div class="pk-services-<?php echo $method_id; ?>" style='display: none;' id="<?php echo $method_id; ?>-<?php echo $method_code; ?>-services">
                                       <?php foreach ( $additional_services as $additional_service ) : ?>
                                         <?php if ( empty( $additional_service->specifiers ) ) : ?>
                                         <input type="hidden"
