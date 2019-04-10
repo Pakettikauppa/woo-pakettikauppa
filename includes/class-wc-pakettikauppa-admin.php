@@ -33,8 +33,8 @@ class WC_Pakettikauppa_Admin {
     add_filter( 'plugin_action_links_' . WC_PAKETTIKAUPPA_BASENAME, array( $this, 'add_settings_link' ) );
     add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
     add_filter( 'bulk_actions-edit-shop_order', array( $this, 'register_multi_create_orders' ) ); // edit-shop_order is the screen ID of the orders page
-    add_filter( 'woocommerce_admin_order_actions', array( $this, 'register_quick_create_order' ), 10, 2 ); //to add print option at the end of each orders in orders page
 
+    add_action( 'woocommerce_admin_order_actions_end', array( $this, 'register_quick_create_order' ), 10, 2 ); //to add print option at the end of each orders in orders page
     add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
     add_action( 'add_meta_boxes', array( $this, 'register_meta_boxes' ) );
     add_action( 'save_post', array( $this, 'save_metabox' ), 10, 2 );
@@ -128,24 +128,26 @@ class WC_Pakettikauppa_Admin {
    *
    * @return array
    */
-  public function register_quick_create_order( $actions, $order ) {
+  public function register_quick_create_order( $order ) {
     $shipping_methods = $order->get_shipping_methods();
 
     $method_id = array_pop( $shipping_methods )->get_method_id();
 
     if ( $method_id === 'local_pickup' ) {
-        return $actions;
+        return;
     }
 
     $document_url = wp_nonce_url( admin_url( 'admin-post.php?post[]=' . $order->get_id () . '&action=quick_create_label'), 'bulk-posts');
 
-    $actions[] = array(
+    $class = 'pakettikauppa_create_shipping_label';
+
+    $actions = array(
       'name'   => __( 'Create shipping label', 'wc-pakettikauppa' ),
       'action' => 'pakettikauppa_create_shipping_label',
       'url'    => $document_url,
     );
 
-    return $actions;
+    printf( '<a class="button wc-action-button wc-action-button-%s %s" href="%s" title="%s" target="_blank">%s</a>', $class, $class, $actions['url'], $actions['name'], $actions['name'] );
   }
 
   /**
@@ -195,7 +197,7 @@ class WC_Pakettikauppa_Admin {
         $tracking_code = $this->create_shipment( $order );
       }
 
-      if ( $tracking_code != null ) {
+      if ( $tracking_code !== null ) {
         $tracking_codes[] = $tracking_code;
       }
     }
@@ -551,7 +553,6 @@ class WC_Pakettikauppa_Admin {
         }
 
         return $this->create_shipment( $order );
-        break;
       case 'get_status':
         $this->get_status( $order );
         break;
@@ -639,7 +640,7 @@ class WC_Pakettikauppa_Admin {
       }
     }
 
-    if ( $service_id == '__NULL__' ) {
+    if ( $service_id === '__NULL__' ) {
       return null;
     }
 
