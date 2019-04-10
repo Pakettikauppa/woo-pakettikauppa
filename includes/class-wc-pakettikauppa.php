@@ -262,7 +262,11 @@ class WC_Pakettikauppa {
   }
 
   public function validate_checkout_pickup_point() {
-    if ( $_POST['pakettikauppa_pickup_point'] === '__NULL__' ) { // @codingStandardsIgnoreLine
+    if ( ! wp_verify_nonce( sanitize_key( $_POST['woocommerce-process-checkout-nonce'] ), 'woocommerce-process_checkout' ) ) {
+      return;
+    }
+
+    if ( $_POST['pakettikauppa_pickup_point'] === '__NULL__' ) {
       wc_add_notice( __( 'Please choose a pickup point.', 'wc-pakettikauppa' ), 'error' );
     }
   }
