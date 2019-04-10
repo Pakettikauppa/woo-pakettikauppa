@@ -60,13 +60,11 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 
-= 2.0.11 =
+= 2.0.10 =
 * New feature: Define shipping method for non-Pakettikauppa shipments
 * New feature: Define additional services for non-Pakettikauppa shipments
 * Enhancement: Don't create shipping label from orders page for local pickups
 * Fixes: Don't display error in the logs, if provided shipping method in the checkout page does not have instance_id
-
-= 2.0.10 =
 * New feature: Implement hooks to be able to implement Pakettikauppa features in another plugins
 * Bug fix: Validate pickup point selection in non-Pakettikauppa shipping methods
 
