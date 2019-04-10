@@ -133,7 +133,7 @@ class WC_Pakettikauppa_Admin {
 
     $method_id = array_pop( $shipping_methods )->get_method_id();
 
-    if ($method_id === 'local_pickup') {
+    if ( $method_id === 'local_pickup' ) {
         return $actions;
     }
 
@@ -475,7 +475,7 @@ class WC_Pakettikauppa_Admin {
                   <ol style="list-style: circle;">
                     <?php foreach ( $additional_services as $i => $additional_service ) : ?>
                         <li>
-                        <?php echo $additional_service_names[$additional_service]; ?>
+                        <?php echo $additional_service_names[ $additional_service ]; ?>
                         </li>
                     <?php endforeach; ?>
                   </ol>
@@ -537,7 +537,7 @@ class WC_Pakettikauppa_Admin {
         if ( ! empty( $_REQUEST['wc_pakettikauppa_service_id'] ) ) {
           $service_id = $_REQUEST['wc_pakettikauppa_service_id'];
 
-          if ($service_id !== '__NULL__') {
+          if ( $service_id !== '__NULL__' ) {
             update_post_meta( $order->get_id(), '_wc_pakettikauppa_service_id', $service_id );
           }
         }
@@ -604,7 +604,7 @@ class WC_Pakettikauppa_Admin {
     }
   }
 
-  private function get_service_id_from_order(WC_Order $order, $return_default_shipping_method = true) {
+  private function get_service_id_from_order( WC_Order $order, $return_default_shipping_method = true ) {
     $service_id = get_post_meta( $order->get_id(), '_wc_pakettikauppa_service_id', true );
 
     if ( empty( $service_id ) ) {
@@ -624,7 +624,7 @@ class WC_Pakettikauppa_Admin {
 
       $method_id = $chosen_shipping_method->get_method_id();
 
-      if ($method_id === 'local_pickup') {
+      if ( $method_id === 'local_pickup' ) {
         return null;
       }
 
@@ -634,12 +634,12 @@ class WC_Pakettikauppa_Admin {
 
       $pickup_points = json_decode($settings['pickup_points'], true);
 
-      if(!empty($pickup_points[ $instance_id ]['service'])) {
+      if ( ! empty( $pickup_points[ $instance_id ]['service'] ) ) {
         $service_id = $pickup_points[ $instance_id ]['service'];
       }
     }
 
-    if ($service_id == '__NULL__') {
+    if ( $service_id == '__NULL__' ) {
       return null;
     }
 
@@ -661,7 +661,7 @@ class WC_Pakettikauppa_Admin {
 
     $method_id = $chosen_shipping_method->get_method_id();
 
-    if ($method_id === 'local_pickup') {
+    if ( $method_id === 'local_pickup' ) {
       return $additional_services;
     }
 
@@ -669,15 +669,15 @@ class WC_Pakettikauppa_Admin {
 
     $pickup_points = json_decode($settings['pickup_points'], true);
 
-    if(!empty($pickup_points[ $instance_id ]['service'])) {
+    if ( ! empty( $pickup_points[ $instance_id ]['service'] ) ) {
       $service_id = $pickup_points[ $instance_id ]['service'];
 
       $services = $pickup_points[ $instance_id ][ $service_id ]['additional_services'];
 
-      foreach($services as $service_code => $service) {
-          if ($service === 'yes') {
-              $additional_services[] = $service_code;
-          }
+      foreach ( $services as $service_code => $service ) {
+        if ( $service === 'yes' ) {
+          $additional_services[] = $service_code;
+        }
       }
     }
 
@@ -694,7 +694,7 @@ class WC_Pakettikauppa_Admin {
       update_post_meta( $order->get_id(), '_wc_pakettikauppa_service_id', $service_id );
     }
 
-    if (empty($service_id) or $service_id === '__NULL__') {
+    if ( empty( $service_id ) || $service_id === '__NULL__' ) {
       $order->add_order_note(esc_attr__( 'The shipping label was not created because the order does not contain valid shipping method.', 'wc-pakettikauppa' ) );
 
       return null;

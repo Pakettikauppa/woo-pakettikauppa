@@ -133,7 +133,7 @@ class WC_Pakettikauppa {
 
       $temp_array = explode (':', $chosen_shipping_id ); // for php 5.6 compatibility
 
-      if (count($temp_array) < 2) {
+      if ( count( $temp_array ) < 2 ) {
         // no instance_id available -> return
         return;
       }
@@ -147,8 +147,8 @@ class WC_Pakettikauppa {
         '2711'  => 'Posti International',
       );
 
-      if ( ! empty ( $pickup_points[ $instance_id ] ) ) {
-        if(!empty($pickup_points[ $instance_id ]['service']) && $pickup_points[ $instance_id ]['service'] === '__PICKUPPOINTS__') {
+      if ( ! empty( $pickup_points[ $instance_id ] ) ) {
+        if ( ! empty( $pickup_points[ $instance_id ]['service'] ) && $pickup_points[ $instance_id ]['service'] === '__PICKUPPOINTS__' ) {
           foreach ( $pickup_points[ $instance_id ] as $shipping_method => $shipping_method_data ) {
             if ( $shipping_method_data['active'] === 'yes' ) {
               $shipping_method_providers[] = $methods[ $shipping_method ];
@@ -262,7 +262,7 @@ class WC_Pakettikauppa {
   }
 
   public function validate_checkout_pickup_point() {
-    if ($_POST['pakettikauppa_pickup_point'] === '__NULL__') {
+    if ( $_POST['pakettikauppa_pickup_point'] === '__NULL__' ) { // @codingStandardsIgnoreLine
       wc_add_notice( __( 'Please choose a pickup point.', 'wc-pakettikauppa' ), 'error' );
     }
   }

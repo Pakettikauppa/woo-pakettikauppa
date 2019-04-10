@@ -133,27 +133,26 @@ function wc_pakettikauppa_shipping_method_init() {
           <tr>
               <td colspan="2">
                     <?php foreach ( WC_Shipping_Zones::get_zones( 'admin' ) as $zone_index => $zone ) : ?>
-                        <h2><?php echo $zone['zone_name'];?></h2>
+                        <h2><?php echo $zone['zone_name']; ?></h2>
                       <?php foreach ( $zone['shipping_methods'] as $method_id => $shipping_method ) : ?>
-                        <?php if ( $shipping_method->enabled === 'yes' && $shipping_method->id !== 'pakettikauppa_shipping_method' && $shipping_method->id !== 'local_pickup') : ?>
-                        <?php
+                        <?php if ( $shipping_method->enabled === 'yes' && $shipping_method->id !== 'pakettikauppa_shipping_method' && $shipping_method->id !== 'local_pickup' ) : ?>
+                          <?php
                           $selected_service = $values[ $method_id ]['service'];
-                          if (empty($selected_service)) {
+                          if ( empty( $selected_service ) ) {
                               $selected_service = '__PICKUPPOINTS__';
                           }
-
-                        ?>
+                          ?>
                             <table>
                                 <th><?php echo $shipping_method->title; ?></th>
                                 <td style="vertical-align: top;">
-                                    <select id="<?php echo $method_id;?>-select" name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][service]'; ?>" onchange="pkChangeOptions(this, '<?php echo $method_id; ?>');">
+                                    <select id="<?php echo $method_id; ?>-select" name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][service]'; ?>" onchange="pkChangeOptions(this, '<?php echo $method_id; ?>');">
                                         <option value="__NULL__"><?php esc_html_e( 'No shipping', 'wc-pakettikauppa'); ?></option>
-                                        <option value="__PICKUPPOINTS__" <?php echo ($selected_service === '__PICKUPPOINTS__' ? 'selected' : '')?>>Noutopisteet</option>
-                                        <?php foreach($all_shipping_methods as $service_id => $service_name):?>
-                                        <?php if(!in_array($service_id, array ('2103', '80010', '90080'))):?>
-                                            <option value="<?php echo $service_id;?>" <?php echo (strval($selected_service) === strval($service_id) ? 'selected' : '')?>><?php echo $service_name;?></option>
-                                        <?php endif;?>
-                                        <?php endforeach;?>
+                                        <option value="__PICKUPPOINTS__" <?php echo ( $selected_service === '__PICKUPPOINTS__' ? 'selected' : '' ); ?>>Noutopisteet</option>
+                                        <?php foreach ( $all_shipping_methods as $service_id => $service_name ) : ?>
+                                          <?php if ( ! in_array ( $service_id, array( '2103', '80010', '90080' ) ) ) : ?>
+                                            <option value="<?php echo $service_id; ?>" <?php echo ( strval( $selected_service ) === strval( $service_id ) ? 'selected' : '' ); ?>><?php echo $service_name; ?></option>
+                                          <?php endif; ?>
+                                        <?php endforeach; ?>
                                     </select>
                                 </td>
                                 <td style="vertical-align: top;">
@@ -181,26 +180,26 @@ function wc_pakettikauppa_shipping_method_init() {
                                     </div>
 
                                     <?php $all_additional_services = $this->wc_pakettikauppa_shipment->get_additional_services(); ?>
-                                    <?php foreach($all_additional_services as $method_code => $additional_services):?>
+                                    <?php foreach ( $all_additional_services as $method_code => $additional_services ) : ?>
                                     <div class="pk-services" style='display: none;' id="<?php echo $method_code; ?>-services">
-                                    <?php foreach($additional_services as $additional_service):?>
-                                    <?php if (empty($additional_service->specifiers)):?>
+                                      <?php foreach ( $additional_services as $additional_service ) : ?>
+                                        <?php if ( empty( $additional_service->specifiers ) ) : ?>
                                         <input type="hidden"
-                                               name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][' . esc_attr( $method_code ) . '][additional_services]['.$additional_service->service_code.']'; ?>"
+                                               name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][' . esc_attr( $method_code ) . '][additional_services][' . $additional_service->service_code . ']'; ?>"
                                                value="no">
                                         <p>
                                             <input type="checkbox"
-                                                   name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][' . esc_attr( $method_code ) . '][additional_services]['.$additional_service->service_code.']'; ?>"
+                                                   name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][' . esc_attr( $method_code ) . '][additional_services][' . $additional_service->service_code . ']'; ?>"
                                                    value="yes" <?php echo $values[ $method_id ][ $method_code ]['additional_services'][ $additional_service->service_code ] === 'yes' ? 'checked' : ''; ?>>
                                           <?php echo $additional_service->name; ?>
                                         </p>
-                                        <?php endif;?>
-                                    <?php endforeach;?>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
                                     </div>
-                                    <?php endforeach;?>
+                                    <?php endforeach; ?>
                                 </td>
                             </table>
-                        <script>pkChangeOptions(document.getElementById("<?php echo $method_id;?>-select"), '<?php echo $method_id;?>');</script>
+                        <script>pkChangeOptions(document.getElementById("<?php echo $method_id; ?>-select"), '<?php echo $method_id; ?>');</script>
                         <?php endif; ?>
                       <?php endforeach; ?>
                     <?php endforeach; ?>

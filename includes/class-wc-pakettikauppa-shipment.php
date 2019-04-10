@@ -260,7 +260,7 @@ class WC_Pakettikauppa_Shipment {
       $shipment->addAdditionalService( $additional_service );
     }
 
-    foreach ($additional_services as $additional_service_code) {
+    foreach ( $additional_services as $additional_service_code ) {
       $additional_service = new AdditionalService();
       $additional_service->setServiceCode( $additional_service_code );
 
@@ -487,9 +487,9 @@ class WC_Pakettikauppa_Shipment {
       return null;
     }
 
-    $additional_services= array();
+    $additional_services = array();
     foreach ( $all_shipping_methods as $shipping_method ) {
-      $additional_services[strval($shipping_method->shipping_method_code)] = $shipping_method->additional_services;
+      $additional_services[ strval( $shipping_method->shipping_method_code ) ] = $shipping_method->additional_services;
     }
 
     return $additional_services;
