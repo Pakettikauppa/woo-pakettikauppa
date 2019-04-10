@@ -142,7 +142,7 @@ function wc_pakettikauppa_shipping_method_init() {
                               $selected_service = '__PICKUPPOINTS__';
                           }
                           ?>
-                            <table style="border-collapse: collapse;" border="1">
+                            <table style="border-collapse: collapse;" border="0">
                                 <th><?php echo $shipping_method->title; ?></th>
                                 <td style="vertical-align: top;">
                                     <select id="<?php echo $method_id; ?>-select" name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][service]'; ?>" onchange="pkChangeOptions(this, '<?php echo $method_id; ?>');">
