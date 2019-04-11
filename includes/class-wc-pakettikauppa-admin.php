@@ -131,10 +131,12 @@ class WC_Pakettikauppa_Admin {
   public function register_quick_create_order( $order ) {
     $shipping_methods = $order->get_shipping_methods();
 
-    $method_id = array_pop( $shipping_methods )->get_method_id();
+    if ( ! empty( $shipping_methods ) ) {
+      $method_id = array_pop( $shipping_methods )->get_method_id();
 
-    if ( $method_id === 'local_pickup' ) {
+      if ( $method_id === 'local_pickup' ) {
         return;
+      }
     }
 
     $document_url = wp_nonce_url( admin_url( 'admin-post.php?post[]=' . $order->get_id () . '&action=quick_create_label'), 'bulk-posts');
