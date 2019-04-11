@@ -132,10 +132,14 @@ class WC_Pakettikauppa_Admin {
     $shipping_methods = $order->get_shipping_methods();
 
     if ( ! empty( $shipping_methods ) ) {
-      $method_id = array_pop( $shipping_methods )->get_method_id();
+      $shipping_method = array_pop( $shipping_methods );
 
-      if ( $method_id === 'local_pickup' ) {
-        return;
+      if ( ! empty( $shipping_method ) ) {
+        $method_id = $shipping_method->get_method_id();
+
+        if ( $method_id === 'local_pickup' ) {
+          return;
+        }
       }
     }
 
