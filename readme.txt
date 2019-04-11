@@ -60,6 +60,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 
+= 2.0.11 =
+* Enhancement: Orders action will open the PDF in the new window/tab
+
 = 2.0.10 =
 * New feature: Define shipping method for non-Pakettikauppa shipments
 * New feature: Define additional services for non-Pakettikauppa shipments
