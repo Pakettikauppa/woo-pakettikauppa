@@ -60,6 +60,11 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 
+= 2.0.12 =
+* New feature: Add HS tariff number and country of origin to products shipping options
+* New feature: Send contents of the order with the shipment creation method
+* Enhancements: redo functions using deprecated get_product_from_item function
+
 = 2.0.11 =
 * Enhancement: Orders action will open the PDF in the new window/tab
 

@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once WC_PAKETTIKAUPPA_DIR . 'vendor/autoload.php';
 
 use Pakettikauppa\Shipment;
+use Pakettikauppa\Shipment\ContentLine;
 use Pakettikauppa\Shipment\Sender;
 use Pakettikauppa\Shipment\Receiver;
 use Pakettikauppa\Shipment\Info;
@@ -267,6 +268,42 @@ class WC_Pakettikauppa_Shipment {
       $shipment->addAdditionalService( $additional_service );
     }
 
+    $items = $order->get_items();
+
+    $wcpf = new WC_Product_Factory();
+
+    foreach ( $items as $item ) {
+      $item_data = $item->get_data();
+
+      if ( empty( $item_data ) ) {
+        continue;
+      }
+
+      $product = $wcpf->get_product($item_data['product_id']);
+
+      if ( empty( $product ) ) {
+        continue;
+      }
+
+      if ( $product->is_virtual() ) {
+        continue;
+      }
+
+      $tariff_code = $product->get_meta( 'pakettikauppa_tariff_codes' );
+      $country_of_origin = $product->get_meta( 'pakettikauppa_country_of_origin' );
+
+      $content_line = new ContentLine();
+      $content_line->currency = 'EUR';
+      $content_line->country_of_origin = $country_of_origin;
+      $content_line->tariff_code = $tariff_code;
+      $content_line->description = $product->get_name();
+      $content_line->quantity = $item->get_quantity();
+      $content_line->netweight = wc_get_weight( $product->get_weight() * $item->get_quantity(), 'g' );
+      $content_line->value = round($item_data['total'] + $item_data['total_tax'], 2);
+
+      $parcel->addContentLine($content_line);
+    }
+
     if ( ! empty( $pickup_point_id ) ) {
       $shipment->setPickupPoint( $pickup_point_id );
     }
@@ -293,12 +330,14 @@ class WC_Pakettikauppa_Shipment {
   public static function order_weight( $order ) {
     $weight = 0;
 
+    $wcpf = new WC_Product_Factory();
+
     foreach ( $order->get_items() as $item ) {
       if ( empty( $item['product_id'] ) ) {
         continue;
       }
 
-      $product = $order->get_product_from_item( $item );
+      $product = $wcpf->get_product( $item['product_id'] );
 
       if ( $product->is_virtual() ) {
         continue;
@@ -308,7 +347,7 @@ class WC_Pakettikauppa_Shipment {
         continue;
       }
 
-      $weight += wc_get_weight( $product->get_weight() * $item['qty'], 'kg' );
+      $weight += wc_get_weight( $product->get_weight() * $item->get_quantity(), 'kg' );
     }
 
     return $weight;
@@ -324,12 +363,14 @@ class WC_Pakettikauppa_Shipment {
   public static function order_volume( $order ) {
     $volume = 0;
 
+    $wcpf = new WC_Product_Factory();
+
     foreach ( $order->get_items() as $item ) {
       if ( empty( $item['product_id'] ) ) {
         continue;
       }
 
-      $product = $order->get_product_from_item( $item );
+      $product = $wcpf->get_product( $item['product_id'] );
 
       if ( $product->is_virtual() ) {
         continue;
