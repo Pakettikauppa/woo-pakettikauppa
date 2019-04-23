@@ -65,7 +65,7 @@ class WC_Pakettikauppa_Admin {
   public function save_custom_product_fields( $post_id ) {
     $custom_fields = array( 'pakettikauppa_tariff_codes', 'pakettikauppa_country_of_origin' );
 
-    if ( ! ( isset( $_POST['woocommerce_meta_nonce'] ) || wp_verify_nonce( sanitize_key( $_POST['woocommerce_meta_nonce'] ), 'woocommerce_save_data' ) ) ) {
+    if ( ! ( isset( $_POST['woocommerce_meta_nonce'] ) && wp_verify_nonce( sanitize_key( $_POST['woocommerce_meta_nonce'] ), 'woocommerce_save_data' ) ) ) {
       return false;
     }
 
@@ -73,6 +73,8 @@ class WC_Pakettikauppa_Admin {
       $value = $_POST[ $custom_field ];
       if ( ! empty( $value ) ) {
         update_post_meta( $post_id, $custom_field, strtoupper( esc_attr( $value ) ) );
+      } else {
+        delete_post_meta( $post_id, $custom_field );
       }
     }
   }
