@@ -47,6 +47,8 @@ class WC_Pakettikauppa_Admin {
     add_action( 'pakettikauppa_create_shipments', array( $this, 'hook_create_shipments' ), 10, 2 );
     add_action( 'pakettikauppa_fetch_shipping_labels', array( $this, 'hook_fetch_shipping_labels' ), 10, 2 );
     add_action( 'pakettikauppa_fetch_tracking_code', array( $this, 'hook_fetch_tracking_code' ), 10, 2 );
+    add_action( 'woocommerce_product_options_shipping', array( $this, 'add_custom_product_fields' ) );
+    add_action( 'woocommerce_process_product_meta', array( $this, 'save_custom_product_fields' ) );
 
     try {
       $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
@@ -58,6 +60,44 @@ class WC_Pakettikauppa_Admin {
 
       return;
     }
+  }
+
+  public function save_custom_product_fields( $post_id ) {
+    $custom_fields = array( 'pakettikauppa_tariff_codes', 'pakettikauppa_country_of_origin' );
+
+    if ( ! ( isset( $_POST['woocommerce_meta_nonce'] ) && wp_verify_nonce( sanitize_key( $_POST['woocommerce_meta_nonce'] ), 'woocommerce_save_data' ) ) ) {
+      return false;
+    }
+
+    foreach ( $custom_fields as $custom_field ) {
+      $value = $_POST[ $custom_field ];
+      if ( ! empty( $value ) ) {
+        update_post_meta( $post_id, $custom_field, strtoupper( esc_attr( $value ) ) );
+      } else {
+        delete_post_meta( $post_id, $custom_field );
+      }
+    }
+  }
+
+  public function add_custom_product_fields() {
+    $args = array(
+      'id' => 'pakettikauppa_tariff_codes',
+      'label' => __( 'HS tariff number', 'pakettikauppa' ),
+      'desc_tip' => true,
+      'description' => __( 'The HS tariff number must be based on the Harmonized Commodity Description and Coding System developed by the World Customs Organization.', 'pakettikauppa' ),
+    );
+    woocommerce_wp_text_input( $args );
+
+    $args = array(
+      'id' => 'pakettikauppa_country_of_origin',
+      'label' => __( 'Country of origin', 'pakettikauppa' ),
+      'desc_tip' => true,
+      'description' => __( '"Country of origin" means the country where the goods originated, e.g. were produced/manufactured or assembled.', 'pakettikauppa' ),
+      'custom_attributes' => array(
+        'maxlength' => '2',
+      ),
+    );
+    woocommerce_wp_text_input( $args );
   }
 
   /**
@@ -437,7 +477,7 @@ class WC_Pakettikauppa_Admin {
       '2106' => 'Noutopiste',
       '3102' => 'Monipaketti lähetys',
       '9902' => 'Asiointikoodi',
-    ]
+    ];
 
     ?>
 <div>
