@@ -272,36 +272,42 @@ class WC_Pakettikauppa_Shipment {
 
     $wcpf = new WC_Product_Factory();
 
-    foreach ( $items as $item ) {
-      $item_data = $item->get_data();
+    if ( ! empty( $items ) ) {
+      foreach ( $items as $item ) {
+        $item_data = $item->get_data();
 
-      if ( empty( $item_data ) ) {
-        continue;
+        if ( empty( $item_data ) ) {
+          continue;
+        }
+
+        $product = $wcpf->get_product( $item_data['product_id'] );
+
+        if ( empty( $product ) ) {
+          continue;
+        }
+
+        if ( $product->is_virtual() ) {
+          continue;
+        }
+
+        $tariff_code       = $product->get_meta( 'pakettikauppa_tariff_codes', true );
+        $country_of_origin = $product->get_meta( 'pakettikauppa_country_of_origin', true );
+
+        $content_line                    = new ContentLine();
+        $content_line->currency          = 'EUR';
+        $content_line->country_of_origin = $country_of_origin;
+        $content_line->tariff_code       = $tariff_code;
+        $content_line->description       = $product->get_name();
+        $content_line->quantity          = $item->get_quantity();
+
+        if ( ! empty( $product->get_weight() ) ) {
+          $content_line->netweight = wc_get_weight( $product->get_weight() * $item->get_quantity(), 'g' );
+        }
+
+        $content_line->value = round( $item_data['total'] + $item_data['total_tax'], 2 );
+
+        $parcel->addContentLine( $content_line );
       }
-
-      $product = $wcpf->get_product($item_data['product_id']);
-
-      if ( empty( $product ) ) {
-        continue;
-      }
-
-      if ( $product->is_virtual() ) {
-        continue;
-      }
-
-      $tariff_code = $product->get_meta( 'pakettikauppa_tariff_codes' );
-      $country_of_origin = $product->get_meta( 'pakettikauppa_country_of_origin' );
-
-      $content_line = new ContentLine();
-      $content_line->currency = 'EUR';
-      $content_line->country_of_origin = $country_of_origin;
-      $content_line->tariff_code = $tariff_code;
-      $content_line->description = $product->get_name();
-      $content_line->quantity = $item->get_quantity();
-      $content_line->netweight = wc_get_weight( $product->get_weight() * $item->get_quantity(), 'g' );
-      $content_line->value = round($item_data['total'] + $item_data['total_tax'], 2);
-
-      $parcel->addContentLine($content_line);
     }
 
     if ( ! empty( $pickup_point_id ) ) {
