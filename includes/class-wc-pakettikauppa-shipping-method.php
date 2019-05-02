@@ -137,7 +137,10 @@ function wc_pakettikauppa_shipping_method_init() {
                       <?php foreach ( $zone['shipping_methods'] as $method_id => $shipping_method ) : ?>
                         <?php if ( $shipping_method->enabled === 'yes' && $shipping_method->id !== 'pakettikauppa_shipping_method' && $shipping_method->id !== 'local_pickup' ) : ?>
                           <?php
-                          $selected_service = $values[ $method_id ]['service'];
+                          $selected_service = null;
+                          if ( ! empty( $values[ $method_id ]['service'] ) ) {
+                              $selected_service = $values[ $method_id ]['service'];
+                          }
                           if ( empty( $selected_service ) ) {
                               $selected_service = '__PICKUPPOINTS__';
                           }
@@ -173,7 +176,7 @@ function wc_pakettikauppa_shipping_method_init() {
                                       <p>
                                           <input type="checkbox"
                                                  name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][' . $method_code . '][active]'; ?>"
-                                                 value="yes" <?php echo $values[ $method_id ][ $method_code ]['active'] === 'yes' ? 'checked' : ''; ?>>
+                                                 value="yes" <?php echo ( ! empty ( $values[ $method_id ][ $method_code ]['active'] ) && $values[ $method_id ][ $method_code ]['active'] === 'yes' ) ? 'checked' : ''; ?>>
                                         <?php echo $method_name; ?>
                                       </p>
                                   <?php endforeach; ?>
@@ -190,7 +193,7 @@ function wc_pakettikauppa_shipping_method_init() {
                                         <p>
                                             <input type="checkbox"
                                                    name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][' . esc_attr( $method_code ) . '][additional_services][' . $additional_service->service_code . ']'; ?>"
-                                                   value="yes" <?php echo $values[ $method_id ][ $method_code ]['additional_services'][ $additional_service->service_code ] === 'yes' ? 'checked' : ''; ?>>
+                                                   value="yes" <?php echo ( ! empty ( $values[ $method_id ][ $method_code ]['additional_services'][ $additional_service->service_code ] ) && $values[ $method_id ][ $method_code ]['additional_services'][ $additional_service->service_code ] ) === 'yes' ? 'checked' : ''; ?>>
                                           <?php echo $additional_service->name; ?>
                                         </p>
                                         <?php endif; ?>
