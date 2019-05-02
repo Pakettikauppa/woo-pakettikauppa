@@ -60,6 +60,10 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 
+= 2.0.13 =
+* New feature: Add selected pickup point information to the confirmation email
+* Enhancements: Added more data validation to admin functions
+
 = 2.0.12 =
 * New feature: Add HS tariff number and country of origin to products shipping options
 * New feature: Send contents of the order with the shipment creation method
