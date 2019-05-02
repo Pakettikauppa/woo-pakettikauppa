@@ -419,6 +419,10 @@ class WC_Pakettikauppa_Admin {
   public function meta_box( $post ) {
     $order = wc_get_order( $post->ID );
 
+    if ( $order === null ) {
+      return;
+    }
+
     if ( ! WC_Pakettikauppa_Shipment::validate_order_shipping_receiver( $order ) ) {
       esc_attr_e( 'Please add shipping info to the order to manage Pakettikauppa shipments.', 'wc-pakettikauppa' );
 
@@ -652,6 +656,10 @@ class WC_Pakettikauppa_Admin {
   }
 
   private function get_service_id_from_order( WC_Order $order, $return_default_shipping_method = true ) {
+    if ( $order === null ) {
+      return null;
+    }
+
     $service_id = get_post_meta( $order->get_id(), '_wc_pakettikauppa_service_id', true );
 
     if ( empty( $service_id ) ) {
@@ -856,6 +864,7 @@ class WC_Pakettikauppa_Admin {
   public function attach_tracking_to_email( $order, $sent_to_admin = false, $plain_text = false, $email = null ) {
     $settings = $this->wc_pakettikauppa_shipment->get_settings();
     $add_to_email = $settings['add_tracking_to_email'];
+    $add_pickup_point_to_email = $settings['add_pickup_point_to_email'];
 
     if ( ! ( $add_to_email === 'yes' && isset( $email->id ) && $email->id === 'customer_completed_order' ) ) {
       return;
@@ -870,8 +879,17 @@ class WC_Pakettikauppa_Admin {
 
     if ( $plain_text ) {
       /* translators: %s: Shipment tracking URL */
-      echo sprintf( esc_html__( "You can track your order at %1\$s.\n\n", 'wc-pakettikauppa' ), esc_url( $tracking_url ) );
+      if ( ! empty( $order->get_meta( '_pakettikauppa_pickup_point' ) ) && 'yes' === $add_pickup_point_to_email ) {
+        echo sprintf( "%s: %s\n\n", __( 'Requested pickup point', 'wc-pakettikauppa' ), $order->get_meta( '_pakettikauppa_pickup_point' ) );
+      }
+
+      echo sprintf( __( "You can track your order at %1\$s.\n\n", 'wc-pakettikauppa' ), esc_url( $tracking_url ) );
     } else {
+      if ( ! empty( $order->get_meta( '_pakettikauppa_pickup_point' ) ) && 'yes' === $add_pickup_point_to_email ) {
+        echo sprintf( '<h2>%s</h2>', esc_attr__( 'Requested pickup point', 'wc-pakettikauppa' ) );
+        echo sprintf( '<p>%s</p>', esc_attr( $order->get_meta( '_pakettikauppa_pickup_point' ) ) );
+      }
+
       echo '<h2>' . esc_attr__( 'Tracking', 'wc-pakettikauppa' ) . '</h2>';
       /* translators: 1: Shipment tracking URL 2: Shipment tracking code */
       echo '<p>' . sprintf( __( 'You can <a href="%1$s">track your order</a> with tracking code %2$s.', 'wc-pakettikauppa' ), esc_url( $tracking_url ), esc_attr( $tracking_code ) ) . '</p>';

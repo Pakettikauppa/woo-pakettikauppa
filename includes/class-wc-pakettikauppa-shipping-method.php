@@ -388,6 +388,12 @@ function wc_pakettikauppa_shipping_method_init() {
             'default' => 'no',
           ),
 
+          'add_pickup_point_to_email'      => array(
+            'title'   => __( 'Add selected pickup point information to the order completed email', 'wc-pakettikauppa' ),
+            'type'    => 'checkbox',
+            'default' => 'no',
+          ),
+
           'pickup_points_search_limit' => array(
             'title'       => __( 'Pickup point search limit', 'wc-pakettikauppa' ),
             'type'        => 'number',
