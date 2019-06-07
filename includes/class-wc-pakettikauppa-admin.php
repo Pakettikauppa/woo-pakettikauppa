@@ -269,10 +269,12 @@ class WC_Pakettikauppa_Admin {
     if ( ! empty ( $settings['pickup_points'] ) ) {
       $pickup_points = json_decode( $settings['pickup_points'], true );
 
-      foreach ( $pickup_points as $shipping_method ) {
-        foreach ( $shipping_method as $provider ) {
-          if ( isset($provider['active']) && $provider['active'] === 'yes' ) {
-            $shipping_method_found = true;
+      if ( ! empty ( $pickup_points ) ) {
+        foreach ( $pickup_points as $shipping_method ) {
+          foreach ( $shipping_method as $provider ) {
+            if ( isset($provider['active']) && $provider['active'] === 'yes' ) {
+              $shipping_method_found = true;
+            }
           }
         }
       }
