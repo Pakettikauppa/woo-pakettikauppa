@@ -669,7 +669,11 @@ class WC_Pakettikauppa_Admin {
     if ( empty( $service_id ) ) {
       $shipping_methods = $order->get_shipping_methods();
 
-      $service_id = array_pop( $shipping_methods )->get_meta( 'service_code' );
+      $shipping_method = array_pop( $shipping_methods );
+
+      if ( ! empty ( $shipping_method ) ) {
+        $service_id = $shipping_method->get_meta( 'service_code' );
+      }
     }
 
     if ( empty ( $service_id ) ) {
@@ -681,20 +685,22 @@ class WC_Pakettikauppa_Admin {
 
       $chosen_shipping_method = array_pop( $shipping_methods );
 
-      $method_id = $chosen_shipping_method->get_method_id();
+      if ( ! empty ( $chosen_shipping_method ) ) {
+        $method_id = $chosen_shipping_method->get_method_id();
 
-      if ( $method_id === 'local_pickup' ) {
-        return null;
-      }
+        if ( $method_id === 'local_pickup' ) {
+          return null;
+        }
 
-      $instance_id = $chosen_shipping_method->get_instance_id();
+        $instance_id = $chosen_shipping_method->get_instance_id();
 
-      $settings = $this->wc_pakettikauppa_shipment->get_settings();
+        $settings = $this->wc_pakettikauppa_shipment->get_settings();
 
-      $pickup_points = json_decode($settings['pickup_points'], true);
+        $pickup_points = json_decode( $settings['pickup_points'], true );
 
-      if ( ! empty( $pickup_points[ $instance_id ]['service'] ) ) {
-        $service_id = $pickup_points[ $instance_id ]['service'];
+        if ( ! empty( $pickup_points[ $instance_id ]['service'] ) ) {
+          $service_id = $pickup_points[ $instance_id ]['service'];
+        }
       }
     }
 
@@ -718,24 +724,26 @@ class WC_Pakettikauppa_Admin {
 
     $chosen_shipping_method = array_pop( $shipping_methods );
 
-    $method_id = $chosen_shipping_method->get_method_id();
+    if ( ! empty ( $chosen_shipping_method ) ) {
+      $method_id = $chosen_shipping_method->get_method_id();
 
-    if ( $method_id === 'local_pickup' ) {
-      return $additional_services;
-    }
+      if ( $method_id === 'local_pickup' ) {
+        return $additional_services;
+      }
 
-    $instance_id = $chosen_shipping_method->get_instance_id();
+      $instance_id = $chosen_shipping_method->get_instance_id();
 
-    $pickup_points = json_decode($settings['pickup_points'], true);
+      $pickup_points = json_decode( $settings['pickup_points'], true );
 
-    if ( ! empty( $pickup_points[ $instance_id ]['service'] ) ) {
-      $service_id = $pickup_points[ $instance_id ]['service'];
+      if ( ! empty( $pickup_points[ $instance_id ]['service'] ) ) {
+        $service_id = $pickup_points[ $instance_id ]['service'];
 
-      $services = $pickup_points[ $instance_id ][ $service_id ]['additional_services'];
+        $services = $pickup_points[ $instance_id ][ $service_id ]['additional_services'];
 
-      foreach ( $services as $service_code => $service ) {
-        if ( $service === 'yes' ) {
-          $additional_services[] = $service_code;
+        foreach ( $services as $service_code => $service ) {
+          if ( $service === 'yes' ) {
+            $additional_services[] = $service_code;
+          }
         }
       }
     }
