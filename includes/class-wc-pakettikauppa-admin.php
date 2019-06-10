@@ -62,7 +62,9 @@ class WC_Pakettikauppa_Admin {
     }
   }
 
-  public function ajax_meta_box () {
+  public function ajax_meta_box() {
+    check_ajax_referer( 'pakettikauppa-meta-box', 'security' );
+
     $this->save_ajax_metabox ( $_POST['post_id'] );
     $this->meta_box( get_post ( $_POST['post_id'] ) );
     wp_die();
@@ -548,7 +550,7 @@ class WC_Pakettikauppa_Admin {
     <?php else : ?>
         <p>
             <button type="button" value="get_status" name="wc_pakettikauppa[get_status]" class="button pakettikauppa_meta_box" onclick="pakettikauppa_meta_box_submit(this);"><?php echo __( 'Update Status', 'wc-pakettikauppa' ); ?></button>
-            <button type="button" value="delete_shipping_label" name="wc_pakettikauppa[delete_shipping_label]"  onclick="pakettikauppa_meta_box_submit(this);" class="button pakettikauppa_meta_box wc-pakettikauppa-delete-button"><?php echo  esc_attr_e( 'Delete Shipping Label', 'wc-pakettikauppa' ); ?></button>
+            <button type="button" value="delete_shipping_label" name="wc_pakettikauppa[delete_shipping_label]" onclick="pakettikauppa_meta_box_submit(this);" class="button pakettikauppa_meta_box wc-pakettikauppa-delete-button"><?php echo __( 'Delete Shipping Label', 'wc-pakettikauppa' ); ?></button>
         </p>
     <?php endif; ?>
     <input type="hidden" name="pakettikauppa_nonce" value="<?php echo wp_create_nonce( 'pakettikauppa-meta-box' ); ?>" id="pakettikauppa_metabox_nonce" />
