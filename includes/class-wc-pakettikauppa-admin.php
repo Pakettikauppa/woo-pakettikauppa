@@ -37,7 +37,6 @@ class WC_Pakettikauppa_Admin {
     add_action( 'woocommerce_admin_order_actions_end', array( $this, 'register_quick_create_order' ), 10, 2 ); //to add print option at the end of each orders in orders page
     add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
     add_action( 'add_meta_boxes', array( $this, 'register_meta_boxes' ) );
-    add_action( 'save_post', array( $this, 'save_metabox' ), 10, 2 );
     add_action( 'admin_post_show_pakettikauppa', array( $this, 'show' ), 10 );
     add_action( 'admin_post_quick_create_label', array( $this, 'create_multiple_shipments' ), 10 );
     add_action( 'woocommerce_email_order_meta', array( $this, 'attach_tracking_to_email' ), 10, 4 );
@@ -49,6 +48,7 @@ class WC_Pakettikauppa_Admin {
     add_action( 'pakettikauppa_fetch_tracking_code', array( $this, 'hook_fetch_tracking_code' ), 10, 2 );
     add_action( 'woocommerce_product_options_shipping', array( $this, 'add_custom_product_fields' ) );
     add_action( 'woocommerce_process_product_meta', array( $this, 'save_custom_product_fields' ) );
+    add_action( 'wp_ajax_pakettikauppa_meta_box', array( $this, 'ajax_meta_box' ) );
 
     try {
       $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
@@ -60,6 +60,12 @@ class WC_Pakettikauppa_Admin {
 
       return;
     }
+  }
+
+  public function ajax_meta_box () {
+    $this->save_ajax_metabox ( $_POST['post_id'] );
+    $this->meta_box( get_post ( $_POST['post_id'] ) );
+    wp_die();
   }
 
   public function save_custom_product_fields( $post_id ) {
@@ -372,12 +378,8 @@ class WC_Pakettikauppa_Admin {
    * Enqueue admin-specific styles and scripts.
    */
   public function admin_enqueue_scripts() {
-    wp_enqueue_style(
-      'wc_pakettikauppa_admin',
-      plugin_dir_url( __FILE__ ) . '../assets/css/wc-pakettikauppa-admin.css',
-      array(),
-      WC_PAKETTIKAUPPA_VERSION
-    );
+    wp_enqueue_style( 'wc_pakettikauppa_admin', plugin_dir_url( __FILE__ ) . '../assets/css/wc-pakettikauppa-admin.css', array(), WC_PAKETTIKAUPPA_VERSION );
+    wp_enqueue_script( 'wc_pakettikauppa_admin_js', plugin_dir_url( __FILE__ ) . '../assets/js/wc-pakettikauppa-admin.js', array( 'jquery' ), WC_PAKETTIKAUPPA_VERSION, true);
   }
 
   /**
@@ -428,9 +430,6 @@ class WC_Pakettikauppa_Admin {
 
       return;
     }
-
-    // Get active services from active_shipping_options
-    $settings                = get_option( 'woocommerce_WC_Pakettikauppa_Shipping_Method_settings', null );
 
     // The tracking code will only be available if the shipment label has been generated
     $tracking_code = get_post_meta( $post->ID, '_wc_pakettikauppa_tracking_code', true );
@@ -509,7 +508,7 @@ class WC_Pakettikauppa_Admin {
           <fieldset class="pakettikauppa-metabox-fieldset">
             <h4><?php echo esc_html__( 'Service', 'wc-pakettikauppa' ); ?></h4>
                 <label for="pakettikeuppa-service">
-                    <select name="wc_pakettikauppa_service_id" id="pakettikauppa-service">
+                    <select name="wc_pakettikauppa_service_id" id="pakettikauppa-service" class="pakettikauppa_metabox_values">
                         <option value="__NULL__"><?php esc_html_e( 'No shipping', 'wc-pakettikauppa'); ?></option>
                     <?php foreach ( $this->wc_pakettikauppa_shipment->services() as $_service_code => $_service_title ) : ?>
                         <option
@@ -534,20 +533,23 @@ class WC_Pakettikauppa_Admin {
               <?php endif; ?>
                 <br>
                 <?php if ( $pickup_point_id ) : ?>
-                    <input type="hidden" name="wc_pakettikauppa_pickup_points" value="1">
-                    <input type="hidden" name="wc_pakettikauppa_pickup_point_id" value="<?php echo $pickup_point_id; ?>">
+                    <input type="hidden" name="wc_pakettikauppa_pickup_points" value="1" class="pakettikauppa_metabox_values">
+                    <input type="hidden" name="wc_pakettikauppa_pickup_point_id" value="<?php echo $pickup_point_id; ?>" class="pakettikauppa_metabox_values">
                 <?php endif; ?>
             </fieldset>
         </div>
         <p>
-            <input type="submit" value="<?php esc_attr_e( 'Create', 'wc-pakettikauppa' ); ?>" name="wc_pakettikauppa[create]" class="button"/>
+            <button type="button" value="create" name="wc_pakettikauppa[create]" class="button pakettikauppa_meta_box" onclick="pakettikauppa_meta_box_submit(this);">
+              <?php echo __( 'Create', 'wc-pakettikauppa' ); ?>
+            </button>
         </p>
     <?php else : ?>
         <p>
-            <input type="submit" value="<?php esc_attr_e( 'Update Status', 'wc-pakettikauppa' ); ?>" name="wc_pakettikauppa[get_status]" class="button"/>
-            <input type="submit" value="<?php esc_attr_e( 'Delete Shipping Label', 'wc-pakettikauppa' ); ?>" name="wc_pakettikauppa[delete_shipping_label]" class="button wc-pakettikauppa-delete-button"/>
+            <button type="button" value="get_status" name="wc_pakettikauppa[get_status]" class="button pakettikauppa_meta_box" onclick="pakettikauppa_meta_box_submit(this);"><?php echo __( 'Update Status', 'wc-pakettikauppa' ); ?></button>
+            <button type="button" value="delete_shipping_label" name="wc_pakettikauppa[delete_shipping_label]"  onclick="pakettikauppa_meta_box_submit(this);" class="button pakettikauppa_meta_box wc-pakettikauppa-delete-button"><?php echo  esc_attr_e( 'Delete Shipping Label', 'wc-pakettikauppa' ); ?></button>
         </p>
     <?php endif; ?>
+    <input type="hidden" name="pakettikauppa_nonce" value="<?php echo wp_create_nonce( 'pakettikauppa-meta-box' ); ?>" id="pakettikauppa_metabox_nonce" />
 </div>
     <?php
   }
@@ -555,7 +557,7 @@ class WC_Pakettikauppa_Admin {
   /**
    * Save metabox values and fetch the shipping label for the order.
    */
-  public function save_metabox( $post_id ) {
+  public function save_ajax_metabox( $post_id ) {
     /**
      * Because this function is called everytime something is saved in WooCommerce, then let's check this first
      * so it won't slow down saving other stuff too much.
@@ -564,7 +566,7 @@ class WC_Pakettikauppa_Admin {
       return;
     }
 
-    if ( wp_verify_nonce( sanitize_key( $_POST['_nonce'] ), 'save_post' ) ) {
+    if ( ! check_ajax_referer( 'pakettikauppa-meta-box', 'security' ) ) {
       return;
     }
 
