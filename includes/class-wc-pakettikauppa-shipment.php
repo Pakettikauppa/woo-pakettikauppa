@@ -205,7 +205,7 @@ class WC_Pakettikauppa_Shipment {
    *
    * @param WC_Order $order
    *
-   * @return string tracking_code Shipment tracking code
+   * @return SimpleXMLElement
    * @throws Exception
    */
   public function create_shipment( $order, $additional_services = array() ) {
@@ -316,14 +316,12 @@ class WC_Pakettikauppa_Shipment {
 
     try {
       $this->wc_pakettikauppa_client->createTrackingCode( $shipment );
-      $tracking_code = $shipment->getTrackingCode()->__toString();
     } catch ( Exception $e ) {
       /* translators: %s: Error message */
       throw new Exception( wp_sprintf( __( 'WooCommerce Pakettikauppa: tracking code creation failed: %s', 'wc-pakettikauppa' ), $e->getMessage() ) );
     }
 
-    return $tracking_code;
-
+    return $this->wc_pakettikauppa_client->getResponse();
   }
 
   /**

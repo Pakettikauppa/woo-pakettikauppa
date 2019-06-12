@@ -60,6 +60,13 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 
+= 2.0.14 =
+* New fetaure: show label code (Helpostikoodi / aktivointikoodi) if it's present
+* Enhancements: Actions from order view are now handled as Ajax -requests
+* Enhancements: Added more data validation to admin functions
+* Bug fix: compatibility issue with action scheduler is now fixed
+* Fix: Mysql support for automatic Travis tests
+
 = 2.0.13 =
 * New feature: Add selected pickup point information to the confirmation email
 * Enhancements: Added more data validation to admin functions
