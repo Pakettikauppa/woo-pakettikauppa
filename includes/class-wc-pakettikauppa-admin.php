@@ -437,6 +437,11 @@ class WC_Pakettikauppa_Admin {
 
     // The tracking code will only be available if the shipment label has been generated
     $tracking_code = get_post_meta( $post->ID, '_wc_pakettikauppa_tracking_code', true );
+    $label_code = get_post_meta( $post->ID, '_wc_pakettikauppa_label_code', true );
+    $tracking_url = get_post_meta ( $post->ID, '_wc_pakettikauppa_tracking_url', true);
+    if ( empty( $tracking_url ) ) {
+      $tracking_url = WC_Pakettikauppa_Shipment::tracking_url( $tracking_code );
+    }
 
     $service_id = $this->get_service_id_from_order($order, false);
 
@@ -448,7 +453,6 @@ class WC_Pakettikauppa_Admin {
     $status          = get_post_meta( $post->ID, '_wc_pakettikauppa_shipment_status', true );
 
     $document_url = admin_url( 'admin-post.php?post=' . $post->ID . '&action=show_pakettikauppa&tracking_code=' . $tracking_code );
-    $tracking_url = WC_Pakettikauppa_Shipment::tracking_url( $tracking_code );
 
     $additional_services = array();
     if ( 'cod' === $order->get_payment_method() ) {
@@ -491,14 +495,12 @@ class WC_Pakettikauppa_Admin {
     <?php if ( ! empty( $tracking_code ) ) : ?>
       <p class="pakettikauppa-shipment">
           <strong>
-              <?php
-              printf(
-                      '%1$s<br>%2$s<br>%3$s',
-                      esc_attr( $this->wc_pakettikauppa_shipment->service_title( $service_id ) ),
-                      esc_attr( $tracking_code ),
-                      esc_attr( WC_Pakettikauppa_Shipment::get_status_text( $status ) )
-              );
-              ?>
+              <?php echo esc_attr( $this->wc_pakettikauppa_shipment->service_title( $service_id ) ); ?><br />
+              <?php echo esc_attr( $tracking_code ); ?><br />
+              <?php echo esc_attr( WC_Pakettikauppa_Shipment::get_status_text( $status ) ); ?><br />
+              <?php if ( ! empty( $label_code ) ) : ?>
+                <?php echo __( 'Label code', 'wc-pakettikauppa' ); ?>: <?php echo $label_code; ?><br />
+              <?php endif; ?>
           </strong>
           <br>
           <a href="<?php echo esc_url( $document_url ); ?>" target="_blank" class="download"><?php esc_attr_e( 'Print document', 'wc-pakettikauppa' ); ?></a>&nbsp;-&nbsp;
@@ -783,7 +785,8 @@ class WC_Pakettikauppa_Admin {
     $additional_services = $this->get_additional_services( $order );
 
     try {
-      $tracking_code = $this->wc_pakettikauppa_shipment->create_shipment( $order, $additional_services );
+      $shipment = $this->wc_pakettikauppa_shipment->create_shipment( $order, $additional_services );
+      $tracking_code = $shipment->{'response.trackingcode'}->__toString();
     } catch ( Exception $e ) {
       $this->add_error( $e->getMessage() );
       /* translators: %s: Error message */
@@ -809,7 +812,15 @@ class WC_Pakettikauppa_Admin {
     update_post_meta( $order->get_id(), '_wc_pakettikauppa_tracking_code', $tracking_code );
 
     $document_url = admin_url( 'admin-post.php?post=' . $order->get_id() . '&action=show_pakettikauppa&tracking_code=' . $tracking_code );
-    $tracking_url = WC_Pakettikauppa_Shipment::tracking_url( $tracking_code );
+    $tracking_url = (string) $shipment->{'response.trackingcode'}['tracking_url'];
+
+    update_post_meta( $order->get_id(), '_wc_pakettikauppa_tracking_url', $tracking_url );
+
+    $label_code = (string) $shipment->{'response.trackingcode'}['labelcode'];
+
+    if ( ! empty( $label_code ) ) {
+      update_post_meta( $order->get_id(), '_wc_pakettikauppa_label_code', $label_code );
+    }
 
     // Add order note
     $dl_link       = sprintf( '<a href="%1$s" target="_blank">%2$s</a>', $document_url, esc_attr__( 'Print document', 'wc-pakettikauppa' ) );
