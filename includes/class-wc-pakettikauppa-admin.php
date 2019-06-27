@@ -744,9 +744,11 @@ class WC_Pakettikauppa_Admin {
 
         $services = $pickup_points[ $instance_id ][ $service_id ]['additional_services'];
 
-        foreach ( $services as $service_code => $service ) {
-          if ( $service === 'yes' ) {
-            $additional_services[] = $service_code;
+        if ( ! empty ( $services ) ) {
+          foreach ( $services as $service_code => $service ) {
+            if ( $service === 'yes' ) {
+              $additional_services[] = $service_code;
+            }
           }
         }
       }
