@@ -37,7 +37,7 @@ Register through [www.pakettikauppa.fi](https://www.pakettikauppa.fi/). Process 
 
 == Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins/woocommerce-pakettikauppa` directory, or install the plugin through the WordPress plugins screen directly.
+1. Install the plugin through the WordPress plugins screen directly or upload the plugin files to the `/wp-content/plugins/woocommerce-pakettikauppa` directory.
 1. Activate the plugin through the 'Plugins' screen in WordPress
 1. Use the Settings->WooCommerce Pakettikauppa screen to configure the plugin
 1. The plugin requires WooCommerce to be installed, with shipping zones configured and this plugin activated and settings set.
@@ -60,8 +60,14 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 
+= 2.0.15 =
+* New feature: Alternative show pickup points as radio button list
+* New feature: New UI for creating custom shipping label
+* New feature: Enable multi parcel shipments
+* Enhancements: Added more data validation to admin functions, COD settings to own section in settings, admin CSS fix
+
 = 2.0.14 =
-* New fetaure: show label code (Helpostikoodi / aktivointikoodi) if it's present
+* New feature: show label code (Helpostikoodi / aktivointikoodi) if it's present
 * Enhancements: Actions from order view are now handled as Ajax -requests
 * Enhancements: Added more data validation to admin functions
 * Bug fix: compatibility issue with action scheduler is now fixed

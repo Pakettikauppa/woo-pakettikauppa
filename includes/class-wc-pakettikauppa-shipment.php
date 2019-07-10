@@ -247,8 +247,6 @@ class WC_Pakettikauppa_Shipment {
     }
     $shipment->addParcel( $parcel );
 
-    $pickup_point_id = $order->get_meta( '_pakettikauppa_pickup_point_id' );
-
     if ( 'cod' === $order->get_payment_method() ) {
       $additional_service = new AdditionalService();
       $additional_service->setServiceCode( 3101 );
@@ -261,9 +259,16 @@ class WC_Pakettikauppa_Shipment {
       $shipment->addAdditionalService( $additional_service );
     }
 
-    foreach ( $additional_services as $additional_service_code ) {
+    error_log(var_export($additional_services, true));
+    foreach ( $additional_services as $_additional_service ) {
       $additional_service = new AdditionalService();
-      $additional_service->setServiceCode( $additional_service_code );
+      $additional_service->setServiceCode( key($_additional_service) );
+
+      foreach ( $_additional_service as $_additional_service_config ) {
+        foreach ( $_additional_service_config as $_name => $_value ) {
+          $additional_service->addSpecifier( $_name, $_value );
+        }
+      }
 
       $shipment->addAdditionalService( $additional_service );
     }
@@ -308,10 +313,6 @@ class WC_Pakettikauppa_Shipment {
 
         $parcel->addContentLine( $content_line );
       }
-    }
-
-    if ( ! empty( $pickup_point_id ) ) {
-      $shipment->setPickupPoint( $pickup_point_id );
     }
 
     try {

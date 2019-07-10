@@ -459,7 +459,9 @@ class WC_Pakettikauppa_Admin {
       $additional_services[] = '3101';
     }
 
-    $additional_services = array_merge($additional_services, $this->get_additional_services( $order ));
+    foreach ( $this->get_additional_services( $order ) as $_additional_service ) {
+      $additional_services[] = key( $_additional_service );
+    }
 
     $additional_service_names = [
       '3101' => 'Postiennakko',
@@ -468,95 +470,121 @@ class WC_Pakettikauppa_Admin {
       '3165' => 'Säilytysajan pidennys',
       '3139' => 'Sähköinen saapumisilmoitus',
       '3174' => 'Suuri',
-      '3101' => 'Postiennakko',
-      '3104' => 'Särkyvä',
-      '3174' => 'Suuri',
-      '3101' => 'Postiennakko',
-      '3104' => 'Särkyvä',
-      '3101' => 'Postiennakko',
-      '3104' => 'Särkyvä',
-      '2106' => 'Noutopiste',
-      '2106' => 'Noutopiste',
       '2106' => 'Noutopiste',
       '3143' => 'LQ Lähetys',
-      '3143' => 'LQ Lähetys',
-      '3143' => 'LQ Lähetys',
-      '3102' => 'Monipaketti lähetys',
-      '3102' => 'Monipaketti lähetys',
-      '3102' => 'Monipaketti lähetys',
-      '3102' => 'Monipaketti lähetys',
-      '2106' => 'Noutopiste',
       '3102' => 'Monipaketti lähetys',
       '9902' => 'Asiointikoodi',
     ];
 
     ?>
-<div>
-    <?php if ( ! empty( $tracking_code ) ) : ?>
-      <p class="pakettikauppa-shipment">
+    <div>
+      <?php if ( ! empty( $tracking_code ) ) : ?>
+        <p class="pakettikauppa-shipment">
           <strong>
-              <?php echo esc_attr( $this->wc_pakettikauppa_shipment->service_title( $service_id ) ); ?><br />
-              <?php echo esc_attr( $tracking_code ); ?><br />
-              <?php echo esc_attr( WC_Pakettikauppa_Shipment::get_status_text( $status ) ); ?><br />
-              <?php if ( ! empty( $label_code ) ) : ?>
-                <?php echo __( 'Label code', 'wc-pakettikauppa' ); ?>: <?php echo $label_code; ?><br />
-              <?php endif; ?>
+            <?php echo esc_attr( $this->wc_pakettikauppa_shipment->service_title( $service_id ) ); ?><br />
+            <?php echo esc_attr( $tracking_code ); ?><br />
+            <?php echo esc_attr( WC_Pakettikauppa_Shipment::get_status_text( $status ) ); ?><br />
+            <?php if ( ! empty( $label_code ) ) : ?>
+              <?php echo __( 'Label code', 'wc-pakettikauppa' ); ?>: <?php echo $label_code; ?><br />
+            <?php endif; ?>
           </strong>
           <br>
           <a href="<?php echo esc_url( $document_url ); ?>" target="_blank" class="download"><?php esc_attr_e( 'Print document', 'wc-pakettikauppa' ); ?></a>&nbsp;-&nbsp;
           <?php if ( ! empty( $tracking_url ) ) : ?>
-              <a href="<?php echo esc_url( $tracking_url ); ?>" target="_blank" class="tracking"><?php esc_attr_e( 'Track', 'wc-pakettikauppa' ); ?></a>
+            <a href="<?php echo esc_url( $tracking_url ); ?>" target="_blank" class="tracking"><?php esc_attr_e( 'Track', 'wc-pakettikauppa' ); ?></a>
           <?php endif; ?>
-      </p>
-    <?php endif; ?>
-    <?php if ( empty( $tracking_code ) ) : ?>
-      <div class="pakettikauppa-services">
-          <fieldset class="pakettikauppa-metabox-fieldset">
-            <h4><?php echo esc_html__( 'Service', 'wc-pakettikauppa' ); ?></h4>
-                <label for="pakettikeuppa-service">
-                    <select name="wc_pakettikauppa_service_id" id="pakettikauppa-service" class="pakettikauppa_metabox_values">
-                        <option value="__NULL__"><?php esc_html_e( 'No shipping', 'wc-pakettikauppa'); ?></option>
-                    <?php foreach ( $this->wc_pakettikauppa_shipment->services() as $_service_code => $_service_title ) : ?>
-                        <option
-                            value="<?php echo esc_attr( $_service_code ); ?>"
-                            <?php if ( strval ( $_service_code ) === $service_id ) : ?>
-                                selected="selected"
-                            <?php endif; ?>>
-                            <?php echo esc_html ( $_service_title ); ?>
-                        </option>
-                    <?php endforeach; ?>
-                    </select>
-                </label>
-              <?php if ( ! empty ( $additional_services ) ) : ?>
-              <h4><?php echo esc_attr__('Additional services', 'wc-pakettikauppa' ); ?></h4>
-                  <ol style="list-style: circle;">
-                    <?php foreach ( $additional_services as $i => $additional_service ) : ?>
-                        <li>
-                        <?php echo $additional_service_names[ $additional_service ]; ?>
-                        </li>
-                    <?php endforeach; ?>
-                  </ol>
-              <?php endif; ?>
-                <br>
-                <?php if ( $pickup_point_id ) : ?>
-                    <input type="hidden" name="wc_pakettikauppa_pickup_points" value="1" class="pakettikauppa_metabox_values">
-                    <input type="hidden" name="wc_pakettikauppa_pickup_point_id" value="<?php echo $pickup_point_id; ?>" class="pakettikauppa_metabox_values">
+        </p>
+      <?php endif; ?>
+      <?php if ( empty( $tracking_code ) ) : ?>
+        <div class="pakettikauppa-services">
+          <fieldset class="pakettikauppa-metabox-fieldset" id="wc_pakettikauppa_shipping_method">
+            <h4><?php echo esc_html( $this->wc_pakettikauppa_shipment->service_title( $service_id ) ); ?></h4>
+            <?php if ( ! empty ( $additional_services ) ) : ?>
+              <h4><?php echo esc_attr__('Additional services', 'wc-pakettikauppa' ); ?>:</h4>
+              <ol style="list-style: circle;">
+                <?php foreach ( $additional_services as $i => $additional_service ) : ?>
+                  <?php if ( $additional_service != '3102' ) : ?>
+                    <li>
+                      <?php echo $additional_service_names[ $additional_service ]; ?>
+                    </li>
+                  <?php endif; ?>
+                <?php endforeach; ?>
+                <?php if ( in_array( '3102', $additional_services ) ) : ?>
+                  <li>
+                    <?php echo esc_html__( 'Parcel count', 'wc-pakettikauppa' ); ?>:
+                    <input type="number" name="wc_pakettikauppa_mps_count" value="1" style="width: 3em;" min="1" step="1" max="15">
+                  </li>
                 <?php endif; ?>
-            </fieldset>
+              </ol>
+            <?php endif; ?>
+
+            <?php if ( $pickup_point_id ) : ?>
+              <h4>
+                <?php echo esc_html__( 'Requested pickup point', 'wc-pakettikauppa' ); ?>
+              </h4>
+              <p>
+                <?php echo esc_html( $order->get_meta( '_pakettikauppa_pickup_point' ) ); ?>
+              </p>
+            <?php endif; ?>
+          </fieldset>
+
+          <fieldset class="pakettikauppa-metabox-fieldset" id="wc_pakettikauppa_custom_shipping_method" style="display: none;">
+            <select name="wc_pakettikauppa_service_id" id="pakettikauppa-service" class="pakettikauppa_metabox_values" onchange="pakettikauppa_change_shipping_method();">
+              <option value="__NULL__"><?php esc_html_e( 'No shipping', 'wc-pakettikauppa'); ?></option>
+              <?php foreach ( $this->wc_pakettikauppa_shipment->services() as $_service_code => $_service_title ) : ?>
+                <option
+                  <?php if ( strval ( $_service_code ) === $service_id ) : ?>
+                        selected="selected"
+                  <?php endif; ?>
+                        value="<?php echo esc_attr( $_service_code ); ?>">
+                  <?php echo esc_html ( $_service_title ); ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+
+            <?php $all_additional_services = $this->wc_pakettikauppa_shipment->get_additional_services(); ?>
+            <?php foreach ( $all_additional_services as $method_code => $_additional_services ) : ?>
+              <ol style="list-style: circle; display: none;" class="pk-admin-additional-services" id="pk-admin-additional-services-<?php echo $method_code; ?>">
+                <?php $show_3102 = false; ?>
+                <?php foreach ( $_additional_services as $additional_service ) : ?>
+                  <?php if ( empty( $additional_service->specifiers ) ) : ?>
+                    <li>
+                      <input
+                              type="checkbox"
+                              class="pakettikauppa_metabox_array_values"
+                              name="wc_pakettikauppa_additional_services"
+                              value="<?php echo $additional_service->service_code; ?>"> <?php echo $additional_service->name; ?>
+                    </li>
+                  <?php elseif ( $additional_service->service_code === '3102' ) : ?>
+                    <?php $show_3102 = true; ?>
+                  <?php endif; ?>
+                <?php endforeach; ?>
+                <?php if ( $show_3102 ) : ?>
+                  <li>
+                    <?php echo esc_html__( 'Parcel count', 'wc-pakettikauppa' ); ?>:
+                    <input class="pakettikauppa_metabox_values" type="number" name="wc_pakettikauppa_mps_count" value="1" style="width: 3em;" min="1" step="1" max="15">
+                  </li>
+                <?php endif; ?>
+              </ol>
+            <?php endforeach; ?>
+          </fieldset>
         </div>
         <p>
-            <button type="button" value="create" name="wc_pakettikauppa[create]" class="button pakettikauppa_meta_box" onclick="pakettikauppa_meta_box_submit(this);">
-              <?php echo __( 'Create', 'wc-pakettikauppa' ); ?>
-            </button>
+          <button type="button" value="create" name="wc_pakettikauppa[create]" class="button pakettikauppa_meta_box" onclick="pakettikauppa_meta_box_submit(this);">
+            <?php echo __( 'Create', 'wc-pakettikauppa' ); ?>
+          </button>
+          <button type="button" value="change" class="button pakettikauppa_meta_box" onclick="pakettikauppa_change_method(this);">
+            <?php echo __( 'Change shipping...', 'wc-pakettikauppa' ); ?>
+          </button>
         </p>
-    <?php else : ?>
+      <?php else : ?>
         <p>
-            <button type="button" value="get_status" name="wc_pakettikauppa[get_status]" class="button pakettikauppa_meta_box" onclick="pakettikauppa_meta_box_submit(this);"><?php echo __( 'Update Status', 'wc-pakettikauppa' ); ?></button>
-            <button type="button" value="delete_shipping_label" name="wc_pakettikauppa[delete_shipping_label]" onclick="pakettikauppa_meta_box_submit(this);" class="button pakettikauppa_meta_box wc-pakettikauppa-delete-button"><?php echo __( 'Delete Shipping Label', 'wc-pakettikauppa' ); ?></button>
+          <button type="button" value="get_status" name="wc_pakettikauppa[get_status]" class="button pakettikauppa_meta_box" onclick="pakettikauppa_meta_box_submit(this);"><?php echo __( 'Update Status', 'wc-pakettikauppa' ); ?></button>
+          <button type="button" value="delete_shipping_label" name="wc_pakettikauppa[delete_shipping_label]" onclick="pakettikauppa_meta_box_submit(this);" class="button pakettikauppa_meta_box wc-pakettikauppa-delete-button"><?php echo __( 'Delete Shipping Label', 'wc-pakettikauppa' ); ?></button>
         </p>
-    <?php endif; ?>
-    <input type="hidden" name="pakettikauppa_nonce" value="<?php echo wp_create_nonce( 'pakettikauppa-meta-box' ); ?>" id="pakettikauppa_metabox_nonce" />
-</div>
+      <?php endif; ?>
+      <input type="hidden" name="pakettikauppa_nonce" value="<?php echo wp_create_nonce( 'pakettikauppa-meta-box' ); ?>" id="pakettikauppa_metabox_nonce" />
+    </div>
     <?php
   }
 
@@ -602,15 +630,30 @@ class WC_Pakettikauppa_Admin {
           }
         }
 
-        $pickup_point_id = $order->get_meta( '_pakettikauppa_pickup_point_id' );
+        if ( empty ( $_REQUEST['custom_method'] ) ) {
+          $pickup_point_id = $order->get_meta( '_pakettikauppa_pickup_point_id' );
 
-        if ( empty( $pickup_point_id ) && ! empty( $_REQUEST['wc_pakettikauppa_pickup_point_id'] ) ) {
-          $pickup_point_id = $_REQUEST['wc_pakettikauppa_pickup_point_id'];
+          if ( empty( $pickup_point_id ) && ! empty( $_REQUEST['wc_pakettikauppa_pickup_point_id'] ) ) {
+            $pickup_point_id = $_REQUEST['wc_pakettikauppa_pickup_point_id'];
 
-          update_post_meta( $order->get_id(), '_pakettikauppa_pickup_point_id', $pickup_point_id );
+            update_post_meta( $order->get_id(), '_pakettikauppa_pickup_point_id', $pickup_point_id );
+          }
+        } else {
+          $additional_services = array();
+
+          foreach ( $_REQUEST['additional_services'] as $_additional_service_code ) {
+            $additional_services[] = array( $_additional_service_code => null );
+
+          }
+
+          if ( ! empty ( $_REQUEST['wc_pakettikauppa_mps_count'] ) ) {
+            $additional_services[] = array( '3102' => array( 'count' => $_REQUEST['wc_pakettikauppa_mps_count'] ) );
+          }
         }
 
-        return $this->create_shipment( $order );
+        error_log(var_export($_REQUEST, true));
+
+        return $this->create_shipment( $order, $additional_services );
       case 'get_status':
         $this->get_status( $order );
         break;
@@ -747,7 +790,7 @@ class WC_Pakettikauppa_Admin {
         if ( ! empty ( $services ) ) {
           foreach ( $services as $service_code => $service ) {
             if ( $service === 'yes' ) {
-              $additional_services[] = $service_code;
+              $additional_services[] = array( $service_code => null );
             }
           }
         }
@@ -759,8 +802,9 @@ class WC_Pakettikauppa_Admin {
 
   /**
    * @param WC_Order $order
+   * @param array $additional_services
    */
-  private function create_shipment( WC_Order $order ) {
+  private function create_shipment( WC_Order $order, $additional_services = null ) {
     $service_id = $this->get_service_id_from_order($order);
 
     if ( ! empty( $service_id ) ) {
@@ -784,7 +828,21 @@ class WC_Pakettikauppa_Admin {
       return null;
     }
 
-    $additional_services = $this->get_additional_services( $order );
+    if ( $additional_services === null ) {
+      $additional_services = $this->get_additional_services( $order );
+
+      $pickup_point_id = $order->get_meta( '_pakettikauppa_pickup_point_id' );
+
+      if ( ! empty( $pickup_point_id ) ) {
+        $additional_services[] = array(
+          '2106' => array(
+            'pickup_point_id' => $pickup_point_id,
+          ),
+        );
+      }
+    }
+
+    error_log(var_export($additional_services, true));
 
     try {
       $shipment = $this->wc_pakettikauppa_shipment->create_shipment( $order, $additional_services );

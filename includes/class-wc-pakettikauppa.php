@@ -120,6 +120,9 @@ class WC_Pakettikauppa {
 
     $shipping_method_providers = array();
     $shipment_meta_data = $shipping_rate->get_meta_data();
+
+    $settings = $this->wc_pakettikauppa_shipment->get_settings();
+
     if ( isset($shipment_meta_data['service_code'] ) ) {
       $shipping_method_id = $shipment_meta_data['service_code'];
 
@@ -127,8 +130,6 @@ class WC_Pakettikauppa {
         $shipping_method_providers[] = $this->wc_pakettikauppa_shipment->service_provider( $shipping_method_id );
       }
     } else {
-      $settings = $this->wc_pakettikauppa_shipment->get_settings();
-
       $pickup_points = json_decode($settings['pickup_points'], true);
 
       $temp_array = explode (':', $chosen_shipping_id ); // for php 5.6 compatibility
@@ -206,11 +207,19 @@ class WC_Pakettikauppa {
           '<span class="shipping_postcode_for_pickup">' . esc_attr( $shipping_postcode ) . '</span>'
         );
 
+        $list_type = 'select';
+
+        if ( $settings['pickup_point_list_type'] === 'list' ) {
+          $list_type = 'radio';
+
+          array_splice( $options_array, 0, 1 );
+        }
+
         woocommerce_form_field(
           'pakettikauppa_pickup_point',
           array(
             'clear'             => true,
-            'type'              => 'select',
+            'type'              => $list_type,
             'custom_attributes' => array( 'style' => 'word-wrap: normal;' ),
             'options'           => $options_array,
           ),
