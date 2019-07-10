@@ -651,8 +651,6 @@ class WC_Pakettikauppa_Admin {
           }
         }
 
-        error_log(var_export($_REQUEST, true));
-
         return $this->create_shipment( $order, $additional_services );
       case 'get_status':
         $this->get_status( $order );
@@ -841,8 +839,6 @@ class WC_Pakettikauppa_Admin {
         );
       }
     }
-
-    error_log(var_export($additional_services, true));
 
     try {
       $shipment = $this->wc_pakettikauppa_shipment->create_shipment( $order, $additional_services );

@@ -122,7 +122,6 @@ function wc_pakettikauppa_shipping_method_init() {
                     document.getElementById(methodId + '-' + strUser + '-services').style.display = "none";
                 } else {
                     document.getElementById(methodId + '-pickuppoints').style.display = "none";
-                    console.log(strUser + '-services');
                     document.getElementById(methodId + '-' + strUser + '-services').style.display = "block";
                 }
             }

@@ -259,7 +259,6 @@ class WC_Pakettikauppa_Shipment {
       $shipment->addAdditionalService( $additional_service );
     }
 
-    error_log(var_export($additional_services, true));
     foreach ( $additional_services as $_additional_service ) {
       $additional_service = new AdditionalService();
       $additional_service->setServiceCode( key($_additional_service) );
