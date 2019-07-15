@@ -37,7 +37,7 @@ Register through [www.pakettikauppa.fi](https://www.pakettikauppa.fi/). Process 
 
 == Installation ==
 
-1. Install the plugin through the WordPress plugins screen directly or upload the plugin files to the `/wp-content/plugins/woocommerce-pakettikauppa` directory.
+1. Install the plugin through the WordPress plugins screen directly or upload the plugin files to the `/wp-content/plugins/woo-pakettikauppa` directory.
 1. Activate the plugin through the 'Plugins' screen in WordPress
 1. Use the Settings->WooCommerce Pakettikauppa screen to configure the plugin
 1. The plugin requires WooCommerce to be installed, with shipping zones configured and this plugin activated and settings set.
