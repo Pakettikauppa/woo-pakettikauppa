@@ -1,6 +1,6 @@
 /* admin js */
 jQuery( function ( $ ) {
-  window.pakettikauppa_meta_box_submit = function (obj) {
+  window.pakettikauppa_meta_box_submit = function(obj) {
     $('#wc-pakettikauppa').block({
       message: null,
       overlayCSS: {
@@ -45,13 +45,13 @@ jQuery( function ( $ ) {
 
     data[$(obj).attr('name')] = $(obj).val();
 
-    $.post(woocommerce_admin_meta_boxes.ajax_url, data, function (response) {
+    $.post(woocommerce_admin_meta_boxes.ajax_url, data, function(response) {
       $("#wc-pakettikauppa .inside").html(response);
       $('#wc-pakettikauppa').unblock();
     });
   };
 
-  window.pakettikauppa_change_method = function (obj) {
+  window.pakettikauppa_change_method = function(obj) {
     if ($("#wc_pakettikauppa_shipping_method").is(':visible')) {
       $("#wc_pakettikauppa_shipping_method").hide();
       $("#wc_pakettikauppa_custom_shipping_method").show();
@@ -63,7 +63,7 @@ jQuery( function ( $ ) {
     pakettikauppa_change_shipping_method();
   };
 
-  window.pakettikauppa_change_shipping_method = function () {
+  window.pakettikauppa_change_shipping_method = function() {
     var selectedService = $('#pakettikauppa-service').val();
     $(".pk-admin-additional-services").each(function (i, obj) {
       $(this).hide();

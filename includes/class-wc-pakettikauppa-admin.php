@@ -257,7 +257,7 @@ class WC_Pakettikauppa_Admin {
       $order = new WC_Order( $order_id );
       $tracking_code = get_post_meta( $order->get_id(), '_wc_pakettikauppa_tracking_code', true );
 
-      if ( empty ( $tracking_code ) ) {
+      if ( empty( $tracking_code ) ) {
         $tracking_code = $this->create_shipment( $order );
       }
 
@@ -284,10 +284,10 @@ class WC_Pakettikauppa_Admin {
 
     $settings = $this->wc_pakettikauppa_shipment->get_settings();
 
-    if ( ! empty ( $settings['pickup_points'] ) ) {
+    if ( ! empty( $settings['pickup_points'] ) ) {
       $pickup_points = json_decode( $settings['pickup_points'], true );
 
-      if ( ! empty ( $pickup_points ) ) {
+      if ( ! empty( $pickup_points ) ) {
         foreach ( $pickup_points as $shipping_method ) {
           foreach ( $shipping_method as $provider ) {
             if ( isset($provider['active']) && $provider['active'] === 'yes' ) {
@@ -456,7 +456,7 @@ class WC_Pakettikauppa_Admin {
     $service_id = get_post_meta ( $post->ID, '_wc_pakettikauppa_custom_service_id', true);
     $default_service_id = $this->get_service_id_from_order($order, false);
 
-    if ( empty ( $service_id ) ) {
+    if ( empty( $service_id ) ) {
       $service_id = $default_service_id;
     }
 
@@ -510,7 +510,7 @@ class WC_Pakettikauppa_Admin {
         <div class="pakettikauppa-services">
           <fieldset class="pakettikauppa-metabox-fieldset" id="wc_pakettikauppa_shipping_method">
             <h4><?php echo esc_html( $this->wc_pakettikauppa_shipment->service_title( $default_service_id ) ); ?></h4>
-            <?php if ( ! empty ( $additional_services ) ) : ?>
+            <?php if ( ! empty( $additional_services ) ) : ?>
               <h4><?php echo esc_attr__('Additional services', 'wc-pakettikauppa' ); ?>:</h4>
               <ol style="list-style: circle;">
                 <?php foreach ( $additional_services as $i => $additional_service ) : ?>
@@ -637,7 +637,7 @@ class WC_Pakettikauppa_Admin {
           $service_id = $_REQUEST['wc_pakettikauppa_service_id'];
         }
 
-        if ( empty ( $_REQUEST['custom_method'] ) ) {
+        if ( empty( $_REQUEST['custom_method'] ) ) {
           $pickup_point_id = $order->get_meta( '_pakettikauppa_pickup_point_id' );
 
           if ( empty( $pickup_point_id ) && ! empty( $_REQUEST['wc_pakettikauppa_pickup_point_id'] ) ) {
@@ -653,7 +653,7 @@ class WC_Pakettikauppa_Admin {
 
           }
 
-          if ( ! empty ( $_REQUEST['wc_pakettikauppa_mps_count'] ) ) {
+          if ( ! empty( $_REQUEST['wc_pakettikauppa_mps_count'] ) ) {
             $additional_services[] = array( '3102' => array( 'count' => $_REQUEST['wc_pakettikauppa_mps_count'] ) );
           }
         }
@@ -723,12 +723,12 @@ class WC_Pakettikauppa_Admin {
 
       $shipping_method = array_pop( $shipping_methods );
 
-      if ( ! empty ( $shipping_method ) ) {
+      if ( ! empty( $shipping_method ) ) {
         $service_id = $shipping_method->get_meta( 'service_code' );
       }
     }
 
-    if ( empty ( $service_id ) ) {
+    if ( empty( $service_id ) ) {
       $service_id = get_post_meta( $order->get_id(), '_pakettikauppa_pickup_point_provider_id', true );
     }
 
@@ -737,7 +737,7 @@ class WC_Pakettikauppa_Admin {
 
       $chosen_shipping_method = array_pop( $shipping_methods );
 
-      if ( ! empty ( $chosen_shipping_method ) ) {
+      if ( ! empty( $chosen_shipping_method ) ) {
         $method_id = $chosen_shipping_method->get_method_id();
 
         if ( $method_id === 'local_pickup' ) {
@@ -776,7 +776,7 @@ class WC_Pakettikauppa_Admin {
 
     $chosen_shipping_method = array_pop( $shipping_methods );
 
-    if ( ! empty ( $chosen_shipping_method ) ) {
+    if ( ! empty( $chosen_shipping_method ) ) {
       $method_id = $chosen_shipping_method->get_method_id();
 
       if ( $method_id === 'local_pickup' ) {
@@ -792,7 +792,7 @@ class WC_Pakettikauppa_Admin {
 
         $services = $pickup_points[ $instance_id ][ $service_id ]['additional_services'];
 
-        if ( ! empty ( $services ) ) {
+        if ( ! empty( $services ) ) {
           foreach ( $services as $service_code => $service ) {
             if ( $service === 'yes' ) {
               $additional_services[] = array( $service_code => null );
