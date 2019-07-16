@@ -16,7 +16,7 @@ class Test_WC_Pakettikauppa_Admin extends WP_UnitTestCase {
    */
   public function test_admin_init() {
     $pakettikauppa_admin = new WC_Pakettikauppa_Admin();
-    $this->assertEquals( 'wc_pakettikauppa_admin', $pakettikauppa_admin->id );
+    $this->assertEquals('wc_pakettikauppa_admin', $pakettikauppa_admin->id);
     $pakettikauppa_admin->load();
 
     return $pakettikauppa_admin;
@@ -26,7 +26,7 @@ class Test_WC_Pakettikauppa_Admin extends WP_UnitTestCase {
    * @depends test_admin_init
    */
   public function test_admin_errors_empty( $pakettikauppa_admin ) {
-    $this->assertEmpty( $pakettikauppa_admin->get_errors() );
+    $this->assertEmpty($pakettikauppa_admin->get_errors());
     return $pakettikauppa_admin;
   }
 
@@ -35,8 +35,8 @@ class Test_WC_Pakettikauppa_Admin extends WP_UnitTestCase {
    */
   public function test_admin_add_error( $pakettikauppa_admin ) {
     $error = 'This is an admin testing error.';
-    $pakettikauppa_admin->add_error( $error );
-    $this->assertEquals( array( $error ), $pakettikauppa_admin->get_errors() );
+    $pakettikauppa_admin->add_error($error);
+    $this->assertEquals(array( $error ), $pakettikauppa_admin->get_errors());
     return $pakettikauppa_admin;
   }
 
@@ -45,7 +45,7 @@ class Test_WC_Pakettikauppa_Admin extends WP_UnitTestCase {
    */
   public function test_admin_clear_errors( $pakettikauppa_admin ) {
     $pakettikauppa_admin->clear_errors();
-    $this->assertEquals( array(), $pakettikauppa_admin->get_errors() );
+    $this->assertEquals(array(), $pakettikauppa_admin->get_errors());
   }
 
 }
