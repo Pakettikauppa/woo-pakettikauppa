@@ -10,7 +10,7 @@
  * Domain Path: /languages/
  * License: GPL v3 or later
  *
- * WC requires at least: 3.0
+ * WC requires at least: 3.4
  * WC tested up to: 3.6.5
  *
  * Copyright: © 2017 Seravo Oy
