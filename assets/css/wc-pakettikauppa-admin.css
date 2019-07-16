@@ -38,3 +38,7 @@ p.pakettikauppa-shipment {
 .widefat .column-wc_actions a.pakettikauppa_create_shipping_label::after {
   content: '\f491';
 }
+
+select.pakettikauppa_metabox_values {
+  width: 100%;
+}

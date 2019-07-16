@@ -122,7 +122,6 @@ function wc_pakettikauppa_shipping_method_init() {
                     document.getElementById(methodId + '-' + strUser + '-services').style.display = "none";
                 } else {
                     document.getElementById(methodId + '-pickuppoints').style.display = "none";
-                    console.log(strUser + '-services');
                     document.getElementById(methodId + '-' + strUser + '-services').style.display = "block";
                 }
             }
@@ -176,7 +175,7 @@ function wc_pakettikauppa_shipping_method_init() {
                                       <p>
                                           <input type="checkbox"
                                                  name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][' . $method_code . '][active]'; ?>"
-                                                 value="yes" <?php echo ( ! empty ( $values[ $method_id ][ $method_code ]['active'] ) && $values[ $method_id ][ $method_code ]['active'] === 'yes' ) ? 'checked' : ''; ?>>
+                                                 value="yes" <?php echo ( ! empty( $values[ $method_id ][ $method_code ]['active'] ) && $values[ $method_id ][ $method_code ]['active'] === 'yes' ) ? 'checked' : ''; ?>>
                                         <?php echo $method_name; ?>
                                       </p>
                                   <?php endforeach; ?>
@@ -186,18 +185,18 @@ function wc_pakettikauppa_shipping_method_init() {
                                     <?php foreach ( $all_additional_services as $method_code => $additional_services ) : ?>
                                     <div class="pk-services-<?php echo $method_id; ?>" style='display: none;' id="<?php echo $method_id; ?>-<?php echo $method_code; ?>-services">
                                       <?php foreach ( $additional_services as $additional_service ) : ?>
-                                        <?php if ( empty( $additional_service->specifiers ) ) : ?>
+                                        <?php if ( empty( $additional_service->specifiers ) || $additional_service->service_code === '3102' ) : ?>
                                         <input type="hidden"
                                                name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][' . esc_attr( $method_code ) . '][additional_services][' . $additional_service->service_code . ']'; ?>"
                                                value="no">
                                         <p>
                                             <input type="checkbox"
                                                    name="<?php echo esc_html( $field_key ) . '[' . esc_attr( $method_id ) . '][' . esc_attr( $method_code ) . '][additional_services][' . $additional_service->service_code . ']'; ?>"
-                                                   value="yes" <?php echo ( ! empty ( $values[ $method_id ][ $method_code ]['additional_services'][ $additional_service->service_code ] ) && $values[ $method_id ][ $method_code ]['additional_services'][ $additional_service->service_code ] ) === 'yes' ? 'checked' : ''; ?>>
+                                                   value="yes" <?php echo ( ! empty( $values[ $method_id ][ $method_code ]['additional_services'][ $additional_service->service_code ] ) && $values[ $method_id ][ $method_code ]['additional_services'][ $additional_service->service_code ] === 'yes' ) ? 'checked' : ''; ?>>
                                           <?php echo $additional_service->name; ?>
                                         </p>
                                         <?php endif; ?>
-                                    <?php endforeach; ?>
+                                      <?php endforeach; ?>
                                     </div>
                                     <?php endforeach; ?>
                                 </td>
@@ -376,7 +375,6 @@ function wc_pakettikauppa_shipping_method_init() {
             'type'  => 'pickuppoints',
           ),
 
-            /* Start new section */
           array(
             'title'       => __( 'Shipping settings', 'wc-pakettikauppa' ),
             'type'        => 'title',
@@ -404,7 +402,15 @@ function wc_pakettikauppa_shipping_method_init() {
             'description' => __( 'Limit the amount of nearest pickup points shown.', 'wc-pakettikauppa' ),
             'desc_tip'    => true,
           ),
-
+          'pickup_point_list_type'     => array(
+            'title'   => __( 'Show pickup points as', 'wc-pakettikauppa' ),
+            'type'    => 'select',
+            'default' => 'menu',
+            'options' => array(
+              'menu'  => __( 'Menu', 'wc-pakettikauppa' ),
+              'list'  => __( 'List', 'wc-pakettikauppa' ),
+            ),
+          ),
           array(
             'title' => __( 'Store owner information', 'wc-pakettikauppa' ),
             'type'  => 'title',
@@ -433,21 +439,22 @@ function wc_pakettikauppa_shipping_method_init() {
             'type'    => 'text',
             'default' => '',
           ),
-
+          'info_code'                  => array(
+            'title'   => __( 'Info-code for shipments', 'wc-pakettikauppa' ),
+            'type'    => 'text',
+            'default' => '',
+          ),
+          array(
+            'title' => __( 'Cash on Delivery (COD) Settings', 'wc-pakettikauppa' ),
+            'type'  => 'title',
+          ),
           'cod_iban'                   => array(
             'title'   => __( 'Bank account number for Cash on Delivery (IBAN)', 'wc-pakettikauppa' ),
             'type'    => 'text',
             'default' => '',
           ),
-
           'cod_bic'                    => array(
             'title'   => __( 'BIC code for Cash on Delivery', 'wc-pakettikauppa' ),
-            'type'    => 'text',
-            'default' => '',
-          ),
-
-          'info_code'                  => array(
-            'title'   => __( 'Info-code for shipments', 'wc-pakettikauppa' ),
             'type'    => 'text',
             'default' => '',
           ),
