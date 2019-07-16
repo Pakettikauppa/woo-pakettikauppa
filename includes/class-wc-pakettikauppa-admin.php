@@ -631,6 +631,8 @@ class WC_Pakettikauppa_Admin {
 
     $command = key( $_POST['wc_pakettikauppa'] );
 
+    $service_id = null;
+
     switch ( $command ) {
       case 'create':
         if ( ! empty( $_REQUEST['wc_pakettikauppa_service_id'] ) ) {
@@ -648,9 +650,10 @@ class WC_Pakettikauppa_Admin {
         } else {
           $additional_services = array();
 
-          foreach ( $_REQUEST['additional_services'] as $_additional_service_code ) {
-            $additional_services[] = array( $_additional_service_code => null );
-
+          if ( ! empty( $_REQUEST['additional_services'] ) ) {
+            foreach ( $_REQUEST['additional_services'] as $_additional_service_code ) {
+              $additional_services[] = array( $_additional_service_code => null );
+            }
           }
 
           if ( ! empty( $_REQUEST['wc_pakettikauppa_mps_count'] ) ) {
