@@ -262,9 +262,11 @@ class WC_Pakettikauppa_Shipment {
       $additional_service = new AdditionalService();
       $additional_service->setServiceCode( key($_additional_service) );
 
-      foreach ( $_additional_service as $_additional_service_config ) {
-        foreach ( $_additional_service_config as $_name => $_value ) {
-          $additional_service->addSpecifier( $_name, $_value );
+      foreach ( $_additional_service as $_additional_service_key => $_additional_service_config ) {
+        if ( ! empty( $_additional_service_config ) ) {
+          foreach ( $_additional_service_config as $_name => $_value ) {
+            $additional_service->addSpecifier( $_name, $_value );
+          }
         }
       }
 

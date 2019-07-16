@@ -60,6 +60,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 
+= 2.0.15.1 =
+* Bug fixes
+
 = 2.0.15 =
 * New feature: Alternative show pickup points as radio button list
 * New feature: New UI for creating custom shipping label
