@@ -1,6 +1,6 @@
 // phpcs:disable PEAR.Functions.FunctionCallSignature
 /* admin js */
-jQuery( function ( $ ) {
+jQuery(function( $ ) {
   window.pakettikauppa_meta_box_submit = function(obj) {
     $('#wc-pakettikauppa').block({
       message: null,
