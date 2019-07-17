@@ -4,7 +4,7 @@
  */
 
 // Prevent direct access to this script
-if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined('ABSPATH') ) {
   exit;
 }
 
@@ -49,49 +49,49 @@ class WC_Pakettikauppa_Shipment {
    * code is unknown.
    */
   public static function get_status_text( $status_code ) {
-    switch ( intval( $status_code ) ) {
+    switch ( intval($status_code) ) {
       case 13:
-        $status = __( 'Item is collected from sender - picked up', 'wc-pakettikauppa' );
+        $status = __('Item is collected from sender - picked up', 'wc-pakettikauppa');
         break;
       case 20:
-        $status = __( 'Exception', 'wc-pakettikauppa' );
+        $status = __('Exception', 'wc-pakettikauppa');
         break;
       case 22:
-        $status = __( 'Item has been handed over to the recipient', 'wc-pakettikauppa' );
+        $status = __('Item has been handed over to the recipient', 'wc-pakettikauppa');
         break;
       case 31:
-        $status = __( 'Item is in transport', 'wc-pakettikauppa' );
+        $status = __('Item is in transport', 'wc-pakettikauppa');
         break;
       case 38:
-        $status = __( 'C.O.D payment is paid to the sender', 'wc-pakettikauppa' );
+        $status = __('C.O.D payment is paid to the sender', 'wc-pakettikauppa');
         break;
       case 45:
-        $status = __( 'Informed consignee of arrival', 'wc-pakettikauppa' );
+        $status = __('Informed consignee of arrival', 'wc-pakettikauppa');
         break;
       case 48:
-        $status = __( 'Item is loaded onto a means of transport', 'wc-pakettikauppa' );
+        $status = __('Item is loaded onto a means of transport', 'wc-pakettikauppa');
         break;
       case 56:
-        $status = __( 'Item not delivered – delivery attempt made', 'wc-pakettikauppa' );
+        $status = __('Item not delivered – delivery attempt made', 'wc-pakettikauppa');
         break;
       case 68:
-        $status = __( 'Pre-information is received from sender', 'wc-pakettikauppa' );
+        $status = __('Pre-information is received from sender', 'wc-pakettikauppa');
         break;
       case 71:
-        $status = __( 'Item is ready for delivery transportation', 'wc-pakettikauppa' );
+        $status = __('Item is ready for delivery transportation', 'wc-pakettikauppa');
         break;
       case 77:
-        $status = __( 'Item is returning to the sender', 'wc-pakettikauppa' );
+        $status = __('Item is returning to the sender', 'wc-pakettikauppa');
         break;
       case 91:
-        $status = __( 'Item is arrived to a post office', 'wc-pakettikauppa' );
+        $status = __('Item is arrived to a post office', 'wc-pakettikauppa');
         break;
       case 99:
-        $status = __( 'Outbound', 'wc-pakettikauppa' );
+        $status = __('Outbound', 'wc-pakettikauppa');
         break;
       default:
         /* translators: %s: Status code */
-        $status = wp_sprintf( __( 'Unknown status: %s', 'wc-pakettikauppa' ), $status_code );
+        $status = wp_sprintf(__('Unknown status: %s', 'wc-pakettikauppa'), $status_code);
         break;
     }
 
@@ -108,7 +108,7 @@ class WC_Pakettikauppa_Shipment {
    */
   public static function tracking_url( $tracking_code ) {
 
-    if ( empty( $tracking_code ) ) {
+    if ( empty($tracking_code) ) {
       return '';
     }
     $tracking_url = 'https://www.pakettikauppa.fi/seuranta/?' . $tracking_code;
@@ -138,10 +138,10 @@ class WC_Pakettikauppa_Shipment {
    */
   public static function validate_order_shipping_receiver( $order ) {
     // Check shipping info first
-    $no_shipping_name     = (bool) empty( $order->get_formatted_shipping_full_name() );
-    $no_shipping_address  = (bool) empty( $order->get_shipping_address_1() ) && empty( $order->get_shipping_address_2() );
-    $no_shipping_postcode = (bool) empty( $order->get_shipping_postcode() );
-    $no_shipping_city     = (bool) empty( $order->get_shipping_city() );
+    $no_shipping_name     = (bool) empty($order->get_formatted_shipping_full_name());
+    $no_shipping_address  = (bool) empty($order->get_shipping_address_1()) && empty($order->get_shipping_address_2());
+    $no_shipping_postcode = (bool) empty($order->get_shipping_postcode());
+    $no_shipping_city     = (bool) empty($order->get_shipping_city());
 
     if ( $no_shipping_name || $no_shipping_address || $no_shipping_postcode || $no_shipping_city ) {
       return false;
@@ -152,7 +152,7 @@ class WC_Pakettikauppa_Shipment {
 
   public function load() {
     // Use option from database directly as WC_Pakettikauppa_Shipping_Method object is not accessible here
-    $settings = get_option( 'woocommerce_pakettikauppa_shipping_method_settings', null );
+    $settings = get_option('woocommerce_pakettikauppa_shipping_method_settings', null);
 
     if ( $settings === false ) {
       throw new Exception(
@@ -165,7 +165,7 @@ class WC_Pakettikauppa_Shipment {
     $account_number = $settings['account_number'];
     $secret_key     = $settings['secret_key'];
     $mode           = $settings['mode'];
-    $is_test_mode   = ( $mode === 'production' ? false : true );
+    $is_test_mode   = ($mode === 'production' ? false : true);
 
     $options_array = array(
       'api_key'   => $account_number,
@@ -173,8 +173,8 @@ class WC_Pakettikauppa_Shipment {
       'test_mode' => $is_test_mode,
     );
 
-    $this->wc_pakettikauppa_client = new Pakettikauppa\Client( $options_array );
-    $this->wc_pakettikauppa_client->setComment( 'From WooCommerce' );
+    $this->wc_pakettikauppa_client = new Pakettikauppa\Client($options_array);
+    $this->wc_pakettikauppa_client->setComment('From WooCommerce');
   }
 
   /**
@@ -185,14 +185,14 @@ class WC_Pakettikauppa_Shipment {
    * @return int The status code of the shipment
    */
   public function get_shipment_status( $post_id ) {
-    $tracking_code = get_post_meta( $post_id, '_wc_pakettikauppa_tracking_code', true );
+    $tracking_code = get_post_meta($post_id, '_wc_pakettikauppa_tracking_code', true);
 
-    if ( ! empty( $tracking_code ) ) {
-      $result = $this->wc_pakettikauppa_client->getShipmentStatus( $tracking_code );
+    if ( ! empty($tracking_code) ) {
+      $result = $this->wc_pakettikauppa_client->getShipmentStatus($tracking_code);
 
-      $data = json_decode( $result );
+      $data = json_decode($result);
 
-      if ( ! empty( $data ) && isset( $data[0] ) ) {
+      if ( ! empty($data) && isset($data[0]) ) {
         return $data[0]->{'status_code'};
       }
 
@@ -211,83 +211,83 @@ class WC_Pakettikauppa_Shipment {
   public function create_shipment( $order, $service_id = null, $additional_services = array() ) {
     $shipment   = new Shipment();
 
-    $shipment->setShippingMethod( $service_id );
+    $shipment->setShippingMethod($service_id);
 
     $sender = new Sender();
-    $sender->setName1( $this->wc_pakettikauppa_settings['sender_name'] );
-    $sender->setAddr1( $this->wc_pakettikauppa_settings['sender_address'] );
-    $sender->setPostcode( $this->wc_pakettikauppa_settings['sender_postal_code'] );
-    $sender->setCity( $this->wc_pakettikauppa_settings['sender_city'] );
-    $sender->setCountry( 'FI' );
-    $shipment->setSender( $sender );
+    $sender->setName1($this->wc_pakettikauppa_settings['sender_name']);
+    $sender->setAddr1($this->wc_pakettikauppa_settings['sender_address']);
+    $sender->setPostcode($this->wc_pakettikauppa_settings['sender_postal_code']);
+    $sender->setCity($this->wc_pakettikauppa_settings['sender_city']);
+    $sender->setCountry('FI');
+    $shipment->setSender($sender);
 
     $receiver = new Receiver();
-    $receiver->setName1( $order->get_formatted_shipping_full_name() );
-    $receiver->setAddr1( $order->get_shipping_address_1() );
-    $receiver->setAddr2( $order->get_shipping_address_2() );
-    $receiver->setPostcode( $order->get_shipping_postcode() );
-    $receiver->setCity( $order->get_shipping_city() );
-    $receiver->setCountry( ( $order->get_shipping_country() === null ? 'FI' : $order->get_shipping_country() ) );
-    $receiver->setEmail( $order->get_billing_email() );
-    $receiver->setPhone( $order->get_billing_phone() );
-    $shipment->setReceiver( $receiver );
+    $receiver->setName1($order->get_formatted_shipping_full_name());
+    $receiver->setAddr1($order->get_shipping_address_1());
+    $receiver->setAddr2($order->get_shipping_address_2());
+    $receiver->setPostcode($order->get_shipping_postcode());
+    $receiver->setCity($order->get_shipping_city());
+    $receiver->setCountry(($order->get_shipping_country() === null ? 'FI' : $order->get_shipping_country()));
+    $receiver->setEmail($order->get_billing_email());
+    $receiver->setPhone($order->get_billing_phone());
+    $shipment->setReceiver($receiver);
 
     $info = new Info();
-    $info->setReference( $order->get_order_number() );
-    $info->setCurrency( get_woocommerce_currency() );
-    $shipment->setShipmentInfo( $info );
+    $info->setReference($order->get_order_number());
+    $info->setCurrency(get_woocommerce_currency());
+    $shipment->setShipmentInfo($info);
 
     $parcel = new Parcel();
-    $parcel->setWeight( self::order_weight( $order ) );
-    $parcel->setVolume( self::order_volume( $order ) );
+    $parcel->setWeight(self::order_weight($order));
+    $parcel->setVolume(self::order_volume($order));
 
-    if ( ! empty( $this->wc_pakettikauppa_settings['info_code'] ) ) {
-      $parcel->setInfocode( $this->wc_pakettikauppa_settings['info_code'] );
+    if ( ! empty($this->wc_pakettikauppa_settings['info_code']) ) {
+      $parcel->setInfocode($this->wc_pakettikauppa_settings['info_code']);
     }
-    $shipment->addParcel( $parcel );
+    $shipment->addParcel($parcel);
 
     if ( 'cod' === $order->get_payment_method() ) {
       $additional_service = new AdditionalService();
-      $additional_service->setServiceCode( 3101 );
+      $additional_service->setServiceCode(3101);
 
-      $additional_service->addSpecifier( 'amount', $order->get_total() );
-      $additional_service->addSpecifier( 'account', $this->wc_pakettikauppa_settings['cod_iban'] );
-      $additional_service->addSpecifier( 'codbic', $this->wc_pakettikauppa_settings['cod_bic'] );
-      $additional_service->addSpecifier( 'reference', $this->calculate_reference( $order->get_id() ) );
+      $additional_service->addSpecifier('amount', $order->get_total());
+      $additional_service->addSpecifier('account', $this->wc_pakettikauppa_settings['cod_iban']);
+      $additional_service->addSpecifier('codbic', $this->wc_pakettikauppa_settings['cod_bic']);
+      $additional_service->addSpecifier('reference', $this->calculate_reference($order->get_id()));
 
-      $shipment->addAdditionalService( $additional_service );
+      $shipment->addAdditionalService($additional_service);
     }
 
     foreach ( $additional_services as $_additional_service ) {
       $additional_service = new AdditionalService();
-      $additional_service->setServiceCode( key($_additional_service) );
+      $additional_service->setServiceCode(key($_additional_service));
 
       foreach ( $_additional_service as $_additional_service_key => $_additional_service_config ) {
-        if ( ! empty( $_additional_service_config ) ) {
+        if ( ! empty($_additional_service_config) ) {
           foreach ( $_additional_service_config as $_name => $_value ) {
-            $additional_service->addSpecifier( $_name, $_value );
+            $additional_service->addSpecifier($_name, $_value);
           }
         }
       }
 
-      $shipment->addAdditionalService( $additional_service );
+      $shipment->addAdditionalService($additional_service);
     }
 
     $items = $order->get_items();
 
     $wcpf = new WC_Product_Factory();
 
-    if ( ! empty( $items ) ) {
+    if ( ! empty($items) ) {
       foreach ( $items as $item ) {
         $item_data = $item->get_data();
 
-        if ( empty( $item_data ) ) {
+        if ( empty($item_data) ) {
           continue;
         }
 
-        $product = $wcpf->get_product( $item_data['product_id'] );
+        $product = $wcpf->get_product($item_data['product_id']);
 
-        if ( empty( $product ) ) {
+        if ( empty($product) ) {
           continue;
         }
 
@@ -295,8 +295,8 @@ class WC_Pakettikauppa_Shipment {
           continue;
         }
 
-        $tariff_code       = $product->get_meta( 'pakettikauppa_tariff_codes', true );
-        $country_of_origin = $product->get_meta( 'pakettikauppa_country_of_origin', true );
+        $tariff_code       = $product->get_meta('pakettikauppa_tariff_codes', true);
+        $country_of_origin = $product->get_meta('pakettikauppa_country_of_origin', true);
 
         $content_line                    = new ContentLine();
         $content_line->currency          = 'EUR';
@@ -305,21 +305,21 @@ class WC_Pakettikauppa_Shipment {
         $content_line->description       = $product->get_name();
         $content_line->quantity          = $item->get_quantity();
 
-        if ( ! empty( $product->get_weight() ) ) {
-          $content_line->netweight = wc_get_weight( $product->get_weight() * $item->get_quantity(), 'g' );
+        if ( ! empty($product->get_weight()) ) {
+          $content_line->netweight = wc_get_weight($product->get_weight() * $item->get_quantity(), 'g');
         }
 
-        $content_line->value = round( $item_data['total'] + $item_data['total_tax'], 2 );
+        $content_line->value = round($item_data['total'] + $item_data['total_tax'], 2);
 
-        $parcel->addContentLine( $content_line );
+        $parcel->addContentLine($content_line);
       }
     }
 
     try {
-      $this->wc_pakettikauppa_client->createTrackingCode( $shipment );
+      $this->wc_pakettikauppa_client->createTrackingCode($shipment);
     } catch ( Exception $e ) {
       /* translators: %s: Error message */
-      throw new Exception( wp_sprintf( __( 'WooCommerce Pakettikauppa: tracking code creation failed: %s', 'wc-pakettikauppa' ), $e->getMessage() ) );
+      throw new Exception(wp_sprintf(__('WooCommerce Pakettikauppa: tracking code creation failed: %s', 'wc-pakettikauppa'), $e->getMessage()));
     }
 
     return $this->wc_pakettikauppa_client->getResponse();
@@ -338,21 +338,21 @@ class WC_Pakettikauppa_Shipment {
     $wcpf = new WC_Product_Factory();
 
     foreach ( $order->get_items() as $item ) {
-      if ( empty( $item['product_id'] ) ) {
+      if ( empty($item['product_id']) ) {
         continue;
       }
 
-      $product = $wcpf->get_product( $item['product_id'] );
+      $product = $wcpf->get_product($item['product_id']);
 
       if ( $product->is_virtual() ) {
         continue;
       }
 
-      if ( ! is_numeric( $product->get_weight() ) ) {
+      if ( ! is_numeric($product->get_weight()) ) {
         continue;
       }
 
-      $weight += wc_get_weight( $product->get_weight() * $item->get_quantity(), 'kg' );
+      $weight += wc_get_weight($product->get_weight() * $item->get_quantity(), 'kg');
     }
 
     return $weight;
@@ -371,24 +371,24 @@ class WC_Pakettikauppa_Shipment {
     $wcpf = new WC_Product_Factory();
 
     foreach ( $order->get_items() as $item ) {
-      if ( empty( $item['product_id'] ) ) {
+      if ( empty($item['product_id']) ) {
         continue;
       }
 
-      $product = $wcpf->get_product( $item['product_id'] );
+      $product = $wcpf->get_product($item['product_id']);
 
       if ( $product->is_virtual() ) {
         continue;
       }
 
-      if ( ! is_numeric( $product->get_width() )
-           || ! is_numeric( $product->get_height() )
-           || ! is_numeric( $product->get_length() ) ) {
+      if ( ! is_numeric($product->get_width())
+           || ! is_numeric($product->get_height())
+           || ! is_numeric($product->get_length()) ) {
         continue;
       }
 
       // Ensure that the volume is in metres
-      $woo_dim_unit = strtolower( get_option( 'woocommerce_dimension_unit' ) );
+      $woo_dim_unit = strtolower(get_option('woocommerce_dimension_unit'));
       switch ( $woo_dim_unit ) {
         case 'mm':
           $dim_multiplier = 0.001;
@@ -403,7 +403,7 @@ class WC_Pakettikauppa_Shipment {
           $dim_multiplier = 1;
       }
       // Calculate total volume
-      $volume += pow( $dim_multiplier, 3 ) * $product->get_width() * $product->get_height() * $product->get_length() * $item['qty'];
+      $volume += pow($dim_multiplier, 3) * $product->get_width() * $product->get_height() * $product->get_length() * $item['qty'];
     }
 
     return $volume;
@@ -421,17 +421,17 @@ class WC_Pakettikauppa_Shipment {
     $weights = array( 7, 3, 1 );
     $sum     = 0;
 
-    $base                 = str_split( strval( ( $id ) ) );
-    $reversed_base        = array_reverse( $base );
-    $reversed_base_length = count( $reversed_base );
+    $base                 = str_split(strval(($id)));
+    $reversed_base        = array_reverse($base);
+    $reversed_base_length = count($reversed_base);
 
     for ( $i = 0; $i < $reversed_base_length; $i ++ ) {
       $sum += $reversed_base[ $i ] * $weights[ $i % 3 ];
     }
 
-    $checksum = ( 10 - $sum % 10 ) % 10;
+    $checksum = (10 - $sum % 10) % 10;
 
-    $reference = implode( '', $base ) . $checksum;
+    $reference = implode('', $base) . $checksum;
 
     return $reference;
   }
@@ -443,7 +443,7 @@ class WC_Pakettikauppa_Shipment {
    * @throws Exception
    */
   public function fetch_shipping_labels( $tracking_codes ) {
-    return $this->wc_pakettikauppa_client->fetchShippingLabels( $tracking_codes );
+    return $this->wc_pakettikauppa_client->fetchShippingLabels($tracking_codes);
   }
 
   /**
@@ -453,7 +453,7 @@ class WC_Pakettikauppa_Shipment {
    * @throws Exception
    */
   public function fetch_shipping_label( $tracking_code ) {
-    return $this->fetch_shipping_labels( array( $tracking_code ) );
+    return $this->fetch_shipping_labels(array( $tracking_code ));
   }
 
   /**
@@ -470,13 +470,13 @@ class WC_Pakettikauppa_Shipment {
   public function get_pickup_points( $postcode, $street_address = null, $country = null, $service_provider = null ) {
     $pickup_point_limit = 5; // Default limit value for pickup point search
 
-    if ( isset( $this->wc_pakettikauppa_settings['pickup_points_search_limit'] ) && ! empty( $this->wc_pakettikauppa_settings['pickup_points_search_limit'] ) ) {
-      $pickup_point_limit = intval( $this->wc_pakettikauppa_settings['pickup_points_search_limit'] );
+    if ( isset($this->wc_pakettikauppa_settings['pickup_points_search_limit']) && ! empty($this->wc_pakettikauppa_settings['pickup_points_search_limit']) ) {
+      $pickup_point_limit = intval($this->wc_pakettikauppa_settings['pickup_points_search_limit']);
     }
 
-    $pickup_point_data = $this->wc_pakettikauppa_client->searchPickupPoints( trim( $postcode ), trim( $street_address ), trim( $country ), $service_provider, $pickup_point_limit );
+    $pickup_point_data = $this->wc_pakettikauppa_client->searchPickupPoints(trim($postcode), trim($street_address), trim($country), $service_provider, $pickup_point_limit);
     if ( $pickup_point_data === 'Bad request' ) {
-      throw new Exception( __( 'WC_Pakettikauppa: An error occured when searching pickup points.', 'wc-pakettikauppa' ) );
+      throw new Exception(__('WC_Pakettikauppa: An error occured when searching pickup points.', 'wc-pakettikauppa'));
     }
 
     return $pickup_point_data;
@@ -492,7 +492,7 @@ class WC_Pakettikauppa_Shipment {
   public function service_title( $service_code ) {
 
     $services = $this->services();
-    if ( isset( $services[ $service_code ] ) ) {
+    if ( isset($services[ $service_code ]) ) {
       return $services[ $service_code ];
     }
 
@@ -518,10 +518,10 @@ class WC_Pakettikauppa_Shipment {
     }
 
     foreach ( $all_shipping_methods as $shipping_method ) {
-      $services[ strval($shipping_method->shipping_method_code) ] = sprintf( '%1$s: %2$s', $shipping_method->service_provider, $shipping_method->name );
+      $services[ strval($shipping_method->shipping_method_code) ] = sprintf('%1$s: %2$s', $shipping_method->service_provider, $shipping_method->name);
     }
 
-    ksort( $services );
+    ksort($services);
 
     return $services;
   }
@@ -535,7 +535,7 @@ class WC_Pakettikauppa_Shipment {
 
     $additional_services = array();
     foreach ( $all_shipping_methods as $shipping_method ) {
-      $additional_services[ strval( $shipping_method->shipping_method_code ) ] = $shipping_method->additional_services;
+      $additional_services[ strval($shipping_method->shipping_method_code) ] = $shipping_method->additional_services;
     }
 
     return $additional_services;
@@ -552,17 +552,17 @@ class WC_Pakettikauppa_Shipment {
     $transient_name = 'wc_pakettikauppa_shipping_methods';
     $transient_time = 86400; // 24 hours
 
-    $all_shipping_methods = get_transient( $transient_name );
+    $all_shipping_methods = get_transient($transient_name);
 
-    if ( empty( $all_shipping_methods ) ) {
-      $all_shipping_methods = json_decode( $this->wc_pakettikauppa_client->listShippingMethods() );
+    if ( empty($all_shipping_methods) ) {
+      $all_shipping_methods = json_decode($this->wc_pakettikauppa_client->listShippingMethods());
 
-      if ( ! empty( $all_shipping_methods ) ) {
-        set_transient( $transient_name, $all_shipping_methods, $transient_time );
+      if ( ! empty($all_shipping_methods) ) {
+        set_transient($transient_name, $all_shipping_methods, $transient_time);
       }
     }
 
-    if ( empty( $all_shipping_methods ) ) {
+    if ( empty($all_shipping_methods) ) {
       return null;
     }
 

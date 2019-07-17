@@ -1,3 +1,4 @@
+// phpcs:disable PEAR.Functions.FunctionCallSignature
 /**
  * Add frontend scripts to this file.
  */
