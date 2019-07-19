@@ -20,7 +20,7 @@ wp plugin install --activate https://github.com/Seravo/woo-pakettikauppa/archive
 composer require seravo/woo-pakettikauppa
 ```
 
-The plugin requires WooCommerce to be installed, with shipping zones configured and this plugin activated and settings set.
+The plugin requires WooCommerce >=3.4 to be installed, with shipping zones configured and this plugin activated and settings set.
 
 Naturally the store owner also needs to have a merchant account at [Pakettikauppa](https://www.pakettikauppa.fi/).
 
