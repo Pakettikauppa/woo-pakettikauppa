@@ -22,7 +22,7 @@ matrix:
 
 before_script:
   # Install phpunit 7.x as WordPress does not support 8.x yet
-  - if [[ "$TRAVIS_PHP_VERSION" == "5.6" ]]; then PHPUNIT_VERSION=5.7.9; else PHPUNIT_VERSION=6.5.9; fi
+  - if [[ "$TRAVIS_PHP_VERSION" == "5.6" ]]; then PHPUNIT_VERSION=5.7.9; else PHPUNIT_VERSION=7.5.9; fi
   - wget https://phar.phpunit.de/phpunit-$PHPUNIT_VERSION.phar -O /tmp/phpunit; chmod +x /tmp/phpunit
   # Install WordPress PHPUnit tests
   - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
