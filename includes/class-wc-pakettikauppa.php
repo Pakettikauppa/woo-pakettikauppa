@@ -151,7 +151,7 @@ class WC_Pakettikauppa {
       if ( ! empty($pickup_points[ $instance_id ]) ) {
         if ( ! empty($pickup_points[ $instance_id ]['service']) && $pickup_points[ $instance_id ]['service'] === '__PICKUPPOINTS__' ) {
           foreach ( $pickup_points[ $instance_id ] as $shipping_method => $shipping_method_data ) {
-            if ( $shipping_method_data['active'] === 'yes' ) {
+            if ( isset($shipping_method_data['active']) && $shipping_method_data['active'] === 'yes' ) {
               $shipping_method_providers[] = $methods[ $shipping_method ];
             }
           }
