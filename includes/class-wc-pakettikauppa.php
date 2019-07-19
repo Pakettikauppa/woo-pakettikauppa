@@ -247,10 +247,12 @@ class WC_Pakettikauppa {
       'Posti International' => '2711',
     );
 
-    foreach ( $pickup_points as $key => $value ) {
-      $pickup_point_key                   = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ') (%' . $methods[ $value->provider ] . ')';
-      $pickup_point_value                 = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
-      $options_array[ $pickup_point_key ] = $pickup_point_value;
+    if ( ! empty($pickup_points) ) {
+      foreach ( $pickup_points as $key => $value ) {
+        $pickup_point_key                   = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ') (%' . $methods[ $value->provider ] . ')';
+        $pickup_point_value                 = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
+        $options_array[ $pickup_point_key ] = $pickup_point_value;
+      }
     }
 
     return $options_array;
