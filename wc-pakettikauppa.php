@@ -23,7 +23,6 @@ if ( ! defined('ABSPATH') ) {
   exit;
 }
 
-// @TODO: Also check for other solutions to refer to plugin_basename and plugin_dir_path in includes/ directory
 define('WC_PAKETTIKAUPPA_BASENAME', plugin_basename(__FILE__));
 define('WC_PAKETTIKAUPPA_DIR', plugin_dir_path(__FILE__));
 define('WC_PAKETTIKAUPPA_VERSION', get_file_data(__FILE__, array( 'Version' ), 'plugin')[0]);
