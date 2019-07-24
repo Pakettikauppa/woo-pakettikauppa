@@ -23,7 +23,6 @@ if ( ! defined('ABSPATH') ) {
   exit;
 }
 
-// @TODO: Also check for other solutions to refer to plugin_basename and plugin_dir_path in includes/ directory
 define('WC_PAKETTIKAUPPA_BASENAME', plugin_basename(__FILE__));
 define('WC_PAKETTIKAUPPA_DIR', plugin_dir_path(__FILE__));
 define('WC_PAKETTIKAUPPA_VERSION', get_file_data(__FILE__, array( 'Version' ), 'plugin')[0]);
@@ -43,8 +42,6 @@ function wc_pakettikauppa_load_textdomain() {
 
 add_action('plugins_loaded', 'wc_pakettikauppa_load_textdomain');
 
-require_once plugin_dir_path(__FILE__) . 'includes/class-wc-pakettikauppa-shipping-method.php';
-
 /**
  * Load the WC_Pakettikauppa class when in frontend
  */
@@ -57,8 +54,6 @@ function wc_pakettikauppa_load() {
   }
 }
 
-add_action('init', 'wc_pakettikauppa_load');
-
 /**
  * Load the WC_Pakettikauppa_Admin class in wp-admin
  */
@@ -68,4 +63,24 @@ function wc_pakettikauppa_load_admin() {
   $wc_pakettikauppa_admin->load();
 }
 
-add_action('admin_init', 'wc_pakettikauppa_load_admin');
+/**
+ * Display an error notice when WooCommerce is not actived.
+ */
+function wc_pakettikauppa_woocommerce_inactive_notice() {
+  echo '<div class="notice notice-error">';
+  echo '<p>' . __('WooCommerce Pakettikauppa requires WooCommerce to be installed and activated!', 'wc-pakettikauppa') . '</p>';
+  echo '</div>';
+}
+
+// This plugin needs WooCommerce to be activated in order to work properly, so
+// don't load any plugin functionalities if WooCommerce is not active.
+if ( in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')), true) ) {
+  require_once plugin_dir_path(__FILE__) . 'includes/class-wc-pakettikauppa-shipping-method.php';
+
+  add_action('admin_init', 'wc_pakettikauppa_load_admin');
+  add_action('init', 'wc_pakettikauppa_load');
+
+} else {
+  // Alert the site admin when in WP Admin
+  add_action('admin_notices', 'wc_pakettikauppa_woocommerce_inactive_notice');
+}

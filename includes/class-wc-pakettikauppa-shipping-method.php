@@ -528,7 +528,7 @@ function wc_pakettikauppa_shipping_method_init() {
           if ( $values['data']->needs_shipping() ) {
             $found_class = $values['data']->get_shipping_class();
 
-            if ( ! isset($found_shipping_classes[ $found_class ]) ) {
+            if ( ! empty($found_class) && ! isset($found_shipping_classes[ $found_class ]) ) {
               $found_shipping_classes[ $found_class ] = array();
             }
 
