@@ -485,7 +485,11 @@ function wc_pakettikauppa_shipping_method_init() {
         foreach ( $cart as $item ) {
           $cost_key = $item['key'];
 
-          $cost_item = $shipping_cost * $item['line_total'] / $cart_total;
+          // Prevent division by zero when the cart total is zero
+          $cost_item = 0;
+          if ( $cart_total !== 0 ) {
+            $cost_item = $shipping_cost * $item['line_total'] / $cart_total;
+          }
 
           if ( $cart[ $cost_key ]['data'] !== null ) {
             $tax_obj = WC_Tax::get_shipping_tax_rates($cart[ $cost_key ]['data']->get_tax_class());

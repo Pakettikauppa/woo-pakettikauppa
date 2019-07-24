@@ -151,7 +151,7 @@ class WC_Pakettikauppa {
       if ( ! empty($pickup_points[ $instance_id ]) ) {
         if ( ! empty($pickup_points[ $instance_id ]['service']) && $pickup_points[ $instance_id ]['service'] === '__PICKUPPOINTS__' ) {
           foreach ( $pickup_points[ $instance_id ] as $shipping_method => $shipping_method_data ) {
-            if ( $shipping_method_data['active'] === 'yes' ) {
+            if ( isset($shipping_method_data['active']) && $shipping_method_data['active'] === 'yes' ) {
               $shipping_method_providers[] = $methods[ $shipping_method ];
             }
           }
@@ -247,10 +247,12 @@ class WC_Pakettikauppa {
       'Posti International' => '2711',
     );
 
-    foreach ( $pickup_points as $key => $value ) {
-      $pickup_point_key                   = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ') (%' . $methods[ $value->provider ] . ')';
-      $pickup_point_value                 = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
-      $options_array[ $pickup_point_key ] = $pickup_point_value;
+    if ( ! empty($pickup_points) ) {
+      foreach ( $pickup_points as $key => $value ) {
+        $pickup_point_key                   = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ') (%' . $methods[ $value->provider ] . ')';
+        $pickup_point_value                 = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
+        $options_array[ $pickup_point_key ] = $pickup_point_value;
+      }
     }
 
     return $options_array;

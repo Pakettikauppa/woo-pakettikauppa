@@ -10,6 +10,13 @@ if ( ! $_tests_dir ) {
   $_tests_dir = '/tmp/wordpress-tests-lib';
 }
 
+// Set custom error handler that fails on PHP warnings and notices
+set_error_handler(
+  function( $errno, $errstr, $errfile, $errline ) {
+    throw new RuntimeException($errstr . ' on line ' . $errline . ' in file ' . $errfile);
+  }
+);
+
 // Give access to tests_add_filter() function.
 require_once $_tests_dir . '/includes/functions.php';
 

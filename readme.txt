@@ -17,6 +17,8 @@ This plugin enables WooCommerce orders to ship using pretty much any shipping me
 
 > *Note!* If you already have shipping contracts with Posti, Matkahuolto, DB Schenker or GLS with reduced prices, you can contact the customer support of Pakettikauppa to get those contracts via Pakettikauppa so you can use the WooCommerce Pakettikauppa plugin with your current shipping contracts. Usage of own contracts is free of charge. No need to use logistics services own integrations (e.g. Posti SmartShip / Prinetti )
 
+This plugin requires at least WooCommerce version 3.4.
+
 == Register and start shipping ==
 
 Register through [www.pakettikauppa.fi](https://www.pakettikauppa.fi/). Process only takes few minutes.
