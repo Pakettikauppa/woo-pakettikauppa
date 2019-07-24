@@ -154,9 +154,7 @@ function wc_pakettikauppa_shipping_method_init() {
                                         <option value="__NULL__"><?php esc_html_e('No shipping', 'wc-pakettikauppa'); ?></option>
                                         <option value="__PICKUPPOINTS__" <?php echo ($selected_service === '__PICKUPPOINTS__' ? 'selected' : ''); ?>>Noutopisteet</option>
                                         <?php foreach ( $all_shipping_methods as $service_id => $service_name ) : ?>
-                                          <?php if ( ! in_array($service_id, array( '2103', '80010', '90080' )) ) : ?>
                                             <option value="<?php echo $service_id; ?>" <?php echo (strval($selected_service) === strval($service_id) ? 'selected' : ''); ?>><?php echo $service_name; ?></option>
-                                          <?php endif; ?>
                                         <?php endforeach; ?>
                                     </select>
                                 </td>
