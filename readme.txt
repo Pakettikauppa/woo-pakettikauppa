@@ -62,6 +62,11 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 
+= 2.0.16 =
+* New feature: Allow creation of COD shipments from custom shipment creation
+* New feature: Allow using all shipping methods and automaticly display it's pickup points if available
+* Enhancements: refactored COD functionality
+
 = 2.0.15.1 =
 * Bug fixes
 
