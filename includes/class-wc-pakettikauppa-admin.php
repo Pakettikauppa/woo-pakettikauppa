@@ -89,17 +89,17 @@ class WC_Pakettikauppa_Admin {
   public function add_custom_product_fields() {
     $args = array(
       'id' => 'pakettikauppa_tariff_codes',
-      'label' => __('HS tariff number', 'pakettikauppa'),
+      'label' => __('HS tariff number', 'wc-pakettikauppa'),
       'desc_tip' => true,
-      'description' => __('The HS tariff number must be based on the Harmonized Commodity Description and Coding System developed by the World Customs Organization.', 'pakettikauppa'),
+      'description' => __('The HS tariff number must be based on the Harmonized Commodity Description and Coding System developed by the World Customs Organization.', 'wc-pakettikauppa'),
     );
     woocommerce_wp_text_input($args);
 
     $args = array(
       'id' => 'pakettikauppa_country_of_origin',
-      'label' => __('Country of origin', 'pakettikauppa'),
+      'label' => __('Country of origin', 'wc-pakettikauppa'),
       'desc_tip' => true,
-      'description' => __('"Country of origin" means the country where the goods originated, e.g. were produced/manufactured or assembled.', 'pakettikauppa'),
+      'description' => __('"Country of origin" means the country where the goods originated, e.g. were produced/manufactured or assembled.', 'wc-pakettikauppa'),
       'custom_attributes' => array(
         'maxlength' => '2',
       ),
@@ -300,7 +300,7 @@ class WC_Pakettikauppa_Admin {
 
     if ( ! $shipping_method_found ) {
       echo '<div class="updated warning">';
-      echo sprintf('<p>%s</p>', __('Pakettikauppa plugin has been installed/updated and no shipping methods are activated!'));
+      echo sprintf('<p>%s</p>', __('WooCommerce Pakettikauppa has been installed/updated but no shipping methods are currently active!', 'wc-pakettikauppa'));
       echo '</div>';
     }
   }
