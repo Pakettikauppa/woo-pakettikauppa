@@ -186,7 +186,7 @@ function wc_pakettikauppa_shipping_method_init() {
                                     <?php foreach ( $all_additional_services as $method_code => $additional_services ) : ?>
                                     <div class="pk-services-<?php echo $method_id; ?>" style='display: none;' id="<?php echo $method_id; ?>-<?php echo $method_code; ?>-services">
                                       <?php foreach ( $additional_services as $additional_service ) : ?>
-                                        <?php if ( empty($additional_service->specifiers) || $additional_service->service_code === '3102' ) : ?>
+                                        <?php if ( empty($additional_service->specifiers) || in_array($additional_service->service_code, array( '3102' )) ) : ?>
                                         <input type="hidden"
                                                name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . esc_attr($method_code) . '][additional_services][' . $additional_service->service_code . ']'; ?>"
                                                value="no">

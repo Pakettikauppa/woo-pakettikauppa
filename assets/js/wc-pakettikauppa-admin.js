@@ -49,6 +49,8 @@ jQuery(function( $ ) {
     $.post(woocommerce_admin_meta_boxes.ajax_url, data, function(response) {
       $("#wc-pakettikauppa .inside").html(response);
       $('#wc-pakettikauppa').unblock();
+    }).fail(function() {
+      location.reload();
     });
   };
 

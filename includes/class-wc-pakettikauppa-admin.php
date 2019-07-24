@@ -64,7 +64,13 @@ class WC_Pakettikauppa_Admin {
   public function ajax_meta_box() {
     check_ajax_referer('pakettikauppa-meta-box', 'security');
 
+    $error_count = count($this->get_errors());
     $this->save_ajax_metabox($_POST['post_id']);
+
+    if ( count($this->get_errors()) != $error_count ) {
+      wp_die('', '', 501);
+    }
+
     $this->meta_box(get_post($_POST['post_id']));
     wp_die();
   }
@@ -466,11 +472,6 @@ class WC_Pakettikauppa_Admin {
 
     $document_url = admin_url('admin-post.php?post=' . $post->ID . '&action=show_pakettikauppa&tracking_code=' . $tracking_code);
 
-    $additional_services = array();
-    if ( 'cod' === $order->get_payment_method() ) {
-      $additional_services[] = '3101';
-    }
-
     foreach ( $this->get_additional_services($order) as $_additional_service ) {
       $additional_services[] = key($_additional_service);
     }
@@ -515,7 +516,7 @@ class WC_Pakettikauppa_Admin {
               <h4><?php echo esc_attr__('Additional services', 'wc-pakettikauppa'); ?>:</h4>
               <ol style="list-style: circle;">
                 <?php foreach ( $additional_services as $i => $additional_service ) : ?>
-                  <?php if ( $additional_service != '3102' ) : ?>
+                  <?php if ( ! in_array($additional_service, array( '3102' )) ) : ?>
                     <li>
                       <?php echo $additional_service_names[ $additional_service ]; ?>
                     </li>
@@ -559,7 +560,7 @@ class WC_Pakettikauppa_Admin {
               <ol style="list-style: circle; display: none;" class="pk-admin-additional-services" id="pk-admin-additional-services-<?php echo $method_code; ?>">
                 <?php $show_3102 = false; ?>
                 <?php foreach ( $_additional_services as $additional_service ) : ?>
-                  <?php if ( empty($additional_service->specifiers) ) : ?>
+                  <?php if ( empty($additional_service->specifiers) || $additional_service->service_code === '3101' ) : ?>
                     <li>
                       <input
                               type="checkbox"
@@ -641,6 +642,8 @@ class WC_Pakettikauppa_Admin {
         }
 
         if ( empty($_REQUEST['custom_method']) ) {
+          $additional_services = null;
+
           $pickup_point_id = $order->get_meta('_pakettikauppa_pickup_point_id');
 
           if ( empty($pickup_point_id) && ! empty($_REQUEST['wc_pakettikauppa_pickup_point_id']) ) {
@@ -653,7 +656,20 @@ class WC_Pakettikauppa_Admin {
 
           if ( ! empty($_REQUEST['additional_services']) ) {
             foreach ( $_REQUEST['additional_services'] as $_additional_service_code ) {
-              $additional_services[] = array( $_additional_service_code => null );
+              if ( $_additional_service_code !== '3101' ) {
+                $additional_services[] = array( $_additional_service_code => null );
+              } else {
+                $settings = $this->wc_pakettikauppa_shipment->get_settings();
+
+                $additional_services[] = array(
+                  '3101' => array(
+                    'amount' => $order->get_total(),
+                    'account' => $settings['cod_iban'],
+                    'codbic' => $settings['cod_bic'],
+                    'reference' => $this->wc_pakettikauppa_shipment->calculate_reference($order->get_id()),
+                  ),
+                );
+              }
             }
           }
 
@@ -786,6 +802,8 @@ class WC_Pakettikauppa_Admin {
 
     $chosen_shipping_method = array_pop($shipping_methods);
 
+    $add_cod_to_additional_services = 'cod' === $order->get_payment_method();
+
     if ( ! empty($chosen_shipping_method) ) {
       $method_id = $chosen_shipping_method->get_method_id();
 
@@ -804,12 +822,25 @@ class WC_Pakettikauppa_Admin {
 
         if ( ! empty($services) ) {
           foreach ( $services as $service_code => $service ) {
-            if ( $service === 'yes' ) {
+            if ( $service === 'yes' && $service_code !== '3101' ) {
               $additional_services[] = array( $service_code => null );
+            } else if ( $service === 'yes' && $service_code === '3101' ) {
+              $add_cod_to_additional_services = true;
             }
           }
         }
       }
+    }
+
+    if ( $add_cod_to_additional_services ) {
+      $additional_services[] = array(
+        '3101' => array(
+          'amount' => $order->get_total(),
+          'account' => $settings['cod_iban'],
+          'codbic' => $settings['cod_bic'],
+          'reference' => $this->wc_pakettikauppa_shipment->calculate_reference($order->get_id()),
+        ),
+      );
     }
 
     return $additional_services;
@@ -825,6 +856,7 @@ class WC_Pakettikauppa_Admin {
     }
 
     if ( empty($service_id) || $service_id === '__NULL__' ) {
+      $this->add_error('');
       $order->add_order_note(esc_attr__('The shipping label was not created because the order does not contain valid shipping method.', 'wc-pakettikauppa'));
 
       return null;
@@ -832,6 +864,7 @@ class WC_Pakettikauppa_Admin {
 
     // Bail out if the receiver has not been properly configured
     if ( ! WC_Pakettikauppa_Shipment::validate_order_shipping_receiver($order) ) {
+      $this->add_error('');
       add_action(
         'admin_notices',
         function() {
@@ -878,6 +911,7 @@ class WC_Pakettikauppa_Admin {
     }
 
     if ( $tracking_code === null ) {
+      $this->add_error('');
       $order->add_order_note(esc_attr__('Failed to create Pakettikauppa shipment.', 'wc-pakettikauppa'));
       add_action(
         'admin_notices',
