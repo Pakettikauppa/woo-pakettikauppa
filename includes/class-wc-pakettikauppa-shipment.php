@@ -246,18 +246,6 @@ class WC_Pakettikauppa_Shipment {
     }
     $shipment->addParcel($parcel);
 
-    if ( 'cod' === $order->get_payment_method() ) {
-      $additional_service = new AdditionalService();
-      $additional_service->setServiceCode(3101);
-
-      $additional_service->addSpecifier('amount', $order->get_total());
-      $additional_service->addSpecifier('account', $this->wc_pakettikauppa_settings['cod_iban']);
-      $additional_service->addSpecifier('codbic', $this->wc_pakettikauppa_settings['cod_bic']);
-      $additional_service->addSpecifier('reference', $this->calculate_reference($order->get_id()));
-
-      $shipment->addAdditionalService($additional_service);
-    }
-
     foreach ( $additional_services as $_additional_service ) {
       $additional_service = new AdditionalService();
       $additional_service->setServiceCode(key($_additional_service));

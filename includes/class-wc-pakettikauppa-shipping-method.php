@@ -154,9 +154,7 @@ function wc_pakettikauppa_shipping_method_init() {
                                         <option value="__NULL__"><?php esc_html_e('No shipping', 'wc-pakettikauppa'); ?></option>
                                         <option value="__PICKUPPOINTS__" <?php echo ($selected_service === '__PICKUPPOINTS__' ? 'selected' : ''); ?>>Noutopisteet</option>
                                         <?php foreach ( $all_shipping_methods as $service_id => $service_name ) : ?>
-                                          <?php if ( ! in_array($service_id, array( '2103', '80010', '90080' )) ) : ?>
                                             <option value="<?php echo $service_id; ?>" <?php echo (strval($selected_service) === strval($service_id) ? 'selected' : ''); ?>><?php echo $service_name; ?></option>
-                                          <?php endif; ?>
                                         <?php endforeach; ?>
                                     </select>
                                 </td>
@@ -188,7 +186,7 @@ function wc_pakettikauppa_shipping_method_init() {
                                     <?php foreach ( $all_additional_services as $method_code => $additional_services ) : ?>
                                     <div class="pk-services-<?php echo $method_id; ?>" style='display: none;' id="<?php echo $method_id; ?>-<?php echo $method_code; ?>-services">
                                       <?php foreach ( $additional_services as $additional_service ) : ?>
-                                        <?php if ( empty($additional_service->specifiers) || $additional_service->service_code === '3102' ) : ?>
+                                        <?php if ( empty($additional_service->specifiers) || in_array($additional_service->service_code, array( '3102' )) ) : ?>
                                         <input type="hidden"
                                                name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . esc_attr($method_code) . '][additional_services][' . $additional_service->service_code . ']'; ?>"
                                                value="no">
