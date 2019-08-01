@@ -67,7 +67,8 @@ class WC_Pakettikauppa_Admin {
     $error_count = count($this->get_errors());
     $this->save_ajax_metabox($_POST['post_id']);
 
-    if ( count($this->get_errors()) != $error_count ) {
+    error_log(count($this->get_errors()) . "=" . $error_count);
+    if ( count($this->get_errors()) !== $error_count ) {
       wp_die('', '', 501);
     }
 
@@ -856,7 +857,7 @@ class WC_Pakettikauppa_Admin {
     }
 
     if ( empty($service_id) || $service_id === '__NULL__' ) {
-      $this->add_error('');
+      $this->add_error('error');
       $order->add_order_note(esc_attr__('The shipping label was not created because the order does not contain valid shipping method.', 'wc-pakettikauppa'));
 
       return null;
@@ -864,7 +865,7 @@ class WC_Pakettikauppa_Admin {
 
     // Bail out if the receiver has not been properly configured
     if ( ! WC_Pakettikauppa_Shipment::validate_order_shipping_receiver($order) ) {
-      $this->add_error('');
+      $this->add_error('error');
       add_action(
         'admin_notices',
         function() {
@@ -911,7 +912,7 @@ class WC_Pakettikauppa_Admin {
     }
 
     if ( $tracking_code === null ) {
-      $this->add_error('');
+      $this->add_error('error');
       $order->add_order_note(esc_attr__('Failed to create Pakettikauppa shipment.', 'wc-pakettikauppa'));
       add_action(
         'admin_notices',
@@ -955,7 +956,49 @@ class WC_Pakettikauppa_Admin {
       )
     );
 
-    return $tracking_code;
+    $settings = $this->wc_pakettikauppa_shipment->get_settings();
+
+    if ( ! empty($settings['post_label_to_url'])) {
+      if ( $this->post_label_to_url( $settings['post_label_to_url'], $tracking_code ) === false ) {
+        $this->add_error('error');
+        $order->add_order_note( __('Posting label to URL failed!', 'wc-pakettikauppa') );
+
+        return null;
+      } else {
+        $order->add_order_note( __('Label posted to URL successfully.', 'wc-pakettikauppa') );
+      }
+    }
+  }
+
+  private function post_label_to_url($url, $tracking_code) {
+    $contents = $this->wc_pakettikauppa_shipment->fetch_shipping_label($tracking_code);
+
+    $label = base64_decode( $contents->{'response.file'} ); // @codingStandardsIgnoreLine
+
+    $postdata = http_build_query( array( 'label' => $label ) );
+
+    $opts = array(
+            'http' => array(
+                    'method'  => 'POST',
+                    'header'  => 'Content-Type: application/x-www-form-urlencoded',
+                    'content' => $postdata
+            ),
+            'ssl' => array(
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed'=> true,
+            ),
+    );
+
+    $context  = stream_context_create($opts);
+
+    $result = file_get_contents($url, false, $context);
+
+    if ($result === false) {
+      return false;
+    }
+
+    return $result;
   }
 
   /**
@@ -988,10 +1031,24 @@ class WC_Pakettikauppa_Admin {
    * @param $contents
    */
   private function output_shipping_label( $contents, $filename ) {
-    header('Content-type:application/pdf');
-    header("Content-Disposition:inline;filename={$filename}.pdf");
+    $settings = $this->wc_pakettikauppa_shipment->get_settings();
 
-    echo base64_decode( $contents->{'response.file'} ); // @codingStandardsIgnoreLine
+    if ( $settings['download_type_of_labels'] === 'download' ) {
+      header('Content-Type: application/octet-stream');
+      $content_disposition = 'attachment';
+    } else {
+      header('Content-Type: application/pdf');
+      $content_disposition = 'inline';
+    }
+
+    $pdf = base64_decode( $contents->{'response.file'} ); // @codingStandardsIgnoreLine
+
+    header('Content-Description: File Transfer');
+    header('Content-Transfer-Encoding: binary');
+    header("Content-Disposition: ' . $content_disposition . ';filename=\"{$filename}.pdf\"");
+    header( 'Content-Length: ' . strlen($pdf));
+
+    echo $pdf;
 
     exit();
   }
