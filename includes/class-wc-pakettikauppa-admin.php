@@ -67,7 +67,6 @@ class WC_Pakettikauppa_Admin {
     $error_count = count($this->get_errors());
     $this->save_ajax_metabox($_POST['post_id']);
 
-    error_log(count($this->get_errors()) . "=" . $error_count);
     if ( count($this->get_errors()) !== $error_count ) {
       wp_die('', '', 501);
     }
@@ -958,43 +957,43 @@ class WC_Pakettikauppa_Admin {
 
     $settings = $this->wc_pakettikauppa_shipment->get_settings();
 
-    if ( ! empty($settings['post_label_to_url'])) {
-      if ( $this->post_label_to_url( $settings['post_label_to_url'], $tracking_code ) === false ) {
+    if ( ! empty($settings['post_label_to_url']) ) {
+      if ( $this->post_label_to_url($settings['post_label_to_url'], $tracking_code) === false ) {
         $this->add_error('error');
-        $order->add_order_note( __('Posting label to URL failed!', 'wc-pakettikauppa') );
+        $order->add_order_note(__('Posting label to URL failed!', 'wc-pakettikauppa'));
 
         return null;
       } else {
-        $order->add_order_note( __('Label posted to URL successfully.', 'wc-pakettikauppa') );
+        $order->add_order_note(__('Label posted to URL successfully.', 'wc-pakettikauppa'));
       }
     }
   }
 
-  private function post_label_to_url($url, $tracking_code) {
+  private function post_label_to_url( $url, $tracking_code ) {
     $contents = $this->wc_pakettikauppa_shipment->fetch_shipping_label($tracking_code);
 
     $label = base64_decode( $contents->{'response.file'} ); // @codingStandardsIgnoreLine
 
-    $postdata = http_build_query( array( 'label' => $label ) );
+    $postdata = http_build_query(array( 'label' => $label ));
 
     $opts = array(
-            'http' => array(
-                    'method'  => 'POST',
-                    'header'  => 'Content-Type: application/x-www-form-urlencoded',
-                    'content' => $postdata
-            ),
-            'ssl' => array(
-                    'verify_peer' => false,
-                    'verify_peer_name' => false,
-                    'allow_self_signed'=> true,
-            ),
+      'http' => array(
+        'method'  => 'POST',
+        'header'  => 'Content-Type: application/x-www-form-urlencoded',
+        'content' => $postdata,
+      ),
+      'ssl' => array(
+        'verify_peer' => false,
+        'verify_peer_name' => false,
+        'allow_self_signed'=> true,
+      ),
     );
 
     $context  = stream_context_create($opts);
 
     $result = file_get_contents($url, false, $context);
 
-    if ($result === false) {
+    if ( $result === false ) {
       return false;
     }
 
@@ -1046,7 +1045,7 @@ class WC_Pakettikauppa_Admin {
     header('Content-Description: File Transfer');
     header('Content-Transfer-Encoding: binary');
     header("Content-Disposition: ' . $content_disposition . ';filename=\"{$filename}.pdf\"");
-    header( 'Content-Length: ' . strlen($pdf));
+    header('Content-Length: ' . strlen($pdf));
 
     echo $pdf;
 

@@ -62,6 +62,11 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 
+= 2.0.17 =
+* New feature: Possibility to send shipping labels to custom URL on creation to help automations
+* New feature: You can define if shipping label is to be displayed on a browser or downloaded
+* Bug fixes: Pickup point search now uses shipping method codes instead of shipping provider names
+
 = 2.0.16 =
 * New feature: Allow creation of COD shipments from custom shipment creation
 * New feature: Allow using all shipping methods and automatically display it's pickup points if available
