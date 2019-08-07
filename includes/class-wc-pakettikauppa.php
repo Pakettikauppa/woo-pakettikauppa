@@ -150,12 +150,7 @@ class WC_Pakettikauppa {
           }
         } else if ( ! empty($pickup_points[ $instance_id ]['service']) ) {
           if ( $this->wc_pakettikauppa_shipment->service_has_pickup_points($pickup_points[ $instance_id ]['service']) ) {
-            $shipping_method = $pickup_points[ $instance_id ]['service'];
-            $shipping_method_data = $pickup_points[ $instance_id ][ $shipping_method ];
-
-            if ( isset($shipping_method_data['active']) && $shipping_method_data['active'] === 'yes' ) {
-              $shipping_method_providers[] = $shipping_method;
-            }
+            $shipping_method_providers[] = $pickup_points[ $instance_id ]['service'];
           }
         }
       }
