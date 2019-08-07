@@ -1027,7 +1027,9 @@ class WC_Pakettikauppa_Admin {
 
   /**
    * Fetches PDF from the XML and outputs it. Ends execution.
+   *
    * @param $contents
+   * @param $filename
    */
   private function output_shipping_label( $contents, $filename ) {
     $settings = $this->wc_pakettikauppa_shipment->get_settings();
