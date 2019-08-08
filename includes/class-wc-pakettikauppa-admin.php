@@ -851,6 +851,8 @@ class WC_Pakettikauppa_Admin {
    * @param array $additional_services
    */
   private function create_shipment( WC_Order $order, $service_id = null, $additional_services = null ) {
+    do_action('pakettikauppa_prepare_create_shipment', $order, $service_id, $additional_services);
+
     if ( $service_id === null ) {
       $service_id = $this->get_service_id_from_order($order);
     }
@@ -926,6 +928,8 @@ class WC_Pakettikauppa_Admin {
 
     update_post_meta($order->get_id(), '_wc_pakettikauppa_tracking_code', $tracking_code);
     update_post_meta($order->get_id(), '_wc_pakettikauppa_custom_service_id', $service_id);
+
+    do_action('pakettikauppa_post_create_shipment', $order);
 
     $document_url = admin_url('admin-post.php?post=' . $order->get_id() . '&action=show_pakettikauppa&tracking_code=' . $tracking_code);
     $tracking_url = (string) $shipment->{'response.trackingcode'}['tracking_url'];
