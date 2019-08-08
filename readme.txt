@@ -15,7 +15,7 @@ This plugin enables WooCommerce orders to ship using pretty much any shipping me
 
 [Pakettikauppa](https://www.pakettikauppa.fi/) is a shipping service provider in Finland. This plugin integrates their service into WooCommerce. To start shipping, all your WooCommerce needs is this plugin and a API credentials of your account registered with Pakettikauppa.
 
-> *Note!* If you already have shipping contracts with Posti, Matkahuolto, DB Schenker or GLS with reduced prices, you can contact the customer support of Pakettikauppa to get those contracts via Pakettikauppa so you can use the WooCommerce Pakettikauppa plugin with your current shipping contracts. Usage of own contracts is free of charge. No need to use logistics services own integrations (e.g. Posti SmartShip / Prinetti )
+> *Note!* If you already have shipping contracts with Posti, Matkahuolto, DB Schenker, Asendia or GLS with reduced prices, you can contact the customer support of Pakettikauppa to get those contracts via Pakettikauppa so you can use the WooCommerce Pakettikauppa plugin with your current shipping contracts. Usage of own contracts is free of charge. No need to use logistics services own integrations (e.g. Posti SmartShip / Prinetti )
 
 This plugin requires at least WooCommerce version 3.4.
 
@@ -46,6 +46,55 @@ Register through [www.pakettikauppa.fi](https://www.pakettikauppa.fi/). Process 
 
 This plugin can also be installed directly from Github or using `composer require seravo/woocommerce-pakettikauppa`.
 
+== Developer notes ==
+= Hooks =
+
+* pakettikauppa_prepare_create_shipment
+
+arguments: $order, $service_id, $additional_services
+
+* pakettikauppa_post_create_shipment
+
+arguments: $order
+
+= Actions =
+
+* pakettikauppa_create_shipments
+
+Call for example:
+
+```php
+$pdf = '';
+$order_ids = array (15, 16, 17);
+$args = array( $order_ids, &$pdf );
+do_action_ref_array('pakettikauppa_create_shipments', $args);"
+```
+
+Defined as: public function hook_create_shipments( $order_ids ) {
+
+* pakettikauppa_fetch_shipping_labels
+
+Call for example:
+
+```php
+$tracking_code='';
+$args = array( $order_id, &$tracking_code );
+do_action_ref_array('pakettikauppa_fetch_tracking_code', $args);
+```
+
+Defined as: public function hook_fetch_shipping_labels( $order_ids, &$pdf ) {
+
+* pakettikauppa_fetch_tracking_code
+
+Call for example:
+
+```php
+$args = array( $order_id, $order_id2, ... );
+do_action('pakettikauppa_create_shipments', $args);
+```
+
+Defined as: public function hook_fetch_tracking_code( $order_id, &$tracking_code ) {
+
 == Frequently Asked Questions ==
 
 = Is this ready for production use? =
@@ -61,6 +110,12 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 1. Examples of settings screens
 
 == Changelog ==
+
+= 2.0.17 =
+* New feature: Possibility to send shipping labels to custom URL on creation to help automations
+* New feature: You can define if shipping label is to be displayed on a browser or downloaded
+* New feature: add new hooks: pakettikauppa_prepare_create_shipment and pakettikauppa_post_create_shipment.
+* Bug fixes: Pickup point search now uses shipping method codes instead of shipping provider names
 
 = 2.0.16 =
 * New feature: Allow creation of COD shipments from custom shipment creation

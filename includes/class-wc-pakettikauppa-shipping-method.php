@@ -223,8 +223,10 @@ function wc_pakettikauppa_shipping_method_init() {
 
         $all_services = $this->wc_pakettikauppa_shipment->services();
 
-        foreach ( $all_services as $key => $value ) {
-          $all_shipping_methods[ $key ] = $value;
+        if ( $all_services !== null ) {
+          foreach ( $all_services as $key => $value ) {
+            $all_shipping_methods[ $key ] = $value;
+          }
         }
 
         if ( empty($all_services) ) {
@@ -396,6 +398,23 @@ function wc_pakettikauppa_shipping_method_init() {
             'default' => 'no',
           ),
 
+          'download_type_of_labels'     => array(
+            'title'   => __('Print labels', 'wc-pakettikauppa'),
+            'type'    => 'select',
+            'default' => 'menu',
+            'options' => array(
+              'browser'  => __('To browser', 'wc-pakettikauppa'),
+              'download'  => __('Download', 'wc-pakettikauppa'),
+            ),
+          ),
+
+          'post_label_to_url' => array(
+            'title'   => __('Post shipping label to URL', 'wc-pakettikauppa'),
+            'type'    => 'text',
+            'default' => '',
+            'description' => __('Plugin can upload shipping label to an URL when creating shipping label. Define URL if you want to upload PDF.', 'wc-pakettikauppa'),
+          ),
+
           'pickup_points_search_limit' => array(
             'title'       => __('Pickup point search limit', 'wc-pakettikauppa'),
             'type'        => 'number',
@@ -412,6 +431,7 @@ function wc_pakettikauppa_shipping_method_init() {
               'list'  => __('List', 'wc-pakettikauppa'),
             ),
           ),
+
           array(
             'title' => __('Store owner information', 'wc-pakettikauppa'),
             'type'  => 'title',
