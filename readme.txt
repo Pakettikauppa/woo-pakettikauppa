@@ -63,12 +63,10 @@ arguments: $order
 
 Call for example:
 
-```php
-$pdf = '';
-$order_ids = array (15, 16, 17);
-$args = array( $order_ids, &$pdf );
-do_action_ref_array('pakettikauppa_create_shipments', $args);"
-```
+    $pdf = '';
+    $order_ids = array (15, 16, 17);
+    $args = array( $order_ids, &$pdf );
+    do_action_ref_array('pakettikauppa_create_shipments', $args);"
 
 Defined as: public function hook_create_shipments( $order_ids ) {
 
@@ -76,11 +74,9 @@ Defined as: public function hook_create_shipments( $order_ids ) {
 
 Call for example:
 
-```php
-$tracking_code='';
-$args = array( $order_id, &$tracking_code );
-do_action_ref_array('pakettikauppa_fetch_tracking_code', $args);
-```
+    $tracking_code='';
+    $args = array( $order_id, &$tracking_code );
+    do_action_ref_array('pakettikauppa_fetch_tracking_code', $args);
 
 Defined as: public function hook_fetch_shipping_labels( $order_ids, &$pdf ) {
 
@@ -88,10 +84,8 @@ Defined as: public function hook_fetch_shipping_labels( $order_ids, &$pdf ) {
 
 Call for example:
 
-```php
-$args = array( $order_id, $order_id2, ... );
-do_action('pakettikauppa_create_shipments', $args);
-```
+    $args = array( $order_id, $order_id2, ... );
+    do_action('pakettikauppa_create_shipments', $args);
 
 Defined as: public function hook_fetch_tracking_code( $order_id, &$tracking_code ) {
 
@@ -217,5 +211,8 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 * Initial release for General Availability.
 
 == Upgrade Notice ==
+= 2.0.0 =
+Breaks compatibility with 1.x -settings
 
+= 1.0 =
 This plugin follows [semantic versioning](https://semver.org). Take it into account when updating.
