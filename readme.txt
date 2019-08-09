@@ -105,6 +105,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 
+= 2.0.18 =
+* Bug fix: Fix for MPS (Multi Parcel Shipment) creation
+
 = 2.0.17 =
 * New feature: Possibility to send shipping labels to custom URL on creation to help automations
 * New feature: You can define if shipping label is to be displayed on a browser or downloaded
