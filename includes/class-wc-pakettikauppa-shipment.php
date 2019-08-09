@@ -237,28 +237,41 @@ class WC_Pakettikauppa_Shipment {
     $info->setCurrency(get_woocommerce_currency());
     $shipment->setShipmentInfo($info);
 
-    $parcel = new Parcel();
-    $parcel->setWeight(self::order_weight($order));
-    $parcel->setVolume(self::order_volume($order));
-
-    if ( ! empty($this->wc_pakettikauppa_settings['info_code']) ) {
-      $parcel->setInfocode($this->wc_pakettikauppa_settings['info_code']);
-    }
-    $shipment->addParcel($parcel);
+    $parcel_total_count = 1;
 
     foreach ( $additional_services as $_additional_service ) {
       $additional_service = new AdditionalService();
-      $additional_service->setServiceCode(key($_additional_service));
+      $additional_service_code = strval(key($_additional_service));
+      $additional_service->setServiceCode($additional_service_code);
 
       foreach ( $_additional_service as $_additional_service_key => $_additional_service_config ) {
         if ( ! empty($_additional_service_config) ) {
           foreach ( $_additional_service_config as $_name => $_value ) {
             $additional_service->addSpecifier($_name, $_value);
+
+            if ( $additional_service_code === '3102' ) {
+              $parcel_total_count = $_value;
+            }
           }
         }
       }
 
       $shipment->addAdditionalService($additional_service);
+    }
+
+    $order_total_weight = self::order_weight($order);
+    $order_total_volume = self::order_volume($order);
+
+    for ( $i = 0; $i < $parcel_total_count; $i++ ) {
+      $parcel = new Parcel();
+      $parcel->setWeight(round($order_total_weight / $parcel_total_count, 0));
+      $parcel->setVolume(round($order_total_volume / $parcel_total_count, 0));
+
+      if ( ! empty($this->wc_pakettikauppa_settings['info_code']) ) {
+        $parcel->setInfocode($this->wc_pakettikauppa_settings['info_code']);
+      }
+
+      $shipment->addParcel($parcel);
     }
 
     $items = $order->get_items();
