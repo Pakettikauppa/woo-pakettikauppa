@@ -971,6 +971,8 @@ class WC_Pakettikauppa_Admin {
         $order->add_order_note(__('Label posted to URL successfully.', 'wc-pakettikauppa'));
       }
     }
+
+    return $tracking_code;
   }
 
   private function post_label_to_url( $url, $tracking_code ) {
