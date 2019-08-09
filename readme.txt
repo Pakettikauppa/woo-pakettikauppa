@@ -47,6 +47,7 @@ Register through [www.pakettikauppa.fi](https://www.pakettikauppa.fi/). Process 
 This plugin can also be installed directly from Github or using `composer require seravo/woocommerce-pakettikauppa`.
 
 == Developer notes ==
+
 = Hooks =
 
 * pakettikauppa_prepare_create_shipment
@@ -104,6 +105,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 1. Examples of settings screens
 
 == Changelog ==
+
+= 2.0.18.1 =
+* Bug fix: bulk and quick actions now work
 
 = 2.0.18 =
 * Bug fix: Fix for MPS (Multi Parcel Shipment) creation
