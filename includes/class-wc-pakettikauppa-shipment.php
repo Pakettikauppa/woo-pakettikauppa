@@ -205,6 +205,9 @@ class WC_Pakettikauppa_Shipment {
    *
    * @param WC_Order $order
    *
+   * @param null $service_id
+   * @param array $additional_services
+   *
    * @return SimpleXMLElement
    * @throws Exception
    */
