@@ -491,6 +491,7 @@ class WC_Pakettikauppa_Admin {
 
     ?>
     <div>
+      <input type="hidden" name="pakettikauppa_nonce" value="<?php echo wp_create_nonce('pakettikauppa-meta-box'); ?>" id="pakettikauppa_metabox_nonce" />
       <?php if ( ! empty($tracking_code) ) : ?>
         <p class="pakettikauppa-shipment">
           <strong>
@@ -507,8 +508,11 @@ class WC_Pakettikauppa_Admin {
             <a href="<?php echo esc_url($tracking_url); ?>" target="_blank" class="tracking"><?php esc_attr_e('Track', 'wc-pakettikauppa'); ?></a>
           <?php endif; ?>
         </p>
-      <?php endif; ?>
-      <?php if ( empty($tracking_code) ) : ?>
+        <p>
+          <button type="button" value="get_status" name="wc_pakettikauppa[get_status]" class="button pakettikauppa_meta_box" onclick="pakettikauppa_meta_box_submit(this);"><?php echo __('Update Status', 'wc-pakettikauppa'); ?></button>
+          <button type="button" value="delete_shipping_label" name="wc_pakettikauppa[delete_shipping_label]" onclick="pakettikauppa_meta_box_submit(this);" class="button pakettikauppa_meta_box wc-pakettikauppa-delete-button"><?php echo __('Delete Shipping Label', 'wc-pakettikauppa'); ?></button>
+        </p>
+      <?php else: ?>
         <div class="pakettikauppa-services">
           <fieldset class="pakettikauppa-metabox-fieldset" id="wc_pakettikauppa_shipping_method">
             <h4><?php echo esc_html($this->wc_pakettikauppa_shipment->service_title($default_service_id)); ?></h4>
@@ -590,13 +594,7 @@ class WC_Pakettikauppa_Admin {
             <?php echo __('Change shipping...', 'wc-pakettikauppa'); ?>
           </button>
         </p>
-      <?php else : ?>
-        <p>
-          <button type="button" value="get_status" name="wc_pakettikauppa[get_status]" class="button pakettikauppa_meta_box" onclick="pakettikauppa_meta_box_submit(this);"><?php echo __('Update Status', 'wc-pakettikauppa'); ?></button>
-          <button type="button" value="delete_shipping_label" name="wc_pakettikauppa[delete_shipping_label]" onclick="pakettikauppa_meta_box_submit(this);" class="button pakettikauppa_meta_box wc-pakettikauppa-delete-button"><?php echo __('Delete Shipping Label', 'wc-pakettikauppa'); ?></button>
-        </p>
       <?php endif; ?>
-      <input type="hidden" name="pakettikauppa_nonce" value="<?php echo wp_create_nonce('pakettikauppa-meta-box'); ?>" id="pakettikauppa_metabox_nonce" />
     </div>
     <?php
   }
