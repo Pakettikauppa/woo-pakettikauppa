@@ -128,9 +128,17 @@ function wc_pakettikauppa_shipping_method_init() {
           </tr>
           <tr>
               <td colspan="2">
-                    <?php foreach ( WC_Shipping_Zones::get_zones('admin') as $zone_index => $zone ) : ?>
-                        <h2><?php echo $zone['zone_name']; ?></h2>
-                      <?php foreach ( $zone['shipping_methods'] as $method_id => $shipping_method ) : ?>
+                    <?php foreach ( WC_Shipping_Zones::get_zones('admin') as $zone_raw ) : ?>
+                      <hr>
+                    <?php $zone = new WC_Shipping_Zone( $zone_raw['zone_id'] );?>
+                      <h2>
+                          <?php esc_html_e( 'Zone name', 'woocommerce' ); ?>: <?php echo $zone->get_zone_name(); ?>
+                        </h2>
+                      <p>
+                        <?php esc_html_e( 'Zone regions', 'woocommerce' ); ?>: <?php echo $zone->get_formatted_location();?>
+                      </p>
+                    <h4><?php esc_html_e( 'Shipping method(s)', 'woocommerce' ); ?></h4>
+                      <?php foreach ( $zone->get_shipping_methods() as $method_id => $shipping_method ) : ?>
                         <?php if ( $shipping_method->enabled === 'yes' && $shipping_method->id !== 'pakettikauppa_shipping_method' && $shipping_method->id !== 'local_pickup' ) : ?>
                           <?php
                           $selected_service = null;
@@ -148,7 +156,12 @@ function wc_pakettikauppa_shipping_method_init() {
                                         <option value="__NULL__"><?php esc_html_e('No shipping', 'wc-pakettikauppa'); ?></option>
                                         <option value="__PICKUPPOINTS__" <?php echo ($selected_service === '__PICKUPPOINTS__' ? 'selected' : ''); ?>>Noutopisteet</option>
                                         <?php foreach ( $all_shipping_methods as $service_id => $service_name ) : ?>
-                                            <option value="<?php echo $service_id; ?>" <?php echo (strval($selected_service) === strval($service_id) ? 'selected' : ''); ?>><?php echo $service_name; ?></option>
+                                            <option value="<?php echo $service_id; ?>" <?php echo (strval($selected_service) === strval($service_id) ? 'selected' : ''); ?>>
+                                              <?php echo $service_name; ?>
+                                              <?php if ( $this->wc_pakettikauppa_shipment->service_has_pickup_points($service_id) ) : ?>
+                                                (<?php esc_html_e( 'includes pickup points', 'wc-pakettikauppa' ); ?>)
+                                              <?php endif; ?>
+                                            </option>
                                         <?php endforeach; ?>
                                     </select>
                                 </td>
@@ -196,10 +209,12 @@ function wc_pakettikauppa_shipping_method_init() {
                                     <?php endforeach; ?>
                                 </td>
                             </table>
-                        <script>pkChangeOptions(document.getElementById("<?php echo $method_id; ?>-select"), '<?php echo $method_id; ?>');</script>
+                          <script>pkChangeOptions(document.getElementById("<?php echo $method_id; ?>-select"), '<?php echo $method_id; ?>');</script>
                         <?php endif; ?>
                       <?php endforeach; ?>
                     <?php endforeach; ?>
+                <hr>
+
               </td>
           </tr>
 
@@ -368,7 +383,7 @@ function wc_pakettikauppa_shipping_method_init() {
           ),
 
           'pickup_points'              => array(
-            'title' => __('Show pickup points for non-Pakettikauppa shipments', 'wc-pakettikauppa'),
+            'title' => __('Shipping methods mapping', 'wc-pakettikauppa'),
             'type'  => 'pickuppoints',
           ),
 

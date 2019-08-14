@@ -102,6 +102,7 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 = 2.0.19 =
 * New feature: Create multiple return shipments from order view
+* Enhancements: Changing texts on settings page to make it easier to understand
 * Enhancements: Small refactoring of admin metabox
 
 = 2.0.18.1 =
