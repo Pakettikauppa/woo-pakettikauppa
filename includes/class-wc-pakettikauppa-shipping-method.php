@@ -130,14 +130,14 @@ function wc_pakettikauppa_shipping_method_init() {
               <td colspan="2">
                     <?php foreach ( WC_Shipping_Zones::get_zones('admin') as $zone_raw ) : ?>
                       <hr>
-                    <?php $zone = new WC_Shipping_Zone( $zone_raw['zone_id'] );?>
+                      <?php $zone = new WC_Shipping_Zone($zone_raw['zone_id']); ?>
                       <h2>
-                          <?php esc_html_e( 'Zone name', 'woocommerce' ); ?>: <?php echo $zone->get_zone_name(); ?>
+                          <?php esc_html_e('Zone name', 'woocommerce'); ?>: <?php echo $zone->get_zone_name(); ?>
                         </h2>
                       <p>
-                        <?php esc_html_e( 'Zone regions', 'woocommerce' ); ?>: <?php echo $zone->get_formatted_location();?>
+                        <?php esc_html_e('Zone regions', 'woocommerce'); ?>: <?php echo $zone->get_formatted_location(); ?>
                       </p>
-                    <h4><?php esc_html_e( 'Shipping method(s)', 'woocommerce' ); ?></h4>
+                    <h4><?php esc_html_e('Shipping method(s)', 'woocommerce'); ?></h4>
                       <?php foreach ( $zone->get_shipping_methods() as $method_id => $shipping_method ) : ?>
                         <?php if ( $shipping_method->enabled === 'yes' && $shipping_method->id !== 'pakettikauppa_shipping_method' && $shipping_method->id !== 'local_pickup' ) : ?>
                           <?php
@@ -159,7 +159,7 @@ function wc_pakettikauppa_shipping_method_init() {
                                             <option value="<?php echo $service_id; ?>" <?php echo (strval($selected_service) === strval($service_id) ? 'selected' : ''); ?>>
                                               <?php echo $service_name; ?>
                                               <?php if ( $this->wc_pakettikauppa_shipment->service_has_pickup_points($service_id) ) : ?>
-                                                (<?php esc_html_e( 'includes pickup points', 'wc-pakettikauppa' ); ?>)
+                                                (<?php esc_html_e('includes pickup points', 'wc-pakettikauppa'); ?>)
                                               <?php endif; ?>
                                             </option>
                                         <?php endforeach; ?>
