@@ -253,6 +253,12 @@ function wc_pakettikauppa_shipping_method_init() {
         }
 
         $fields = array(
+          /* Start new section */
+          array(
+            'description' => __('Only use this shipping method if no other shipping methods are available and suitable. Using this shipping method is not required to be able to use Pakettikauppa plugin.', 'wc-pakettikauppa'),
+            'type'  => 'title',
+            'title' => __('Note', 'wc-pakettikauppa'),
+          ),
           'title'           => array(
             'title'       => __('Title', 'woocommerce'),
             'type'        => 'text',
@@ -260,7 +266,6 @@ function wc_pakettikauppa_shipping_method_init() {
             'default'     => 'Pakettikauppa',
             'desc_tip'    => true,
           ),
-            /* Start new section */
           array(
             'title' => __('Shipping methods', 'wc-pakettikauppa'),
             'type'  => 'title',
