@@ -418,7 +418,9 @@ function wc_pakettikauppa_shipping_method_init() {
             'default' => 'no',
             'options' => array(
               'no'  => __('No automatic creation of shipping labels', 'wc-pakettikauppa'),
+              /* translators: %s: order status */
               'completed'  => sprintf(__('When order status is "%s"', 'wc-pakettikauppa'), __('Completed', 'woocommerce')),
+              /* translators: %s: order status */
               'processing' => sprintf(__('When order status is "%s"', 'wc-pakettikauppa'), __('Processing', 'woocommerce')),
             ),
           ),
