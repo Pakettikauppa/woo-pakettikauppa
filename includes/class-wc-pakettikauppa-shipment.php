@@ -265,7 +265,7 @@ class WC_Pakettikauppa_Shipment {
 
         $instance_id = $chosen_shipping_method->get_instance_id();
 
-        $settings = $this->wc_pakettikauppa_shipment->get_settings();
+        $settings = $this->get_settings();
 
         $pickup_points = json_decode($settings['pickup_points'], true);
 
