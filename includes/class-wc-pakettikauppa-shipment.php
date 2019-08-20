@@ -112,7 +112,7 @@ class WC_Pakettikauppa_Shipment {
       $service_id = $this->get_service_id_from_order($order);
     }
 
-    if ( empty($service_id) || $service_id === '__NULL__' || $service_id === '__PICKUP_POINTS__' ) {
+    if ( empty($service_id) || $service_id === '__NULL__' || $service_id === '__PICKUPPOINTS__' ) {
       $this->add_error('error');
       $order->add_order_note(esc_attr__('The shipping label was not created because the order does not contain valid shipping method.', 'wc-pakettikauppa'));
 
@@ -743,7 +743,11 @@ class WC_Pakettikauppa_Shipment {
       if ( ! empty($pickup_points[ $instance_id ]['service']) ) {
         $service_id = $pickup_points[ $instance_id ]['service'];
 
-        $services = $pickup_points[ $instance_id ][ $service_id ]['additional_services'];
+        $services = array();
+
+        if ( ! empty($pickup_points[ $instance_id ][ $service_id ]) && isset($pickup_points[ $instance_id ][ $service_id ]['additional_services']) ) {
+          $services = $pickup_points[ $instance_id ][ $service_id ]['additional_services'];
+        }
 
         if ( ! empty($services) ) {
           foreach ( $services as $service_code => $service ) {
