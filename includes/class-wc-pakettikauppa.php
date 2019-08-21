@@ -35,7 +35,7 @@ class WC_Pakettikauppa {
     add_action('woocommerce_order_details_after_order_table', array( $this, 'display_order_data' ));
     add_action('woocommerce_checkout_update_order_meta', array( $this, 'update_order_meta_pickup_point_field' ));
     add_action('woocommerce_checkout_process', array( $this, 'validate_checkout_pickup_point' ));
-    add_action('woocommerce_order_status_changed', array( $this, 'create_shipment_for_order_automatially' ));
+    add_action('woocommerce_order_status_changed', array( $this, 'create_shipment_for_order_automatically' ));
 
     try {
       $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
