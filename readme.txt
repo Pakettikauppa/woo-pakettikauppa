@@ -103,9 +103,12 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 = 2.0.19 =
 * New feature: Create multiple return shipments from order view
 * New feature: Option for automatic creation of shipping labels when order is complete
+* Tested against woocommerce 3.7.0
+* Enhancements: Show "Pakettikauppa shipping method" settings option
 * Enhancements: Changing texts on settings page to make it easier to understand
 * Enhancements: Make note to Pakettikauppa shipping method that it is not required to be used. Shipping methods already available to woo can do more than our own shipping method. Our own shipping method might be removed in the future as obsolete.
 * Enhancements: Small refactoring of admin metabox
+* Bug fixes: add more data validation
 
 = 2.0.18.1 =
 * Bug fix: bulk and quick actions now work
