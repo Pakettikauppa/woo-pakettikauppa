@@ -111,15 +111,27 @@ class WC_Pakettikauppa {
    * listings, when we want to have only one single pickup point per order.
    */
   public function pickup_point_field_html() {
-    $packages = WC()->shipping()->get_packages();
+    $chosen_shipping_methods = WC()->session->get('chosen_shipping_methods');
 
-    $chosen_shipping_id = WC()->session->get('chosen_shipping_methods')[0];
+    if ( empty($chosen_shipping_methods) ) {
+      return;
+    }
+
+    $packages = WC()->shipping()->get_packages();
 
     /** @var WC_Shipping_Rate $shipping_rate */
     $shipping_rate = null;
-    foreach ( $packages as $package ) {
-      if ( isset($package['rates'][ $chosen_shipping_id ]) ) {
-        $shipping_rate = $package['rates'][ $chosen_shipping_id ];
+
+    // Find first chosen shipping method that has shipping_rates
+    foreach ( $chosen_shipping_methods as $chosen_shipping_id ) {
+      foreach ( $packages as $package ) {
+        if ( isset($package['rates'][ $chosen_shipping_id ]) ) {
+          $shipping_rate = $package['rates'][ $chosen_shipping_id ];
+        }
+      }
+
+      if ( $shipping_rate !== null ) {
+        break;
       }
     }
 
