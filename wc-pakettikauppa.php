@@ -11,7 +11,7 @@
  * License: GPL v3 or later
  *
  * WC requires at least: 3.4
- * WC tested up to: 3.6.5
+ * WC tested up to: 3.7.0
  *
  * Copyright: © 2017 Seravo Oy
  * License: GNU General Public License v3.0
