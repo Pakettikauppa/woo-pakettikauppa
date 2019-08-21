@@ -326,9 +326,7 @@ class WC_Pakettikauppa_Admin {
    * @param string $message A message containing details about the error.
    */
   public function add_error( $message ) {
-    if ( ! empty($message) ) {
-      array_push($this->errors, $message);
-    }
+    $this->wc_pakettikauppa_shipment->add_error($message);
   }
 
   /**
@@ -337,15 +335,14 @@ class WC_Pakettikauppa_Admin {
    * @return array Errors
    */
   public function get_errors() {
-    return $this->errors;
+    return $this->wc_pakettikauppa_shipment->get_errors();
   }
 
   /**
    * Clear all existing errors that have been added via add_error().
    */
   public function clear_errors() {
-    unset($this->errors);
-    $this->errors = array();
+    $this->wc_pakettikauppa_shipment->clear_errors();
   }
 
   /**

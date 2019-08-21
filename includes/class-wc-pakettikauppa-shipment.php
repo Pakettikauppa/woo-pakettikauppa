@@ -36,8 +36,38 @@ class WC_Pakettikauppa_Shipment {
   private $wc_pakettikauppa_client = null;
   private $wc_pakettikauppa_settings = null;
 
+  private $errors = array();
+
   public function __construct() {
     $this->id = 'wc_pakettikauppa_shipment';
+  }
+
+  /**
+   * Add an error with a specified error message.
+   *
+   * @param string $message A message containing details about the error.
+   */
+  public function add_error( $message ) {
+    if ( ! empty($message) ) {
+      array_push($this->errors, $message);
+    }
+  }
+
+  /**
+   * Return all errors that have been added via add_error().
+   *
+   * @return array Errors
+   */
+  public function get_errors() {
+    return $this->errors;
+  }
+
+  /**
+   * Clear all existing errors that have been added via add_error().
+   */
+  public function clear_errors() {
+    unset($this->errors);
+    $this->errors = array();
   }
 
   /**
