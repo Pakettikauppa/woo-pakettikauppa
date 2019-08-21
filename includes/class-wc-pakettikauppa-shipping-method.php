@@ -537,7 +537,7 @@ function wc_pakettikauppa_shipping_method_init() {
             'title' => __('Advanced settings', 'wc-pakettikauppa'),
             'type'  => 'title',
           ),
-          'show_pakettikauppa_shipping_method2' => array(
+          'show_pakettikauppa_shipping_method' => array(
             'title'   => __('Show Pakettikauppa shipping method', 'wc-pakettikauppa'),
             'type'    => 'select',
             'default' => 'no',
