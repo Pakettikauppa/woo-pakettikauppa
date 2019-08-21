@@ -76,7 +76,11 @@ function wc_pakettikauppa_shipping_method_init() {
        */
       public function init() {
         $settings = $this->wc_pakettikauppa_shipment->get_settings();
-        $show_pakettikauppa_shipping_method = 'yes';
+        if ( ! isset($settings['show_pakettikauppa_shipping_method']) ) {
+          $show_pakettikauppa_shipping_method = 'yes';
+        } else {
+          $show_pakettikauppa_shipping_method = $settings['show_pakettikauppa_shipping_method'];
+        }
 
         if ( $this->instance_id === 0 ) {
           if ( ! isset($settings['show_pakettikauppa_shipping_method']) ) {
