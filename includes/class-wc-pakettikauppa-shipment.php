@@ -873,6 +873,14 @@ class WC_Pakettikauppa_Shipment {
     return $this->wc_pakettikauppa_settings;
   }
 
+  public function update_setting( $name, $value ) {
+    $this->wc_pakettikauppa_settings[$name] = $value;
+  }
+
+  public function save_settings() {
+    return update_option('woocommerce_pakettikauppa_shipping_method_settings', $this->get_settings(), 'yes');
+  }
+
   public function can_create_shipment_automatically( WC_Order $order ) {
     $settings = $this->get_settings();
 
