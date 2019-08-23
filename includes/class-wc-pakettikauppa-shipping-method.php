@@ -163,9 +163,9 @@ function wc_pakettikauppa_shipping_method_init() {
             <?php foreach ( WC_Shipping_Zones::get_zones('admin') as $zone_raw ) : ?>
               <hr>
               <?php $zone = new WC_Shipping_Zone($zone_raw['zone_id']); ?>
-              <h2>
+              <h3>
                 <?php esc_html_e('Zone name', 'woocommerce'); ?>: <?php echo $zone->get_zone_name(); ?>
-              </h2>
+              </h3>
               <p>
                 <?php esc_html_e('Zone regions', 'woocommerce'); ?>: <?php echo $zone->get_formatted_location(); ?>
               </p>

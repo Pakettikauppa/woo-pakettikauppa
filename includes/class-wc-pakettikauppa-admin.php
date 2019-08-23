@@ -30,6 +30,8 @@ class WC_Pakettikauppa_Admin {
   }
 
   public function load() {
+    add_action('init', array( $this, 'maybe_load_setup_wizard' ));
+    add_action('current_screen', array( $this, 'maybe_show_new_install_notice' ));
     add_filter('plugin_action_links_' . WC_PAKETTIKAUPPA_BASENAME, array( $this, 'add_settings_link' ));
     add_filter('plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2);
     add_filter('bulk_actions-edit-shop_order', array( $this, 'register_multi_create_orders' ));
@@ -59,7 +61,6 @@ class WC_Pakettikauppa_Admin {
     } catch ( Exception $e ) {
       $this->add_error($e->getMessage());
       $this->add_error_notice($e->getMessage());
-
       return;
     }
   }
@@ -72,6 +73,42 @@ class WC_Pakettikauppa_Admin {
     $pickup_point_id = $_POST['pickup_point_id'];
 
     WC()->session->set('pakettikauppa_pickup_point_id', $pickup_point_id);
+  }
+
+  public function maybe_show_new_install_notice( $current_screen ) {
+    // Don't show the notice in every screen because that would be
+    // excessive.
+    $show_notice_in_screens = array( 'plugins', 'dashboard' );
+    if ( in_array($current_screen->id, $show_notice_in_screens, true) ) {
+
+      // Determine if this is a new install by checking if the plugin settings
+      // have been saved even once.
+      if ( empty($this->wc_pakettikauppa_shipment->get_settings()) ) {
+        add_action('admin_notices', array( $this, 'new_install_notice_content' ));
+      }
+    }
+  }
+
+  public function new_install_notice_content() {
+    ?>
+    <div class="notice notice-info is-dismissible">
+      <p><?php esc_html_e('Thank you for installing WooCommerce Pakettikauppa! To get started smoothly, please open our setup wizard:', 'wc-pakettikauppa'); ?></p>
+      <p>
+        <a href="<?php echo esc_url(admin_url('admin.php?page=wcpk-setup')); ?>">
+          <button class="button button-primary">
+            <?php esc_html_e('Get started', 'wc-pakettikauppa'); ?>
+          </button>
+        </a>
+      </p>
+    </div>
+    <?php
+  }
+
+  public function maybe_load_setup_wizard() {
+    $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_SPECIAL_CHARS);
+    if ( $page === 'wcpk-setup' ) {
+      require_once WC_PAKETTIKAUPPA_DIR . 'includes/class-wc-pakettikauppa-setup-wizard.php';
+    }
   }
 
   public function create_shipment_for_order_automatically( $order_id ) {
