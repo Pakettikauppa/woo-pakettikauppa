@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce pakettikauppa 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pk\n"
-"POT-Creation-Date: 2019-08-26 12:09:58+00:00\n"
-"PO-Revision-Date: 2019-08-26 15:10+0300\n"
+"POT-Creation-Date: 2019-08-26 12:18:40+00:00\n"
+"PO-Revision-Date: 2019-08-26 15:19+0300\n"
 "Last-Translator: Leo Toikka <leo@seravo.fi>\n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -61,8 +61,8 @@ msgstr ""
 
 #. translators: %s: Error message
 #: includes/class-wc-pakettikauppa-admin.php:355
-#: includes/class-wc-pakettikauppa-admin.php:811
-#: includes/class-wc-pakettikauppa-admin.php:838
+#: includes/class-wc-pakettikauppa-admin.php:813
+#: includes/class-wc-pakettikauppa-admin.php:840
 #: includes/class-wc-pakettikauppa-shipment.php:193
 msgid "An error occured: %s"
 msgstr "Tapahtui virhe: %s"
@@ -86,8 +86,8 @@ msgstr "Asetukset"
 #. translators: %s: Shipment tracking URL
 #: includes/class-wc-pakettikauppa-admin.php:434
 #: includes/class-wc-pakettikauppa-admin.php:574
-#: includes/class-wc-pakettikauppa-admin.php:956
-#: includes/class-wc-pakettikauppa-admin.php:962
+#: includes/class-wc-pakettikauppa-admin.php:958
+#: includes/class-wc-pakettikauppa-admin.php:964
 msgid "Requested pickup point"
 msgstr "Valittu noutopiste"
 
@@ -162,36 +162,37 @@ msgstr "Vaihda toimitustapaa…"
 msgid "Unable to create return label for this shipment type."
 msgstr "Palautuslähetystä ei voitu luoda automaattisesti tälle lähetystavalle."
 
-#: includes/class-wc-pakettikauppa-admin.php:793
-#: includes/class-wc-pakettikauppa-admin.php:800
-msgid "Successfully deleted Pakettikauppa shipping label."
-msgstr "Pakettikauppa-lähetyksen pakettikortti poistettiin onnistuneesti."
+#. translators: %%s: tracking code
+#: includes/class-wc-pakettikauppa-admin.php:794
+#: includes/class-wc-pakettikauppa-admin.php:802
+msgid "Successfully deleted Pakettikauppa shipping label %s."
+msgstr "Pakettikauppa-lähetyksen pakettikortti (%s) poistettiin onnistuneesti."
 
 #. translators: %s: Error message
-#: includes/class-wc-pakettikauppa-admin.php:818
+#: includes/class-wc-pakettikauppa-admin.php:820
 msgid "Deleting Pakettikauppa shipment failed! Errors: %s"
 msgstr "Toimenpide epäonnistui! Virheet: %s"
 
-#: includes/class-wc-pakettikauppa-admin.php:882
+#: includes/class-wc-pakettikauppa-admin.php:884
 msgid "Shipment tracking code is not defined."
 msgstr "Lähetystä ei löytynyt annetulla seurantanumerolla."
 
-#: includes/class-wc-pakettikauppa-admin.php:892
+#: includes/class-wc-pakettikauppa-admin.php:894
 msgid "Cannot find shipment with given shipment number."
 msgstr "Lähetystä ei löytynyt annetulla seurantanumerolla."
 
-#: includes/class-wc-pakettikauppa-admin.php:959
+#: includes/class-wc-pakettikauppa-admin.php:961
 msgid ""
 "You can track your order at %1$s.\n"
 "\n"
 msgstr "Voit seurata <a href=\"%1$s\">seurata lähetystä täältä</a>.\n"
 
-#: includes/class-wc-pakettikauppa-admin.php:966
+#: includes/class-wc-pakettikauppa-admin.php:968
 msgid "Tracking"
 msgstr "Lähetysseuranta"
 
 #. translators: 1: Shipment tracking URL 2: Shipment tracking code
-#: includes/class-wc-pakettikauppa-admin.php:968
+#: includes/class-wc-pakettikauppa-admin.php:970
 msgid "You can <a href=\"%1$s\">track your order</a> with tracking code %2$s."
 msgstr "Voit <a href=\"%1$s\">seurata lähetystä</a> lähetystunnuksella %2$s."
 
