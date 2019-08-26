@@ -790,7 +790,8 @@ class WC_Pakettikauppa_Admin {
         // Delete old tracking code
         update_post_meta($order->get_id(), '_wc_pakettikauppa_tracking_code', '');
 
-        $order->add_order_note(esc_attr__('Successfully deleted Pakettikauppa shipping label.', 'wc-pakettikauppa'));
+        /* translators: %%s: tracking code */
+        $order->add_order_note(sprintf(esc_attr__('Successfully deleted Pakettikauppa shipping label %s.', 'wc-pakettikauppa'), $tracking_code));
       } else {
         $return_shipments = get_post_meta($order->get_id(), '_wc_pakettikauppa_return_shipment');
 
