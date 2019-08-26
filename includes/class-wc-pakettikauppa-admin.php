@@ -232,15 +232,19 @@ class WC_Pakettikauppa_Admin {
       return;
     }
 
-    if ( isset($_REQUEST['action2']) ) {
-      if ( $_REQUEST['action2'] !== 'pakettikauppa_create_multiple_shipping_labels' ) {
-        return;
-      }
-    } else if ( isset($_REQUEST['action']) ) {
-      if ( $_REQUEST['action'] !== 'quick_create_label' ) {
-        return;
-      }
-    } else {
+    $action = null;
+
+    if ( isset($_REQUEST['action']) && $_REQUEST['action'] !== '-1' ) {
+      $action = $_REQUEST['action'];
+    } else if ( isset($_REQUEST['action2']) && $_REQUEST['action2'] !== '-1' ) {
+      $action = $_REQUEST['action2'];
+    }
+
+    if ( $action === null ) {
+      return;
+    }
+
+    if ( ! ($action === 'pakettikauppa_create_multiple_shipping_labels' || $action === 'quick_create_label') ) {
       return;
     }
 
