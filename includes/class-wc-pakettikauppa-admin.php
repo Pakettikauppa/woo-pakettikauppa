@@ -749,22 +749,26 @@ class WC_Pakettikauppa_Admin {
     $shipment = $this->wc_pakettikauppa_shipment->create_shipment($order, $return_service_id, $additional_services);
 
     if ($shipment !== null) {
-      $tracking_code = $shipment->{'response.trackingcode'}->__toString();
-      $document_url  = admin_url( 'admin-post.php?post=' . $order->get_id() . '&action=show_pakettikauppa&tracking_code=' . $tracking_code );
-      $tracking_url  = (string) $shipment->{'response.trackingcode'}['tracking_url'];
-      $label_code    = (string) $shipment->{'response.trackingcode'}['labelcode'];
+      $tracking_code = null;
 
-      add_post_meta(
-        $order->get_id(),
-        '_wc_pakettikauppa_return_shipment',
-        array(
-          'service_id' => $return_service_id,
-          'tracking_code' => $tracking_code,
-          'document_url' => $document_url,
-          'tracking_url' => $tracking_url,
-          'label_code' => $label_code,
-        )
-      );
+      if ( isset($shipment->{'response.trackingcode'}) ) {
+        $tracking_code = $shipment->{'response.trackingcode'}->__toString();
+        $document_url  = admin_url( 'admin-post.php?post=' . $order->get_id() . '&action=show_pakettikauppa&tracking_code=' . $tracking_code );
+        $tracking_url  = (string) $shipment->{'response.trackingcode'}['tracking_url'];
+        $label_code    = (string) $shipment->{'response.trackingcode'}['labelcode'];
+
+        add_post_meta(
+          $order->get_id(),
+          '_wc_pakettikauppa_return_shipment',
+          array(
+            'service_id' => $return_service_id,
+            'tracking_code' => $tracking_code,
+            'document_url' => $document_url,
+            'tracking_url' => $tracking_url,
+            'label_code' => $label_code,
+          )
+        );
+      }
     }
   }
 
