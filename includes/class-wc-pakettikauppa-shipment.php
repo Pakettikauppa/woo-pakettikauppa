@@ -429,7 +429,7 @@ class WC_Pakettikauppa_Shipment {
    * @return SimpleXMLElement
    * @throws Exception
    */
-  private function create_shipment_from_order( $order, $service_id = null, $additional_services = array() ) {
+  public function create_shipment_from_order( $order, $service_id = null, $additional_services = array() ) {
     $shipment   = new Shipment();
 
     $shipment->setShippingMethod($service_id);

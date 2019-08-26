@@ -520,7 +520,13 @@ class WC_Pakettikauppa_Admin {
         <p class="pakettikauppa-shipment">
           <button type="button" value="get_status" name="wc_pakettikauppa[get_status]" class="button pakettikauppa_meta_box" onclick="pakettikauppa_meta_box_submit(this);"><?php echo __('Update Status', 'wc-pakettikauppa'); ?></button>
           <button type="button" value="create_return_label" name="wc_pakettikauppa[create_return_label]" onclick="pakettikauppa_meta_box_submit(this);" class="button pakettikauppa_meta_box"><?php echo __('Create Return Label', 'wc-pakettikauppa'); ?></button>
-          <button type="button" value="all" name="wc_pakettikauppa[delete_shipping_label]" onclick="pakettikauppa_meta_box_submit(this);" class="button pakettikauppa_meta_box wc-pakettikauppa-delete-button"><?php echo __('Delete Shipping Label', 'wc-pakettikauppa'); ?></button>
+          <button type="button" value="all" name="wc_pakettikauppa[delete_shipping_label]" onclick="pakettikauppa_meta_box_submit(this);" class="button pakettikauppa_meta_box wc-pakettikauppa-delete-button">
+          <?php if ( empty($return_shipments) ) : ?>
+            <?php echo __('Delete Shipping Label', 'wc-pakettikauppa'); ?>
+          <?php else : ?>
+            <?php echo __('Delete Shipping Label and return labels', 'wc-pakettikauppa'); ?>
+          <?php endif; ?>
+          </button>
         </p>
         <?php if ( ! empty($return_shipments) ) : ?>
           <?php foreach ( $return_shipments as $return_label ) : ?>
@@ -746,14 +752,14 @@ class WC_Pakettikauppa_Admin {
         return null;
     }
 
-    $shipment = $this->wc_pakettikauppa_shipment->create_shipment($order, $return_service_id, $additional_services);
+    $shipment = $this->wc_pakettikauppa_shipment->create_shipment_from_order($order, $return_service_id, $additional_services);
 
-    if ($shipment !== null) {
+    if ( $shipment !== null ) {
       $tracking_code = null;
 
       if ( isset($shipment->{'response.trackingcode'}) ) {
         $tracking_code = $shipment->{'response.trackingcode'}->__toString();
-        $document_url  = admin_url( 'admin-post.php?post=' . $order->get_id() . '&action=show_pakettikauppa&tracking_code=' . $tracking_code );
+        $document_url  = admin_url('admin-post.php?post=' . $order->get_id() . '&action=show_pakettikauppa&tracking_code=' . $tracking_code);
         $tracking_url  = (string) $shipment->{'response.trackingcode'}['tracking_url'];
         $label_code    = (string) $shipment->{'response.trackingcode'}['labelcode'];
 
