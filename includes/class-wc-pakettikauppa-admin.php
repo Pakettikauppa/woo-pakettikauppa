@@ -797,7 +797,8 @@ class WC_Pakettikauppa_Admin {
         foreach ( $return_shipments as $return_shipment ) {
           if ( $return_shipment['tracking_code'] === $tracking_code ) {
             delete_post_meta($order->get_id(), '_wc_pakettikauppa_return_shipment', $return_shipment);
-            $order->add_order_note(esc_attr__('Successfully deleted Pakettikauppa shipping label.', 'wc-pakettikauppa'));
+            /* translators: %%s: tracking code */
+            $order->add_order_note(sprintf(esc_attr__('Successfully deleted Pakettikauppa shipping label %s.', 'wc-pakettikauppa'), $tracking_code));
             return;
           }
         }
