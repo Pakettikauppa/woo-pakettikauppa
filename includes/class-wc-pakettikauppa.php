@@ -35,6 +35,7 @@ class WC_Pakettikauppa {
     add_action('woocommerce_order_details_after_order_table', array( $this, 'display_order_data' ));
     add_action('woocommerce_checkout_update_order_meta', array( $this, 'update_order_meta_pickup_point_field' ));
     add_action('woocommerce_checkout_process', array( $this, 'validate_checkout_pickup_point' ));
+    add_action('woocommerce_order_status_changed', array( $this, 'create_shipment_for_order_automatically' ));
 
     try {
       $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
@@ -42,6 +43,14 @@ class WC_Pakettikauppa {
     } catch ( Exception $e ) {
       $this->add_error($e->getMessage());
       $this->display_error();
+    }
+  }
+
+  public function create_shipment_for_order_automatically( $order_id ) {
+    $order = new WC_Order($order_id);
+
+    if ( $this->wc_pakettikauppa_shipment->can_create_shipment_automatically($order) ) {
+      $this->wc_pakettikauppa_shipment->create_shipment($order);
     }
   }
 
@@ -102,15 +111,27 @@ class WC_Pakettikauppa {
    * listings, when we want to have only one single pickup point per order.
    */
   public function pickup_point_field_html() {
-    $packages = WC()->shipping()->get_packages();
+    $chosen_shipping_methods = WC()->session->get('chosen_shipping_methods');
 
-    $chosen_shipping_id = WC()->session->get('chosen_shipping_methods')[0];
+    if ( empty($chosen_shipping_methods) ) {
+      return;
+    }
+
+    $packages = WC()->shipping()->get_packages();
 
     /** @var WC_Shipping_Rate $shipping_rate */
     $shipping_rate = null;
-    foreach ( $packages as $package ) {
-      if ( isset($package['rates'][ $chosen_shipping_id ]) ) {
-        $shipping_rate = $package['rates'][ $chosen_shipping_id ];
+
+    // Find first chosen shipping method that has shipping_rates
+    foreach ( $chosen_shipping_methods as $chosen_shipping_id ) {
+      foreach ( $packages as $package ) {
+        if ( isset($package['rates'][ $chosen_shipping_id ]) ) {
+          $shipping_rate = $package['rates'][ $chosen_shipping_id ];
+        }
+      }
+
+      if ( $shipping_rate !== null ) {
+        break;
       }
     }
 
