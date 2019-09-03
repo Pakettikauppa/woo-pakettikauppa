@@ -100,6 +100,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 
+= 2.0.20 =
+* New feature: Change order status after shipping label is printed
+
 = 2.0.19 =
 * New feature: Create multiple return shipments from order view
 * New feature: Option for automatic creation of shipping labels when order is complete
