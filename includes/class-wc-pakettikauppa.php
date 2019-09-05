@@ -94,7 +94,7 @@ class WC_Pakettikauppa {
     $pickup_point = $_POST['pakettikauppa_pickup_point'];
 
     if ( empty($pickup_point) ) {
-      $pickup_point = WC()->session->get( 'pakettikauppa_pickup_point_id' );
+      $pickup_point = WC()->session->get('pakettikauppa_pickup_point_id');
       WC()->session->set('pakettikauppa_pickup_point_id', null);
     }
 
@@ -253,7 +253,10 @@ class WC_Pakettikauppa {
           array(
             'clear'             => true,
             'type'              => $list_type,
-            'custom_attributes' => array( 'style' => 'word-wrap: normal;', 'onchange' => 'pakettikauppa_pickup_point_change(this);' ),
+            'custom_attributes' => array(
+              'style' => 'word-wrap: normal;',
+              'onchange' => 'pakettikauppa_pickup_point_change(this);',
+            ),
             'options'           => $options_array,
           ),
           null
