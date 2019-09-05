@@ -30,7 +30,7 @@ class WC_Pakettikauppa {
   }
 
   public function load() {
-    add_action('enqueue_scripts', array( $this, 'enqueue_scripts' ));
+    add_action('woocommerce_before_checkout_form', array( $this, 'enqueue_scripts' ));
     add_action('woocommerce_review_order_after_shipping', array( $this, 'pickup_point_field_html' ));
     add_action('woocommerce_order_details_after_order_table', array( $this, 'display_order_data' ));
     add_action('woocommerce_checkout_update_order_meta', array( $this, 'update_order_meta_pickup_point_field' ));
@@ -87,15 +87,26 @@ class WC_Pakettikauppa {
    * @param int $order_id The id of the order to update
    */
   public function update_order_meta_pickup_point_field( $order_id ) {
-    if ( ! empty($_POST['pakettikauppa_pickup_point']) && wp_verify_nonce(sanitize_key($_POST['woocommerce-process-checkout-nonce']), 'woocommerce-process_checkout') ) {
-      update_post_meta($order_id, '_pakettikauppa_pickup_point', sanitize_text_field($_POST['pakettikauppa_pickup_point']));
+    if ( ! wp_verify_nonce(sanitize_key($_POST['woocommerce-process-checkout-nonce']), 'woocommerce-process_checkout') ) {
+      return;
+    }
+
+    $pickup_point = $_POST['pakettikauppa_pickup_point'];
+
+    if ( empty($pickup_point) ) {
+      $pickup_point = WC()->session->get( 'pakettikauppa_pickup_point_id' );
+      WC()->session->set('pakettikauppa_pickup_point_id', null);
+    }
+
+    if ( ! empty($pickup_point) ) {
+      update_post_meta($order_id, '_pakettikauppa_pickup_point', sanitize_text_field($pickup_point));
       // Find string like '(#6681)'
-      preg_match('/\(#[0-9]+\)/', $_POST['pakettikauppa_pickup_point'], $matches);
+      preg_match('/\(#[0-9]+\)/', $pickup_point, $matches);
       // Cut the number out from a string of the form '(#6681)'
       $pakettikauppa_pickup_point_id = substr($matches[0], 2, - 1);
       update_post_meta($order_id, '_pakettikauppa_pickup_point_id', $pakettikauppa_pickup_point_id);
 
-      preg_match('/\(\%[0-9]+\)/', $_POST['pakettikauppa_pickup_point'], $matches);
+      preg_match('/\(\%[0-9]+\)/', $pickup_point, $matches);
       // Cut the number out from a string of the form '(#6681)'
       $pakettikauppa_pickup_point_provider_id = substr($matches[0], 2, - 1);
 
@@ -194,6 +205,10 @@ class WC_Pakettikauppa {
     echo '<th>' . esc_attr__('Pickup point', 'wc-pakettikauppa') . '</th>';
     echo '<td data-title="' . esc_attr__('Pickup point', 'wc-pakettikauppa') . '">';
 
+    ?>
+    <input type="hidden" name="pakettikauppa_nonce" value="<?php echo wp_create_nonce('pakettikauppa-pickup_point_update'); ?>" id="pakettikauppa_pickup_point_update_nonce" />
+    <?php
+
     // Return if the customer has not yet chosen a postcode
     if ( empty($shipping_postcode) ) {
       echo '<p>';
@@ -238,7 +253,7 @@ class WC_Pakettikauppa {
           array(
             'clear'             => true,
             'type'              => $list_type,
-            'custom_attributes' => array( 'style' => 'word-wrap: normal;' ),
+            'custom_attributes' => array( 'style' => 'word-wrap: normal;', 'onchange' => 'pakettikauppa_pickup_point_change(this);' ),
             'options'           => $options_array,
           ),
           null
