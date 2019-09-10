@@ -123,6 +123,7 @@ class WC_Pakettikauppa {
    */
   public function pickup_point_field_html() {
     $chosen_shipping_methods = WC()->session->get('chosen_shipping_methods');
+    WC()->session->set('pakettikauppa_pickup_point_id', null);
 
     if ( empty($chosen_shipping_methods) ) {
       return;
