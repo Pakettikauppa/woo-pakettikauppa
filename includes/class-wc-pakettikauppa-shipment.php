@@ -257,6 +257,12 @@ class WC_Pakettikauppa_Shipment {
       }
     }
 
+    if ( ! empty($settings['change_order_status_to']) ) {
+      if ( $order->get_status() !== $settings['change_order_status_to'] ) {
+        $order->update_status($settings['change_order_status_to']);
+      }
+    }
+
     return $tracking_code;
   }
 

@@ -444,6 +444,17 @@ function wc_pakettikauppa_shipping_method_init() {
             'default' => 'no',
           ),
 
+          'change_order_status_to'      => array(
+            'title'   => __('When creating shipping label change order status to', 'wc-pakettikauppa'),
+            'type'    => 'select',
+            'default' => '',
+            'options' => array(
+              '' => __('No order status change', 'wc-pakettikauppa'),
+              'completed'  => __('Completed', 'woocommerce'),
+              'processing' => __('Processing', 'woocommerce'),
+            ),
+          ),
+
           'create_shipments_automatically'     => array(
             'title'   => __('Create shipping labels automatically', 'wc-pakettikauppa'),
             'type'    => 'select',

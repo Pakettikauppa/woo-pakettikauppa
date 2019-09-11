@@ -40,7 +40,7 @@ class WC_Pakettikauppa_Admin {
     add_action('admin_post_quick_create_label', array( $this, 'create_multiple_shipments' ), 10);
     add_action('woocommerce_email_order_meta', array( $this, 'attach_tracking_to_email' ), 10, 4);
     add_action('woocommerce_admin_order_data_after_shipping_address', array( $this, 'show_pickup_point_in_admin_order_meta' ), 10, 1);
-    add_action('admin_notices', array( $this, 'wc_pakettikauppa_updated' ), 10, 2);
+    //add_action('admin_notices', array( $this, 'wc_pakettikauppa_updated' ), 10, 2);
     add_action('handle_bulk_actions-edit-shop_order', array( $this, 'create_multiple_shipments' )); // admin_action_{action name}
     add_action('pakettikauppa_create_shipments', array( $this, 'hook_create_shipments' ), 10, 2);
     add_action('pakettikauppa_fetch_shipping_labels', array( $this, 'hook_fetch_shipping_labels' ), 10, 2);
@@ -49,6 +49,8 @@ class WC_Pakettikauppa_Admin {
     add_action('woocommerce_process_product_meta', array( $this, 'save_custom_product_fields' ));
     add_action('wp_ajax_pakettikauppa_meta_box', array( $this, 'ajax_meta_box' ));
     add_action('woocommerce_order_status_changed', array( $this, 'create_shipment_for_order_automatically' ));
+    add_action('wp_ajax_pakettikauppa_update_pickup_point', array( $this, 'save_pickup_point_info_to_session' ), 10);
+    add_action('wp_ajax_nopriv_pakettikauppa_update_pickup_point', array( $this, 'save_pickup_point_info_to_session' ), 10);
 
     try {
       $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
@@ -60,6 +62,16 @@ class WC_Pakettikauppa_Admin {
 
       return;
     }
+  }
+
+  public function save_pickup_point_info_to_session() {
+    if ( ! check_ajax_referer('pakettikauppa-pickup_point_update', 'security') ) {
+      return;
+    }
+
+    $pickup_point_id = $_POST['pickup_point_id'];
+
+    WC()->session->set('pakettikauppa_pickup_point_id', $pickup_point_id);
   }
 
   public function create_shipment_for_order_automatically( $order_id ) {
