@@ -46,7 +46,6 @@ add_action('plugins_loaded', 'wc_pakettikauppa_load_textdomain');
  * Load the WC_Pakettikauppa class when in frontend
  */
 function wc_pakettikauppa_load() {
-
   if ( ! is_admin() ) {
     require_once plugin_dir_path(__FILE__) . 'includes/class-wc-pakettikauppa.php';
     $wc_pakettikauppa = new WC_Pakettikauppa();
