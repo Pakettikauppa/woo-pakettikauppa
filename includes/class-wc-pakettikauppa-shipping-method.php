@@ -441,7 +441,7 @@ function wc_pakettikauppa_shipping_method_init() {
           'add_pickup_point_to_email'      => array(
             'title'   => __('Add selected pickup point information to the order completed email', 'wc-pakettikauppa'),
             'type'    => 'checkbox',
-            'default' => 'no',
+            'default' => 'yes',
           ),
 
           'change_order_status_to'      => array(
@@ -509,25 +509,25 @@ function wc_pakettikauppa_shipping_method_init() {
           'sender_name'                => array(
             'title'   => __('Sender name', 'wc-pakettikauppa'),
             'type'    => 'text',
-            'default' => '',
+            'default' => get_bloginfo('name'),
           ),
 
           'sender_address'             => array(
             'title'   => __('Sender address', 'wc-pakettikauppa'),
             'type'    => 'text',
-            'default' => '',
+            'default' => WC()->countries->get_base_address(),
           ),
 
           'sender_postal_code'         => array(
             'title'   => __('Sender postal code', 'wc-pakettikauppa'),
             'type'    => 'text',
-            'default' => '',
+            'default' => WC()->countries->get_base_postcode(),
           ),
 
           'sender_city'                => array(
             'title'   => __('Sender city', 'wc-pakettikauppa'),
             'type'    => 'text',
-            'default' => '',
+            'default' => WC()->countries->get_base_city(),
           ),
           'info_code'                  => array(
             'title'   => __('Info-code for shipments', 'wc-pakettikauppa'),
