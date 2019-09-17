@@ -484,8 +484,8 @@ class WC_Pakettikauppa_Shipment {
 
     for ( $i = 0; $i < $parcel_total_count; $i++ ) {
       $parcel = new Parcel();
-      $parcel->setWeight(round($order_total_weight / $parcel_total_count, 0));
-      $parcel->setVolume(round($order_total_volume / $parcel_total_count, 0));
+      $parcel->setWeight(round($order_total_weight / $parcel_total_count, 2));
+      $parcel->setVolume(round($order_total_volume / $parcel_total_count, 4));
 
       if ( ! empty($this->wc_pakettikauppa_settings['info_code']) ) {
         $parcel->setInfocode($this->wc_pakettikauppa_settings['info_code']);
