@@ -163,9 +163,9 @@ function wc_pakettikauppa_shipping_method_init() {
             <?php foreach ( WC_Shipping_Zones::get_zones('admin') as $zone_raw ) : ?>
               <hr>
               <?php $zone = new WC_Shipping_Zone($zone_raw['zone_id']); ?>
-              <h2>
+              <h3>
                 <?php esc_html_e('Zone name', 'woocommerce'); ?>: <?php echo $zone->get_zone_name(); ?>
-              </h2>
+              </h3>
               <p>
                 <?php esc_html_e('Zone regions', 'woocommerce'); ?>: <?php echo $zone->get_formatted_location(); ?>
               </p>
@@ -441,7 +441,7 @@ function wc_pakettikauppa_shipping_method_init() {
           'add_pickup_point_to_email'      => array(
             'title'   => __('Add selected pickup point information to the order completed email', 'wc-pakettikauppa'),
             'type'    => 'checkbox',
-            'default' => 'no',
+            'default' => 'yes',
           ),
 
           'change_order_status_to'      => array(
@@ -509,25 +509,25 @@ function wc_pakettikauppa_shipping_method_init() {
           'sender_name'                => array(
             'title'   => __('Sender name', 'wc-pakettikauppa'),
             'type'    => 'text',
-            'default' => '',
+            'default' => get_bloginfo('name'),
           ),
 
           'sender_address'             => array(
             'title'   => __('Sender address', 'wc-pakettikauppa'),
             'type'    => 'text',
-            'default' => '',
+            'default' => WC()->countries->get_base_address(),
           ),
 
           'sender_postal_code'         => array(
             'title'   => __('Sender postal code', 'wc-pakettikauppa'),
             'type'    => 'text',
-            'default' => '',
+            'default' => WC()->countries->get_base_postcode(),
           ),
 
           'sender_city'                => array(
             'title'   => __('Sender city', 'wc-pakettikauppa'),
             'type'    => 'text',
-            'default' => '',
+            'default' => WC()->countries->get_base_city(),
           ),
           'info_code'                  => array(
             'title'   => __('Info-code for shipments', 'wc-pakettikauppa'),

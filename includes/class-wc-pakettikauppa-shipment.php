@@ -376,19 +376,12 @@ class WC_Pakettikauppa_Shipment {
 
   public function load() {
     // Use option from database directly as WC_Pakettikauppa_Shipping_Method object is not accessible here
-    $settings = get_option('woocommerce_pakettikauppa_shipping_method_settings', null);
-
-    if ( $settings === false ) {
-      throw new Exception(
-        'WooCommerce Pakettikauppa: woocommerce_pakettikauppa_shipping_method_settings was not found in the database!'
-      );
-    }
-
+    $settings = get_option('woocommerce_pakettikauppa_shipping_method_settings', array());
     $this->wc_pakettikauppa_settings = $settings;
 
-    $account_number = $settings['account_number'];
-    $secret_key     = $settings['secret_key'];
-    $mode           = $settings['mode'];
+    $account_number = isset($settings['account_number']) ? $settings['account_number'] : '';
+    $secret_key     = isset($settings['secret_key']) ? $settings['secret_key'] : '';
+    $mode           = isset($settings['mode']) ? $settings['mode'] : '';
     $is_test_mode   = ($mode === 'production' ? false : true);
 
     $options_array = array(
