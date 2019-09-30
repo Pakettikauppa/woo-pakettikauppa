@@ -27,6 +27,7 @@ define('WC_PAKETTIKAUPPA_BASENAME', plugin_basename(__FILE__));
 define('WC_PAKETTIKAUPPA_DIR', plugin_dir_path(__FILE__));
 define('WC_PAKETTIKAUPPA_VERSION', get_file_data(__FILE__, array( 'Version' ), 'plugin')[0]);
 define('WC_PAKETTIKAUPPA_TEXT_DOMAIN', 'wc-pakettikauppa');
+define('WC_PAKETTIKAUPPA_SHIPPING_METHOD', 'pakettikauppa_shipping_method');
 
 /**
  * Load plugin textdomain

@@ -44,9 +44,9 @@ function wc_pakettikauppa_shipping_method_init() {
       public function __construct( $instance_id = 0 ) {
         parent::__construct($instance_id);
 
-        $this->id = 'pakettikauppa_shipping_method'; // ID for your shipping method. Should be unique.
+        $this->id = WC_PAKETTIKAUPPA_SHIPPING_METHOD; // ID for your shipping method. Should be unique.
 
-        $this->method_title = 'Pakettikauppa';
+        $this->method_title = __('Pakettikauppa', WC_PAKETTIKAUPPA_TEXT_DOMAIN);
 
         $this->method_description = __('Edit to select shipping company and shipping prices.', WC_PAKETTIKAUPPA_TEXT_DOMAIN); // Description shown in admin
         //        $this->method_description = __( 'All shipping methods with one contract. For more information visit <a href="https://www.pakettikauppa.fi/">Pakettikauppa</a>.', WC_PAKETTIKAUPPA_TEXT_DOMAIN ); // Description shown in admin
@@ -171,7 +171,7 @@ function wc_pakettikauppa_shipping_method_init() {
               </p>
               <h4><?php esc_html_e('Shipping method(s)', 'woocommerce'); ?></h4>
               <?php foreach ( $zone->get_shipping_methods() as $method_id => $shipping_method ) : ?>
-                <?php if ( $shipping_method->enabled === 'yes' && $shipping_method->id !== 'pakettikauppa_shipping_method' && $shipping_method->id !== 'local_pickup' ) : ?>
+                <?php if ( $shipping_method->enabled === 'yes' && $shipping_method->id !== WC_PAKETTIKAUPPA_SHIPPING_METHOD && $shipping_method->id !== 'local_pickup' ) : ?>
                   <?php
                   $selected_service = null;
                   if ( ! empty($values[ $method_id ]['service']) ) {
@@ -761,7 +761,7 @@ function wc_pakettikauppa_shipping_method_init() {
 add_action('woocommerce_shipping_init', 'wc_pakettikauppa_shipping_method_init');
 
 function add_wc_pakettikauppa_shipping_method( $methods ) {
-  $methods['pakettikauppa_shipping_method'] = 'WC_Pakettikauppa_Shipping_Method';
+  $methods[WC_PAKETTIKAUPPA_SHIPPING_METHOD] = 'WC_Pakettikauppa_Shipping_Method';
 
   return $methods;
 }

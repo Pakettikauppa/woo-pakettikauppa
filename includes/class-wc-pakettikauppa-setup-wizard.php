@@ -77,8 +77,8 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
         $this->step = sanitize_key($_GET['wcpk-setup-step']);
       }
       $shipping_methods = WC()->shipping()->get_shipping_methods();
-      if ( isset($shipping_methods['pakettikauppa_shipping_method']) ) {
-        $this->shipping_method = $shipping_methods['pakettikauppa_shipping_method'];
+      if ( isset($shipping_methods[WC_PAKETTIKAUPPA_SHIPPING_METHOD]) ) {
+        $this->shipping_method = $shipping_methods[WC_PAKETTIKAUPPA_SHIPPING_METHOD];
       }
 
       // Check if there is a save currently in progress, call handler if necessary
