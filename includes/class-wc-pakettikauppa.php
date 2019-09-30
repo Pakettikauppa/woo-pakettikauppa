@@ -26,7 +26,7 @@ class WC_Pakettikauppa {
   private $errors = array();
 
   public function __construct() {
-    $this->id = 'wc_pakettikauppa';
+    $this->id = WC_PAKETTIKAUPPA_TEXT_DOMAIN;
   }
 
   public function load() {

@@ -66,7 +66,7 @@ function wc_pakettikauppa_load() {
  */
 function wc_pakettikauppa_woocommerce_inactive_notice() {
   echo '<div class="notice notice-error">';
-  echo '<p>' . __('WooCommerce Pakettikauppa requires WooCommerce to be installed and activated!', 'wc-pakettikauppa') . '</p>';
+  echo '<p>' . __('WooCommerce Pakettikauppa requires WooCommerce to be installed and activated!', WC_PAKETTIKAUPPA_TEXT_DOMAIN) . '</p>';
   echo '</div>';
 }
 
