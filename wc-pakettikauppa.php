@@ -26,6 +26,7 @@ if ( ! defined('ABSPATH') ) {
 define('WC_PAKETTIKAUPPA_BASENAME', plugin_basename(__FILE__));
 define('WC_PAKETTIKAUPPA_DIR', plugin_dir_path(__FILE__));
 define('WC_PAKETTIKAUPPA_VERSION', get_file_data(__FILE__, array( 'Version' ), 'plugin')[0]);
+define('WC_PAKETTIKAUPPA_TEXT_DOMAIN', 'wc-pakettikauppa');
 
 /**
  * Load plugin textdomain
@@ -34,7 +35,7 @@ define('WC_PAKETTIKAUPPA_VERSION', get_file_data(__FILE__, array( 'Version' ), '
  */
 function wc_pakettikauppa_load_textdomain() {
   load_plugin_textdomain(
-    'wc-pakettikauppa',
+    WC_PAKETTIKAUPPA_TEXT_DOMAIN,
     false,
     dirname(plugin_basename(__FILE__)) . '/languages/'
   );
