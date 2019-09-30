@@ -743,6 +743,8 @@ class WC_Pakettikauppa_Admin {
 
   /**
    * @param WC_Order $order
+   *
+   * @throws Exception
    */
   private function create_return_label( WC_Order $order ) {
     $service_id = get_post_meta($order->get_id(), '_wc_pakettikauppa_custom_service_id', true);
@@ -765,7 +767,7 @@ class WC_Pakettikauppa_Admin {
       case 'Matkahuolto':
       default:
         $order->add_order_note(__('Unable to create return label for this shipment type.', 'wc-pakettikauppa'));
-        return null;
+        return;
     }
 
     $shipment = $this->wc_pakettikauppa_shipment->create_shipment_from_order($order, $return_service_id, $additional_services);
