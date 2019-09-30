@@ -28,6 +28,8 @@ define('WC_PAKETTIKAUPPA_DIR', plugin_dir_path(__FILE__));
 define('WC_PAKETTIKAUPPA_VERSION', get_file_data(__FILE__, array( 'Version' ), 'plugin')[0]);
 define('WC_PAKETTIKAUPPA_TEXT_DOMAIN', 'wc-pakettikauppa');
 define('WC_PAKETTIKAUPPA_SHIPPING_METHOD', 'pakettikauppa_shipping_method');
+define('WC_PAKETTIKAUPPA_ADMIN', 'wc_pakettikauppa_admin');
+define('WC_PAKETTIKAUPPA_URL', 'https://www.pakettikauppa.fi/');
 
 /**
  * Load plugin textdomain

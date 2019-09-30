@@ -26,7 +26,7 @@ class WC_Pakettikauppa_Admin {
   private $errors = array();
 
   public function __construct() {
-    $this->id = 'wc_pakettikauppa_admin';
+    $this->id = WC_PAKETTIKAUPPA_ADMIN;
   }
 
   public function load() {
@@ -42,7 +42,6 @@ class WC_Pakettikauppa_Admin {
     add_action('admin_post_quick_create_label', array( $this, 'create_multiple_shipments' ), 10);
     add_action('woocommerce_email_order_meta', array( $this, 'attach_tracking_to_email' ), 10, 4);
     add_action('woocommerce_admin_order_data_after_shipping_address', array( $this, 'show_pickup_point_in_admin_order_meta' ), 10, 1);
-    //add_action('admin_notices', array( $this, 'wc_pakettikauppa_updated' ), 10, 2);
     add_action('handle_bulk_actions-edit-shop_order', array( $this, 'create_multiple_shipments' )); // admin_action_{action name}
     add_action('pakettikauppa_create_shipments', array( $this, 'hook_create_shipments' ), 10, 2);
     add_action('pakettikauppa_fetch_shipping_labels', array( $this, 'hook_fetch_shipping_labels' ), 10, 2);
@@ -458,8 +457,8 @@ class WC_Pakettikauppa_Admin {
    * Enqueue admin-specific styles and scripts.
    */
   public function admin_enqueue_scripts() {
-    wp_enqueue_style('wc_pakettikauppa_admin', plugin_dir_url(__FILE__) . '../assets/css/wc-pakettikauppa-admin.css', array(), WC_PAKETTIKAUPPA_VERSION);
-    wp_enqueue_script('wc_pakettikauppa_admin_js', plugin_dir_url(__FILE__) . '../assets/js/wc-pakettikauppa-admin.js', array( 'jquery' ), WC_PAKETTIKAUPPA_VERSION, true);
+    wp_enqueue_style('wc_pakettikauppa_admin', plugin_dir_url(__FILE__) . '../assets/css/' . WC_PAKETTIKAUPPA_TEXT_DOMAIN . '/admin.css', array(), WC_PAKETTIKAUPPA_VERSION);
+    wp_enqueue_script('wc_pakettikauppa_admin_js', plugin_dir_url(__FILE__) . '../assets/js/' . WC_PAKETTIKAUPPA_TEXT_DOMAIN . '/admin.js', array( 'jquery' ), WC_PAKETTIKAUPPA_VERSION, true);
   }
 
   /**

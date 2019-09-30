@@ -99,7 +99,7 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
     }
 
     public function enqueue_scripts() {
-      wp_enqueue_style('wc_pakettikauppa_admin_setup', plugin_dir_url(__FILE__) . '../assets/css/wc-pakettikauppa-admin-setup.css', array(), WC_PAKETTIKAUPPA_VERSION);
+      wp_enqueue_style('wc_pakettikauppa_admin_setup', plugin_dir_url(__FILE__) . '../assets/css/' . WC_PAKETTIKAUPPA_TEXT_DOMAIN . '/admin-setup.css', array(), WC_PAKETTIKAUPPA_VERSION);
       wp_enqueue_style('wp-admin');
       wp_enqueue_style('buttons');
     }
@@ -120,7 +120,7 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
       <body class="wcpk-setup-body wp-core-ui" style="background-image: url(<?php echo plugin_dir_url(__FILE__) . '../assets/img/pakettikauppa-background.jpg'; ?>)">
         <div class="wcpk-setup">
           <h1 id="pakettikauppa-logo">
-            <a href="https://www.pakettikauppa.fi/" target="_blank" rel="noreferrer noopener" aria-label="<?php esc_html_e('Link to Pakettikauppa website', WC_PAKETTIKAUPPA_TEXT_DOMAIN); ?>">
+            <a href="<?php echo esc_html(WC_PAKETTIKAUPPA_URL); ?>" target="_blank" rel="noreferrer noopener" aria-label="<?php esc_html_e('Link to Pakettikauppa website', WC_PAKETTIKAUPPA_TEXT_DOMAIN); ?>">
               <img src="<?php echo plugin_dir_url(__FILE__) . '../assets/img/pakettikauppa-logo.png'; ?>" alt="<?php esc_attr_e('Pakettikauppa', WC_PAKETTIKAUPPA_TEXT_DOMAIN); ?>" />
             </a>
           </h1>
@@ -150,12 +150,12 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
       // Provide an option to skip the whole wizard on the first step
       if ( $this->step === array_keys($this->steps)[0] ) {
         echo '<a href="' . esc_url(admin_url()) . '">';
-        echo esc_html_e('Not now', WC_PAKETTIKAUPPA_TEXT_DOMAIN);
+        esc_html_e('Not now', WC_PAKETTIKAUPPA_TEXT_DOMAIN);
         echo '</a>';
       } elseif ( $this->step !== array_keys($this->steps)[count($this->steps) - 1] ) {
         // For skipping individual steps
         echo '<a href="' . esc_url($this->get_next_step_link()) . '">';
-        echo esc_html_e('Skip this step', WC_PAKETTIKAUPPA_TEXT_DOMAIN);
+        esc_html_e('Skip this step', WC_PAKETTIKAUPPA_TEXT_DOMAIN);
         echo '</a>';
       }
 

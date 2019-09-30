@@ -76,8 +76,8 @@ class WC_Pakettikauppa {
    * Enqueue frontend-specific styles and scripts.
    */
   public function enqueue_scripts() {
-    wp_enqueue_style('wc_pakettikauppa', plugin_dir_url(__FILE__) . '../assets/css/wc-pakettikauppa.css', array(), WC_PAKETTIKAUPPA_VERSION);
-    wp_enqueue_script('wc_pakettikauppa_js', plugin_dir_url(__FILE__) . '../assets/js/wc-pakettikauppa.js', array( 'jquery' ), WC_PAKETTIKAUPPA_VERSION, true);
+    wp_enqueue_style('wc_pakettikauppa', plugin_dir_url(__FILE__) . '../assets/css/' . WC_PAKETTIKAUPPA_TEXT_DOMAIN . '/frontend.css', array(), WC_PAKETTIKAUPPA_VERSION);
+    wp_enqueue_script('wc_pakettikauppa_js', plugin_dir_url(__FILE__) . '../assets/js/' . WC_PAKETTIKAUPPA_TEXT_DOMAIN . 'frontend.js', array( 'jquery' ), WC_PAKETTIKAUPPA_VERSION, true);
   }
 
   /**
