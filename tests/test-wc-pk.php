@@ -13,7 +13,7 @@ class Test_WC_Pakettikauppa extends WP_UnitTestCase {
    */
   public function test_init() {
     $pakettikauppa = new WC_Pakettikauppa();
-    $this->assertEquals('wc_pakettikauppa', $pakettikauppa->id);
+    $this->assertEquals('wc-pakettikauppa', $pakettikauppa->id);
     $pakettikauppa->load();
 
     return $pakettikauppa;
