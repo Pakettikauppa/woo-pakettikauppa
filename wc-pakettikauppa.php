@@ -46,17 +46,26 @@ function wc_pakettikauppa_load_textdomain() {
 
 add_action('plugins_loaded', 'wc_pakettikauppa_load_textdomain');
 
+$module_config = array(
+  'text_domain' => 'wc-pakettikauppa',
+  'admin' => 'wc_pakettikauppa_admin',
+  'url' => 'https://www.pakettikauppa.fi/',
+  'shipping_method' => 'pakettikauppa_shipping_method',
+);
+
 /**
  * Load WC_Pakettikauppa
+ *
+ * @param array $module_config
  */
-function wc_pakettikauppa_load() {
+function wc_pakettikauppa_load($module_config) {
   if ( is_admin() ) {
     require_once plugin_dir_path(__FILE__) . 'includes/class-wc-pakettikauppa-admin.php';
-    $wc_pakettikauppa_admin = new WC_Pakettikauppa_Admin();
+    $wc_pakettikauppa_admin = new WC_Pakettikauppa_Admin($module_config);
     $wc_pakettikauppa_admin->load();
   } else {
     require_once plugin_dir_path(__FILE__) . 'includes/class-wc-pakettikauppa.php';
-    $wc_pakettikauppa = new WC_Pakettikauppa();
+    $wc_pakettikauppa = new WC_Pakettikauppa($module_config);
     $wc_pakettikauppa->load();
   }
 }
@@ -74,8 +83,7 @@ function wc_pakettikauppa_woocommerce_inactive_notice() {
 // don't load any plugin functionalities if WooCommerce is not active.
 if ( in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')), true) ) {
   require_once plugin_dir_path(__FILE__) . 'includes/class-wc-pakettikauppa-shipping-method.php';
-  wc_pakettikauppa_load();
-
+  wc_pakettikauppa_load($module_config);
 } else {
   // Alert the site admin when in WP Admin
   add_action('admin_notices', 'wc_pakettikauppa_woocommerce_inactive_notice');
