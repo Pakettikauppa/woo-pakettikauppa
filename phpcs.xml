@@ -28,6 +28,9 @@
   -->
   <rule ref="WordPress-Extra">
 
+    <!-- Allow text-domain from variable -->
+    <exclude name="WordPress.WP.I18n.NonSingularStringLiteralDomain" />
+
     <!-- Allow spaces in indentation -->
     <exclude name="Generic.WhiteSpace.DisallowSpaceIndent.SpacesUsed" />
 

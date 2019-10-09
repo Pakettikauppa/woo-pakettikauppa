@@ -25,8 +25,12 @@ class WC_Pakettikauppa {
   private $wc_pakettikauppa_shipment = null;
   private $errors = array();
 
-  public function __construct() {
-    $this->id = 'wc_pakettikauppa';
+  private static $module_config = array();
+
+  public function __construct( $config ) {
+    self::$module_config = $config;
+
+    $this->id = self::$module_config['text_domain'];
   }
 
   public function load() {
@@ -38,7 +42,7 @@ class WC_Pakettikauppa {
     add_action('woocommerce_order_status_changed', array( $this, 'create_shipment_for_order_automatically' ));
 
     try {
-      $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
+      $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment(self::$module_config);
       $this->wc_pakettikauppa_shipment->load();
     } catch ( Exception $e ) {
       $this->add_error($e->getMessage());
@@ -69,15 +73,15 @@ class WC_Pakettikauppa {
    * Display error in woocommerce
    */
   public function display_error() {
-    wc_add_notice(__('An error occured. Please try again later.', 'wc-pakettikauppa'), 'error');
+    wc_add_notice(__('An error occured. Please try again later.', self::$module_config['text_domain']), 'error');
   }
 
   /**
    * Enqueue frontend-specific styles and scripts.
    */
   public function enqueue_scripts() {
-    wp_enqueue_style('wc_pakettikauppa', plugin_dir_url(__FILE__) . '../assets/css/wc-pakettikauppa.css', array(), WC_PAKETTIKAUPPA_VERSION);
-    wp_enqueue_script('wc_pakettikauppa_js', plugin_dir_url(__FILE__) . '../assets/js/wc-pakettikauppa.js', array( 'jquery' ), WC_PAKETTIKAUPPA_VERSION, true);
+    wp_enqueue_style('wc_pakettikauppa', plugin_dir_url(__FILE__) . '../assets/css/' . self::$module_config['text_domain'] . '/frontend.css', array(), WC_PAKETTIKAUPPA_VERSION);
+    wp_enqueue_script('wc_pakettikauppa_js', plugin_dir_url(__FILE__) . '../assets/js/' . self::$module_config['text_domain'] . 'frontend.js', array( 'jquery' ), WC_PAKETTIKAUPPA_VERSION, true);
   }
 
   /**
@@ -203,8 +207,8 @@ class WC_Pakettikauppa {
     }
 
     echo '<tr class="shipping-pickup-point">';
-    echo '<th>' . esc_attr__('Pickup point', 'wc-pakettikauppa') . '</th>';
-    echo '<td data-title="' . esc_attr__('Pickup point', 'wc-pakettikauppa') . '">';
+    echo '<th>' . esc_attr__('Pickup point', self::$module_config['text_domain']) . '</th>';
+    echo '<td data-title="' . esc_attr__('Pickup point', self::$module_config['text_domain']) . '">';
 
     ?>
     <input type="hidden" name="pakettikauppa_nonce" value="<?php echo wp_create_nonce('pakettikauppa-pickup_point_update'); ?>" id="pakettikauppa_pickup_point_update_nonce" />
@@ -213,13 +217,13 @@ class WC_Pakettikauppa {
     // Return if the customer has not yet chosen a postcode
     if ( empty($shipping_postcode) ) {
       echo '<p>';
-      esc_attr_e('Insert your shipping details to view nearby pickup points', 'wc-pakettikauppa');
+      esc_attr_e('Insert your shipping details to view nearby pickup points', self::$module_config['text_domain']);
       echo '</p>';
     } elseif ( ! is_numeric($shipping_postcode) ) {
       echo '<p>';
       printf(
         /* translators: %s: Postcode */
-        esc_attr__('Invalid postcode "%1$s". Please check your address information.', 'wc-pakettikauppa'),
+        esc_attr__('Invalid postcode "%1$s". Please check your address information.', self::$module_config['text_domain']),
         esc_attr($shipping_postcode)
       );
       echo '</p>';
@@ -237,7 +241,7 @@ class WC_Pakettikauppa {
 
         printf(
           /* translators: %s: Postcode */
-          esc_html__('Choose one of the pickup points close to your postcode %1$s below:', 'wc-pakettikauppa'),
+          esc_html__('Choose one of the pickup points close to your postcode %1$s below:', self::$module_config['text_domain']),
           '<span class="shipping_postcode_for_pickup">' . esc_attr($shipping_postcode) . '</span>'
         );
 
@@ -275,7 +279,7 @@ class WC_Pakettikauppa {
 
   private function process_pickup_points_to_option_array( $pickup_point_data ) {
     $pickup_points = json_decode($pickup_point_data);
-    $options_array = array( '__NULL__' => '- ' . __('Select a pickup point', 'wc-pakettikauppa') . ' -' );
+    $options_array = array( '__NULL__' => '- ' . __('Select a pickup point', self::$module_config['text_domain']) . ' -' );
 
     $methods = array(
       'Posti'               => '2103',
@@ -304,7 +308,7 @@ class WC_Pakettikauppa {
     $pickup_point = $order->get_meta('_pakettikauppa_pickup_point');
 
     if ( ! empty($pickup_point) ) {
-      echo '<h2>' . esc_attr__('Pickup point', 'wc-pakettikauppa') . '</h2>';
+      echo '<h2>' . esc_attr__('Pickup point', self::$module_config['text_domain']) . '</h2>';
       echo '<p>' . esc_attr($pickup_point) . '</p>';
     }
   }
@@ -315,7 +319,7 @@ class WC_Pakettikauppa {
     }
 
     if ( $_POST['pakettikauppa_pickup_point'] === '__NULL__' ) {
-      wc_add_notice(__('Please choose a pickup point.', 'wc-pakettikauppa'), 'error');
+      wc_add_notice(__('Please choose a pickup point.', self::$module_config['text_domain']), 'error');
     }
   }
 }

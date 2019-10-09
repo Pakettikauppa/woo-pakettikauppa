@@ -38,7 +38,11 @@ class WC_Pakettikauppa_Shipment {
 
   private $errors = array();
 
-  public function __construct() {
+  private static $module_config = array();
+
+  public function __construct( $module_config ) {
+    self::$module_config = $module_config;
+
     $this->id = 'wc_pakettikauppa_shipment';
   }
 
@@ -81,47 +85,47 @@ class WC_Pakettikauppa_Shipment {
   public static function get_status_text( $status_code ) {
     switch ( intval($status_code) ) {
       case 13:
-        $status = __('Item is collected from sender - picked up', 'wc-pakettikauppa');
+        $status = __('Item is collected from sender - picked up', self::$module_config['text_domain']);
         break;
       case 20:
-        $status = __('Exception', 'wc-pakettikauppa');
+        $status = __('Exception', self::$module_config['text_domain']);
         break;
       case 22:
-        $status = __('Item has been handed over to the recipient', 'wc-pakettikauppa');
+        $status = __('Item has been handed over to the recipient', self::$module_config['text_domain']);
         break;
       case 31:
-        $status = __('Item is in transport', 'wc-pakettikauppa');
+        $status = __('Item is in transport', self::$module_config['text_domain']);
         break;
       case 38:
-        $status = __('C.O.D payment is paid to the sender', 'wc-pakettikauppa');
+        $status = __('C.O.D payment is paid to the sender', self::$module_config['text_domain']);
         break;
       case 45:
-        $status = __('Informed consignee of arrival', 'wc-pakettikauppa');
+        $status = __('Informed consignee of arrival', self::$module_config['text_domain']);
         break;
       case 48:
-        $status = __('Item is loaded onto a means of transport', 'wc-pakettikauppa');
+        $status = __('Item is loaded onto a means of transport', self::$module_config['text_domain']);
         break;
       case 56:
-        $status = __('Item not delivered – delivery attempt made', 'wc-pakettikauppa');
+        $status = __('Item not delivered – delivery attempt made', self::$module_config['text_domain']);
         break;
       case 68:
-        $status = __('Pre-information is received from sender', 'wc-pakettikauppa');
+        $status = __('Pre-information is received from sender', self::$module_config['text_domain']);
         break;
       case 71:
-        $status = __('Item is ready for delivery transportation', 'wc-pakettikauppa');
+        $status = __('Item is ready for delivery transportation', self::$module_config['text_domain']);
         break;
       case 77:
-        $status = __('Item is returning to the sender', 'wc-pakettikauppa');
+        $status = __('Item is returning to the sender', self::$module_config['text_domain']);
         break;
       case 91:
-        $status = __('Item is arrived to a post office', 'wc-pakettikauppa');
+        $status = __('Item is arrived to a post office', self::$module_config['text_domain']);
         break;
       case 99:
-        $status = __('Outbound', 'wc-pakettikauppa');
+        $status = __('Outbound', self::$module_config['text_domain']);
         break;
       default:
         /* translators: %s: Status code */
-        $status = wp_sprintf(__('Unknown status: %s', 'wc-pakettikauppa'), $status_code);
+        $status = wp_sprintf(__('Unknown status: %s', self::$module_config['text_domain']), $status_code);
         break;
     }
 
@@ -144,7 +148,7 @@ class WC_Pakettikauppa_Shipment {
 
     if ( empty($service_id) || $service_id === '__NULL__' || $service_id === '__PICKUPPOINTS__' ) {
       $this->add_error('error');
-      $order->add_order_note(esc_attr__('The shipping label was not created because the order does not contain valid shipping method.', 'wc-pakettikauppa'));
+      $order->add_order_note(esc_attr__('The shipping label was not created because the order does not contain valid shipping method.', self::$module_config['text_domain']));
 
       return null;
     }
@@ -156,7 +160,7 @@ class WC_Pakettikauppa_Shipment {
         'admin_notices',
         function() {
           echo '<div class="update-nag notice">' .
-               esc_attr__('The shipping label was not created because the order does not contain valid shipping details.', 'wc-pakettikauppa') .
+               esc_attr__('The shipping label was not created because the order does not contain valid shipping details.', self::$module_config['text_domain']) .
                '</div>';
         }
       );
@@ -185,12 +189,12 @@ class WC_Pakettikauppa_Shipment {
       $this->add_error($e->getMessage());
 
       /* translators: %s: Error message */
-      $order->add_order_note(sprintf(esc_attr__('Failed to create Pakettikauppa shipment. Errors: %s', 'wc-pakettikauppa'), $e->getMessage()));
+      $order->add_order_note(sprintf(esc_attr__('Failed to create Pakettikauppa shipment. Errors: %s', self::$module_config['text_domain']), $e->getMessage()));
       add_action(
         'admin_notices',
         function() use ( $e ) {
           /* translators: %s: Error message */
-          $this->add_error_notice(wp_sprintf(esc_attr__('An error occured: %s', 'wc-pakettikauppa'), $e->getMessage()));
+          $this->add_error_notice(wp_sprintf(esc_attr__('An error occured: %s', self::$module_config['text_domain']), $e->getMessage()));
         }
       );
 
@@ -199,12 +203,12 @@ class WC_Pakettikauppa_Shipment {
 
     if ( $tracking_code === null ) {
       $this->add_error('error');
-      $order->add_order_note(esc_attr__('Failed to create Pakettikauppa shipment.', 'wc-pakettikauppa'));
+      $order->add_order_note(esc_attr__('Failed to create Pakettikauppa shipment.', self::$module_config['text_domain']));
       add_action(
         'admin_notices',
         function() {
           /* translators: %s: Error message */
-          $this->add_error_notice(esc_attr__('Failed to create Pakettikauppa shipment.', 'wc-pakettikauppa'));
+          $this->add_error_notice(esc_attr__('Failed to create Pakettikauppa shipment.', self::$module_config['text_domain']));
         }
       );
 
@@ -228,15 +232,15 @@ class WC_Pakettikauppa_Shipment {
     }
 
     // Add order note
-    $dl_link       = sprintf('<a href="%1$s" target="_blank">%2$s</a>', $document_url, esc_attr__('Print document', 'wc-pakettikauppa'));
-    $tracking_link = sprintf('<a href="%1$s" target="_blank">%2$s</a>', $tracking_url, __('Track', 'wc-pakettikauppa'));
+    $dl_link       = sprintf('<a href="%1$s" target="_blank">%2$s</a>', $document_url, esc_attr__('Print document', self::$module_config['text_domain']));
+    $tracking_link = sprintf('<a href="%1$s" target="_blank">%2$s</a>', $tracking_url, __('Track', self::$module_config['text_domain']));
 
     $service_id = get_post_meta($order->get_id(), '_wc_pakettikauppa_service_id', true);
 
     $order->add_order_note(
       sprintf(
         /* translators: 1: Shipping service title 2: Shipment tracking code 3: Shipping label URL 4: Shipment tracking URL */
-        __('Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s', 'wc-pakettikauppa'),
+        __('Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s', self::$module_config['text_domain']),
         $this->service_title($service_id),
         $tracking_code,
         $dl_link,
@@ -249,11 +253,11 @@ class WC_Pakettikauppa_Shipment {
     if ( ! empty($settings['post_label_to_url']) ) {
       if ( $this->post_label_to_url($settings['post_label_to_url'], $tracking_code) === false ) {
         $this->add_error('error');
-        $order->add_order_note(__('Posting label to URL failed!', 'wc-pakettikauppa'));
+        $order->add_order_note(__('Posting label to URL failed!', self::$module_config['text_domain']));
 
         return null;
       } else {
-        $order->add_order_note(__('Label posted to URL successfully.', 'wc-pakettikauppa'));
+        $order->add_order_note(__('Label posted to URL successfully.', self::$module_config['text_domain']));
       }
     }
 
@@ -484,8 +488,8 @@ class WC_Pakettikauppa_Shipment {
 
     for ( $i = 0; $i < $parcel_total_count; $i++ ) {
       $parcel = new Parcel();
-      $parcel->setWeight(round($order_total_weight / $parcel_total_count, 0));
-      $parcel->setVolume(round($order_total_volume / $parcel_total_count, 0));
+      $parcel->setWeight(round($order_total_weight / $parcel_total_count, 2));
+      $parcel->setVolume(round($order_total_volume / $parcel_total_count, 4));
 
       if ( ! empty($this->wc_pakettikauppa_settings['info_code']) ) {
         $parcel->setInfocode($this->wc_pakettikauppa_settings['info_code']);
@@ -540,7 +544,7 @@ class WC_Pakettikauppa_Shipment {
       $this->wc_pakettikauppa_client->createTrackingCode($shipment);
     } catch ( Exception $e ) {
       /* translators: %s: Error message */
-      throw new Exception(wp_sprintf(__('WooCommerce Pakettikauppa: tracking code creation failed: %s', 'wc-pakettikauppa'), $e->getMessage()));
+      throw new Exception(wp_sprintf(__('WooCommerce Pakettikauppa: tracking code creation failed: %s', self::$module_config['text_domain']), $e->getMessage()));
     }
 
     return $this->wc_pakettikauppa_client->getResponse();
@@ -697,7 +701,7 @@ class WC_Pakettikauppa_Shipment {
 
     $pickup_point_data = $this->wc_pakettikauppa_client->searchPickupPoints(trim($postcode), trim($street_address), trim($country), $service_provider, $pickup_point_limit);
     if ( $pickup_point_data === 'Bad request' ) {
-      throw new Exception(__('WC_Pakettikauppa: An error occured when searching pickup points.', 'wc-pakettikauppa'));
+      throw new Exception(__('WC_Pakettikauppa: An error occured when searching pickup points.', self::$module_config['text_domain']));
     }
 
     return $pickup_point_data;

@@ -24,9 +24,12 @@ class WC_Pakettikauppa_Admin {
    */
   private $wc_pakettikauppa_shipment = null;
   private $errors = array();
+  private static $module_config = array();
 
-  public function __construct() {
-    $this->id = 'wc_pakettikauppa_admin';
+  public function __construct( $module_config ) {
+    self::$module_config = $module_config;
+
+    $this->id = self::$module_config['admin'];
   }
 
   public function load() {
@@ -42,7 +45,6 @@ class WC_Pakettikauppa_Admin {
     add_action('admin_post_quick_create_label', array( $this, 'create_multiple_shipments' ), 10);
     add_action('woocommerce_email_order_meta', array( $this, 'attach_tracking_to_email' ), 10, 4);
     add_action('woocommerce_admin_order_data_after_shipping_address', array( $this, 'show_pickup_point_in_admin_order_meta' ), 10, 1);
-    //add_action('admin_notices', array( $this, 'wc_pakettikauppa_updated' ), 10, 2);
     add_action('handle_bulk_actions-edit-shop_order', array( $this, 'create_multiple_shipments' )); // admin_action_{action name}
     add_action('pakettikauppa_create_shipments', array( $this, 'hook_create_shipments' ), 10, 2);
     add_action('pakettikauppa_fetch_shipping_labels', array( $this, 'hook_fetch_shipping_labels' ), 10, 2);
@@ -55,7 +57,7 @@ class WC_Pakettikauppa_Admin {
     add_action('wp_ajax_nopriv_pakettikauppa_update_pickup_point', array( $this, 'save_pickup_point_info_to_session' ), 10);
 
     try {
-      $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
+      $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment(self::$module_config);
       $this->wc_pakettikauppa_shipment->load();
 
     } catch ( Exception $e ) {
@@ -92,11 +94,11 @@ class WC_Pakettikauppa_Admin {
   public function new_install_notice_content() {
     ?>
     <div class="notice notice-info is-dismissible">
-      <p><?php esc_html_e('Thank you for installing WooCommerce Pakettikauppa! To get started smoothly, please open our setup wizard:', 'wc-pakettikauppa'); ?></p>
+      <p><?php esc_html_e('Thank you for installing WooCommerce Pakettikauppa! To get started smoothly, please open our setup wizard:', self::$module_config['text_domain']); ?></p>
       <p>
         <a href="<?php echo esc_url(admin_url('admin.php?page=wcpk-setup')); ?>">
           <button class="button button-primary">
-            <?php esc_html_e('Get started', 'wc-pakettikauppa'); ?>
+            <?php esc_html_e('Get started', self::$module_config['text_domain']); ?>
           </button>
         </a>
       </p>
@@ -108,6 +110,8 @@ class WC_Pakettikauppa_Admin {
     $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_SPECIAL_CHARS);
     if ( $page === 'wcpk-setup' ) {
       require_once WC_PAKETTIKAUPPA_DIR . 'includes/class-wc-pakettikauppa-setup-wizard.php';
+
+      new WC_Pakettikauppa_Setup_Wizard(self::$module_config);
     }
   }
 
@@ -153,17 +157,17 @@ class WC_Pakettikauppa_Admin {
   public function add_custom_product_fields() {
     $args = array(
       'id' => 'pakettikauppa_tariff_codes',
-      'label' => __('HS tariff number', 'wc-pakettikauppa'),
+      'label' => __('HS tariff number', self::$module_config['text_domain']),
       'desc_tip' => true,
-      'description' => __('The HS tariff number must be based on the Harmonized Commodity Description and Coding System developed by the World Customs Organization.', 'wc-pakettikauppa'),
+      'description' => __('The HS tariff number must be based on the Harmonized Commodity Description and Coding System developed by the World Customs Organization.', self::$module_config['text_domain']),
     );
     woocommerce_wp_text_input($args);
 
     $args = array(
       'id' => 'pakettikauppa_country_of_origin',
-      'label' => __('Country of origin', 'wc-pakettikauppa'),
+      'label' => __('Country of origin', self::$module_config['text_domain']),
       'desc_tip' => true,
-      'description' => __('"Country of origin" means the country where the goods originated, e.g. were produced/manufactured or assembled.', 'wc-pakettikauppa'),
+      'description' => __('"Country of origin" means the country where the goods originated, e.g. were produced/manufactured or assembled.', self::$module_config['text_domain']),
       'custom_attributes' => array(
         'maxlength' => '2',
       ),
@@ -228,7 +232,7 @@ class WC_Pakettikauppa_Admin {
    * @return mixed
    */
   public function register_multi_create_orders( $bulk_actions ) {
-    $bulk_actions['pakettikauppa_create_multiple_shipping_labels'] = __('Create and fetch shipping labels', 'wc-pakettikauppa');
+    $bulk_actions['pakettikauppa_create_multiple_shipping_labels'] = __('Create and fetch shipping labels', self::$module_config['text_domain']);
 
     return $bulk_actions;
   }
@@ -259,7 +263,7 @@ class WC_Pakettikauppa_Admin {
     $class = 'pakettikauppa_create_shipping_label';
 
     $actions = array(
-      'name'   => __('Create shipping label', 'wc-pakettikauppa'),
+      'name'   => __('Create shipping label', self::$module_config['text_domain']),
       'action' => 'pakettikauppa_create_shipping_label',
       'url'    => $document_url,
     );
@@ -306,7 +310,7 @@ class WC_Pakettikauppa_Admin {
     $contents = $this->fetch_shipping_labels($tracking_codes);
 
     if ( $contents->{'response.file'}->__toString() === '' ) {
-      esc_attr_e('Cannot find shipments with given shipment numbers.', 'wc-pakettikauppa');
+      esc_attr_e('Cannot find shipments with given shipment numbers.', self::$module_config['text_domain']);
 
       return;
     }
@@ -368,7 +372,7 @@ class WC_Pakettikauppa_Admin {
 
     if ( ! $shipping_method_found ) {
       echo '<div class="updated warning">';
-      echo sprintf('<p>%s</p>', __('WooCommerce Pakettikauppa has been installed/updated but no shipping methods are currently active!', 'wc-pakettikauppa'));
+      echo sprintf('<p>%s</p>', __('WooCommerce Pakettikauppa has been installed/updated but no shipping methods are currently active!', self::$module_config['text_domain']));
       echo '</div>';
     }
   }
@@ -405,7 +409,7 @@ class WC_Pakettikauppa_Admin {
     if ( ! empty($message) ) {
       $class = 'notice notice-error';
       /* translators: %s: Error message */
-      $print_error = wp_sprintf(__('An error occured: %s', 'wc-pakettikauppa'), $message);
+      $print_error = wp_sprintf(__('An error occured: %s', self::$module_config['text_domain']), $message);
       printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($print_error));
     }
   }
@@ -424,8 +428,8 @@ class WC_Pakettikauppa_Admin {
         'service' => sprintf(
           '<a href="%1$s" aria-label="%2$s">%3$s</a>',
           esc_url('https://www.pakettikauppa.fi'),
-          esc_attr__('Visit Pakettikauppa', 'wc-pakettikauppa'),
-          esc_html__('Show site Pakettikauppa', 'wc-pakettikauppa')
+          esc_attr__('Visit Pakettikauppa', self::$module_config['text_domain']),
+          esc_html__('Show site Pakettikauppa', self::$module_config['text_domain'])
         ),
       );
 
@@ -441,8 +445,8 @@ class WC_Pakettikauppa_Admin {
   public function register_meta_boxes() {
     foreach ( wc_get_order_types('order-meta-boxes') as $type ) {
       add_meta_box(
-        'wc-pakettikauppa',
-        esc_attr__('Pakettikauppa', 'wc-pakettikauppa'),
+        self::$module_config['text_domain'],
+        esc_attr__('Pakettikauppa', self::$module_config['text_domain']),
         array(
           $this,
           'meta_box',
@@ -458,8 +462,8 @@ class WC_Pakettikauppa_Admin {
    * Enqueue admin-specific styles and scripts.
    */
   public function admin_enqueue_scripts() {
-    wp_enqueue_style('wc_pakettikauppa_admin', plugin_dir_url(__FILE__) . '../assets/css/wc-pakettikauppa-admin.css', array(), WC_PAKETTIKAUPPA_VERSION);
-    wp_enqueue_script('wc_pakettikauppa_admin_js', plugin_dir_url(__FILE__) . '../assets/js/wc-pakettikauppa-admin.js', array( 'jquery' ), WC_PAKETTIKAUPPA_VERSION, true);
+    wp_enqueue_style('wc_pakettikauppa_admin', plugin_dir_url(__FILE__) . '../assets/css/' . self::$module_config['text_domain'] . '/admin.css', array(), WC_PAKETTIKAUPPA_VERSION);
+    wp_enqueue_script('wc_pakettikauppa_admin_js', plugin_dir_url(__FILE__) . '../assets/js/' . self::$module_config['text_domain'] . '/admin.js', array( 'jquery' ), WC_PAKETTIKAUPPA_VERSION, true);
   }
 
   /**
@@ -484,7 +488,7 @@ class WC_Pakettikauppa_Admin {
    * @param WC_Order $order The order that is currently being viewed in wp-admin
    */
   public function show_pickup_point_in_admin_order_meta( $order ) {
-    echo sprintf('<p class="form-field"><strong>%s:</strong><br>', esc_attr__('Requested pickup point', 'wc-pakettikauppa'));
+    echo sprintf('<p class="form-field"><strong>%s:</strong><br>', esc_attr__('Requested pickup point', self::$module_config['text_domain']));
     if ( $order->get_meta('_pakettikauppa_pickup_point') ) {
       echo esc_attr($order->get_meta('_pakettikauppa_pickup_point'));
     } else {
@@ -506,7 +510,7 @@ class WC_Pakettikauppa_Admin {
     }
 
     if ( ! WC_Pakettikauppa_Shipment::validate_order_shipping_receiver($order) ) {
-      esc_attr_e('Please add shipping info to the order to manage Pakettikauppa shipments.', 'wc-pakettikauppa');
+      esc_attr_e('Please add shipping info to the order to manage Pakettikauppa shipments.', self::$module_config['text_domain']);
 
       return;
     }
@@ -561,23 +565,23 @@ class WC_Pakettikauppa_Admin {
             <?php echo esc_attr($tracking_code); ?><br />
             <?php echo esc_attr(WC_Pakettikauppa_Shipment::get_status_text($status)); ?><br />
             <?php if ( ! empty($label_code) ) : ?>
-              <?php echo __('Label code', 'wc-pakettikauppa'); ?>: <?php echo $label_code; ?><br />
+              <?php echo __('Label code', self::$module_config['text_domain']); ?>: <?php echo $label_code; ?><br />
             <?php endif; ?>
           </strong>
           <br>
-          <a href="<?php echo esc_url($document_url); ?>" target="_blank" class="download"><?php esc_attr_e('Print document', 'wc-pakettikauppa'); ?></a>&nbsp;-&nbsp;
+          <a href="<?php echo esc_url($document_url); ?>" target="_blank" class="download"><?php esc_attr_e('Print document', self::$module_config['text_domain']); ?></a>&nbsp;-&nbsp;
           <?php if ( ! empty($tracking_url) ) : ?>
-            <a href="<?php echo esc_url($tracking_url); ?>" target="_blank" class="tracking"><?php esc_attr_e('Track', 'wc-pakettikauppa'); ?></a>
+            <a href="<?php echo esc_url($tracking_url); ?>" target="_blank" class="tracking"><?php esc_attr_e('Track', self::$module_config['text_domain']); ?></a>
           <?php endif; ?>
         </p>
         <p class="pakettikauppa-shipment">
-          <button type="button" value="get_status" name="wc_pakettikauppa[get_status]" class="button pakettikauppa_meta_box" onclick="pakettikauppa_meta_box_submit(this);"><?php echo __('Update Status', 'wc-pakettikauppa'); ?></button>
-          <button type="button" value="create_return_label" name="wc_pakettikauppa[create_return_label]" onclick="pakettikauppa_meta_box_submit(this);" class="button pakettikauppa_meta_box"><?php echo __('Create Return Label', 'wc-pakettikauppa'); ?></button>
+          <button type="button" value="get_status" name="wc_pakettikauppa[get_status]" class="button pakettikauppa_meta_box" onclick="pakettikauppa_meta_box_submit(this);"><?php echo __('Update Status', self::$module_config['text_domain']); ?></button>
+          <button type="button" value="create_return_label" name="wc_pakettikauppa[create_return_label]" onclick="pakettikauppa_meta_box_submit(this);" class="button pakettikauppa_meta_box"><?php echo __('Create Return Label', self::$module_config['text_domain']); ?></button>
           <button type="button" value="all" name="wc_pakettikauppa[delete_shipping_label]" onclick="pakettikauppa_meta_box_submit(this);" class="button pakettikauppa_meta_box wc-pakettikauppa-delete-button">
           <?php if ( empty($return_shipments) ) : ?>
-            <?php echo __('Delete Shipping Label', 'wc-pakettikauppa'); ?>
+            <?php echo __('Delete Shipping Label', self::$module_config['text_domain']); ?>
           <?php else : ?>
-            <?php echo __('Delete Shipping Label and return labels', 'wc-pakettikauppa'); ?>
+            <?php echo __('Delete Shipping Label and return labels', self::$module_config['text_domain']); ?>
           <?php endif; ?>
           </button>
         </p>
@@ -587,15 +591,15 @@ class WC_Pakettikauppa_Admin {
             <strong>
               <?php echo esc_attr($this->wc_pakettikauppa_shipment->service_title($return_label['service_id'])); ?><br />
               <?php echo esc_attr($return_label['tracking_code']); ?><br />
-              <?php echo __('Label code', 'wc-pakettikauppa'); ?>: <?php echo $return_label['label_code']; ?><br />
+              <?php echo __('Label code', self::$module_config['text_domain']); ?>: <?php echo $return_label['label_code']; ?><br />
             </strong>
           </p>
           <p>
-            <a href="<?php echo esc_url($return_label['document_url']); ?>" target="_blank" class="download"><?php esc_attr_e('Print document', 'wc-pakettikauppa'); ?></a>&nbsp;-&nbsp;
-            <a href="<?php echo esc_url($return_label['tracking_url']); ?>" target="_blank" class="tracking"><?php esc_attr_e('Track', 'wc-pakettikauppa'); ?></a>
+            <a href="<?php echo esc_url($return_label['document_url']); ?>" target="_blank" class="download"><?php esc_attr_e('Print document', self::$module_config['text_domain']); ?></a>&nbsp;-&nbsp;
+            <a href="<?php echo esc_url($return_label['tracking_url']); ?>" target="_blank" class="tracking"><?php esc_attr_e('Track', self::$module_config['text_domain']); ?></a>
           </p>
               <p class="pakettikauppa-shipment">
-            <button type="button" value="<?php echo esc_attr($return_label['tracking_code']); ?>" name="wc_pakettikauppa[delete_shipping_label]" onclick="pakettikauppa_meta_box_submit(this);" class="button pakettikauppa_meta_box wc-pakettikauppa-delete-button"><?php echo __('Delete Shipping Label', 'wc-pakettikauppa'); ?></button>
+            <button type="button" value="<?php echo esc_attr($return_label['tracking_code']); ?>" name="wc_pakettikauppa[delete_shipping_label]" onclick="pakettikauppa_meta_box_submit(this);" class="button pakettikauppa_meta_box wc-pakettikauppa-delete-button"><?php echo __('Delete Shipping Label', self::$module_config['text_domain']); ?></button>
           </p>
           <?php endforeach; ?>
         <?php endif; ?>
@@ -604,7 +608,7 @@ class WC_Pakettikauppa_Admin {
           <fieldset class="pakettikauppa-metabox-fieldset" id="wc_pakettikauppa_shipping_method">
             <h4><?php echo esc_html($this->wc_pakettikauppa_shipment->service_title($default_service_id)); ?></h4>
             <?php if ( ! empty($additional_services) ) : ?>
-              <h4><?php echo esc_attr__('Additional services', 'wc-pakettikauppa'); ?>:</h4>
+              <h4><?php echo esc_attr__('Additional services', self::$module_config['text_domain']); ?>:</h4>
               <ol style="list-style: circle;">
                 <?php foreach ( $additional_services as $i => $additional_service ) : ?>
                   <?php if ( ! in_array($additional_service, array( '3102' )) ) : ?>
@@ -615,7 +619,7 @@ class WC_Pakettikauppa_Admin {
                 <?php endforeach; ?>
                 <?php if ( in_array('3102', $additional_services) ) : ?>
                   <li>
-                    <?php echo esc_html__('Parcel count', 'wc-pakettikauppa'); ?>:
+                    <?php echo esc_html__('Parcel count', self::$module_config['text_domain']); ?>:
                     <input type="number" name="wc_pakettikauppa_mps_count" value="1" style="width: 3em;" min="1" step="1" max="15">
                   </li>
                 <?php endif; ?>
@@ -624,7 +628,7 @@ class WC_Pakettikauppa_Admin {
 
             <?php if ( $pickup_point_id ) : ?>
               <h4>
-                <?php echo esc_html__('Requested pickup point', 'wc-pakettikauppa'); ?>
+                <?php echo esc_html__('Requested pickup point', self::$module_config['text_domain']); ?>
               </h4>
               <p>
                 <?php echo esc_html($order->get_meta('_pakettikauppa_pickup_point')); ?>
@@ -634,7 +638,7 @@ class WC_Pakettikauppa_Admin {
 
           <fieldset class="pakettikauppa-metabox-fieldset" id="wc_pakettikauppa_custom_shipping_method" style="display: none;">
             <select name="wc_pakettikauppa_service_id" id="pakettikauppa-service" class="pakettikauppa_metabox_values" onchange="pakettikauppa_change_shipping_method();">
-              <option value="__NULL__"><?php esc_html_e('No shipping', 'wc-pakettikauppa'); ?></option>
+              <option value="__NULL__"><?php esc_html_e('No shipping', self::$module_config['text_domain']); ?></option>
               <?php foreach ( $this->wc_pakettikauppa_shipment->services() as $_service_code => $_service_title ) : ?>
                 <option
                   <?php if ( strval($_service_code) === $service_id ) : ?>
@@ -665,7 +669,7 @@ class WC_Pakettikauppa_Admin {
                 <?php endforeach; ?>
                 <?php if ( $show_3102 ) : ?>
                   <li>
-                    <?php echo esc_html__('Parcel count', 'wc-pakettikauppa'); ?>:
+                    <?php echo esc_html__('Parcel count', self::$module_config['text_domain']); ?>:
                     <input class="pakettikauppa_metabox_values" type="number" name="wc_pakettikauppa_mps_count" value="1" style="width: 3em;" min="1" step="1" max="15">
                   </li>
                 <?php endif; ?>
@@ -675,10 +679,10 @@ class WC_Pakettikauppa_Admin {
         </div>
         <p>
           <button type="button" value="create" name="wc_pakettikauppa[create]" class="button pakettikauppa_meta_box" onclick="pakettikauppa_meta_box_submit(this);">
-            <?php echo __('Create', 'wc-pakettikauppa'); ?>
+            <?php echo __('Create', self::$module_config['text_domain']); ?>
           </button>
           <button type="button" value="change" class="button pakettikauppa_meta_box" onclick="pakettikauppa_change_method(this);">
-            <?php echo __('Change shipping...', 'wc-pakettikauppa'); ?>
+            <?php echo __('Change shipping...', self::$module_config['text_domain']); ?>
           </button>
         </p>
       <?php endif; ?>
@@ -780,6 +784,8 @@ class WC_Pakettikauppa_Admin {
 
   /**
    * @param WC_Order $order
+   *
+   * @throws Exception
    */
   private function create_return_label( WC_Order $order ) {
     $service_id = get_post_meta($order->get_id(), '_wc_pakettikauppa_custom_service_id', true);
@@ -801,8 +807,8 @@ class WC_Pakettikauppa_Admin {
         break;
       case 'Matkahuolto':
       default:
-        $order->add_order_note(__('Unable to create return label for this shipment type.', 'wc-pakettikauppa'));
-        return null;
+        $order->add_order_note(__('Unable to create return label for this shipment type.', self::$module_config['text_domain']));
+        return;
     }
 
     $shipment = $this->wc_pakettikauppa_shipment->create_shipment_from_order($order, $return_service_id, $additional_services);
@@ -844,7 +850,7 @@ class WC_Pakettikauppa_Admin {
         update_post_meta($order->get_id(), '_wc_pakettikauppa_tracking_code', '');
 
         /* translators: %%s: tracking code */
-        $order->add_order_note(sprintf(esc_attr__('Successfully deleted Pakettikauppa shipping label %s.', 'wc-pakettikauppa'), $tracking_code));
+        $order->add_order_note(sprintf(esc_attr__('Successfully deleted Pakettikauppa shipping label %s.', self::$module_config['text_domain']), $tracking_code));
       } else {
         $return_shipments = get_post_meta($order->get_id(), '_wc_pakettikauppa_return_shipment');
 
@@ -852,7 +858,7 @@ class WC_Pakettikauppa_Admin {
           if ( $return_shipment['tracking_code'] === $tracking_code ) {
             delete_post_meta($order->get_id(), '_wc_pakettikauppa_return_shipment', $return_shipment);
             /* translators: %%s: tracking code */
-            $order->add_order_note(sprintf(esc_attr__('Successfully deleted Pakettikauppa shipping label %s.', 'wc-pakettikauppa'), $tracking_code));
+            $order->add_order_note(sprintf(esc_attr__('Successfully deleted Pakettikauppa shipping label %s.', self::$module_config['text_domain']), $tracking_code));
             return;
           }
         }
@@ -863,14 +869,14 @@ class WC_Pakettikauppa_Admin {
         'admin_notices',
         function() use ( $e ) {
           /* translators: %s: Error message */
-          $this->add_error_notice(wp_sprintf(esc_attr__('An error occured: %s', 'wc-pakettikauppa'), $e->getMessage()));
+          $this->add_error_notice(wp_sprintf(esc_attr__('An error occured: %s', self::$module_config['text_domain']), $e->getMessage()));
         }
       );
 
       $order->add_order_note(
         sprintf(
           /* translators: %s: Error message */
-          esc_attr__('Deleting Pakettikauppa shipment failed! Errors: %s', 'wc-pakettikauppa'),
+          esc_attr__('Deleting Pakettikauppa shipment failed! Errors: %s', self::$module_config['text_domain']),
           $e->getMessage()
         )
       );
@@ -890,7 +896,7 @@ class WC_Pakettikauppa_Admin {
         'admin_notices',
         function() use ( $e ) {
           /* translators: %s: Error message */
-          $this->add_error_notice(wp_sprintf(esc_attr__('An error occured: %s', 'wc-pakettikauppa'), $e->getMessage()));
+          $this->add_error_notice(wp_sprintf(esc_attr__('An error occured: %s', self::$module_config['text_domain']), $e->getMessage()));
         }
       );
     }
@@ -934,7 +940,7 @@ class WC_Pakettikauppa_Admin {
     // Find shipment ID either from GET parameters or from the order
     // data.
     if ( empty( $_REQUEST['tracking_code'] ) ) { // @codingStandardsIgnoreLine
-      esc_attr_e('Shipment tracking code is not defined.', 'wc-pakettikauppa');
+      esc_attr_e('Shipment tracking code is not defined.', self::$module_config['text_domain']);
 
       return;
     }
@@ -944,7 +950,7 @@ class WC_Pakettikauppa_Admin {
     $contents = $this->wc_pakettikauppa_shipment->fetch_shipping_label($tracking_code);
 
     if ( $contents->{'response.file'}->__toString() === '' ) {
-      esc_attr_e('Cannot find shipment with given shipment number.', 'wc-pakettikauppa');
+      esc_attr_e('Cannot find shipment with given shipment number.', self::$module_config['text_domain']);
 
       return;
     }
@@ -1008,19 +1014,19 @@ class WC_Pakettikauppa_Admin {
     if ( $plain_text ) {
       /* translators: %s: Shipment tracking URL */
       if ( ! empty($order->get_meta('_pakettikauppa_pickup_point')) && 'yes' === $add_pickup_point_to_email ) {
-        echo sprintf("%s: %s\n\n", __('Requested pickup point', 'wc-pakettikauppa'), $order->get_meta('_pakettikauppa_pickup_point'));
+        echo sprintf("%s: %s\n\n", __('Requested pickup point', self::$module_config['text_domain']), $order->get_meta('_pakettikauppa_pickup_point'));
       }
 
-      echo sprintf(__("You can track your order at %1\$s.\n\n", 'wc-pakettikauppa'), esc_url($tracking_url));
+      echo sprintf(__("You can track your order at %1\$s.\n\n", self::$module_config['text_domain']), esc_url($tracking_url));
     } else {
       if ( ! empty($order->get_meta('_pakettikauppa_pickup_point')) && 'yes' === $add_pickup_point_to_email ) {
-        echo sprintf('<h2>%s</h2>', esc_attr__('Requested pickup point', 'wc-pakettikauppa'));
+        echo sprintf('<h2>%s</h2>', esc_attr__('Requested pickup point', self::$module_config['text_domain']));
         echo sprintf('<p>%s</p>', esc_attr($order->get_meta('_pakettikauppa_pickup_point')));
       }
 
-      echo '<h2>' . esc_attr__('Tracking', 'wc-pakettikauppa') . '</h2>';
+      echo '<h2>' . esc_attr__('Tracking', self::$module_config['text_domain']) . '</h2>';
       /* translators: 1: Shipment tracking URL 2: Shipment tracking code */
-      echo '<p>' . sprintf(__('You can <a href="%1$s">track your order</a> with tracking code %2$s.', 'wc-pakettikauppa'), esc_url($tracking_url), esc_attr($tracking_code)) . '</p>';
+      echo '<p>' . sprintf(__('You can <a href="%1$s">track your order</a> with tracking code %2$s.', self::$module_config['text_domain']), esc_url($tracking_url), esc_attr($tracking_code)) . '</p>';
     }
   }
 }
