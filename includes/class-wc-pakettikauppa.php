@@ -30,7 +30,7 @@ class WC_Pakettikauppa {
   public function __construct( $config ) {
     self::$module_config = $config;
 
-    $this->id = self::$module_config['admin'];
+    $this->id = self::$module_config['text_domain'];
   }
 
   public function load() {
