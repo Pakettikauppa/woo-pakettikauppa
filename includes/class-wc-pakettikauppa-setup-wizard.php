@@ -11,8 +11,12 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
     private $steps = array();
     private $step = '';
     private $shipping_method = null;
+    
+    private static $module_config = array();
 
-    public function __construct() {
+    public function __construct($module_config) {
+      self::$module_config = $module_config;
+
       if ( apply_filters('wc_pakettikauppa_enable_setup_wizard', true) && current_user_can('manage_woocommerce') ) {
         add_action('admin_menu', array( $this, 'admin_page' ));
         add_action('admin_init', array( $this, 'setup_wizard' ));
@@ -27,7 +31,7 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
     public function setup_wizard() {
       $this->steps = array(
         'pakettikauppa_credentials' => array(
-          'name' => __('Credentials', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+          'name' => __('Credentials', self::$module_config['text_domain']),
           'view' => array( $this, 'credentials_setup' ),
           'handler' => array( $this, 'save_options' ),
           'fields' => array(
@@ -37,7 +41,7 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
           ),
         ),
         'pakettikauppa_merchant_details' => array(
-          'name' => __('Merchant', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+          'name' => __('Merchant', self::$module_config['text_domain']),
           'view' => array( $this, 'merchant_details_setup' ),
           'handler' => array( $this, 'save_options' ),
           'fields' => array(
@@ -48,7 +52,7 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
           ),
         ),
         'pakettikauppa_shipping_details' => array(
-          'name' => __('Shipping', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+          'name' => __('Shipping', self::$module_config['text_domain']),
           'view' => array( $this, 'shipping_details_setup' ),
           'handler' => array( $this, 'save_options' ),
           'fields' => array(
@@ -56,7 +60,7 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
           ),
         ),
         'pakettikauppa_order_processing' => array(
-          'name' => __('Order Processing', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+          'name' => __('Order Processing', self::$module_config['text_domain']),
           'view' => array( $this, 'order_processing_setup' ),
           'handler' => array( $this, 'save_options' ),
           'fields' => array(
@@ -65,7 +69,7 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
           ),
         ),
         'pakettikauppa_ready' => array(
-          'name' => __('Ready!', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+          'name' => __('Ready!', self::$module_config['text_domain']),
           'view' => array( $this, 'setup_ready' ),
           'handler' => '',
         ),
@@ -99,7 +103,7 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
     }
 
     public function enqueue_scripts() {
-      wp_enqueue_style('wc_pakettikauppa_admin_setup', plugin_dir_url(__FILE__) . '../assets/css/' . WC_PAKETTIKAUPPA_TEXT_DOMAIN . '/admin-setup.css', array(), WC_PAKETTIKAUPPA_VERSION);
+      wp_enqueue_style('wc_pakettikauppa_admin_setup', plugin_dir_url(__FILE__) . '../assets/css/' . self::$module_config['text_domain'] . '/admin-setup.css', array(), WC_PAKETTIKAUPPA_VERSION);
       wp_enqueue_style('wp-admin');
       wp_enqueue_style('buttons');
     }
@@ -112,7 +116,7 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
       <head>
         <meta name="viewport" content="width=device-width" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title><?php esc_html_e('WooCommerce Pakettikauppa &rsaquo; Setup Wizard', WC_PAKETTIKAUPPA_TEXT_DOMAIN); ?></title>
+        <title><?php esc_html_e('WooCommerce Pakettikauppa &rsaquo; Setup Wizard', self::$module_config['text_domain']); ?></title>
         <?php do_action('admin_enqueue_scripts'); ?>
         <?php do_action('admin_print_styles'); ?>
         <?php do_action('admin_head'); ?>
@@ -120,8 +124,8 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
       <body class="wcpk-setup-body wp-core-ui" style="background-image: url(<?php echo plugin_dir_url(__FILE__) . '../assets/img/pakettikauppa-background.jpg'; ?>)">
         <div class="wcpk-setup">
           <h1 id="pakettikauppa-logo">
-            <a href="<?php echo esc_html(WC_PAKETTIKAUPPA_URL); ?>" target="_blank" rel="noreferrer noopener" aria-label="<?php esc_html_e('Link to Pakettikauppa website', WC_PAKETTIKAUPPA_TEXT_DOMAIN); ?>">
-              <img src="<?php echo plugin_dir_url(__FILE__) . '../assets/img/pakettikauppa-logo.png'; ?>" alt="<?php esc_attr_e('Pakettikauppa', WC_PAKETTIKAUPPA_TEXT_DOMAIN); ?>" />
+            <a href="<?php echo esc_html(WC_PAKETTIKAUPPA_URL); ?>" target="_blank" rel="noreferrer noopener" aria-label="<?php esc_html_e('Link to Pakettikauppa website', self::$module_config['text_domain']); ?>">
+              <img src="<?php echo plugin_dir_url(__FILE__) . '../assets/img/pakettikauppa-logo.png'; ?>" alt="<?php esc_attr_e('Pakettikauppa', self::$module_config['text_domain']); ?>" />
             </a>
           </h1>
           <?php
@@ -150,12 +154,12 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
       // Provide an option to skip the whole wizard on the first step
       if ( $this->step === array_keys($this->steps)[0] ) {
         echo '<a href="' . esc_url(admin_url()) . '">';
-        esc_html_e('Not now', WC_PAKETTIKAUPPA_TEXT_DOMAIN);
+        esc_html_e('Not now', self::$module_config['text_domain']);
         echo '</a>';
       } elseif ( $this->step !== array_keys($this->steps)[count($this->steps) - 1] ) {
         // For skipping individual steps
         echo '<a href="' . esc_url($this->get_next_step_link()) . '">';
-        esc_html_e('Skip this step', WC_PAKETTIKAUPPA_TEXT_DOMAIN);
+        esc_html_e('Skip this step', self::$module_config['text_domain']);
         echo '</a>';
       }
 
@@ -174,10 +178,10 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
     public function credentials_setup() {
       ?>
       <p class="wcpk-setup-welcome">
-        <?php esc_html_e('Thank you for installing WooCommerce Pakettikauppa! This wizard will guide you through the setup process to get you started.', WC_PAKETTIKAUPPA_TEXT_DOMAIN); ?>
+        <?php esc_html_e('Thank you for installing WooCommerce Pakettikauppa! This wizard will guide you through the setup process to get you started.', self::$module_config['text_domain']); ?>
       </p>
       <p class="wcpk-setup-info">
-        <?php _e('If you have already registered with Pakettikauppa, please choose "Production mode" and enter the credentials you received from Pakettikauppa. If you have not yet registered, please register at <a target="_blank" rel="noopener noreferrer" href="https://www.pakettikauppa.fi">www.pakettikauppa.fi</a>. If you wish to test the plugin before making a contract with Pakettikauppa, please choose "Test mode" and leave the API secret/key fields empty.', WC_PAKETTIKAUPPA_TEXT_DOMAIN); ?>
+        <?php _e('If you have already registered with Pakettikauppa, please choose "Production mode" and enter the credentials you received from Pakettikauppa. If you have not yet registered, please register at <a target="_blank" rel="noopener noreferrer" href="https://www.pakettikauppa.fi">www.pakettikauppa.fi</a>. If you wish to test the plugin before making a contract with Pakettikauppa, please choose "Test mode" and leave the API secret/key fields empty.', self::$module_config['text_domain']); ?>
       </p>
       <div class="wcpk-setup-settings-wrapper">
         <form method="post">
@@ -187,7 +191,7 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
           ?>
           <p class="wcpk-setup-actions step">
             <button type="submit" class="button-primary button button-large button-next" value="pakettikauppa_credentials" name="save_step">
-              <?php esc_html_e('Let\'s start!', WC_PAKETTIKAUPPA_TEXT_DOMAIN); ?>
+              <?php esc_html_e('Let\'s start!', self::$module_config['text_domain']); ?>
             </button>
           </p>
         </form>
@@ -198,7 +202,7 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
     public function merchant_details_setup() {
       ?>
       <p class="wcpk-setup-info">
-        <?php esc_html_e('Please fill the details of the merchant below. The information provided here will be used as the sender in shipping labels.', WC_PAKETTIKAUPPA_TEXT_DOMAIN); ?>
+        <?php esc_html_e('Please fill the details of the merchant below. The information provided here will be used as the sender in shipping labels.', self::$module_config['text_domain']); ?>
       </p>
       <div class="wcpk-setup-settings-wrapper">
         <form method="post">
@@ -208,7 +212,7 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
           ?>
           <p class="wcpk-setup-actions step">
             <button type="submit" class="button-primary button button-large button-next" value="pakettikauppa_merchant_details" name="save_step">
-              <?php esc_html_e('Continue', WC_PAKETTIKAUPPA_TEXT_DOMAIN); ?>
+              <?php esc_html_e('Continue', self::$module_config['text_domain']); ?>
             </button>
           </p>
         </form>
@@ -226,7 +230,7 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
            * %1$s: link to WooCommerce shipping zone setting page
            * %2$s: link to external WooCommerce documentation
            */
-          __('Please configure the shipping methods of the currently active shipping zones to use Pakettikauppa shipping. Note that this plugin requires WooCommerce shipping zones and methods to be preconfigured in <a href="%1$s">WooCommerce > Settings > Shipping > Shipping zones</a>. For more information, visit <a target="_blank" href="%2$s">%2$s</a>.', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+          __('Please configure the shipping methods of the currently active shipping zones to use Pakettikauppa shipping. Note that this plugin requires WooCommerce shipping zones and methods to be preconfigured in <a href="%1$s">WooCommerce > Settings > Shipping > Shipping zones</a>. For more information, visit <a target="_blank" href="%2$s">%2$s</a>.', self::$module_config['text_domain']),
           esc_url(admin_url('admin.php?page=wc-settings&tab=shipping')),
           'https://docs.woocommerce.com/document/setting-up-shipping-zones/'
         );
@@ -242,7 +246,7 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
           </table>
           <p class="wcpk-setup-actions step">
             <button type="submit" class="button-primary button button-large button-next" value="pakettikauppa_shipping_details" name="save_step">
-              <?php esc_html_e('Continue', WC_PAKETTIKAUPPA_TEXT_DOMAIN); ?>
+              <?php esc_html_e('Continue', self::$module_config['text_domain']); ?>
             </button>
           </p>
         </form>
@@ -253,7 +257,7 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
     public function order_processing_setup() {
       ?>
       <p class="wcpk-setup-info">
-        <?php esc_html_e('Customize the order processing phase.', WC_PAKETTIKAUPPA_TEXT_DOMAIN); ?>
+        <?php esc_html_e('Customize the order processing phase.', self::$module_config['text_domain']); ?>
       </p>
       <div class="wcpk-setup-settings-wrapper">
         <form method="post">
@@ -263,7 +267,7 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
           ?>
           <p class="wcpk-setup-actions step">
             <button type="submit" class="button-primary button button-large button-next" value="pakettikauppa_order_processing" name="save_step">
-              <?php esc_html_e('Continue', WC_PAKETTIKAUPPA_TEXT_DOMAIN); ?>
+              <?php esc_html_e('Continue', self::$module_config['text_domain']); ?>
             </button>
           </p>
         </form>
@@ -274,12 +278,12 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
     public function setup_ready() {
       ?>
       <p class="wcpk-setup-info">
-        <?php esc_html_e('Congratulations, everything is now set up and you are now ready to start using the plugin!', WC_PAKETTIKAUPPA_TEXT_DOMAIN); ?>
+        <?php esc_html_e('Congratulations, everything is now set up and you are now ready to start using the plugin!', self::$module_config['text_domain']); ?>
       </p>
       <p class="wcpk-setup-actions step">
         <a href="<?php echo esc_url(admin_url()); ?>">
           <button class="button-primary button button-large button-next">
-            <?php esc_html_e('Exit', WC_PAKETTIKAUPPA_TEXT_DOMAIN); ?>
+            <?php esc_html_e('Exit', self::$module_config['text_domain']); ?>
           </button>
         </a>
       </p>
@@ -327,4 +331,3 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
   }
 }
 
-new WC_Pakettikauppa_Setup_Wizard();

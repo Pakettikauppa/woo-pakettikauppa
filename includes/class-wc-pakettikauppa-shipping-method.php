@@ -35,6 +35,7 @@ function wc_pakettikauppa_shipping_method_init() {
        */
       public $fee = 5.95;
 
+      protected static $module_config = array();
       /**
        * Constructor for Pakettikauppa shipping class
        *
@@ -44,15 +45,20 @@ function wc_pakettikauppa_shipping_method_init() {
       public function __construct( $instance_id = 0 ) {
         parent::__construct($instance_id);
 
-        $this->id = WC_PAKETTIKAUPPA_SHIPPING_METHOD; // ID for your shipping method. Should be unique.
+        self::$module_config = array(
+          'shipping_method' => WC_PAKETTIKAUPPA_SHIPPING_METHOD,
+          'text_domain' => WC_PAKETTIKAUPPA_TEXT_DOMAIN,
+        );
 
-        $this->method_title = __('Pakettikauppa', WC_PAKETTIKAUPPA_TEXT_DOMAIN);
+        $this->id = self::$module_config['shipping_method']; // ID for your shipping method. Should be unique.
 
-        $this->method_description = __('Edit to select shipping company and shipping prices.', WC_PAKETTIKAUPPA_TEXT_DOMAIN); // Description shown in admin
-        //        $this->method_description = __( 'All shipping methods with one contract. For more information visit <a href="https://www.pakettikauppa.fi/">Pakettikauppa</a>.', WC_PAKETTIKAUPPA_TEXT_DOMAIN ); // Description shown in admin
+        $this->method_title = __('Pakettikauppa', self::$module_config['text_domain']);
+
+        $this->method_description = __('Edit to select shipping company and shipping prices.', self::$module_config['text_domain']); // Description shown in admin
+        //        $this->method_description = __( 'All shipping methods with one contract. For more information visit <a href="https://www.pakettikauppa.fi/">Pakettikauppa</a>.', self::$module_config['text_domain'] ); // Description shown in admin
 
         // Make Pakettikauppa API accessible via WC_Pakettikauppa_Shipment
-        $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment();
+        $this->wc_pakettikauppa_shipment = new WC_Pakettikauppa_Shipment(self::$module_config);
         $this->wc_pakettikauppa_shipment->load();
 
         $this->supports = array(
@@ -66,7 +72,7 @@ function wc_pakettikauppa_shipping_method_init() {
 
         if ( ! empty($this->get_instance_option('shipping_method')) ) {
           /* translators: %s: shipping method */
-          $this->method_description = sprintf(__('Selected shipping method: %s', WC_PAKETTIKAUPPA_TEXT_DOMAIN), $this->wc_pakettikauppa_shipment->service_title($this->get_instance_option('shipping_method')));
+          $this->method_description = sprintf(__('Selected shipping method: %s', self::$module_config['text_domain']), $this->wc_pakettikauppa_shipment->service_title($this->get_instance_option('shipping_method')));
         }
 
       }
@@ -185,13 +191,13 @@ function wc_pakettikauppa_shipping_method_init() {
                 <th><?php echo $shipping_method->title; ?></th>
                 <td style="vertical-align: top;">
                   <select id="<?php echo $method_id; ?>-select" name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][service]'; ?>" onchange="pkChangeOptions(this, '<?php echo $method_id; ?>');">
-                    <option value="__NULL__"><?php esc_html_e('No shipping', WC_PAKETTIKAUPPA_TEXT_DOMAIN); ?></option>
+                    <option value="__NULL__"><?php esc_html_e('No shipping', self::$module_config['text_domain']); ?></option>
                     <option value="__PICKUPPOINTS__" <?php echo ($selected_service === '__PICKUPPOINTS__' ? 'selected' : ''); ?>>Noutopisteet</option>
                     <?php foreach ( $all_shipping_methods as $service_id => $service_name ) : ?>
                       <option value="<?php echo $service_id; ?>" <?php echo (strval($selected_service) === strval($service_id) ? 'selected' : ''); ?>>
                         <?php echo $service_name; ?>
                         <?php if ( $this->wc_pakettikauppa_shipment->service_has_pickup_points($service_id) ) : ?>
-                          (<?php esc_html_e('includes pickup points', WC_PAKETTIKAUPPA_TEXT_DOMAIN); ?>)
+                          (<?php esc_html_e('includes pickup points', self::$module_config['text_domain']); ?>)
                         <?php endif; ?>
                       </option>
                     <?php endforeach; ?>
@@ -260,7 +266,7 @@ function wc_pakettikauppa_shipping_method_init() {
        * Initialize form fields
        */
       private function my_instance_form_fields() {
-        $all_shipping_methods = array( '' => __('Select one shipping method', WC_PAKETTIKAUPPA_TEXT_DOMAIN) );
+        $all_shipping_methods = array( '' => __('Select one shipping method', self::$module_config['text_domain']) );
 
         $all_services = $this->wc_pakettikauppa_shipment->services();
 
@@ -275,7 +281,7 @@ function wc_pakettikauppa_shipping_method_init() {
             'title' => array(
               'title'       => __('Title', 'woocommerce'),
               'type'        => 'text',
-              'description' => __('Can not connect to Pakettikauppa server - please check Pakettikauppa API credentials, servers error log and firewall settings.', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+              'description' => __('Can not connect to Pakettikauppa server - please check Pakettikauppa API credentials, servers error log and firewall settings.', self::$module_config['text_domain']),
               'default'     => 'Pakettikauppa',
               'desc_tip'    => true,
             ),
@@ -287,9 +293,9 @@ function wc_pakettikauppa_shipping_method_init() {
         $fields = array(
           /* Start new section */
           array(
-            'description' => __('Only use this shipping method if no other shipping methods are available and suitable. Using this shipping method is not required to be able to use Pakettikauppa plugin.', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'description' => __('Only use this shipping method if no other shipping methods are available and suitable. Using this shipping method is not required to be able to use Pakettikauppa plugin.', self::$module_config['text_domain']),
             'type'  => 'title',
-            'title' => __('Note', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title' => __('Note', self::$module_config['text_domain']),
           ),
           'title'           => array(
             'title'       => __('Title', 'woocommerce'),
@@ -299,12 +305,12 @@ function wc_pakettikauppa_shipping_method_init() {
             'desc_tip'    => true,
           ),
           array(
-            'title' => __('Shipping methods', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title' => __('Shipping methods', self::$module_config['text_domain']),
             'type'  => 'title',
           ),
 
           'shipping_method' => array(
-            'title'   => __('Shipping method', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'   => __('Shipping method', self::$module_config['text_domain']),
             'type'    => 'select',
             'options' => $all_shipping_methods,
           ),
@@ -335,19 +341,19 @@ function wc_pakettikauppa_shipping_method_init() {
 
             $fields[ 'class_cost_' . $shipping_class->term_id . '_price' ] = array(
             /* translators: %s: shipping class name */
-              'title'       => __('Price (vat included)', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+              'title'       => __('Price (vat included)', self::$module_config['text_domain']),
               'type'        => 'number',
               'default'     => null,
               'placeholder' => __('N/A', 'woocommerce'),
-              'description' => __('Shipping cost', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+              'description' => __('Shipping cost', self::$module_config['text_domain']),
               'desc_tip'    => true,
             );
 
             $fields[ 'class_cost_' . $shipping_class->term_id . '_price_free' ] = array(
-              'title'       => __('Free shipping tier', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+              'title'       => __('Free shipping tier', self::$module_config['text_domain']),
               'type'        => 'number',
               'default'     => null,
-              'description' => __('After which amount shipping is free.', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+              'description' => __('After which amount shipping is free.', self::$module_config['text_domain']),
               'desc_tip'    => true,
             );
           }
@@ -366,25 +372,25 @@ function wc_pakettikauppa_shipping_method_init() {
         }
 
         $fields[] = array(
-          'title'   => __('Default shipping class cost', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+          'title'   => __('Default shipping class cost', self::$module_config['text_domain']),
           'type'    => 'title',
           'default' => '',
         );
 
         $fields['price'] = array(
-          'title'       => __('No shipping class cost (vat included)', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+          'title'       => __('No shipping class cost (vat included)', self::$module_config['text_domain']),
           'type'        => 'number',
           'default'     => $this->fee,
           'placeholder' => __('N/A', 'woocommerce'),
-          'description' => __('Shipping cost  (vat included)', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+          'description' => __('Shipping cost  (vat included)', self::$module_config['text_domain']),
           'desc_tip'    => true,
         );
 
         $fields['price_free'] = array(
-          'title'       => __('Free shipping tier', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+          'title'       => __('Free shipping tier', self::$module_config['text_domain']),
           'type'        => 'number',
           'default'     => '',
-          'description' => __('After which amount shipping is free.', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+          'description' => __('After which amount shipping is free.', self::$module_config['text_domain']),
           'desc_tip'    => true,
         );
 
@@ -394,166 +400,166 @@ function wc_pakettikauppa_shipping_method_init() {
       private function my_global_form_fields() {
         return array(
           'mode'                       => array(
-            'title'   => __('Mode', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'   => __('Mode', self::$module_config['text_domain']),
             'type'    => 'select',
             'default' => 'test',
             'options' => array(
-              'test'       => __('Testing environment', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
-              'production' => __('Production environment', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+              'test'       => __('Testing environment', self::$module_config['text_domain']),
+              'production' => __('Production environment', self::$module_config['text_domain']),
             ),
           ),
 
           'account_number'             => array(
-            'title'    => __('API key', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
-            'desc'     => __('API key provided by Pakettikauppa', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'    => __('API key', self::$module_config['text_domain']),
+            'desc'     => __('API key provided by Pakettikauppa', self::$module_config['text_domain']),
             'type'     => 'text',
             'default'  => '',
             'desc_tip' => true,
           ),
 
           'secret_key'                 => array(
-            'title'    => __('API secret', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
-            'desc'     => __('API Secret provided by Pakettikauppa', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'    => __('API secret', self::$module_config['text_domain']),
+            'desc'     => __('API Secret provided by Pakettikauppa', self::$module_config['text_domain']),
             'type'     => 'text',
             'default'  => '',
             'desc_tip' => true,
           ),
 
           'pickup_points'              => array(
-            'title' => __('Shipping methods mapping', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title' => __('Shipping methods mapping', self::$module_config['text_domain']),
             'type'  => 'pickuppoints',
           ),
 
           array(
-            'title'       => __('Shipping settings', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'       => __('Shipping settings', self::$module_config['text_domain']),
             'type'        => 'title',
             /* translators: %s: url to documentation */
-            'description' => sprintf(__('You can activate new shipping method to checkout in <b>WooCommerce > Settings > Shipping > Shipping zones</b>. For more information, see <a target="_blank" href="%1$s">%1$s</a>', WC_PAKETTIKAUPPA_TEXT_DOMAIN), 'https://docs.woocommerce.com/document/setting-up-shipping-zones/'),
+            'description' => sprintf(__('You can activate new shipping method to checkout in <b>WooCommerce > Settings > Shipping > Shipping zones</b>. For more information, see <a target="_blank" href="%1$s">%1$s</a>', self::$module_config['text_domain']), 'https://docs.woocommerce.com/document/setting-up-shipping-zones/'),
 
           ),
 
           'add_tracking_to_email'      => array(
-            'title'   => __('Add tracking link to the order completed email', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'   => __('Add tracking link to the order completed email', self::$module_config['text_domain']),
             'type'    => 'checkbox',
             'default' => 'no',
           ),
 
           'add_pickup_point_to_email'      => array(
-            'title'   => __('Add selected pickup point information to the order completed email', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'   => __('Add selected pickup point information to the order completed email', self::$module_config['text_domain']),
             'type'    => 'checkbox',
             'default' => 'yes',
           ),
 
           'change_order_status_to'      => array(
-            'title'   => __('When creating shipping label change order status to', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'   => __('When creating shipping label change order status to', self::$module_config['text_domain']),
             'type'    => 'select',
             'default' => '',
             'options' => array(
-              '' => __('No order status change', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+              '' => __('No order status change', self::$module_config['text_domain']),
               'completed'  => __('Completed', 'woocommerce'),
               'processing' => __('Processing', 'woocommerce'),
             ),
           ),
 
           'create_shipments_automatically'     => array(
-            'title'   => __('Create shipping labels automatically', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'   => __('Create shipping labels automatically', self::$module_config['text_domain']),
             'type'    => 'select',
             'default' => 'no',
             'options' => array(
-              'no'  => __('No automatic creation of shipping labels', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+              'no'  => __('No automatic creation of shipping labels', self::$module_config['text_domain']),
               /* translators: %s: order status */
-              'completed'  => sprintf(__('When order status is "%s"', WC_PAKETTIKAUPPA_TEXT_DOMAIN), __('Completed', 'woocommerce')),
+              'completed'  => sprintf(__('When order status is "%s"', self::$module_config['text_domain']), __('Completed', 'woocommerce')),
               /* translators: %s: order status */
-              'processing' => sprintf(__('When order status is "%s"', WC_PAKETTIKAUPPA_TEXT_DOMAIN), __('Processing', 'woocommerce')),
+              'processing' => sprintf(__('When order status is "%s"', self::$module_config['text_domain']), __('Processing', 'woocommerce')),
             ),
           ),
 
           'download_type_of_labels'     => array(
-            'title'   => __('Print labels', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'   => __('Print labels', self::$module_config['text_domain']),
             'type'    => 'select',
             'default' => 'menu',
             'options' => array(
-              'browser'  => __('To browser', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
-              'download'  => __('Download', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+              'browser'  => __('To browser', self::$module_config['text_domain']),
+              'download'  => __('Download', self::$module_config['text_domain']),
             ),
           ),
 
           'post_label_to_url' => array(
-            'title'   => __('Post shipping label to URL', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'   => __('Post shipping label to URL', self::$module_config['text_domain']),
             'type'    => 'text',
             'default' => '',
-            'description' => __('Plugin can upload shipping label to an URL when creating shipping label. Define URL if you want to upload PDF.', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'description' => __('Plugin can upload shipping label to an URL when creating shipping label. Define URL if you want to upload PDF.', self::$module_config['text_domain']),
           ),
 
           'pickup_points_search_limit' => array(
-            'title'       => __('Pickup point search limit', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'       => __('Pickup point search limit', self::$module_config['text_domain']),
             'type'        => 'number',
             'default'     => 5,
-            'description' => __('Limit the amount of nearest pickup points shown.', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'description' => __('Limit the amount of nearest pickup points shown.', self::$module_config['text_domain']),
             'desc_tip'    => true,
           ),
           'pickup_point_list_type'     => array(
-            'title'   => __('Show pickup points as', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'   => __('Show pickup points as', self::$module_config['text_domain']),
             'type'    => 'select',
             'default' => 'menu',
             'options' => array(
-              'menu'  => __('Menu', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
-              'list'  => __('List', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+              'menu'  => __('Menu', self::$module_config['text_domain']),
+              'list'  => __('List', self::$module_config['text_domain']),
             ),
           ),
           array(
-            'title' => __('Store owner information', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title' => __('Store owner information', self::$module_config['text_domain']),
             'type'  => 'title',
           ),
 
           'sender_name'                => array(
-            'title'   => __('Sender name', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'   => __('Sender name', self::$module_config['text_domain']),
             'type'    => 'text',
             'default' => get_bloginfo('name'),
           ),
 
           'sender_address'             => array(
-            'title'   => __('Sender address', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'   => __('Sender address', self::$module_config['text_domain']),
             'type'    => 'text',
             'default' => WC()->countries->get_base_address(),
           ),
 
           'sender_postal_code'         => array(
-            'title'   => __('Sender postal code', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'   => __('Sender postal code', self::$module_config['text_domain']),
             'type'    => 'text',
             'default' => WC()->countries->get_base_postcode(),
           ),
 
           'sender_city'                => array(
-            'title'   => __('Sender city', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'   => __('Sender city', self::$module_config['text_domain']),
             'type'    => 'text',
             'default' => WC()->countries->get_base_city(),
           ),
           'info_code'                  => array(
-            'title'   => __('Info-code for shipments', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'   => __('Info-code for shipments', self::$module_config['text_domain']),
             'type'    => 'text',
             'default' => '',
           ),
           array(
-            'title' => __('Cash on Delivery (COD) Settings', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title' => __('Cash on Delivery (COD) Settings', self::$module_config['text_domain']),
             'type'  => 'title',
           ),
           'cod_iban'                   => array(
-            'title'   => __('Bank account number for Cash on Delivery (IBAN)', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'   => __('Bank account number for Cash on Delivery (IBAN)', self::$module_config['text_domain']),
             'type'    => 'text',
             'default' => '',
           ),
           'cod_bic'                    => array(
-            'title'   => __('BIC code for Cash on Delivery', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'   => __('BIC code for Cash on Delivery', self::$module_config['text_domain']),
             'type'    => 'text',
             'default' => '',
           ),
           array(
-            'title' => __('Advanced settings', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title' => __('Advanced settings', self::$module_config['text_domain']),
             'type'  => 'title',
           ),
           'show_pakettikauppa_shipping_method' => array(
-            'title'   => __('Show Pakettikauppa shipping method', WC_PAKETTIKAUPPA_TEXT_DOMAIN),
+            'title'   => __('Show Pakettikauppa shipping method', self::$module_config['text_domain']),
             'type'    => 'select',
             'default' => 'no',
             'options' => array(
