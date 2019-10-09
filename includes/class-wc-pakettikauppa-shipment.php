@@ -40,7 +40,7 @@ class WC_Pakettikauppa_Shipment {
 
   private static $module_config = array();
 
-  public function __construct($module_config) {
+  public function __construct( $module_config ) {
     self::$module_config = $module_config;
 
     $this->id = 'wc_pakettikauppa_shipment';

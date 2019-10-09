@@ -58,7 +58,7 @@ $module_config = array(
  *
  * @param array $module_config
  */
-function wc_pakettikauppa_load($module_config) {
+function wc_pakettikauppa_load( $module_config ) {
   if ( is_admin() ) {
     require_once plugin_dir_path(__FILE__) . 'includes/class-wc-pakettikauppa-admin.php';
     $wc_pakettikauppa_admin = new WC_Pakettikauppa_Admin($module_config);

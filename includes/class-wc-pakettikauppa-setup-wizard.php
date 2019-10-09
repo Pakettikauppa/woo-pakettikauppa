@@ -11,10 +11,9 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
     private $steps = array();
     private $step = '';
     private $shipping_method = null;
-    
     private static $module_config = array();
 
-    public function __construct($module_config) {
+    public function __construct( $module_config ) {
       self::$module_config = $module_config;
 
       if ( apply_filters('wc_pakettikauppa_enable_setup_wizard', true) && current_user_can('manage_woocommerce') ) {
@@ -330,4 +329,3 @@ if ( ! class_exists('WC_Pakettikauppa_Setup_Wizard') ) {
     }
   }
 }
-
