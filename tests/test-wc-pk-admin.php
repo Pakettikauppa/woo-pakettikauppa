@@ -11,11 +11,18 @@ require_once WC_PAKETTIKAUPPA_DIR . 'includes/class-wc-pakettikauppa-admin.php';
  */
 class Test_WC_Pakettikauppa_Admin extends WP_UnitTestCase {
 
+  private $module_config = array(
+    'text_domain' => 'wc-pakettikauppa',
+    'admin' => 'wc_pakettikauppa_admin',
+    'url' => 'https://www.pakettikauppa.fi/',
+    'shipping_method' => 'pakettikauppa_shipping_method',
+  );
+
   /**
    * Test that the id is set correctly and return an WC_Pakettikauppa_Admin object
    */
   public function test_admin_init() {
-    $pakettikauppa_admin = new WC_Pakettikauppa_Admin();
+    $pakettikauppa_admin = new WC_Pakettikauppa_Admin($this->module_config);
     $this->assertEquals('wc_pakettikauppa_admin', $pakettikauppa_admin->id);
     $pakettikauppa_admin->load();
 

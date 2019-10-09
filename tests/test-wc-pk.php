@@ -8,11 +8,17 @@
  */
 class Test_WC_Pakettikauppa extends WP_UnitTestCase {
 
+  private $module_config = array(
+    'text_domain' => 'wc-pakettikauppa',
+    'admin' => 'wc_pakettikauppa_admin',
+    'url' => 'https://www.pakettikauppa.fi/',
+    'shipping_method' => 'pakettikauppa_shipping_method',
+  );
   /**
    * Test that the id is set correctly and return an WC_Pakettikauppa object.
    */
   public function test_init() {
-    $pakettikauppa = new WC_Pakettikauppa();
+    $pakettikauppa = new WC_Pakettikauppa($this->module_config);
     $this->assertEquals('wc-pakettikauppa', $pakettikauppa->id);
     $pakettikauppa->load();
 
@@ -48,7 +54,7 @@ class Test_WC_Pakettikauppa extends WP_UnitTestCase {
    * @depends test_init
    */
   public function test_get_pickup_points( $pakettikauppa ) {
-    $shipment = new WC_Pakettikauppa_Shipment();
+    $shipment = new WC_Pakettikauppa_Shipment($this->module_config);
     $shipment->load();
     $pickups                 = $shipment->get_pickup_points(00100);
     $wc_pakettikauppa_client = new Pakettikauppa\Client(array( 'test_mode' => true ));
