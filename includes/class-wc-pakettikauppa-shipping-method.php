@@ -627,8 +627,15 @@ function wc_pakettikauppa_shipping_method_init() {
         foreach ( $package['contents'] as $item_id => $values ) {
           if ( $values['data']->needs_shipping() ) {
             $found_class = $values['data']->get_shipping_class();
+            $exists = !empty($found_class);
 
-            if ( ! empty($found_class) && ! isset($found_shipping_classes[ $found_class ]) ) {
+            // If WC_Product_Simple->get_shipping_class() returns nothing, skip. Item doesn't have a shipping class.
+            if (!$exists) {
+              continue;
+            }
+
+            // Create the array on first iteration
+            if ( $exists && ! isset($found_shipping_classes[ $found_class ]) ) {
               $found_shipping_classes[ $found_class ] = array();
             }
 
