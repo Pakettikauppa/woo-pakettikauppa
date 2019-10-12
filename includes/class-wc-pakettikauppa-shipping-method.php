@@ -76,14 +76,15 @@ function wc_pakettikauppa_shipping_method_init() {
        */
       public function init() {
         $settings = $this->wc_pakettikauppa_shipment->get_settings();
-        if ( ! isset($settings['show_pakettikauppa_shipping_method']) ) {
-          $show_pakettikauppa_shipping_method = 'yes';
-        } else {
-          $show_pakettikauppa_shipping_method = $settings['show_pakettikauppa_shipping_method'];
-        }
+        $show_method_set = isset($settings['show_pakettikauppa_shipping_method']);
+        $show_pakettikauppa_shipping_method = !$show_method_set ? 'yes' : $settings['show_pakettikauppa_shipping_method'];
 
-        if ( $this->instance_id === 0 ) {
-          if ( ! isset($settings['show_pakettikauppa_shipping_method']) ) {
+        // What's this for? All it seems to do is cause a notice in the setup wizard, and just entering the setup
+        // wizard causes the setup wizard notice to disappear forever.
+        // TODO: Remove.
+
+        /* if ( $this->instance_id === 0 ) {
+          if ( ! $show_method_set ) {
             $shipping_zones = WC_Shipping_Zones::get_zones();
 
             $show_pakettikauppa_shipping_method = 'no';
@@ -100,7 +101,7 @@ function wc_pakettikauppa_shipping_method_init() {
             $this->wc_pakettikauppa_shipment->save_settings();
             $settings = $this->wc_pakettikauppa_shipment->get_settings();
           }
-        }
+        } */
 
         if ( $show_pakettikauppa_shipping_method === 'yes' ) {
           $this->supports[] = 'instance-settings';
@@ -555,7 +556,7 @@ function wc_pakettikauppa_shipping_method_init() {
           'show_pakettikauppa_shipping_method' => array(
             'title'   => __('Show Pakettikauppa shipping method', 'wc-pakettikauppa'),
             'type'    => 'select',
-            'default' => 'no',
+            'default' => 'yes',
             'options' => array(
               'no'  => __('No'),
               'yes'  => __('Yes'),
