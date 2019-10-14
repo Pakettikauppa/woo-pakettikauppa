@@ -85,10 +85,19 @@ function wc_pakettikauppa_shipping_method_init() {
         $show_method_set = isset($settings['show_pakettikauppa_shipping_method']);
         $show_pakettikauppa_shipping_method = ! $show_method_set ? 'yes' : $settings['show_pakettikauppa_shipping_method'];
 
+        /**
+         * The shipping method should only be shown to users who used an earlier version of the plugin. Recent
+         * versions of the plugin do not require using a shipping method; instead the plugin maps to existing
+         * shipping methods in the store.
+         */
         if ( $this->instance_id === 0 ) {
           if ( ! $show_method_set ) {
             $shipping_zones = WC_Shipping_Zones::get_zones();
 
+            /**
+             * Disable the shipping method automatically if it's not set yet, unless
+             * some zone shipping method matches with WC_Pakettikauppa_Shipping_Method.
+             */
             $show_pakettikauppa_shipping_method = 'no';
 
             foreach ( $shipping_zones as $shipping_zone ) {
