@@ -79,6 +79,25 @@ function wc_pakettikauppa_shipping_method_init() {
         $show_method_set = isset($settings['show_pakettikauppa_shipping_method']);
         $show_pakettikauppa_shipping_method = ! $show_method_set ? 'yes' : $settings['show_pakettikauppa_shipping_method'];
 
+        if ( $this->instance_id === 0 ) {
+          if ( ! $show_method_set ) {
+            $shipping_zones = WC_Shipping_Zones::get_zones();
+
+            $show_pakettikauppa_shipping_method = 'no';
+
+            foreach ( $shipping_zones as $shipping_zone ) {
+              foreach ( $shipping_zone['shipping_methods'] as $shipping_object ) {
+                if ( get_class($shipping_object) === 'WC_Pakettikauppa_Shipping_Method' ) {
+                  $show_pakettikauppa_shipping_method = 'yes';
+                }
+              }
+            }
+
+            $this->wc_pakettikauppa_shipment->update_setting('show_pakettikauppa_shipping_method', $show_pakettikauppa_shipping_method);
+            $this->wc_pakettikauppa_shipment->save_settings();
+            $settings = $this->wc_pakettikauppa_shipment->get_settings();
+          }
+        }
 
         if ( $show_pakettikauppa_shipping_method === 'yes' ) {
           $this->supports[] = 'instance-settings';
