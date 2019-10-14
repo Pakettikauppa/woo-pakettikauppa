@@ -1,13 +1,11 @@
 <?php
 
-require_once WC_PAKETTIKAUPPA_DIR . 'vendor/autoload.php';
-
 /**
- * Class Test_WC_Pakettikauppa_Shipment
+ * Class Test_Shipment
  *
  * @package Woocommerce_Pakettikauppa
  */
-class Test_WC_Pakettikauppa_Shipment extends WP_UnitTestCase {
+class Test_Shipment extends WP_UnitTestCase {
 
   /**
    * Tests that the tracking code is set correctly

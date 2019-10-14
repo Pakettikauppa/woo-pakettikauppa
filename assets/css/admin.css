@@ -12,7 +12,7 @@ p.pakettikauppa-shipment {
   margin: 10px 0 5px;
 }
 
-.pakettikauppa-services div#wc-pakettikauppa-pickup-points-wrapper {
+.pakettikauppa-services div#woo-pakettikauppa-pickup-points-wrapper {
   width: 95%;
 }
 
@@ -20,18 +20,18 @@ p.pakettikauppa-shipment {
   width: 100%;
 }
 
-.pakettikauppa-services div#wc-pakettikauppa-cod-amount-wrapper,
-.pakettikauppa-services div#wc-pakettikauppa-cod-reference-wrapper,
-.pakettikauppa-services div#wc-pakettikauppa-pickup-points-wrapper
+.pakettikauppa-services div#woo-pakettikauppa-cod-amount-wrapper,
+.pakettikauppa-services div#woo-pakettikauppa-cod-reference-wrapper,
+.pakettikauppa-services div#woo-pakettikauppa-pickup-points-wrapper
 {
   display: none;
 }
 
-.button.wc-pakettikauppa-delete-button {
+.button.woo-pakettikauppa-delete-button {
     color: #a00 !important;
 }
 
-.wc-pakettikauppa-metabox-error {
+.woo-pakettikauppa-metabox-error {
   color: #a00;
 }
 

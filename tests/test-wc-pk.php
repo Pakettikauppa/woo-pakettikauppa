@@ -1,28 +1,28 @@
 <?php
+
+
 /**
- * Class Test_WC_Pakettikauppa
+ * Class Test_Frontend
  *
- * @package woocommerce-pakettikauppa
+ * @package woo-pakettikauppa
  * @since 1.0.0
  * @author Seravo
  */
-class Test_WC_Pakettikauppa extends WP_UnitTestCase {
+class Test_Frontend extends WP_UnitTestCase {
 
-  private $module_config = array(
-    'text_domain' => 'wc-pakettikauppa',
-    'admin' => 'wc_pakettikauppa_admin',
-    'url' => 'https://www.pakettikauppa.fi/',
-    'shipping_method' => 'pakettikauppa_shipping_method',
-  );
   /**
-   * Test that the id is set correctly and return an WC_Pakettikauppa object.
+   * Test that the main plugin class is accessible and return an Frontend object.
    */
   public function test_init() {
-    $pakettikauppa = new WC_Pakettikauppa($this->module_config);
-    $this->assertEquals('wc-pakettikauppa', $pakettikauppa->id);
-    $pakettikauppa->load();
+    $plugin = get_instance();
+    $plugin->load();
 
-    return $pakettikauppa;
+    $frontend = $plugin->frontend;
+    $frontend->load();
+
+    $this->assertEquals($plugin, $frontend->core);
+
+    return $frontend;
   }
 
   /**
@@ -30,33 +30,32 @@ class Test_WC_Pakettikauppa extends WP_UnitTestCase {
    *
    * @depends test_init
    */
-  public function test_wc_pakettikauppa_get_status_text( $pakettikauppa ) {
-    $status = WC_Pakettikauppa_Shipment::get_status_text(13);
+  public function test_wc_pakettikauppa_get_status_text( $frontend ) {
+
+    $status = call_user_func([ $frontend->core->shipment, 'get_status_text' ], 13);
     $this->assertEquals('Item is collected from sender - picked up', $status);
     $input  = 'abcdefg';
-    $status = WC_Pakettikauppa_Shipment::get_status_text($input);
+    $status = call_user_func([ $frontend->core->shipment, 'get_status_text' ], $input);
     $this->assertEquals('Unknown status: ' . $input, $status);
   }
 
   /**
    * @depends test_init
    */
-  public function test_wc_pakettikauppa_tracking_url( $pakettikauppa ) {
+  public function test_wc_pakettikauppa_tracking_url( $frontend ) {
     $inputs = array(
       0 => 90080,
       1 => 'seurantakoodi',
     );
-    $output = WC_Pakettikauppa_Shipment::tracking_url($inputs[1]);
+    $output = call_user_func([ $frontend->core->shipment, 'tracking_url' ], $inputs[1]);
     $this->assertEquals('https://www.pakettikauppa.fi/seuranta/?seurantakoodi', $output);
   }
 
   /**
    * @depends test_init
    */
-  public function test_get_pickup_points( $pakettikauppa ) {
-    $shipment = new WC_Pakettikauppa_Shipment($this->module_config);
-    $shipment->load();
-    $pickups                 = $shipment->get_pickup_points(00100);
+  public function test_get_pickup_points( $frontend ) {
+    $pickups = call_user_func([ $frontend->core->shipment, 'get_pickup_points' ], 00100);
     $wc_pakettikauppa_client = new Pakettikauppa\Client(array( 'test_mode' => true ));
     $pickup_point_data       = $wc_pakettikauppa_client->searchPickupPoints(00100);
     $this->assertEquals($pickup_point_data, $pickups);

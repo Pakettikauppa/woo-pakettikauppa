@@ -1,12 +1,12 @@
 <?php
 /**
  * Plugin Name: WooCommerce Pakettikauppa
- * Version: 2.0.22
- * Plugin URI: https://github.com/Seravo/woocommerce-pakettikauppa
+ * Version: 2.0.23
+ * Plugin URI: https://github.com/Seravo/woo-pakettikauppa
  * Description: Pakettikauppa shipping service for WooCommerce. Integrates Posti, Smartship, Matkahuolto, DB Schenker and others. Version 2 breaks 1.x pricing settings.
  * Author: Seravo
  * Author URI: https://seravo.com/
- * Text Domain: wc-pakettikauppa
+ * Text Domain: woo-pakettikauppa
  * Domain Path: /languages/
  * License: GPL v3 or later
  *
@@ -23,68 +23,31 @@ if ( ! defined('ABSPATH') ) {
   exit;
 }
 
-define('WC_PAKETTIKAUPPA_BASENAME', plugin_basename(__FILE__));
-define('WC_PAKETTIKAUPPA_DIR', plugin_dir_path(__FILE__));
-define('WC_PAKETTIKAUPPA_VERSION', get_file_data(__FILE__, array( 'Version' ), 'plugin')[0]);
-define('WC_PAKETTIKAUPPA_TEXT_DOMAIN', 'wc-pakettikauppa');
-define('WC_PAKETTIKAUPPA_SHIPPING_METHOD', 'pakettikauppa_shipping_method');
-define('WC_PAKETTIKAUPPA_ADMIN', 'wc_pakettikauppa_admin');
-define('WC_PAKETTIKAUPPA_URL', 'https://www.pakettikauppa.fi/');
-
 /**
- * Load plugin textdomain
- *
- * @return void
+ * Autoloader loads nothing but Pakettikauppa libraries. The classname of the generated autoloader is not unique,
+ * whitelabel forks use the same autoloader which results in a fatal error if the main plugin and a whitelabel plugin
+ * co-exist.
  */
-function wc_pakettikauppa_load_textdomain() {
-  load_plugin_textdomain(
-    WC_PAKETTIKAUPPA_TEXT_DOMAIN,
-    false,
-    dirname(plugin_basename(__FILE__)) . '/languages/'
-  );
+if ( ! class_exists('\Pakettikauppa\Client') ) {
+  require_once __DIR__ . '/vendor/autoload.php';
 }
 
-add_action('plugins_loaded', 'wc_pakettikauppa_load_textdomain');
+require_once 'core/class-core.php';
 
-$module_config = array(
-  'text_domain' => 'wc-pakettikauppa',
-  'admin' => 'wc_pakettikauppa_admin',
-  'url' => 'https://www.pakettikauppa.fi/',
-  'shipping_method' => 'pakettikauppa_shipping_method',
+class Wc_Pakettikauppa extends Woo_Pakettikauppa_Core\Core {
+
+}
+
+$instance = new Wc_Pakettikauppa(
+  [
+    'root' => __FILE__,
+    'version' => get_file_data(__FILE__, array( 'Version' ), 'plugin')[0],
+    'shipping_method_name' => 'pakettikauppa_shipping_method',
+    'vendor_name' => 'Pakettikauppa',
+    'vendor_url' => 'https://www.pakettikauppa.fi/',
+    'vendor_logo' => 'assets/img/pakettikauppa-logo.png',
+    'setup_background' => 'assets/img/pakettikauppa-background.jpg',
+    'setup_page' => 'wcpk-setup',
+  ]
 );
 
-/**
- * Load WC_Pakettikauppa
- *
- * @param array $module_config
- */
-function wc_pakettikauppa_load( $module_config ) {
-  if ( is_admin() ) {
-    require_once plugin_dir_path(__FILE__) . 'includes/class-wc-pakettikauppa-admin.php';
-    $wc_pakettikauppa_admin = new WC_Pakettikauppa_Admin($module_config);
-    $wc_pakettikauppa_admin->load();
-  } else {
-    require_once plugin_dir_path(__FILE__) . 'includes/class-wc-pakettikauppa.php';
-    $wc_pakettikauppa = new WC_Pakettikauppa($module_config);
-    $wc_pakettikauppa->load();
-  }
-}
-
-/**
- * Display an error notice when WooCommerce is not actived.
- */
-function wc_pakettikauppa_woocommerce_inactive_notice() {
-  echo '<div class="notice notice-error">';
-  echo '<p>' . __('WooCommerce Pakettikauppa requires WooCommerce to be installed and activated!', WC_PAKETTIKAUPPA_TEXT_DOMAIN) . '</p>';
-  echo '</div>';
-}
-
-// This plugin needs WooCommerce to be activated in order to work properly, so
-// don't load any plugin functionalities if WooCommerce is not active.
-if ( in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')), true) ) {
-  require_once plugin_dir_path(__FILE__) . 'includes/class-wc-pakettikauppa-shipping-method.php';
-  wc_pakettikauppa_load($module_config);
-} else {
-  // Alert the site admin when in WP Admin
-  add_action('admin_notices', 'wc_pakettikauppa_woocommerce_inactive_notice');
-}

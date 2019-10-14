@@ -13,7 +13,7 @@ WP_VERSION=${5-latest}
 SKIP_DB_CREATE=${6-false}
 
 WP_TESTS_DIR=${WP_TESTS_DIR-/tmp/wordpress-tests-lib}
-WP_CORE_DIR=${WP_CORE_DIR-/tmp/wordpress/}
+WP_CORE_DIR=${WP_CORE_DIR-/tmp/wordpress}
 
 download() {
   if [ `which curl` ]; then
@@ -65,6 +65,17 @@ install_wp() {
 	fi
 
 	download https://raw.github.com/markoheijnen/wp-mysqli/master/db.php $WP_CORE_DIR/wp-content/db.php
+}
+
+install_woo() {
+	if [ -d $WP_CORE_DIR/wp-content/plugins/woocommerce ]; then
+		return;
+	fi
+
+	mkdir -p $WP_CORE_DIR/wp-content/plugins
+  download https://downloads.wordpress.org/plugin/woocommerce.3.7.1.zip $WP_CORE_DIR/wp-content/plugins/woocommerce.zip
+  unzip -q $WP_CORE_DIR/wp-content/plugins/woocommerce.zip -d $WP_CORE_DIR/wp-content/plugins
+  rm $WP_CORE_DIR/wp-content/plugins/woocommerce.zip
 }
 
 install_test_suite() {
@@ -119,9 +130,10 @@ install_db() {
 	fi
 
 	# create database
-	mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA
+	mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA || echo "Failed to create database, does it already exist?"
 }
 
 install_wp
+install_woo
 install_test_suite
 install_db

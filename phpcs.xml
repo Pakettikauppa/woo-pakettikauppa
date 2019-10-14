@@ -101,6 +101,9 @@
   <!-- Include PHP compatibility sniffs -->
   <rule ref="PHPCompatibility" />
 
+  <!-- Set minimum supporter PHP version -->
+  <config name="testVersion" value="5.6-"/>
+
 
   <!--
     Add some custom sniff rules in this section below. See
