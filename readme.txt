@@ -100,6 +100,14 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 
+= 2.0.22 =
+* New feature: Setup wizard
+* Enhancements: Round weight and volume to more precise number
+* Enhancements: Refactoring code
+
+= 2.0.21 =
+* Version skipped
+
 = 2.0.20 =
 * New feature: Change order status after shipping label is printed
 * Enhancements: When choosing pickup point in checkout, do ajax call to save that pickup point to session as a backup.
