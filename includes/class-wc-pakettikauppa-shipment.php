@@ -786,7 +786,7 @@ class WC_Pakettikauppa_Shipment {
           foreach ( $services as $service_code => $service ) {
             if ( $service === 'yes' && $service_code !== '3101' ) {
               $additional_services[] = array( $service_code => null );
-            } else if ( $service === 'yes' && $service_code === '3101' ) {
+            } elseif ( $service === 'yes' && $service_code === '3101' ) {
               $add_cod_to_additional_services = true;
             }
           }

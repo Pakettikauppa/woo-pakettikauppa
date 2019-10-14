@@ -82,16 +82,22 @@ function wc_pakettikauppa_shipping_method_init() {
        */
       public function init() {
         $settings = $this->wc_pakettikauppa_shipment->get_settings();
-        if ( ! isset($settings['show_pakettikauppa_shipping_method']) ) {
-          $show_pakettikauppa_shipping_method = 'yes';
-        } else {
-          $show_pakettikauppa_shipping_method = $settings['show_pakettikauppa_shipping_method'];
-        }
+        $show_method_set = isset($settings['show_pakettikauppa_shipping_method']);
+        $show_pakettikauppa_shipping_method = ! $show_method_set ? 'yes' : $settings['show_pakettikauppa_shipping_method'];
 
+        /**
+         * The shipping method should only be shown to users who used an earlier version of the plugin. Recent
+         * versions of the plugin do not require using a shipping method; instead the plugin maps to existing
+         * shipping methods in the store.
+         */
         if ( $this->instance_id === 0 ) {
-          if ( ! isset($settings['show_pakettikauppa_shipping_method']) ) {
+          if ( ! $show_method_set ) {
             $shipping_zones = WC_Shipping_Zones::get_zones();
 
+            /**
+             * Disable the shipping method automatically if it's not set yet, unless
+             * some zone shipping method matches with WC_Pakettikauppa_Shipping_Method.
+             */
             $show_pakettikauppa_shipping_method = 'no';
 
             foreach ( $shipping_zones as $shipping_zone ) {
@@ -633,8 +639,15 @@ function wc_pakettikauppa_shipping_method_init() {
         foreach ( $package['contents'] as $item_id => $values ) {
           if ( $values['data']->needs_shipping() ) {
             $found_class = $values['data']->get_shipping_class();
+            $exists = ! empty($found_class);
 
-            if ( ! empty($found_class) && ! isset($found_shipping_classes[ $found_class ]) ) {
+            // If WC_Product_Simple->get_shipping_class() returns nothing, skip. Item doesn't have a shipping class.
+            if ( ! $exists ) {
+              continue;
+            }
+
+            // Create the array on first iteration
+            if ( $exists && ! isset($found_shipping_classes[ $found_class ]) ) {
               $found_shipping_classes[ $found_class ] = array();
             }
 

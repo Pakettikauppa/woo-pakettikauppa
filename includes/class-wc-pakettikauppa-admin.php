@@ -289,7 +289,7 @@ class WC_Pakettikauppa_Admin {
 
     if ( isset($_REQUEST['action']) && $_REQUEST['action'] !== '-1' ) {
       $action = $_REQUEST['action'];
-    } else if ( isset($_REQUEST['action2']) && $_REQUEST['action2'] !== '-1' ) {
+    } elseif ( isset($_REQUEST['action2']) && $_REQUEST['action2'] !== '-1' ) {
       $action = $_REQUEST['action2'];
     }
 

@@ -185,7 +185,7 @@ class WC_Pakettikauppa {
               $shipping_method_providers[] = $shipping_method;
             }
           }
-        } else if ( ! empty($pickup_points[ $instance_id ]['service']) ) {
+        } elseif ( ! empty($pickup_points[ $instance_id ]['service']) ) {
           if ( $this->wc_pakettikauppa_shipment->service_has_pickup_points($pickup_points[ $instance_id ]['service']) ) {
             $shipping_method_providers[] = $pickup_points[ $instance_id ]['service'];
           }
