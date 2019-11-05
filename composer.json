@@ -24,6 +24,11 @@
       "name": "Tero Auvinen",
       "email": "tero@seravo.com",
       "homepage": "https://github.com/serter"
+    },
+    {
+      "name": "Christian Nikkanen",
+      "email": "christian@seravo.com",
+      "homepage": "https://github.com/k1sul1"
     }
   ],
   "autoload": {
@@ -33,6 +38,7 @@
     "wordpress", "wp", "pakettikauppa", "seravo", "woocommerce", "prinetti", "matkahuolto", "schenker", "posti"
   ],
   "require": {
+    "php": ">=7.0",
     "composer/installers": "v1.0.12",
     "pakettikauppa/api-library": "*",
     "ext-simplexml": "*"

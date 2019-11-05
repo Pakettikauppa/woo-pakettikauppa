@@ -9,21 +9,31 @@ env:
 
 php:
   - '7.3'
-  - '7.2'
-  - '7.1'
   - nightly
 
 matrix:
-  # include:
-    # Arbitrary PHP version to run the sniffs against.
-    # - php: '5.6'
-      # env: WP_VERSION=4.9.9 WP_MULTISITE=1 SNIFF=1
+  include:
+    # Arbitrary PHP version to run the PHPCS sniffs against, also with multisite
+    - php: '7.2'
+      env: WP_MULTISITE=1 SNIFF=1
+    # Test the legacy 4.9 series and an older PHP version
+    - php: '7.1'
+      env: WP_VERSION=4.9.12
+    # Test the next upcoming major WP release with latest PHP
+    - php: '7.3'
+      env: WP_VERSION=nightly
   allow_failures:
-  - php: nightly  # Old phpunit not compatible with PHP 8.0.0 yet
+    # WordPress core is currenlty not compatible with PHP 8,
+    # so tests with the PHP development version will fail with:
+    #   PHP Fatal error:  Uncaught RuntimeException: Array and string offset
+    #   access syntax with curly braces is deprecated on line 757 in file
+    #   /tmp/wordpress/wp-includes/script-loader.php
+    - php: nightly
 
 before_script:
-  # Install phpunit 7.x as WordPress does not support 8.x yet
-  - if [[ "$TRAVIS_PHP_VERSION" == "5.6" ]]; then PHPUNIT_VERSION=5.7.9; else PHPUNIT_VERSION=7.5.9; fi
+  # Install phpunit 7.x as WordPress 5.x does not support 8.x yet
+  # Install phpunit 5.x for older WordPress 4.x series
+  - if [[ "$TRAVIS_PHP_VERSION" == "7.1" ]]; then PHPUNIT_VERSION=5.7.9; else PHPUNIT_VERSION=7.5.9; fi
   - wget https://phar.phpunit.de/phpunit-$PHPUNIT_VERSION.phar -O /tmp/phpunit; chmod +x /tmp/phpunit
   # Install WordPress PHPUnit tests
   - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION

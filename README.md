@@ -88,8 +88,6 @@ cd /data/wordpress/htdocs/wp-content/plugins/woo-pakettikauppa/bin
 ./run-local-tests.sh
 ```
 
-You may need to chmod the scripts before using: `chmod +x install-tests.sh`
-
 ## Architecture
 The plugin is written so that it can be easily forked to a whitelabel version, containing only a subset of shipping providers and a custom branding. This is achieved by using an abstract class as a factory for the plugin component. Each component can be replaced by simply overloading a method.
 
@@ -97,4 +95,4 @@ The `Woo_Pakettikauppa_Core\Core` class is responsible for loading all component
 
 The subclasses are responsible for doing the actual heavy lifting. `Admin` handles operations in wp-admin, `Frontend` handles frontend, `Shipment` is used for creating shipment labels, etc.
 
-`Text` is bit of a special case, it's only real purpose is to serve as a key-value store for strings that require translation. Currently the plugin has __ & _e calls scattered all over it, in the future, all of them should live in `Text`. The advantage of doing so is being able to replace any text in the whitelabel forks.
+`Text` is bit of a special case, it's only real purpose is to serve as a key-value store for strings that require translation. Currently the plugin has `__` and `_e` calls scattered all over it – in the future, all of them should live in `Text`. The advantage of doing so is being able to replace any text in the whitelabel forks.
