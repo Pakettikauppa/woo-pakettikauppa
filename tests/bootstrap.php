@@ -23,10 +23,15 @@ require_once $_tests_dir . '/includes/functions.php';
 /**
  * Manually load the plugin being tested.
  */
-function _manually_load_plugin() {
-  require dirname(dirname(__FILE__)) . '/wc-pakettikauppa.php';
-}
-tests_add_filter('muplugins_loaded', '_manually_load_plugin');
+tests_add_filter(
+  'muplugins_loaded',
+  function() {
+    require_once 'functions.php';
+
+    require WP_PLUGIN_DIR . '/woocommerce/woocommerce.php';
+    get_instance();
+  }
+);
 
 // Start up the WP testing environment.
 require $_tests_dir . '/includes/bootstrap.php';

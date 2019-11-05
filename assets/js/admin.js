@@ -2,7 +2,7 @@
 /* admin js */
 jQuery(function( $ ) {
   window.pakettikauppa_meta_box_submit = function(obj) {
-    $('#wc-pakettikauppa').block({
+    $('#woo-pakettikauppa').block({
       message: null,
       overlayCSS: {
         background: '#fff',
@@ -47,8 +47,8 @@ jQuery(function( $ ) {
     data[$(obj).attr('name')] = $(obj).val();
 
     $.post(woocommerce_admin_meta_boxes.ajax_url, data, function(response) {
-      $("#wc-pakettikauppa .inside").html(response);
-      $('#wc-pakettikauppa').unblock();
+      $("#woo-pakettikauppa .inside").html(response);
+      $('#woo-pakettikauppa').unblock();
     }).fail(function() {
       location.reload();
     });

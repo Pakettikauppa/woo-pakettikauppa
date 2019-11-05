@@ -26,6 +26,9 @@
       "homepage": "https://github.com/serter"
     }
   ],
+  "autoload": {
+
+  },
   "keywords": [
     "wordpress", "wp", "pakettikauppa", "seravo", "woocommerce", "prinetti", "matkahuolto", "schenker", "posti"
   ],

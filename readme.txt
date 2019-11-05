@@ -4,7 +4,7 @@ Donate link: https://seravo.com/
 Tags: woocommerce, shipping, toimitustavat, smartship, pakettikauppa, posti, smartpost, prinetti, matkahuolto, schenker, seravo, gls
 Requires at least: 4.6
 Tested up to: 5.2
-Requires PHP: 5.6.0
+Requires PHP: 7.1
 Stable tag: trunk
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -44,7 +44,7 @@ Register through [www.pakettikauppa.fi](https://www.pakettikauppa.fi/). Process 
 1. Use the Settings->WooCommerce Pakettikauppa screen to configure the plugin
 1. The plugin requires WooCommerce to be installed, with shipping zones configured and this plugin activated and settings set.
 
-This plugin can also be installed directly from Github or using `composer require seravo/woocommerce-pakettikauppa`.
+This plugin can also be installed directly from Github or using `composer require seravo/woo-pakettikauppa`.
 
 == Developer notes ==
 
@@ -88,7 +88,7 @@ Call for example:
 
 = Is this ready for production use? =
 
-Yes! If you encounter any issues related to this plugin, please report at https://github.com/Seravo/woocommerce-pakettikauppa/issues or to asiakaspalvelu@pakettikauppa.fi
+Yes! If you encounter any issues related to this plugin, please report at https://github.com/Seravo/woo-pakettikauppa/issues or to asiakaspalvelu@pakettikauppa.fi
 
 = Can Shipipping method names be translated? =
 
