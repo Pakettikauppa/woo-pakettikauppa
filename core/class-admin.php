@@ -77,8 +77,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       if ( in_array($current_screen->id, $show_notice_in_screens, true) ) {
 
         // Determine if this is a new install by checking if the plugin settings
-        // have been saved even once.
-        if ( empty($this->shipment->get_settings()) ) {
+        // have been saved even once. There's a longstanding bug that causes the plugin to save it's options pretty much immediately after activating,
+        // as the show_pakettikauppa_shipping_method option is set to `no` by default. There are more than one saved setting if the user has ACTUALLY saved the settings...
+        $settings = $this->shipment->get_settings();
+
+        if ( empty($settings) || count($settings) < 2 ) {
           add_action('admin_notices', array( $this, 'new_install_notice_content' ));
         }
       }
