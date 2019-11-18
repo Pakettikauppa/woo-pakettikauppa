@@ -1,9 +1,9 @@
 === WooCommerce Pakettikauppa ===
-Contributors: joosev, ottok, leotoikka, serter
+Contributors: joosev, ottok, leotoikka, serter, k1sul1
 Donate link: https://seravo.com/
 Tags: woocommerce, shipping, toimitustavat, smartship, pakettikauppa, posti, smartpost, prinetti, matkahuolto, schenker, seravo, gls
 Requires at least: 4.6
-Tested up to: 5.2
+Tested up to: 5.3
 Requires PHP: 7.1
 Stable tag: trunk
 License: GPLv3 or later
@@ -99,6 +99,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 1. Examples of settings screens
 
 == Changelog ==
+
+= 2.1.0 =
+* Plugin refactored to better support future development. No visible functional changes.
 
 = 2.0.22 =
 * New feature: Setup wizard
