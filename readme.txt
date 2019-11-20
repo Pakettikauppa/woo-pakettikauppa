@@ -99,6 +99,8 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 1. Examples of settings screens
 
 == Changelog ==
+= 2.1.1 =
+* Fixed a bug breaking shipping methods created the old way.
 
 = 2.1.0 =
 * Plugin refactored to better support future development. No visible functional changes.

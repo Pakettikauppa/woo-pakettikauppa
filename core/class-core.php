@@ -31,6 +31,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
     public $shipping_method_instance; // Added as an afterthought to fix a bug, merge with $shippingmethod in the future.
     public $setup_wizard;
 
+    public static $instance; // The class is a singleton.
+
     /**
      * Takes an options array with the following key-values.
      *
@@ -64,6 +66,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
 
       $this->text = $this->load_text_class();
 
+      self::$instance = $this;
+
       add_action(
         'plugins_loaded',
         function() {
@@ -71,6 +75,16 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
           $this->load_textdomain();
         }
       );
+    }
+
+    /**
+     * Get class instance. Only used by Shipping_Method class, which can't be injected with
+     * $this. After legacy shipping method is removed, rethink about the existence of this, as it's a terrible hack.
+     *
+     * See https://github.com/Seravo/woo-pakettikauppa/issues/96.
+     */
+    public static function get_instance() {
+      return self::$instance;
     }
 
     /**
@@ -124,7 +138,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       add_action(
         'wp_loaded',
         function() {
-          $this->shipping_method_instance = $this->load_shipping_method_class();
+          // $this->shipping_method_instance = $this->load_shipping_method_class();
+          $this->load_shipping_method_class();
           $this->add_shipping_method();
         }
       );
@@ -161,7 +176,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       add_filter(
         'woocommerce_shipping_methods',
         function( $methods ) {
-          $methods[$this->shippingmethod] = $this->shipping_method_instance;
+          // Ideally we'd control the class init ourselves, but the legacy shipping method doesn't work
+          // if WC doesn't control it.
+          // $methods[$this->shippingmethod] = $this->shipping_method_instance;
+
+          $methods[$this->shippingmethod] = __NAMESPACE__ . '\Shipping_Method';
 
           return $methods;
         }
@@ -241,10 +260,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
     protected function load_shipping_method_class() {
       require_once 'class-shipping-method.php';
 
-      $method = new Shipping_Method();
-      $method->injectCore($this)->load();
+      // We can't inject the core to the shipping method class if WooCommerce controls
+      // the init of it. This class was turned into a singleton to go around that.
+      // $method = new Shipping_Method();
+      // $method->injectCore($this)->load();
+      // $method->load();
 
-      return $method;
+      // return $method;
     }
   }
 }
