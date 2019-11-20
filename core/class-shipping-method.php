@@ -18,12 +18,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
    */
   class Shipping_Method extends \WC_Shipping_Method {
     /**
-     * @var Core
-     */
-    public $core;
-    // public static $core = null;
-
-    /**
      * Required to access Pakettikauppa client
      * @var Shipment $shipment
      */
@@ -35,6 +29,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
      * @var string
      */
     public $fee = 5.95;
+    public $is_loaded = false;
 
     /**
      * Constructor for Pakettikauppa shipping class
@@ -45,18 +40,32 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
     public function __construct( $instance_id = 0 ) {
       parent::__construct($instance_id);
 
+      $this->load();
     }
 
-    public function injectCore( Core $plugin ) {
+    /**
+     * Inject plugin core class to have access to other classes such as Text.
+     * Better solution than making the core class a singleton and calling it with a hardcoded name.
+     * Kept for "historical value".
+     */
+    /*public function injectCore( Core $plugin ) {
       $this->core = $plugin;
 
       return $this;
+    } */
+
+    public function get_core() {
+      return \Wc_Pakettikauppa::get_instance();
     }
 
     public function load() {
-      $this->id = $this->core->shippingmethod; // ID for your shipping method. Should be unique.
-      $this->method_title = $this->core->text->shipping_method_name();
-      $this->method_description = $this->core->text->shipping_method_desc(); // Description shown in admin
+      if ( $this->is_loaded ) {
+        return;
+      }
+
+      $this->id = $this->get_core()->shippingmethod; // ID for your shipping method. Should be unique.
+      $this->method_title = $this->get_core()->text->shipping_method_name();
+      $this->method_description = $this->get_core()->text->shipping_method_desc(); // Description shown in admin
 
       $this->supports = array(
         'settings',
@@ -68,18 +77,19 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       add_action('woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ));
 
       if ( ! empty($this->get_instance_option('shipping_method')) ) {
-        $this->method_description = $this->core->text->selected_shipping_method(
-          $this->core->shipment->service_title($this->get_instance_option('shipping_method'))
+        $this->method_description = $this->get_core()->text->selected_shipping_method(
+          $this->get_core()->shipment->service_title($this->get_instance_option('shipping_method'))
         );
-
       }
+
+      $this->is_loaded = true;
     }
 
     /**
      * Initialize Pakettikauppa shipping
      */
     public function init() {
-      $settings = $this->core->shipment->get_settings();
+      $settings = $this->get_core()->shipment->get_settings();
       $show_method_set = isset($settings['show_pakettikauppa_shipping_method']);
       $show_pakettikauppa_shipping_method = ! $show_method_set ? 'yes' : $settings['show_pakettikauppa_shipping_method'];
 
@@ -106,9 +116,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
             }
           }
 
-          $this->core->shipment->update_setting('show_pakettikauppa_shipping_method', $show_pakettikauppa_shipping_method);
-          $this->core->shipment->save_settings();
-          $settings = $this->core->shipment->get_settings();
+          $this->get_core()->shipment->update_setting('show_pakettikauppa_shipping_method', $show_pakettikauppa_shipping_method);
+          $this->get_core()->shipment->save_settings();
+          $settings = $this->get_core()->shipment->get_settings();
         }
       }
 
@@ -140,7 +150,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
         $values = array();
       }
 
-      $all_shipping_methods = $this->core->shipment->services();
+      $all_shipping_methods = $this->get_core()->shipment->services();
       $additional_services = array();
 
       ob_start();
@@ -180,7 +190,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
             </p>
             <h4><?php esc_html_e('Shipping method(s)', 'woocommerce'); ?></h4>
             <?php foreach ( $zone->get_shipping_methods() as $method_id => $shipping_method ) : ?>
-              <?php if ( $shipping_method->enabled === 'yes' && $shipping_method->id !== $this->core->shippingmethod && $shipping_method->id !== 'local_pickup' ) : ?>
+              <?php if ( $shipping_method->enabled === 'yes' && $shipping_method->id !== $this->get_core()->shippingmethod && $shipping_method->id !== 'local_pickup' ) : ?>
                 <?php
                 $selected_service = null;
                 if ( ! empty($values[ $method_id ]['service']) ) {
@@ -194,13 +204,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
               <th><?php echo $shipping_method->title; ?></th>
               <td style="vertical-align: top;">
                 <select id="<?php echo $method_id; ?>-select" name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][service]'; ?>" onchange="pkChangeOptions(this, '<?php echo $method_id; ?>');">
-                  <option value="__NULL__"><?php $this->core->text->no_shipping(); ?></option>
+                  <option value="__NULL__"><?php $this->get_core()->text->no_shipping(); ?></option>
                   <option value="__PICKUPPOINTS__" <?php echo ($selected_service === '__PICKUPPOINTS__' ? 'selected' : ''); ?>>Noutopisteet</option>
                   <?php foreach ( $all_shipping_methods as $service_id => $service_name ) : ?>
                     <option value="<?php echo $service_id; ?>" <?php echo (strval($selected_service) === strval($service_id) ? 'selected' : ''); ?>>
                       <?php echo $service_name; ?>
-                      <?php if ( $this->core->shipment->service_has_pickup_points($service_id) ) : ?>
-                        (<?php $this->core->text->includes_pickup_points(); ?>)
+                      <?php if ( $this->get_core()->shipment->service_has_pickup_points($service_id) ) : ?>
+                        (<?php $this->get_core()->text->includes_pickup_points(); ?>)
                       <?php endif; ?>
                     </option>
                   <?php endforeach; ?>
@@ -209,7 +219,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
               <td style="vertical-align: top;">
                 <div style='display: none;' id="<?php echo $method_id; ?>-pickuppoints">
                   <?php
-                  $methods = $this->core->shipment->get_pickup_point_methods();
+                  $methods = $this->get_core()->shipment->get_pickup_point_methods();
                   ?>
                   <?php foreach ( $methods as $method_code => $method_name ) : ?>
                     <input type="hidden"
@@ -224,7 +234,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                   <?php endforeach; ?>
                 </div>
 
-                <?php $all_additional_services = $this->core->shipment->get_additional_services(); ?>
+                <?php $all_additional_services = $this->get_core()->shipment->get_additional_services(); ?>
                 <?php foreach ( $all_additional_services as $method_code => $additional_services ) : ?>
                   <div class="pk-services-<?php echo $method_id; ?>" style='display: none;' id="<?php echo $method_id; ?>-<?php echo $method_code; ?>-services">
                     <?php foreach ( $additional_services as $additional_service ) : ?>
@@ -263,9 +273,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
      * Initialize form fields
      */
     private function my_instance_form_fields() {
-      $all_shipping_methods = array( '' => $this->core->text->select_one_shipping_method() );
+      $all_shipping_methods = array( '' => $this->get_core()->text->select_one_shipping_method() );
 
-      $all_services = $this->core->shipment->services();
+      $all_services = $this->get_core()->shipment->services();
 
       if ( $all_services !== null ) {
         foreach ( $all_services as $key => $value ) {
@@ -278,8 +288,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           'title' => array(
             'title'       => __('Title', 'woocommerce'),
             'type'        => 'text',
-            'description' => $this->core->text->unable_connect_to_vendor_server(),
-            'default'     => $this->core->vendor_name,
+            'description' => $this->get_core()->text->unable_connect_to_vendor_server(),
+            'default'     => $this->get_core()->vendor_name,
             'desc_tip'    => true,
           ),
         );
@@ -290,24 +300,24 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       $fields = array(
         /* Start new section */
         array(
-          'description' => $this->core->text->legacy_shipping_method_desc(),
+          'description' => $this->get_core()->text->legacy_shipping_method_desc(),
           'type'  => 'title',
-          'title' => $this->core->text->note(),
+          'title' => $this->get_core()->text->note(),
         ),
         'title'           => array(
           'title'       => __('Title', 'woocommerce'),
           'type'        => 'text',
           'description' => __('This controls the title which the user sees during checkout.', 'woocommerce'),
-          'default'     => $this->core->vendor_name,
+          'default'     => $this->get_core()->vendor_name,
           'desc_tip'    => true,
         ),
         array(
-          'title' => $this->core->text->shipping_methods(),
+          'title' => $this->get_core()->text->shipping_methods(),
           'type'  => 'title',
         ),
 
         'shipping_method' => array(
-          'title'   => $this->core->text->shipping_method(),
+          'title'   => $this->get_core()->text->shipping_method(),
           'type'    => 'select',
           'options' => $all_shipping_methods,
         ),
@@ -338,19 +348,19 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
 
           $fields[ 'class_cost_' . $shipping_class->term_id . '_price' ] = array(
           /* translators: %s: shipping class name */
-            'title'       => $this->core->text->price_vat_included(),
+            'title'       => $this->get_core()->text->price_vat_included(),
             'type'        => 'number',
             'default'     => null,
             'placeholder' => __('N/A', 'woocommerce'),
-            'description' => $this->core->text->shipping_cost(),
+            'description' => $this->get_core()->text->shipping_cost(),
             'desc_tip'    => true,
           );
 
           $fields[ 'class_cost_' . $shipping_class->term_id . '_price_free' ] = array(
-            'title'       => $this->core->text->free_shipping_tier(),
+            'title'       => $this->get_core()->text->free_shipping_tier(),
             'type'        => 'number',
             'default'     => null,
-            'description' => $this->core->text->free_shipping_tier_desc(),
+            'description' => $this->get_core()->text->free_shipping_tier_desc(),
             'desc_tip'    => true,
           );
         }
@@ -369,25 +379,25 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       }
 
       $fields[] = array(
-        'title'   => $this->core->text->default_shipping_class_cost(),
+        'title'   => $this->get_core()->text->default_shipping_class_cost(),
         'type'    => 'title',
         'default' => '',
       );
 
       $fields['price'] = array(
-        'title'       => $this->core->text->no_shipping_class_cost(),
+        'title'       => $this->get_core()->text->no_shipping_class_cost(),
         'type'        => 'number',
         'default'     => $this->fee,
         'placeholder' => __('N/A', 'woocommerce'),
-        'description' => $this->core->text->shipping_cost_vat_included(),
+        'description' => $this->get_core()->text->shipping_cost_vat_included(),
         'desc_tip'    => true,
       );
 
       $fields['price_free'] = array(
-        'title'       => $this->core->text->free_shipping_tier(),
+        'title'       => $this->get_core()->text->free_shipping_tier(),
         'type'        => 'number',
         'default'     => '',
-        'description' => $this->core->text->free_shipping_tier_desc(),
+        'description' => $this->get_core()->text->free_shipping_tier_desc(),
         'desc_tip'    => true,
       );
 
@@ -397,166 +407,166 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
     private function my_global_form_fields() {
       return array(
         'mode'                       => array(
-          'title'   => $this->core->text->mode(),
+          'title'   => $this->get_core()->text->mode(),
           'type'    => 'select',
           'default' => 'test',
           'options' => array(
-            'test'       => $this->core->text->testing_environment(),
-            'production' => $this->core->text->production_environment(),
+            'test'       => $this->get_core()->text->testing_environment(),
+            'production' => $this->get_core()->text->production_environment(),
           ),
         ),
 
         'account_number'             => array(
-          'title'    => $this->core->text->api_key_title(),
-          'desc'     => $this->core->text->api_key_desc($this->core->vendor_name),
+          'title'    => $this->get_core()->text->api_key_title(),
+          'desc'     => $this->get_core()->text->api_key_desc($this->get_core()->vendor_name),
           'type'     => 'text',
           'default'  => '',
           'desc_tip' => true,
         ),
 
         'secret_key'                 => array(
-          'title'    => $this->core->text->api_secret_title(),
-          'desc'     => $this->core->text->api_secret_desc($this->core->vendor_name),
+          'title'    => $this->get_core()->text->api_secret_title(),
+          'desc'     => $this->get_core()->text->api_secret_desc($this->get_core()->vendor_name),
           'type'     => 'text',
           'default'  => '',
           'desc_tip' => true,
         ),
 
         'pickup_points'              => array(
-          'title' => $this->core->text->pickup_points_title(),
+          'title' => $this->get_core()->text->pickup_points_title(),
           'type'  => 'pickuppoints',
         ),
 
         array(
-          'title'       => $this->core->text->shipping_settings_title(),
+          'title'       => $this->get_core()->text->shipping_settings_title(),
           'type'        => 'title',
           /* translators: %s: url to documentation */
-          'description' => $this->core->text->shipping_settings_desc(),
+          'description' => $this->get_core()->text->shipping_settings_desc(),
 
         ),
 
         'add_tracking_to_email'      => array(
-          'title'   => $this->core->text->add_tracking_link_to_email(),
+          'title'   => $this->get_core()->text->add_tracking_link_to_email(),
           'type'    => 'checkbox',
           'default' => 'no',
         ),
 
         'add_pickup_point_to_email'      => array(
-          'title'   => $this->core->text->add_pickup_point_to_email(),
+          'title'   => $this->get_core()->text->add_pickup_point_to_email(),
           'type'    => 'checkbox',
           'default' => 'yes',
         ),
 
         'change_order_status_to'      => array(
-          'title'   => $this->core->text->change_order_status_to(),
+          'title'   => $this->get_core()->text->change_order_status_to(),
           'type'    => 'select',
           'default' => '',
           'options' => array(
-            '' => $this->core->text->no_order_status_change(),
+            '' => $this->get_core()->text->no_order_status_change(),
             'completed'  => __('Completed', 'woocommerce'),
             'processing' => __('Processing', 'woocommerce'),
           ),
         ),
 
         'create_shipments_automatically'     => array(
-          'title'   => $this->core->text->create_shipments_automatically(),
+          'title'   => $this->get_core()->text->create_shipments_automatically(),
           'type'    => 'select',
           'default' => 'no',
           'options' => array(
-            'no'  => $this->core->text->no_automatic_creation_of_labels(),
+            'no'  => $this->get_core()->text->no_automatic_creation_of_labels(),
             /* translators: %s: order status */
-            'completed'  => $this->core->text->when_order_status_is(__('Completed', 'woocommerce')),
+            'completed'  => $this->get_core()->text->when_order_status_is(__('Completed', 'woocommerce')),
             /* translators: %s: order status */
-            'processing' => $this->core->text->when_order_status_is(__('Processing', 'woocommerce')),
+            'processing' => $this->get_core()->text->when_order_status_is(__('Processing', 'woocommerce')),
           ),
         ),
 
         'download_type_of_labels'     => array(
-          'title'   => $this->core->text->download_type_of_labels_title(),
+          'title'   => $this->get_core()->text->download_type_of_labels_title(),
           'type'    => 'select',
           'default' => 'menu',
           'options' => array(
-            'browser'  => $this->core->text->download_type_of_labels_option_browser(),
-            'download'  => $this->core->text->download_type_of_labels_option_download(),
+            'browser'  => $this->get_core()->text->download_type_of_labels_option_browser(),
+            'download'  => $this->get_core()->text->download_type_of_labels_option_download(),
           ),
         ),
 
         'post_label_to_url' => array(
-          'title'   => $this->core->text->post_shipping_label_to_url_title(),
+          'title'   => $this->get_core()->text->post_shipping_label_to_url_title(),
           'type'    => 'text',
           'default' => '',
-          'description' => $this->core->text->post_shipping_label_to_url_desc(),
+          'description' => $this->get_core()->text->post_shipping_label_to_url_desc(),
         ),
 
         'pickup_points_search_limit' => array(
-          'title'       => $this->core->text->pickup_points_search_limit_title(),
+          'title'       => $this->get_core()->text->pickup_points_search_limit_title(),
           'type'        => 'number',
           'default'     => 5,
-          'description' => $this->core->text->pickup_points_search_limit_desc(),
+          'description' => $this->get_core()->text->pickup_points_search_limit_desc(),
           'desc_tip'    => true,
         ),
         'pickup_point_list_type'     => array(
-          'title'   => $this->core->text->pickup_point_list_type_title(),
+          'title'   => $this->get_core()->text->pickup_point_list_type_title(),
           'type'    => 'select',
           'default' => 'menu',
           'options' => array(
-            'menu'  => $this->core->text->pickup_point_list_type_option_menu(),
-            'list'  => $this->core->text->pickup_point_list_type_option_list(),
+            'menu'  => $this->get_core()->text->pickup_point_list_type_option_menu(),
+            'list'  => $this->get_core()->text->pickup_point_list_type_option_list(),
           ),
         ),
         array(
-          'title' => $this->core->text->store_owner_information(),
+          'title' => $this->get_core()->text->store_owner_information(),
           'type'  => 'title',
         ),
 
         'sender_name'                => array(
-          'title'   => $this->core->text->sender_name(),
+          'title'   => $this->get_core()->text->sender_name(),
           'type'    => 'text',
           'default' => get_bloginfo('name'),
         ),
 
         'sender_address'             => array(
-          'title'   => $this->core->text->sender_address(),
+          'title'   => $this->get_core()->text->sender_address(),
           'type'    => 'text',
           'default' => WC()->countries->get_base_address(),
         ),
 
         'sender_postal_code'         => array(
-          'title'   => $this->core->text->sender_postal_code(),
+          'title'   => $this->get_core()->text->sender_postal_code(),
           'type'    => 'text',
           'default' => WC()->countries->get_base_postcode(),
         ),
 
         'sender_city'                => array(
-          'title'   => $this->core->text->sender_city(),
+          'title'   => $this->get_core()->text->sender_city(),
           'type'    => 'text',
           'default' => WC()->countries->get_base_city(),
         ),
         'info_code'                  => array(
-          'title'   => $this->core->text->info_code(),
+          'title'   => $this->get_core()->text->info_code(),
           'type'    => 'text',
           'default' => '',
         ),
         array(
-          'title' => $this->core->text->cod_settings(),
+          'title' => $this->get_core()->text->cod_settings(),
           'type'  => 'title',
         ),
         'cod_iban'                   => array(
-          'title'   => $this->core->text->cod_iban(),
+          'title'   => $this->get_core()->text->cod_iban(),
           'type'    => 'text',
           'default' => '',
         ),
         'cod_bic'                    => array(
-          'title'   => $this->core->text->cod_bic(),
+          'title'   => $this->get_core()->text->cod_bic(),
           'type'    => 'text',
           'default' => '',
         ),
         array(
-          'title' => $this->core->text->advanced_settings(),
+          'title' => $this->get_core()->text->advanced_settings(),
           'type'  => 'title',
         ),
         'show_pakettikauppa_shipping_method' => array(
-          'title'   => $this->core->text->show_shipping_method(),
+          'title'   => $this->get_core()->text->show_shipping_method(),
           'type'    => 'select',
           'default' => 'no',
           'options' => array(
@@ -759,7 +769,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
 
     public function process_admin_options() {
       if ( ! $this->instance_id ) {
-        delete_transient($this->core->prefix . '_shipping_methods');
+        delete_transient($this->get_core()->prefix . '_shipping_methods');
       }
 
       return parent::process_admin_options();
