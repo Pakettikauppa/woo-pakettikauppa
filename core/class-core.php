@@ -138,8 +138,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       add_action(
         'wp_loaded',
         function() {
-          // $this->shipping_method_instance = $this->load_shipping_method_class();
-          $this->load_shipping_method_class();
+          // Instance is only used for hacking classes together.
+          // It's not used by WooCommerce. WooCommerce creates it's own instances, otherwise the legacy
+          // shipping method breaks. If this class doesn't contain the shipping method class instance
+          // things like setup wizard break.
+          $this->shipping_method_instance = $this->load_shipping_method_class();
           $this->add_shipping_method();
         }
       );
@@ -260,13 +263,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
     protected function load_shipping_method_class() {
       require_once 'class-shipping-method.php';
 
+      $method = new Shipping_Method();
       // We can't inject the core to the shipping method class if WooCommerce controls
       // the init of it. This class was turned into a singleton to go around that.
-      // $method = new Shipping_Method();
       // $method->injectCore($this)->load();
       // $method->load();
 
-      // return $method;
+      return $method;
     }
   }
 }
