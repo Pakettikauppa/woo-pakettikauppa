@@ -721,6 +721,22 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       return $pickup_point_data;
     }
 
+    public function get_pickup_points_by_free_input($input, $service_provider = null) {
+      $pickup_point_limit = 5; // Default limit value for pickup point search
+
+      if ( isset($this->settings['pickup_points_search_limit']) && ! empty($this->settings['pickup_points_search_limit']) ) {
+        $pickup_point_limit = intval($this->settings['pickup_points_search_limit']);
+      }
+
+      $pickup_point_data = $this->client->searchPickupPointsByText(trim($input), $service_provider, $pickup_point_limit);
+
+      if ( $pickup_point_data === 'Bad request' ) {
+        throw new Exception($this->core->prefix . __(': An error occured when searching pickup points.', 'woo-pakettikauppa'));
+      }
+
+      return $pickup_point_data;
+    }
+
     /**
      * Get the title of a service by providing its code.
      *

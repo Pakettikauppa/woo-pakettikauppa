@@ -41,8 +41,44 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       add_action('woocommerce_checkout_update_order_meta', array( $this, 'update_order_meta_pickup_point_field' ));
       add_action('woocommerce_checkout_process', array( $this, 'validate_checkout_pickup_point' ));
       add_action('woocommerce_order_status_changed', array( $this, 'create_shipment_for_order_automatically' ));
+      
+      add_action('wp_ajax_pakettikauppa_save_pickup_point_info_to_session', array( $this, 'save_pickup_point_info_to_session' ), 10);
+      add_action('wp_ajax_nopriv_pakettikauppa_save_pickup_point_info_to_session', array( $this, 'save_pickup_point_info_to_session' ), 10);
+
+      add_action('wp_ajax_pakettikauppa_use_custom_address_for_pickup_point', array( $this, 'use_custom_address_for_pickup_point' ), 10);
+      add_action('wp_ajax_nopriv_pakettikauppa_use_custom_address_for_pickup_point', array( $this, 'use_custom_address_for_pickup_point' ), 10);
 
       $this->shipment = $this->core->shipment;
+    }
+
+    public function save_pickup_point_info_to_session() {
+      if ( ! check_ajax_referer(str_replace('wc_', '', $this->core->prefix) . '-pickup_point_update', 'security') ) {
+        return;
+      }
+
+      $pickup_point_id = $_POST['pickup_point_id'];
+
+      WC()->session->set(str_replace('wc_', '', $this->core->prefix) . '_pickup_point_id', $pickup_point_id);
+    }
+
+    public function use_custom_address_for_pickup_point() {
+      if ( ! check_ajax_referer(str_replace('wc_', '', $this->core->prefix) . '-pickup_point_update', 'security') ) {
+        return;
+      }
+
+      if (!empty($_POST['address'])) {
+        $address = $_POST['address'];
+      } else {
+        $address = null;
+      }
+
+      // Reset the pickup point
+      WC()->session->set(str_replace('wc_', '', $this->core->prefix) . '_pickup_point_id', null);
+
+      // And set the pickup address
+      WC()->session->set(str_replace('wc_', '', $this->core->prefix) . '_custom_pickup_point_address', $address);
+
+      // Rest is handled in Frontend\fetch_pickup_point_options
     }
 
     public function create_shipment_for_order_automatically( $order_id ) {
@@ -202,6 +238,26 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
         $shipping_country = 'FI';
       }
 
+      echo '<tr class="shipping-custom-pickup-point">';
+      echo '<th>' . esc_attr__('Custom pickup address', 'woo-pakettikauppa') . '</th>';
+      echo '<td data-title="' . esc_attr__('Custom pickup address', 'woo-pakettikauppa') . '">';
+
+      woocommerce_form_field(
+        str_replace('wc_', '', $this->core->prefix) . 'custom_pickup_point',
+        array(
+          'type'              => 'textarea',
+          'label' => __('Address', 'woo-pakettikauppa'),
+          'description' => __('If none of your preferred pickup points are listed, fill in a custom address and select another pickup point.', 'woo-pakettikauppa'),
+          'custom_attributes' => array(
+            'onchange' => 'pakettikauppa_custom_pickup_point_change(this)'
+          ),
+        ),
+        WC()->session->get(str_replace('wc_', '', $this->core->prefix) . '_custom_pickup_point_address')
+      );
+
+      echo '</td></tr>';
+
+
       echo '<tr class="shipping-pickup-point">';
       echo '<th>' . esc_attr__('Pickup point', 'woo-pakettikauppa') . '</th>';
       echo '<td data-title="' . esc_attr__('Pickup point', 'woo-pakettikauppa') . '">';
@@ -256,7 +312,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
               'type'              => $list_type,
               'custom_attributes' => array(
                 'style' => 'word-wrap: normal;',
-                'onchange' => str_replace('wc_', '', $this->core->prefix) . '_pickup_point_change(this);',
+                // 'onchange' => str_replace('wc_', '', $this->core->prefix) . '_pickup_point_change(this);',
+                'onchange' => 'pakettikauppa_pickup_point_change(this)'
               ),
               'options'           => $options_array,
             ),
@@ -268,7 +325,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     }
 
     private function fetch_pickup_point_options( $shipping_postcode, $shipping_address, $shipping_country, $shipping_method_provider ) {
-      $pickup_point_data = $this->shipment->get_pickup_points($shipping_postcode, $shipping_address, $shipping_country, $shipping_method_provider);
+      $custom_address = WC()->session->get(str_replace('wc_', '', $this->core->prefix) . '_custom_pickup_point_address');
+
+      if ($custom_address) {
+        $pickup_point_data = $this->shipment->get_pickup_points_by_free_input($custom_address, $shipping_method_provider);
+      } else {
+        $pickup_point_data = $this->shipment->get_pickup_points($shipping_postcode, $shipping_address, $shipping_country, $shipping_method_provider);
+      }
 
       return $this->process_pickup_points_to_option_array($pickup_point_data);
     }
