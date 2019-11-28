@@ -88,6 +88,27 @@ cd /data/wordpress/htdocs/wp-content/plugins/woo-pakettikauppa/bin
 ./run-local-tests.sh
 ```
 
+## Translating
+
+If you add new translatable strings or edit existing once, you have to regenerate `woo-pakettikauppa.pot` under `core/languages`. Easiest way to do it is use wp-cli: 
+
+```
+wp i18n make-pot . core/languages/woo-pakettikauppa.pot
+```
+
+If wp-cli version is less than 2.3, the order of the strings will change and existing translations will be "lost", but you can use `msgcat` to merge two .po files together.
+
+First, rename the old .po file. After that, using Poedit, generate a new .po using file from the new .pot, it can be blank. Then do the merge: 
+
+```
+cd core/languages
+msgcat oldrenamed.po woo-pakettikauppa-fi.po -o woo-pakettikauppa-fi.po
+```
+
+Then generate the .mo file from the .po file, using Poedit.
+
+Rinse & repeat for all languages.
+
 ## Architecture
 The plugin is written so that it can be easily forked to a whitelabel version, containing only a subset of shipping providers and a custom branding. This is achieved by using an abstract class as a factory for the plugin component. Each component can be replaced by simply overloading a method.
 

@@ -1,19 +1,37 @@
+# #-#-#-#-#  woo-pakettikauppa-fi-oldie.po (WooCommerce pakettikauppa 1.0.0)  #-#-#-#-#
 # Copyright (C) 2016 WooCommerce pakettikauppa
 # This file is distributed under the same license as the WooCommerce pakettikauppa package.
+# #-#-#-#-#  woo-pakettikauppa-fi.po (WooCommerce Pakettikauppa 2.1.2)  #-#-#-#-#
+# Copyright (C) 2019 Seravo
+# This file is distributed under the same license as the WooCommerce Pakettikauppa plugin.
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce pakettikauppa 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-25T12:34:22+03:00\n"
-"PO-Revision-Date: 2019-09-13 14:59+0300\n"
+"PO-Revision-Date: 2019-11-28 21:09+0200\n"
 "Last-Translator: Leo Toikka <leo@seravo.fi>\n"
 "Language-Team: \n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.2.4\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Project-Id-Version: WooCommerce Pakettikauppa 2.1.2\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-"
+"pakettikauppa\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-11-28T20:39:08+02:00\n"
+"PO-Revision-Date: 2019-11-28 20:57+0200\n"
+"X-Generator: Poedit 2.2.4\n"
+"X-Domain: woo-pakettikauppa\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: fi\n"
 
 #: class-admin.php:90
 msgid ""
@@ -314,9 +332,8 @@ msgid "WooCommerce Pakettikauppa: tracking code creation failed: %s"
 msgstr "WooCommerce Pakettikauppa: seurantakoodin luonti epäonnistui: %s"
 
 #: class-shipment.php:718
-#, fuzzy
 msgid ": An error occured when searching pickup points."
-msgstr "WC_Pakettikauppa: noutopistehaussa tapahtui virhe."
+msgstr ": noutopistehaussa tapahtui virhe."
 
 #: class-text.php:26
 msgid "WooCommerce Pakettikauppa &rsaquo; Setup Wizard"
@@ -352,8 +369,7 @@ msgstr ""
 "Pakettikaupan API tunnukset, palvelimen virheloki ja palomuuriasetukset."
 
 #. translators: Vendor name, not translatable
-#: class-text.php:68
-#, fuzzy
+#: class-text.php:68 core/class-text.php:68
 msgid ""
 "Only use this shipping method if no other shipping methods are available and "
 "suitable. Using this shipping method is not required to be able to use %s "
@@ -400,10 +416,9 @@ msgid "No shipping class cost (vat included)"
 msgstr "Oletushinta toimitusluokalle (ALV sisältyy hintaan)"
 
 #. translators: Vendor name, not translatable
-#: class-text.php:119
-#, fuzzy
+#: class-text.php:119 core/class-text.php:119
 msgid "Link to %s website"
-msgstr "Linkki Pakettikaupan sivustolle"
+msgstr "Linkki %s:n"
 
 #: class-text.php:123
 msgid "Not now"
@@ -435,8 +450,7 @@ msgstr ""
 "mahdollisimman vaivatonta."
 
 #. translators: %1$s: Vendor name, not translateable %2$s: Vendor url, not translateable
-#: class-text.php:161
-#, fuzzy
+#: class-text.php:161 core/class-text.php:161
 msgid ""
 "If you have already registered with %1$s, please choose \"Production mode\" "
 "and enter the credentials you received from %1$s. If you have not yet "
@@ -527,8 +541,7 @@ msgid "API key"
 msgstr "Käyttäjätunnus (API key)"
 
 #. translators: %1$s: Vendor name, not translatable
-#: class-text.php:244
-#, fuzzy
+#: class-text.php:244 core/class-text.php:244
 msgid "API key provided by %1$s"
 msgstr "Pakettikaupalta saatu käyttäjätunnus"
 
@@ -537,8 +550,7 @@ msgid "API secret"
 msgstr "Salainen avain (API secret)"
 
 #. translators: %1$s: Vendor name, not translatable
-#: class-text.php:259
-#, fuzzy
+#: class-text.php:259 core/class-text.php:259
 msgid "API secret provided by %1$s"
 msgstr "Pakettikaupalta saatu salainen avain"
 
@@ -594,10 +606,9 @@ msgstr "Kun tilauksen tila on ”%s”"
 msgid "Print labels"
 msgstr "Tulosta pakettikortit"
 
-#: class-text.php:317
-#, fuzzy
+#: class-text.php:317 core/class-text.php:317
 msgid "Browser"
-msgstr "Selain ikkunaan"
+msgstr "Selainikkunaan"
 
 #: class-text.php:321
 msgid "Download"
@@ -686,6 +697,26 @@ msgid ""
 msgstr ""
 "WooCommerce Pakettikauppa vaatii WooCommerce-lisäosan asennettuna ja "
 "aktivoituna!"
+
+#: core/class-frontend.php:246 core/class-frontend.php:247
+msgid "Custom pickup address"
+msgstr "Yliaja noutopisteen osoite"
+
+#: core/class-text.php:401
+msgid "No pickup points were found. Check the address."
+msgstr "Noutopisteitä ei löytynyt. Tarkista osoite."
+
+#: core/class-text.php:405
+msgid "An error occured when searching pickup points.."
+msgstr "Noutopisteitä haettaessa tapahtui virhe."
+
+#: core/class-text.php:409
+msgid ""
+"If none of your preferred pickup points are listed, fill in a custom address "
+"above and select another pickup point."
+msgstr ""
+"Jos et löydä preferoimaasi noutopistettä, täytä ylläolevaan kenttään "
+"yliajava osoite ja valitse noutopiste listalta."
 
 #~ msgid "WooCommerce Pakettikauppa"
 #~ msgstr "WooCommerce Pakettikauppa"
