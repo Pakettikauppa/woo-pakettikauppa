@@ -311,11 +311,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
           echo $error;
           echo '</p>';
         } else {
-          printf(
-            /* translators: %s: Postcode */
-            esc_html__('Choose one of the pickup points close to your postcode %1$s below:', 'woo-pakettikauppa'),
-            '<span class="shipping_postcode_for_pickup">' . esc_attr($shipping_postcode) . '</span>'
-          );
+          echo esc_html__('Choose one of pickup points close to the address you entered:', 'woo-pakettikauppa');
 
           $list_type = 'select';
 
