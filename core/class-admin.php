@@ -841,7 +841,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             }
           }
         }
-      } catch ( Exception $e ) {
+      } catch ( \Exception $e ) {
         $this->add_error($e->getMessage());
         add_action(
           'admin_notices',
@@ -868,7 +868,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       try {
         $status_code = $this->shipment->get_shipment_status($order->get_id());
         update_post_meta($order->get_id(), '_' . $this->core->prefix . '_shipment_status', $status_code);
-      } catch ( Exception $e ) {
+      } catch ( \Exception $e ) {
         $this->add_error($e->getMessage());
         add_action(
           'admin_notices',

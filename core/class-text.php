@@ -396,5 +396,17 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
     public function no_woo_error() {
       return __('WooCommerce Pakettikauppa requires WooCommerce to be installed and activated!', 'woo-pakettikauppa');
     }
+
+    public function no_pickup_points_error() {
+      return __('No pickup points were found. Check the address.', 'woo-pakettikauppa');
+    }
+
+    public function something_went_wrong_while_searching_pickup_points_error() {
+      return __('An error occured when searching pickup points..', 'woo-pakettikauppa');
+    }
+
+    public function custom_pickup_point_desc() {
+      return __('If none of your preferred pickup points are listed, fill in a custom address above and select another pickup point.', 'woo-pakettikauppa');
+    }
   }
 }

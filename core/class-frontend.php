@@ -39,9 +39,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       add_action('woocommerce_review_order_after_shipping', array( $this, 'pickup_point_field_html' ));
       add_action('woocommerce_order_details_after_order_table', array( $this, 'display_order_data' ));
       add_action('woocommerce_checkout_update_order_meta', array( $this, 'update_order_meta_pickup_point_field' ));
-      add_action('woocommerce_checkout_process', array( $this, 'validate_checkout_pickup_point' ));
+      add_action('woocommerce_checkout_process', array( $this, 'validate_checkout' ));
       add_action('woocommerce_order_status_changed', array( $this, 'create_shipment_for_order_automatically' ));
-      
+
       add_action('wp_ajax_pakettikauppa_save_pickup_point_info_to_session', array( $this, 'save_pickup_point_info_to_session' ), 10);
       add_action('wp_ajax_nopriv_pakettikauppa_save_pickup_point_info_to_session', array( $this, 'save_pickup_point_info_to_session' ), 10);
 
@@ -66,7 +66,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
         return;
       }
 
-      if (!empty($_POST['address'])) {
+      if ( ! empty($_POST['address']) ) {
         $address = $_POST['address'];
       } else {
         $address = null;
@@ -103,8 +103,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     /**
      * Display error in woocommerce
      */
-    public function display_error() {
-      wc_add_notice(__('An error occured. Please try again later.', 'woo-pakettikauppa'), 'error');
+    public function display_error( $error = null ) {
+      if ( ! $error ) {
+        $error = __('An error occured. Please try again later.', 'woo-pakettikauppa');
+      }
+
+      wc_add_notice($error, 'error');
     }
 
     /**
@@ -246,17 +250,18 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
         str_replace('wc_', '', $this->core->prefix) . 'custom_pickup_point',
         array(
           'type'              => 'textarea',
-          'label' => __('Address', 'woo-pakettikauppa'),
-          'description' => __('If none of your preferred pickup points are listed, fill in a custom address and select another pickup point.', 'woo-pakettikauppa'),
           'custom_attributes' => array(
-            'onchange' => 'pakettikauppa_custom_pickup_point_change(this)'
+            'onchange' => 'pakettikauppa_custom_pickup_point_change(this)',
           ),
         ),
         WC()->session->get(str_replace('wc_', '', $this->core->prefix) . '_custom_pickup_point_address')
       );
 
-      echo '</td></tr>';
+      echo '<p>';
+      echo $this->core->text->custom_pickup_point_desc();
+      echo '</p>';
 
+      echo '</td></tr>';
 
       echo '<tr class="shipping-pickup-point">';
       echo '<th>' . esc_attr__('Pickup point', 'woo-pakettikauppa') . '</th>';
@@ -280,17 +285,32 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
         );
         echo '</p>';
       } else {
+        $error = null;
 
         try {
           $options_array = $this->fetch_pickup_point_options($shipping_postcode, $shipping_address, $shipping_country, implode(',', $shipping_method_providers));
-        } catch ( Exception $e ) {
+        } catch ( \Exception $e ) {
           $options_array = false;
-          $this->add_error($e->getMessage());
-          $this->display_error();
+
+          // The error prints twice if the page is refreshed and there's an invalid address.
+          // Which doesn't make any sense as this method should only be called *once*.
+          // The error is displayed differently because of that.
+          // $this->display_error($e->getMessage());
+
+          // Adding the error to $this->errors doesn't work either, as the errors are only displayed in the
+          // woocommerce_checkout_process hook which is triggered when the user submits the order.
+          // $this->add_error($e->getMessage());
+
+          // This works though. It prevents the pickup point input from rendering,
+          // and if there's no pickup point selected, the order will error in woocommerce_checkout_process.
+          $error = $e->getMessage();
         }
 
-        if ( $options_array !== false ) {
-
+        if ( $error ) {
+          echo '<p>';
+          echo $error;
+          echo '</p>';
+        } else {
           printf(
             /* translators: %s: Postcode */
             esc_html__('Choose one of the pickup points close to your postcode %1$s below:', 'woo-pakettikauppa'),
@@ -312,8 +332,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
               'type'              => $list_type,
               'custom_attributes' => array(
                 'style' => 'word-wrap: normal;',
-                // 'onchange' => str_replace('wc_', '', $this->core->prefix) . '_pickup_point_change(this);',
-                'onchange' => 'pakettikauppa_pickup_point_change(this)'
+                'onchange' => 'pakettikauppa_pickup_point_change(this)',
               ),
               'options'           => $options_array,
             ),
@@ -327,7 +346,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     private function fetch_pickup_point_options( $shipping_postcode, $shipping_address, $shipping_country, $shipping_method_provider ) {
       $custom_address = WC()->session->get(str_replace('wc_', '', $this->core->prefix) . '_custom_pickup_point_address');
 
-      if ($custom_address) {
+      if ( $custom_address ) {
         $pickup_point_data = $this->shipment->get_pickup_points_by_free_input($custom_address, $shipping_method_provider);
       } else {
         $pickup_point_data = $this->shipment->get_pickup_points($shipping_postcode, $shipping_address, $shipping_country, $shipping_method_provider);
@@ -367,13 +386,20 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       }
     }
 
-    public function validate_checkout_pickup_point() {
+    public function validate_checkout() {
       if ( ! wp_verify_nonce(sanitize_key($_POST['woocommerce-process-checkout-nonce']), 'woocommerce-process_checkout') ) {
         return;
       }
 
-      if ( isset($_POST[str_replace('wc_', '', $this->core->prefix) . '_pickup_point']) && $_POST[str_replace('wc_', '', $this->core->prefix) . '_pickup_point'] === '__NULL__' ) {
-        wc_add_notice(__('Please choose a pickup point.', 'woo-pakettikauppa'), 'error');
+      $key = str_replace('wc_', '', $this->core->prefix) . '_pickup_point';
+      $pickup = isset($_POST[$key]) ? $_POST[$key] : false;
+
+      if ( ! $pickup || $pickup === '__NULL__' ) {
+        $this->add_error(__('Please choose a pickup point.', 'woo-pakettikauppa'));
+      }
+
+      foreach ( $this->errors as $error ) {
+        $this->display_error($error);
       }
     }
   }
