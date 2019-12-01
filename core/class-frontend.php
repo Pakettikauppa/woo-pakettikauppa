@@ -242,26 +242,30 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
         $shipping_country = 'FI';
       }
 
-      echo '<tr class="shipping-custom-pickup-point">';
-      echo '<th>' . esc_attr__('Custom pickup address', 'woo-pakettikauppa') . '</th>';
-      echo '<td data-title="' . esc_attr__('Custom pickup address', 'woo-pakettikauppa') . '">';
+      $show_pickup_point_override_query = $this->core->shipping_method_instance->get_option('show_pickup_point_override_query');
 
-      woocommerce_form_field(
-        str_replace('wc_', '', $this->core->prefix) . 'custom_pickup_point',
-        array(
-          'type'              => 'textarea',
-          'custom_attributes' => array(
-            'onchange' => 'pakettikauppa_custom_pickup_point_change(this)',
+      if ( $show_pickup_point_override_query === 'yes' ) {
+        echo '<tr class="shipping-custom-pickup-point">';
+        echo '<th>' . esc_attr__('Custom pickup address', 'woo-pakettikauppa') . '</th>';
+        echo '<td data-title="' . esc_attr__('Custom pickup address', 'woo-pakettikauppa') . '">';
+
+        woocommerce_form_field(
+          str_replace('wc_', '', $this->core->prefix) . 'custom_pickup_point',
+          array(
+            'type'              => 'textarea',
+            'custom_attributes' => array(
+              'onchange' => 'pakettikauppa_custom_pickup_point_change(this)',
+            ),
           ),
-        ),
-        WC()->session->get(str_replace('wc_', '', $this->core->prefix) . '_custom_pickup_point_address')
-      );
+          WC()->session->get(str_replace('wc_', '', $this->core->prefix) . '_custom_pickup_point_address')
+        );
 
-      echo '<p>';
-      echo $this->core->text->custom_pickup_point_desc();
-      echo '</p>';
+        echo '<p>';
+        echo $this->core->text->custom_pickup_point_desc();
+        echo '</p>';
 
-      echo '</td></tr>';
+        echo '</td></tr>';
+      }
 
       echo '<tr class="shipping-pickup-point">';
       echo '<th>' . esc_attr__('Pickup point', 'woo-pakettikauppa') . '</th>';
@@ -342,7 +346,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     private function fetch_pickup_point_options( $shipping_postcode, $shipping_address, $shipping_country, $shipping_method_provider ) {
       $custom_address = WC()->session->get(str_replace('wc_', '', $this->core->prefix) . '_custom_pickup_point_address');
 
-      if ( $custom_address ) {
+      if ( $custom_address && $this->core->shipping_method_instance->get_option('show_pickup_point_override_query') === 'yes' ) {
         $pickup_point_data = $this->shipment->get_pickup_points_by_free_input($custom_address, $shipping_method_provider);
       } else {
         $pickup_point_data = $this->shipment->get_pickup_points($shipping_postcode, $shipping_address, $shipping_country, $shipping_method_provider);

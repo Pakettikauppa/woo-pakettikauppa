@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2019-11-28T21:30:22+02:00\n"
-"PO-Revision-Date: 2019-11-28 21:32+0200\n"
+"PO-Revision-Date: 2019-12-01 15:47+0200\n"
 "X-Generator: Poedit 2.2.4\n"
 "X-Domain: woo-pakettikauppa\n"
 "Last-Translator: \n"
@@ -215,7 +215,7 @@ msgstr "Toimenpide epäonnistui! Kokeile uudelleen."
 
 #: core/class-frontend.php:246 core/class-frontend.php:247
 msgid "Custom pickup address"
-msgstr "Yliaja noutopisteen osoite"
+msgstr "Hae vaihtoehtoista noutopistettä"
 
 #: core/class-frontend.php:267 core/class-frontend.php:268
 #: core/class-frontend.php:380
@@ -717,5 +717,5 @@ msgid ""
 "If none of your preferred pickup points are listed, fill in a custom address "
 "above and select another pickup point."
 msgstr ""
-"Jos et löydä preferoimaasi noutopistettä, täytä ylläolevaan kenttään "
-"yliajava osoite ja valitse noutopiste listalta."
+"Voit myös hakea noutopisteitä syöttämällä vaihtoehtoisen osoitteen "
+"ylläolevaan kenttään."

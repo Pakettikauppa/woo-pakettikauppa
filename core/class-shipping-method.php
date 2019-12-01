@@ -574,6 +574,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
             'yes'  => __('Yes'),
           ),
         ),
+        'show_pickup_point_override_query' => array(
+          'title'   => $this->get_core()->text->show_pickup_point_override_query(),
+          'type'    => 'select',
+          'default' => 'yes',
+          'options' => array(
+            'no'  => __('No'),
+            'yes'  => __('Yes'),
+          ),
+        ),
       );
     }
 

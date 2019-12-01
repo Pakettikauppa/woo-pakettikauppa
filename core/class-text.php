@@ -408,5 +408,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
     public function custom_pickup_point_desc() {
       return __('If none of your preferred pickup points are listed, fill in a custom address above and select another pickup point.', 'woo-pakettikauppa');
     }
+
+    public function show_pickup_point_override_query() {
+      return __('Show pickup point override in checkout', 'woo-pakettikauppa');
+    }
   }
 }
