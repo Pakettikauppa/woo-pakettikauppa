@@ -99,9 +99,6 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 1. Examples of settings screens
 
 == Changelog ==
-= 2.2.0 =
-* Added an overriding address field and tidied the codebase a bit. Should contain less bugs.
-
 = 2.1.2 =
 * Fixed a bug breaking the setup wizard
 
