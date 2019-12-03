@@ -201,7 +201,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       try {
         $shipment = $this->create_shipment_from_order($order, $service_id, $additional_services);
         $tracking_code = $shipment->{'response.trackingcode'}->__toString();
-      } catch ( Exception $e ) {
+      } catch ( \Exception $e ) {
         $this->add_error($e->getMessage());
 
         /* translators: %s: Error message */
@@ -556,9 +556,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
       try {
         $this->client->createTrackingCode($shipment);
-      } catch ( Exception $e ) {
+      } catch ( \Exception $e ) {
         /* translators: %s: Error message */
-        throw new Exception(wp_sprintf(__('WooCommerce Pakettikauppa: tracking code creation failed: %s', 'woo-pakettikauppa'), $e->getMessage()));
+        throw new \Exception(wp_sprintf(__('WooCommerce Pakettikauppa: tracking code creation failed: %s', 'woo-pakettikauppa'), $e->getMessage()));
       }
 
       return $this->client->getResponse();
@@ -714,8 +714,37 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       }
 
       $pickup_point_data = $this->client->searchPickupPoints(trim($postcode), trim($street_address), trim($country), $service_provider, $pickup_point_limit);
+
       if ( $pickup_point_data === 'Bad request' ) {
-        throw new Exception($this->core->prefix . __(': An error occured when searching pickup points.', 'woo-pakettikauppa'));
+        throw new \Exception($this->core->text->something_went_wrong_while_searching_pickup_points_error());
+      }
+
+      // This makes zero sense unless you read this issue:
+      // https://github.com/Pakettikauppa/api-library/issues/11
+      if ( $pickup_point_data === '[]' ) {
+        throw new \Exception($this->core->text->no_pickup_points_error());
+      }
+
+      return $pickup_point_data;
+    }
+
+    public function get_pickup_points_by_free_input( $input, $service_provider = null ) {
+      $pickup_point_limit = 5; // Default limit value for pickup point search
+
+      if ( isset($this->settings['pickup_points_search_limit']) && ! empty($this->settings['pickup_points_search_limit']) ) {
+        $pickup_point_limit = intval($this->settings['pickup_points_search_limit']);
+      }
+
+      $pickup_point_data = $this->client->searchPickupPointsByText(trim($input), $service_provider, $pickup_point_limit);
+
+      if ( $pickup_point_data === 'Bad request' ) {
+        throw new \Exception($this->core->text->something_went_wrong_while_searching_pickup_points_error());
+      }
+
+      // This makes zero sense unless you read this issue:
+      // https://github.com/Pakettikauppa/api-library/issues/11
+      if ( $pickup_point_data === '[]' ) {
+        throw new \Exception($this->core->text->no_pickup_points_error());
       }
 
       return $pickup_point_data;

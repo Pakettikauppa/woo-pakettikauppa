@@ -54,20 +54,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       add_action('woocommerce_process_product_meta', array( $this, 'save_custom_product_fields' ));
       add_action('wp_ajax_pakettikauppa_meta_box', array( $this, 'ajax_meta_box' ));
       add_action('woocommerce_order_status_changed', array( $this, 'create_shipment_for_order_automatically' ));
-      add_action('wp_ajax_pakettikauppa_update_pickup_point', array( $this, 'save_pickup_point_info_to_session' ), 10);
-      add_action('wp_ajax_nopriv_pakettikauppa_update_pickup_point', array( $this, 'save_pickup_point_info_to_session' ), 10);
 
       $this->shipment = $this->core->shipment;
-    }
-
-    public function save_pickup_point_info_to_session() {
-      if ( ! check_ajax_referer(str_replace('wc_', '', $this->core->prefix) . '-pickup_point_update', 'security') ) {
-        return;
-      }
-
-      $pickup_point_id = $_POST['pickup_point_id'];
-
-      WC()->session->set(str_replace('wc_', '', $this->core->prefix) . '_pickup_point_id', $pickup_point_id);
     }
 
     public function maybe_show_new_install_notice( $current_screen ) {
@@ -853,7 +841,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             }
           }
         }
-      } catch ( Exception $e ) {
+      } catch ( \Exception $e ) {
         $this->add_error($e->getMessage());
         add_action(
           'admin_notices',
@@ -880,7 +868,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       try {
         $status_code = $this->shipment->get_shipment_status($order->get_id());
         update_post_meta($order->get_id(), '_' . $this->core->prefix . '_shipment_status', $status_code);
-      } catch ( Exception $e ) {
+      } catch ( \Exception $e ) {
         $this->add_error($e->getMessage());
         add_action(
           'admin_notices',

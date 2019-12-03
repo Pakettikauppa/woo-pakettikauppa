@@ -155,13 +155,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
           $this->admin->add_error($shipment_exception);
           $this->admin->add_error_notice($shipment_exception);
         }
-      } else {
-        $this->frontend = $this->load_frontend_class();
+      }
 
-        if ( $shipment_exception ) {
-          $this->frontend->add_error($shipment_exception);
-          $this->frontend->display_error();
-        }
+      // Always load frontend so admin_ajax can work from there
+      $this->frontend = $this->load_frontend_class();
+
+      if ( $shipment_exception ) {
+        $this->frontend->add_error($shipment_exception);
+        $this->frontend->display_error();
       }
 
       return $this;
