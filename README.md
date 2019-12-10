@@ -109,7 +109,28 @@ Then generate the .mo file from the .po file, using Poedit.
 
 Rinse & repeat for all languages.
 
+## Branching and releases
+
+### Development always targets master branch
+
+All bugfixes and new features are developed on separate git branches. Work-in-progress can be marked by appending "WIP:" to the commit message or the pull request title. Once a feature is ready, a pull request is opened for comments and review. Pull requests should not include any updates to the changelog or version number, as those are done separately at release time to match the actual release. Making a pull request implies that comments and review are requested, so wait at least 24h after making a new PR so others have time to respond.
+
+Very small bugfixes that don't need any reviews (e.g. fixing spelling errors) can be applied directly on master. Note that all commits must pass CI, so Travis-CI needs to see a commit on some branch first and Github needs to register that commit as passing CI. Then those commits can be merged directly on master by a developer who has write access to master, without making a separate pull request on Github.
+
+As this is a WordPress plugin, there can only be one version released. Thus there are no separate maintenance release branches (once 2.1.x has been released, the next release must be 2.1.y or higher, there cannot be any maintenance releases for 2.0.x).
+
+### Making a new release
+
+All improvements on land on master, and when the current master is tested and deemed fit for a release, the release itself include:
+
+- Make a temporary branch where you bump the version number and update the changelog, ensure CI passes
+- Send an email to asiakaspalvelu@pakettikauppa.fi as a heads-up about the upcoming release
+- Wait for 1-2 work days
+- Merge the temporary branch on master and tag it using git (don't use Github's release features, it can mess up the git tag references)
+- This repository hooks into https://deployer.seravo.com/, Packagist and all release actions happen automatically based on the git tag
+
 ## Architecture
+
 The plugin is written so that it can be easily forked to a whitelabel version, containing only a subset of shipping providers and a custom branding. This is achieved by using an abstract class as a factory for the plugin component. Each component can be replaced by simply overloading a method.
 
 The `Woo_Pakettikauppa_Core\Core` class is responsible for loading all components, and it serves as a bridge between the components. The instance is passed to most subclasses of the plugin, such as `Woo_Pakettikauppa_Core\Admin`, which keep a reference to it under `$this->core`.
