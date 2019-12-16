@@ -394,7 +394,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       $key = str_replace('wc_', '', $this->core->prefix) . '_pickup_point';
       $pickup = isset($_POST[$key]) ? $_POST[$key] : false;
 
-      if ( ! $pickup || $pickup === '__NULL__' ) {
+      if ( $pickup && $pickup === '__NULL__' ) {
         $this->add_error(__('Please choose a pickup point.', 'woo-pakettikauppa'));
       }
 
