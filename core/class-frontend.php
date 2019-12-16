@@ -311,9 +311,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
         }
 
         if ( $error ) {
+          $name = esc_attr(str_replace('wc_', '', $this->core->prefix) . '_pickup_point');
+
           echo '<p>';
           echo $error;
           echo '</p>';
+
+          // Ensure that there's something to check against in $this->validate_checkout
+          echo "<input type='hidden' name='$name' value='__NULL__'>";
         } else {
           echo esc_html__('Choose one of pickup points close to the address you entered:', 'woo-pakettikauppa');
 
