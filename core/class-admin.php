@@ -957,7 +957,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
       header('Content-Description: File Transfer');
       header('Content-Transfer-Encoding: binary');
-      header("Content-Disposition: ' . $content_disposition . ';filename=\"{$filename}.pdf\"");
+      header("Content-Disposition: $content_disposition;filename=\"{$filename}.pdf\"");
       header('Content-Length: ' . strlen($pdf));
 
       echo $pdf;
