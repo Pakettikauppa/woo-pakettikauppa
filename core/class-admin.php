@@ -35,7 +35,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
     }
 
     public function load() {
-      add_action('current_screen', array( $this, 'maybe_show_new_install_notice' ));
+      add_action('current_screen', array( $this, 'maybe_show_notices' ));
       add_filter('plugin_action_links_' . $this->core->basename, array( $this, 'add_settings_link' ));
       add_filter('plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2);
       add_filter('bulk_actions-edit-shop_order', array( $this, 'register_multi_create_orders' ));
@@ -58,10 +58,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $this->shipment = $this->core->shipment;
     }
 
-    public function maybe_show_new_install_notice( $current_screen ) {
-      // Don't show the notice in every screen because that would be
-      // excessive.
+    public function maybe_show_notices( $current_screen ) {
+      // Don't show the setup notice in every screen because that would be excessive.
       $show_notice_in_screens = array( 'plugins', 'dashboard' );
+
+      // Always show the setup notice in plugin settings page
+      $tab = isset($_GET['tab']) ? $_GET['tab'] : false;
+      $section = isset($_GET['section']) ? $_GET['section'] : false;
+      $is_in_wc_settings = $current_screen->id === 'woocommerce_page_wc-settings' && $tab === 'shipping' && $section === str_replace('wc_', '', $this->core->prefix) . '_shipping_method';
+
       if ( in_array($current_screen->id, $show_notice_in_screens, true) ) {
 
         // Determine if this is a new install by checking if the plugin settings
@@ -72,20 +77,57 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         if ( empty($settings) || count($settings) < 2 ) {
           add_action('admin_notices', array( $this, 'new_install_notice_content' ));
         }
+      } elseif ( $is_in_wc_settings ) {
+        add_action('admin_notices', array( $this, 'settings_page_setup_notice' ));
       }
     }
 
     public function new_install_notice_content() {
       ?>
-      <div class="notice notice-info is-dismissible">
-        <p><?php esc_html_e('Thank you for installing WooCommerce Pakettikauppa! To get started smoothly, please open our setup wizard:', 'woo-pakettikauppa'); ?></p>
-        <p>
-          <a href="<?php echo esc_url(admin_url('admin.php?page=' . $this->core->setup_page)); ?>">
-            <button class="button button-primary">
-              <?php esc_html_e('Get started', 'woo-pakettikauppa'); ?>
-            </button>
-          </a>
-        </p>
+      <div class="notice notice-info pakettikauppa-notice pakettikauppa-notice--setup">
+        <div class="pakettikauppa-notice__logo">
+          <img src="<?php echo $this->core->dir_url; ?>assets/img/pakettikauppa-logo-black.png" alt="<?php echo $this->core->text->shipping_method_name(); ?>">
+        </div>
+
+        <div class="pakettikauppa-notice__content">
+          <p>
+            <?php esc_html_e('Thank you for installing WooCommerce Pakettikauppa! To get started smoothly, please open our setup wizard:', 'woo-pakettikauppa'); ?>
+
+            <br />
+            <br />
+
+            <a href="<?php echo esc_url(admin_url('admin.php?page=' . $this->core->setup_page)); ?>">
+              <button class="button button-primary">
+                <?php esc_html_e('Get started', 'woo-pakettikauppa'); ?>
+              </button>
+            </a>
+          </p>
+        </div>
+      </div>
+      <?php
+    }
+
+    public function settings_page_setup_notice() {
+      ?>
+      <div class="notice notice-info pakettikauppa-notice pakettikauppa-notice--setup">
+        <div class="pakettikauppa-notice__logo">
+          <img src="<?php echo $this->core->dir_url; ?>assets/img/pakettikauppa-logo-black.png" alt="<?php echo $this->core->text->shipping_method_name(); ?>">
+        </div>
+
+        <div class="pakettikauppa-notice__content">
+          <p>
+            <?php esc_html_e('Thank you for installing WooCommerce Pakettikauppa! To get started smoothly, please open our setup wizard:', 'woo-pakettikauppa'); ?>
+
+            <br />
+            <br />
+
+            <a href="<?php echo esc_url(admin_url('admin.php?page=' . $this->core->setup_page)); ?>">
+              <button class="button button-primary">
+                <?php echo $this->core->text->setup_title(); ?>
+              </button>
+            </a>
+          </p>
+        </div>
       </div>
       <?php
     }
