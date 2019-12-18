@@ -8,9 +8,8 @@ function pakettikauppa_pickup_point_change(element) {
   };
 
   // Ensure that the user knows that the pickup point they chose is private
-  // Compares based on text value (instead of actual value) because array_map is iffy in php
   var privatePoints = $(element).data('private-points').split(';');
-  var chosenPoint = $(element).find('option:selected').text();
+  var chosenPoint = $(element).val();
   var chosenIsPrivate = privatePoints.indexOf(chosenPoint) > -1;
   var global = window.pakettikauppaData;
 

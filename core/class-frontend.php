@@ -351,7 +351,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
               'custom_attributes' => array(
                 'style' => 'word-wrap: normal;',
                 'onchange' => 'pakettikauppa_pickup_point_change(this)',
-                'data-private-points' => join(';', $private_points),
+                'data-private-points' => join(';', array_keys($private_points)),
               ),
               'options'           => $all_points,
             ),
