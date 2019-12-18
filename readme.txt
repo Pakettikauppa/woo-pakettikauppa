@@ -99,6 +99,11 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 1. Examples of settings screens
 
 == Changelog ==
+= 2.2.0 = 
+* Properly catch exceptions so faulty orders don't cause a fatal error
+* Allow supplying a different address for pickup point search
+* Fix headers so files download properly
+
 = 2.1.2 =
 * Fixed a bug breaking the setup wizard
 
