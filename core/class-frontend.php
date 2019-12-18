@@ -117,9 +117,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     public function enqueue_scripts() {
       wp_enqueue_style($this->core->prefix . '', $this->core->dir_url . 'assets/css/frontend.css', array(), $this->core->version);
       wp_enqueue_script($this->core->prefix . '_js', $this->core->dir_url . 'assets/js/frontend.js', array( 'jquery' ), $this->core->version, true);
-      wp_localize_script($this->core->prefix . '_js', 'pakettikauppaData', [
-        'privatePickupPointConfirm' => $this->core->text->confirm_private_pickup_selection(),
-      ]);
+      wp_localize_script(
+        $this->core->prefix . '_js',
+        'pakettikauppaData',
+        [
+          'privatePickupPointConfirm' => $this->core->text->confirm_private_pickup_selection(),
+        ]
+      );
     }
 
     /**
@@ -333,13 +337,19 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
             array_splice($options_array, 0, 1);
           }
 
-          $flatten = function($point) {
+          $flatten = function( $point ) {
             return $point['text'];
           };
 
-          $private_points = \array_map($flatten, \array_filter($options_array, function($point) {
-            return isset($point['is_private']) ? $point['is_private'] === true : false;
-          }));
+          $private_points = \array_map(
+            $flatten,
+            \array_filter(
+              $options_array,
+              function( $point ) {
+                return isset($point['is_private']) ? $point['is_private'] === true : false;
+              }
+            )
+          );
 
           $all_points = \array_map($flatten, $options_array);
 
@@ -376,7 +386,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
 
     private function process_pickup_points_to_option_array( $pickup_point_data ) {
       $pickup_points = json_decode($pickup_point_data);
-      $options_array = array( '__NULL__' => [ 'text' => '- ' . __('Select a pickup point', 'woo-pakettikauppa') . ' -' ]);
+      $options_array = array( '__NULL__' => [ 'text' => '- ' . __('Select a pickup point', 'woo-pakettikauppa') . ' -' ] );
 
       $methods = array_flip($this->core->shipment->get_pickup_point_methods());
 
