@@ -412,5 +412,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
     public function show_pickup_point_override_query() {
       return __('Show pickup point override in checkout', 'woo-pakettikauppa');
     }
+
+    public function confirm_private_pickup_selection() {
+      return __('The pickup point you\'ve chosen is not available for public access. Are you sure that you can retrieve the package?');
+    }
   }
 }
