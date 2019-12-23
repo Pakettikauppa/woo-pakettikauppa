@@ -550,7 +550,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           'type'    => 'text',
           'default' => '',
         ),
-        array(
+        'cod_title' => array(
           'title' => $this->get_core()->text->cod_settings(),
           'type'  => 'title',
         ),

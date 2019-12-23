@@ -59,6 +59,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Setup_Wizard') ) {
           'handler' => array( $this, 'save_options' ),
           'fields' => array(
             'pickup_points',
+            'cod_title',
+            'cod_iban',
+            'cod_bic',
           ),
         ),
         str_replace('wc_', '', $this->core->prefix) . '_order_processing' => array(
