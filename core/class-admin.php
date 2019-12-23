@@ -96,10 +96,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             <br />
             <br />
 
-            <a href="<?php echo esc_url(admin_url('admin.php?page=' . $this->core->setup_page)); ?>">
-              <button class="button button-primary">
-                <?php echo $this->core->text->setup_button_text(); ?>
-              </button>
+            <a class="button button-primary" href="<?php echo esc_url(admin_url('admin.php?page=' . $this->core->setup_page)); ?>">
+              <?php echo $this->core->text->setup_button_text(); ?>
             </a>
           </p>
         </div>
@@ -121,10 +119,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             <br />
             <br />
 
-            <a href="<?php echo esc_url(admin_url('admin.php?page=' . $this->core->setup_page)); ?>">
-              <button class="button button-primary">
-                <?php echo $this->core->text->setup_button_text(); ?>
-              </button>
+            <a class="button button-primary" href="<?php echo esc_url(admin_url('admin.php?page=' . $this->core->setup_page)); ?>">
+              <?php echo $this->core->text->setup_button_text(); ?>
             </a>
           </p>
         </div>
