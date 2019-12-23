@@ -31,6 +31,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
     public $shipping_method_instance; // Added as an afterthought to fix a bug, merge with $shippingmethod in the future.
     public $setup_wizard;
 
+    public $api_config; // Used by Pakettikauppa\Client
+    public $api_comment; // Used by ^
+
     public static $instance; // The class is a singleton.
 
     /**
@@ -65,6 +68,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       $this->setup_page = $config['setup_page'] ?: 'wcpk-setup';
 
       $this->text = $this->load_text_class();
+
+      $this->api_config = isset($config['pakettikauppa_api_config']) ? $config['pakettikauppa_api_config'] : [];
+      $this->api_comment = isset($config['pakettikauppa_api_comment']) ? $config['pakettikauppa_api_comment'] : 'From WooCommerce';
 
       self::$instance = $this;
 

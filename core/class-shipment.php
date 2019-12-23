@@ -402,14 +402,17 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       $mode           = isset($settings['mode']) ? $settings['mode'] : '';
       $is_test_mode   = ($mode === 'production' ? false : true);
 
-      $options_array = array(
-        'api_key'   => $account_number,
-        'secret'    => $secret_key,
-        'test_mode' => $is_test_mode,
+      $options_array = array_merge(
+        array(
+          'api_key'   => $account_number,
+          'secret'    => $secret_key,
+          'test_mode' => $is_test_mode,
+        ),
+        $this->core->api_config
       );
 
       $this->client = new \Pakettikauppa\Client($options_array);
-      $this->client->setComment('From WooCommerce');
+      $this->client->setComment($this->core->api_comment);
     }
 
     /**
