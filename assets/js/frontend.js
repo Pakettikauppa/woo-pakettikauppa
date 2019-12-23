@@ -8,7 +8,7 @@ function pakettikauppa_pickup_point_change(element) {
   };
 
   // Ensure that the user knows that the pickup point they chose is private
-  var privatePoints = $(element).data('private-points').split(';');
+  var privatePoints = $(element).data('private-points') ? $(element).data('private-points').split(';') : [];
   var chosenPoint = $(element).val();
   var chosenIsPrivate = privatePoints.indexOf(chosenPoint) > -1;
   var global = window.pakettikauppaData;

@@ -159,18 +159,21 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
         function pkChangeOptions(elem, methodId) {
 
             var strUser = elem.options[elem.selectedIndex].value;
-
             var elements = document.getElementsByClassName('pk-services-' + methodId);
+
+            var servicesElement = document.getElementById('services-' + methodId + '-' + strUser);
+            var pickuppointsElement = document.getElementById('pickuppoints-' + methodId);
+
             for(var i=0; i<elements.length; ++i) {
                 elements[i].style.display = "none";
             }
 
             if (strUser == '__PICKUPPOINTS__') {
-                document.getElementById(methodId + '-pickuppoints').style.display = "block";
-                document.getElementById(methodId + '-' + strUser + '-services').style.display = "none";
+              if (pickuppointsElement) pickuppointsElement.style.display = "block";
+              if (servicesElement) servicesElement.style.display = "none";
             } else {
-                document.getElementById(methodId + '-pickuppoints').style.display = "none";
-                document.getElementById(methodId + '-' + strUser + '-services').style.display = "block";
+              if (pickuppointsElement) pickuppointsElement.style.display = "none";
+              if (servicesElement) servicesElement.style.display = "block";
             }
         }
       </script>
@@ -217,7 +220,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                 </select>
               </td>
               <td style="vertical-align: top;">
-                <div style='display: none;' id="<?php echo $method_id; ?>-pickuppoints">
+                <div style='display: none;' id="pickuppoints-<?php echo $method_id; ?>">
                   <?php
                   $methods = $this->get_core()->shipment->get_pickup_point_methods();
                   ?>
@@ -236,7 +239,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
 
                 <?php $all_additional_services = $this->get_core()->shipment->get_additional_services(); ?>
                 <?php foreach ( $all_additional_services as $method_code => $additional_services ) : ?>
-                  <div class="pk-services-<?php echo $method_id; ?>" style='display: none;' id="<?php echo $method_id; ?>-<?php echo $method_code; ?>-services">
+                  <div class="pk-services-<?php echo $method_id; ?>" style='display: none;' id="services-<?php echo $method_id; ?>-<?php echo $method_code; ?>">
                     <?php foreach ( $additional_services as $additional_service ) : ?>
                       <?php if ( empty($additional_service->specifiers) || in_array($additional_service->service_code, array( '3102' )) ) : ?>
                         <input type="hidden"
