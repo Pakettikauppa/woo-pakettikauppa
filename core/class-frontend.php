@@ -117,6 +117,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     public function enqueue_scripts() {
       wp_enqueue_style($this->core->prefix . '', $this->core->dir_url . 'assets/css/frontend.css', array(), $this->core->version);
       wp_enqueue_script($this->core->prefix . '_js', $this->core->dir_url . 'assets/js/frontend.js', array( 'jquery' ), $this->core->version, true);
+      wp_localize_script(
+        $this->core->prefix . '_js',
+        'pakettikauppaData',
+        [
+          'privatePickupPointConfirm' => $this->core->text->confirm_private_pickup_selection(),
+        ]
+      );
     }
 
     /**
@@ -330,6 +337,22 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
             array_splice($options_array, 0, 1);
           }
 
+          $flatten = function( $point ) {
+            return $point['text'];
+          };
+
+          $private_points = \array_map(
+            $flatten,
+            \array_filter(
+              $options_array,
+              function( $point ) {
+                return isset($point['is_private']) ? $point['is_private'] === true : false;
+              }
+            )
+          );
+
+          $all_points = \array_map($flatten, $options_array);
+
           woocommerce_form_field(
             str_replace('wc_', '', $this->core->prefix) . '_pickup_point',
             array(
@@ -338,8 +361,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
               'custom_attributes' => array(
                 'style' => 'word-wrap: normal;',
                 'onchange' => 'pakettikauppa_pickup_point_change(this)',
+                'data-private-points' => join(';', array_keys($private_points)),
               ),
-              'options'           => $options_array,
+              'options'           => $all_points,
             ),
             null
           );
@@ -362,15 +386,20 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
 
     private function process_pickup_points_to_option_array( $pickup_point_data ) {
       $pickup_points = json_decode($pickup_point_data);
-      $options_array = array( '__NULL__' => '- ' . __('Select a pickup point', 'woo-pakettikauppa') . ' -' );
+      $options_array = array( '__NULL__' => [ 'text' => '- ' . __('Select a pickup point', 'woo-pakettikauppa') . ' -' ] );
 
       $methods = array_flip($this->core->shipment->get_pickup_point_methods());
 
       if ( ! empty($pickup_points) ) {
         foreach ( $pickup_points as $key => $value ) {
-          $pickup_point_key                   = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ') (%' . $methods[ $value->provider ] . ')';
-          $pickup_point_value                 = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
-          $options_array[ $pickup_point_key ] = $pickup_point_value;
+          $pickup_point_key = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ') (%' . $methods[ $value->provider ] . ')';
+          $pickup_point_value = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
+
+          // $options_array[ $pickup_point_key ] = $pickup_point_value;
+          $options_array[ $pickup_point_key ] = [
+            'text' => $pickup_point_value,
+            'is_private' => $value->point_type === 'PRIVATE_LOCKER',
+          ];
         }
       }
 
