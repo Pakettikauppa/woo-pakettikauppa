@@ -91,14 +91,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
         <div class="pakettikauppa-notice__content">
           <p>
-            <?php esc_html_e('Thank you for installing WooCommerce Pakettikauppa! To get started smoothly, please open our setup wizard:', 'woo-pakettikauppa'); ?>
+            <?php esc_html_e('Thank you for installing WooCommerce Pakettikauppa! To get started smoothly, please open our setup wizard.', 'woo-pakettikauppa'); ?>
 
             <br />
             <br />
 
             <a href="<?php echo esc_url(admin_url('admin.php?page=' . $this->core->setup_page)); ?>">
               <button class="button button-primary">
-                <?php esc_html_e('Get started', 'woo-pakettikauppa'); ?>
+                <?php echo $this->core->text->setup_button_text(); ?>
               </button>
             </a>
           </p>
@@ -116,14 +116,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
         <div class="pakettikauppa-notice__content">
           <p>
-            <?php esc_html_e('Thank you for installing WooCommerce Pakettikauppa! To get started smoothly, please open our setup wizard:', 'woo-pakettikauppa'); ?>
+            <?php esc_html_e('Thank you for installing WooCommerce Pakettikauppa! To get started smoothly, please open our setup wizard.', 'woo-pakettikauppa'); ?>
 
             <br />
             <br />
 
             <a href="<?php echo esc_url(admin_url('admin.php?page=' . $this->core->setup_page)); ?>">
               <button class="button button-primary">
-                <?php echo $this->core->text->setup_title(); ?>
+                <?php echo $this->core->text->setup_button_text(); ?>
               </button>
             </a>
           </p>
@@ -1037,6 +1037,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           echo sprintf("%s: %s\n\n", __('Requested pickup point', 'woo-pakettikauppa'), $order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point'));
         }
 
+        /* translators: Shipment tracking url */
         echo sprintf(__("You can track your order at %1\$s.\n\n", 'woo-pakettikauppa'), esc_url($tracking_url));
       } else {
         if ( ! empty($order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point')) && 'yes' === $add_pickup_point_to_email ) {
