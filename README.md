@@ -41,7 +41,10 @@ Naturally the store owner also needs to have a merchant account at [Pakettikaupp
 
 # Screenshots
 
-![Screenshots](screenshot.png)
+![Checkout in twentynineteen theme](assets/screenshot-1.png)
+![Order confirmation in twentynineteen theme](assets/screenshot-2.png)
+![Order screen in admin](assets/screenshot-3.png)
+![Setup wizard](assets/screenshot-4.png)
 
 # Changelog
 
@@ -90,7 +93,7 @@ cd /data/wordpress/htdocs/wp-content/plugins/woo-pakettikauppa/bin
 
 ## Translating
 
-If you add new translatable strings or edit existing once, you have to regenerate `woo-pakettikauppa.pot` under `core/languages`. Easiest way to do it is use wp-cli: 
+If you add new translatable strings or edit existing once, you have to regenerate `woo-pakettikauppa.pot` under `core/languages`. Easiest way to do it is use wp-cli:
 
 ```
 wp i18n make-pot . core/languages/woo-pakettikauppa.pot
@@ -98,7 +101,7 @@ wp i18n make-pot . core/languages/woo-pakettikauppa.pot
 
 If wp-cli version is less than 2.3, the order of the strings will change and existing translations will be "lost", but you can use `msgcat` to merge two .po files together.
 
-First, rename the old .po file. After that, using Poedit, generate a new .po using file from the new .pot, it can be blank. Then do the merge: 
+First, rename the old .po file. After that, using Poedit, generate a new .po using file from the new .pot, it can be blank. Then do the merge:
 
 ```
 cd core/languages

@@ -96,10 +96,13 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Screenshots ==
 
-1. Examples of settings screens
+1. Checkout in twentynineteen theme
+2. Order confirmation in twentynineteen theme
+3. Order screen in admin
+4. Setup wizard
 
 == Changelog ==
-= 2.2.0 = 
+= 2.2.0 =
 * Properly catch exceptions so faulty orders don't cause a fatal error
 * Allow supplying a different address for pickup point search
 * Fix headers so files download properly
