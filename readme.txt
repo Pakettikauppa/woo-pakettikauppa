@@ -32,7 +32,7 @@ Register through [www.pakettikauppa.fi](https://www.pakettikauppa.fi/). Process 
 * Store owners can add pickup points to any shipping zones shipping method
 * Store owners can specify themselves any fixed rate for a shipping or have free shipping if the order value is above a certain limit
 * Store owners can generate the shipping label in one click
-* Store owners can generate shipping lables as mass action from orders view
+* Store owners can generate shipping labels as mass action from orders view
 * Store owners and customers get tracking code links and status information
 * Support for Cash-On-Delivery
 * Test mode available that uses the testing API without registration
@@ -90,7 +90,7 @@ Call for example:
 
 Yes! If you encounter any issues related to this plugin, please report at https://github.com/Seravo/woo-pakettikauppa/issues or to asiakaspalvelu@pakettikauppa.fi
 
-= Can Shipipping method names be translated? =
+= Can Shipping method names be translated? =
 
 You can use plugin (f.ex. Polylang) to translate shipping method names.
 

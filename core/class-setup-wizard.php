@@ -157,7 +157,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Setup_Wizard') ) {
           echo '<li class="active">' . esc_html($step['name']) . '</li>';
           $completed = false;
         } elseif ( $completed ) {
-          // Allow to return to previous steps
+          // Allow returning to previous steps
           $step_return_link = esc_url(add_query_arg('wcpk-setup-step', $step_key));
           echo '<li class="completed"><a href="' . $step_return_link . '">' . esc_html($step['name']) . '</a></li>';
         } else {

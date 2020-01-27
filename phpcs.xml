@@ -73,7 +73,7 @@
     <!-- Don't enforce the usage of class files with name "class-*.php". -->
     <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
 
-    <!-- We need to use PHP system calls to provide grahpical wrappers for CLI commands. -->
+    <!-- We need to use PHP system calls to provide graphical wrappers for CLI commands. -->
     <exclude name="WordPress.PHP.DiscouragedPHPFunctions.system_calls_exec" />
 
     <!--

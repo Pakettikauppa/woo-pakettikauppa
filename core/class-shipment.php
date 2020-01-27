@@ -210,7 +210,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           'admin_notices',
           function() use ( $e ) {
             /* translators: %s: Error message */
-            $this->add_error_notice(wp_sprintf(esc_attr__('An error occured: %s', 'woo-pakettikauppa'), $e->getMessage()));
+            $this->add_error_notice(wp_sprintf(esc_attr__('An error occurred: %s', 'woo-pakettikauppa'), $e->getMessage()));
           }
         );
 

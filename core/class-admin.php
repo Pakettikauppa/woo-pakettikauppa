@@ -423,7 +423,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       if ( ! empty($message) ) {
         $class = 'notice notice-error';
         /* translators: %s: Error message */
-        $print_error = wp_sprintf(__('An error occured: %s', 'woo-pakettikauppa'), $message);
+        $print_error = wp_sprintf(__('An error occurred: %s', 'woo-pakettikauppa'), $message);
         printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($print_error));
       }
     }
@@ -710,7 +710,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
      */
     public function save_ajax_metabox( $post_id ) {
       /**
-       * Because this function is called everytime something is saved in WooCommerce, then let's check this first
+       * Because this function is called every time something is saved in WooCommerce, then let's check this first
        * so it won't slow down saving other stuff too much.
        */
       if ( ! isset($_POST['wc_pakettikauppa']) ) {
@@ -885,7 +885,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           'admin_notices',
           function() use ( $e ) {
             /* translators: %s: Error message */
-            $this->add_error_notice(wp_sprintf(esc_attr__('An error occured: %s', 'woo-pakettikauppa'), $e->getMessage()));
+            $this->add_error_notice(wp_sprintf(esc_attr__('An error occurred: %s', 'woo-pakettikauppa'), $e->getMessage()));
           }
         );
 
@@ -912,7 +912,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           'admin_notices',
           function() use ( $e ) {
             /* translators: %s: Error message */
-            $this->add_error_notice(wp_sprintf(esc_attr__('An error occured: %s', 'woo-pakettikauppa'), $e->getMessage()));
+            $this->add_error_notice(wp_sprintf(esc_attr__('An error occurred: %s', 'woo-pakettikauppa'), $e->getMessage()));
           }
         );
       }

@@ -76,7 +76,7 @@ msgstr ""
 #: core/class-admin.php:892
 #: core/class-admin.php:919
 #: core/class-shipment.php:213
-msgid "An error occured: %s"
+msgid "An error occurred: %s"
 msgstr ""
 
 #: core/class-admin.php:449
@@ -195,7 +195,7 @@ msgid "You can <a href=\"%1$s\">track your order</a> with tracking code %2$s."
 msgstr ""
 
 #: core/class-frontend.php:108
-msgid "An error occured. Please try again later."
+msgid "An error occurred. Please try again later."
 msgstr ""
 
 #: core/class-frontend.php:256
@@ -638,7 +638,7 @@ msgid "No pickup points were found. Check the address."
 msgstr ""
 
 #: core/class-text.php:409
-msgid "An error occured when searching pickup points.."
+msgid "An error occurred while searching for pickup points."
 msgstr ""
 
 #: core/class-text.php:413

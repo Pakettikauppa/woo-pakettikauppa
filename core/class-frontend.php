@@ -105,7 +105,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
      */
     public function display_error( $error = null ) {
       if ( ! $error ) {
-        $error = __('An error occured. Please try again later.', 'woo-pakettikauppa');
+        $error = __('An error occurred. Please try again later.', 'woo-pakettikauppa');
       }
 
       wc_add_notice($error, 'error');

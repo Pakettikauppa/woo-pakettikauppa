@@ -406,7 +406,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
     }
 
     public function something_went_wrong_while_searching_pickup_points_error() {
-      return __('An error occured when searching pickup points..', 'woo-pakettikauppa');
+      return __('An error occurred while searching for pickup points.', 'woo-pakettikauppa');
     }
 
     public function custom_pickup_point_desc() {

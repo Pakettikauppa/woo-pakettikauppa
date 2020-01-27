@@ -98,7 +98,7 @@ msgstr ""
 #. translators: %s: Error message
 #: core/class-admin.php:430 core/class-admin.php:892 core/class-admin.php:919
 #: core/class-shipment.php:213
-msgid "An error occured: %s"
+msgid "An error occurred: %s"
 msgstr "Tapahtui virhe: %s"
 
 #: core/class-admin.php:449
@@ -210,7 +210,7 @@ msgid "You can <a href=\"%1$s\">track your order</a> with tracking code %2$s."
 msgstr "Voit <a href=\"%1$s\">seurata lähetystä</a> lähetystunnuksella %2$s."
 
 #: core/class-frontend.php:108
-msgid "An error occured. Please try again later."
+msgid "An error occurred. Please try again later."
 msgstr "Toimenpide epäonnistui! Kokeile uudelleen."
 
 #: core/class-frontend.php:256 core/class-frontend.php:257
@@ -713,7 +713,7 @@ msgid "No pickup points were found. Check the address."
 msgstr "Noutopisteitä ei löytynyt. Tarkista osoite."
 
 #: core/class-text.php:409
-msgid "An error occured when searching pickup points.."
+msgid "An error occurred when searching pickup points.."
 msgstr "Noutopisteitä haettaessa tapahtui virhe."
 
 #: core/class-text.php:413
