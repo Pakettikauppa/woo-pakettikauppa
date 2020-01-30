@@ -116,7 +116,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
      */
     public function enqueue_scripts() {
 
-      if (!is_checkout()) {
+      if ( ! is_checkout() ) {
         return;
       }
 
@@ -174,7 +174,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     */
     public function pickup_point_field_html() {
       $chosen_shipping_methods = WC()->session->get('chosen_shipping_methods');
-      $selected_payment_method = WC()->session->get( 'chosen_payment_method');
+      $selected_payment_method = WC()->session->get('chosen_payment_method');
       $is_klarna = $selected_payment_method === 'kco';
 
       WC()->session->set(str_replace('wc_', '', $this->core->prefix) . '_pickup_point_id', null);
