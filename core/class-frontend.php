@@ -35,7 +35,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     }
 
     public function load() {
-      add_action('woocommerce_before_checkout_form', array( $this, 'enqueue_scripts' ));
+      add_action('wp_enqueue_scripts', array( $this, 'enqueue_scripts' ));
       add_action('woocommerce_review_order_after_shipping', array( $this, 'pickup_point_field_html' ));
       add_action('woocommerce_order_details_after_order_table', array( $this, 'display_order_data' ));
       add_action('woocommerce_checkout_update_order_meta', array( $this, 'update_order_meta_pickup_point_field' ));
@@ -115,6 +115,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
      * Enqueue frontend-specific styles and scripts.
      */
     public function enqueue_scripts() {
+
+      if (!is_checkout()) {
+        return;
+      }
+
       wp_enqueue_style($this->core->prefix . '', $this->core->dir_url . 'assets/css/frontend.css', array(), $this->core->version);
       wp_enqueue_script($this->core->prefix . '_js', $this->core->dir_url . 'assets/js/frontend.js', array( 'jquery' ), $this->core->version, true);
       wp_localize_script(
@@ -169,6 +174,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     */
     public function pickup_point_field_html() {
       $chosen_shipping_methods = WC()->session->get('chosen_shipping_methods');
+      $selected_payment_method = WC()->session->get( 'chosen_payment_method');
+      $is_klarna = $selected_payment_method === 'kco';
+
       WC()->session->set(str_replace('wc_', '', $this->core->prefix) . '_pickup_point_id', null);
 
       if ( empty($chosen_shipping_methods) ) {
@@ -251,10 +259,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
 
       $show_pickup_point_override_query = $this->core->shipping_method_instance->get_option('show_pickup_point_override_query');
 
-      if ( $show_pickup_point_override_query === 'yes' ) {
+      // Compatibility fixes below
+      // Klarna Checkout changes the checkout flow; user types their address into an iframe instead
+      // and selecting a pickup point is not possible
+      if ( $show_pickup_point_override_query === 'yes' || $is_klarna ) {
+        $title = $is_klarna ? $this->core->text->pickup_point_title() : $this->core->text->custom_pickup_point_title();
+
         echo '<tr class="shipping-custom-pickup-point">';
-        echo '<th>' . esc_attr__('Custom pickup address', 'woo-pakettikauppa') . '</th>';
-        echo '<td data-title="' . esc_attr__('Custom pickup address', 'woo-pakettikauppa') . '">';
+        echo '<th>' . $title . '</th>';
+        echo '<td data-title="' . $title . '">';
 
         woocommerce_form_field(
           str_replace('wc_', '', $this->core->prefix) . 'custom_pickup_point',
@@ -268,7 +281,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
         );
 
         echo '<p>';
-        echo $this->core->text->custom_pickup_point_desc();
+        echo $is_klarna ? $this->core->text->fill_pickup_address_above() : $this->core->text->custom_pickup_point_desc();
         echo '</p>';
 
         echo '</td></tr>';
