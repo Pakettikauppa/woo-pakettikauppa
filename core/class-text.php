@@ -413,6 +413,18 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
       return __('If none of your preferred pickup points are listed, fill in a custom address above and select another pickup point.', 'woo-pakettikauppa');
     }
 
+    public function custom_pickup_point_title() {
+      return __('Custom pickup address', 'woo-pakettikauppa');
+    }
+
+    public function pickup_point_title() {
+      return __('Pickup address', 'woo-pakettikauppa');
+    }
+
+    public function fill_pickup_address_above() {
+      return __('Search pickup points near you by typing your address above.', 'woo-pakettikauppa');
+    }
+
     public function show_pickup_point_override_query() {
       return __('Show pickup point override in checkout', 'woo-pakettikauppa');
     }
