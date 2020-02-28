@@ -38,10 +38,7 @@
     "wordpress", "wp", "pakettikauppa", "seravo", "woocommerce", "prinetti", "matkahuolto", "schenker", "posti"
   ],
   "require": {
-    "php": ">=7.0",
-    "composer/installers": "v1.0.12",
-    "pakettikauppa/api-library": "*",
-    "ext-simplexml": "*"
+    "pakettikauppa/api-library": "*"
   },
   "minimum-stability": "dev"
 }
