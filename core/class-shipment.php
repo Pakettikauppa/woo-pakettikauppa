@@ -286,6 +286,37 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       return $tracking_code;
     }
 
+    private function post_label_to_url( $url, $tracking_code ) {
+      $contents = $this->shipment->fetch_shipping_label($tracking_code);
+
+      $label = base64_decode( $contents->{'response.file'} ); // @codingStandardsIgnoreLine
+
+      $postdata = http_build_query(array( 'label' => $label ));
+
+      $opts = array(
+        'http' => array(
+          'method'  => 'POST',
+          'header'  => 'Content-Type: application/x-www-form-urlencoded',
+          'content' => $postdata,
+        ),
+        'ssl' => array(
+          'verify_peer' => false,
+          'verify_peer_name' => false,
+          'allow_self_signed'=> true,
+        ),
+      );
+
+      $context  = stream_context_create($opts);
+
+      $result = file_get_contents($url, false, $context);
+
+      if ( $result === false ) {
+        return false;
+      }
+
+      return $result;
+    }
+
     public function get_service_id_from_order( \WC_Order $order, $return_default_shipping_method = true ) {
       if ( $order === null ) {
         return null;
