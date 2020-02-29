@@ -377,6 +377,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
                 'data-private-points' => join(';', array_keys($private_points)),
               ),
               'options'           => $all_points,
+
+              // Select the first point as the default when using Klarna Checkout, which does not validate the selection
+              'default' => array_keys($all_points)[ $is_klarna ? 1 : 0 ],
             ),
             null
           );
