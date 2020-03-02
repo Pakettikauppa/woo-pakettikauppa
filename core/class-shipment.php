@@ -485,6 +485,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
       $shipment->setShippingMethod($service_id);
 
+      $id = $order->get_id();
+      $shipping_phone = get_post_meta($id, '_shipping_phone', true);
+      $shipping_email = get_post_meta($id, '_shipping_email', true);
+
       $sender = new Sender();
       $sender->setName1($this->settings['sender_name']);
       $sender->setAddr1($this->settings['sender_address']);
@@ -500,8 +504,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       $receiver->setPostcode($order->get_shipping_postcode());
       $receiver->setCity($order->get_shipping_city());
       $receiver->setCountry(($order->get_shipping_country() === null ? 'FI' : $order->get_shipping_country()));
-      $receiver->setEmail($order->get_billing_email());
-      $receiver->setPhone($order->get_billing_phone());
+      $receiver->setEmail(! empty($shipping_email) ? $shipping_email : $order->get_billing_email());
+      $receiver->setPhone(! empty($shipping_phone) ? $shipping_phone : $order->get_billing_phone());
       $shipment->setReceiver($receiver);
 
       $info = new Info();
