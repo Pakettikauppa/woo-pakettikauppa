@@ -73,7 +73,7 @@ install_woo() {
 	fi
 
 	mkdir -p $WP_CORE_DIR/wp-content/plugins
-  download https://downloads.wordpress.org/plugin/woocommerce.3.7.1.zip $WP_CORE_DIR/wp-content/plugins/woocommerce.zip
+  download https://downloads.wordpress.org/plugin/woocommerce.3.9.3.zip $WP_CORE_DIR/wp-content/plugins/woocommerce.zip
   unzip -q $WP_CORE_DIR/wp-content/plugins/woocommerce.zip -d $WP_CORE_DIR/wp-content/plugins
   rm $WP_CORE_DIR/wp-content/plugins/woocommerce.zip
 }
