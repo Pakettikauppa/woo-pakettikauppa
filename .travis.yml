@@ -14,19 +14,22 @@ jobs:
       env: WP_VERSION=4.9.12
     # Arbitrary PHP version to run the PHPCS sniffs against, also with multisite
     - php: '7.2'
-      env: WP_VERSION=latest WP_MULTISITE=1 SNIFF=1
+      env: WP_MULTISITE=1 SNIFF=1
     # Test PHP 7.3
     - php: '7.3'
-      env: WP_VERSION=latest
-    # Test the next upcoming major WP release with latest PHP
-    - php: '7.3'
-      env: WP_VERSION=nightly
     # Test PHP 7.4
     - php: '7.4'
-      env: WP_VERSION=latest
-    # Test the both development versions
+    # Test the PHP development version
     - php: 'nightly'
+    # Test the WordPress development version
+    - php: '7.4'
       env: WP_VERSION=nightly
+    # Test the WooCommerce development version
+    - php: '7.4'
+      env: WOO_VERSION=nightly
+    # Test the all development versions
+    - php: 'nightly'
+      env: WP_VERSION=nightly WOO_VERSION=nightly
   allow_failures:
     # WordPress core is currenlty not compatible with PHP 8,
     # so tests with the PHP development version will fail with:
@@ -45,7 +48,7 @@ install:
   - if [[ "$TRAVIS_PHP_VERSION" == "7.1" ]]; then PHPUNIT_VERSION=5.7.9; else PHPUNIT_VERSION=7.5.9; fi
   - wget https://phar.phpunit.de/phpunit-$PHPUNIT_VERSION.phar -O /tmp/phpunit; chmod +x /tmp/phpunit
   # Install WordPress PHPUnit tests
-  - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+  - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION $WOO_VERSION
   # Install PHP_CodeSniffer with a specific version defined so that devs and Travis-CI will have exactly same standards
   - if [[ "$SNIFF" == "1" ]]; then export PHPCS_DIR=/tmp/phpcs; export PHPCS_VERSION=3.3.2; fi
   - if [[ "$SNIFF" == "1" ]]; then export WP_SNIFFS_DIR=/tmp/wp-sniffs; export WP_SNIFFS_VERSION=2.1.0; fi

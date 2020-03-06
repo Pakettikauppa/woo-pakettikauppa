@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ $# -lt 3 ]; then
-	echo "usage: $0 <db-name> <db-user> <db-pass> [db-host] [wp-version] [skip-database-creation]"
+	echo "usage: $0 <db-name> <db-user> <db-pass> [db-host] [wp-version] [woo-version] [skip-database-creation]"
 	exit 1
 fi
 
@@ -10,7 +10,8 @@ DB_USER=$2
 DB_PASS=$3
 DB_HOST=${4-localhost}
 WP_VERSION=${5-latest}
-SKIP_DB_CREATE=${6-false}
+WOO_VERSION=${6-latest}
+SKIP_DB_CREATE=${7-false}
 
 WP_TESTS_DIR=${WP_TESTS_DIR-/tmp/wordpress-tests-lib}
 WP_CORE_DIR=${WP_CORE_DIR-/tmp/wordpress}
@@ -72,10 +73,21 @@ install_woo() {
 		return;
 	fi
 
-	mkdir -p $WP_CORE_DIR/wp-content/plugins
-  download https://downloads.wordpress.org/plugin/woocommerce.3.9.3.zip $WP_CORE_DIR/wp-content/plugins/woocommerce.zip
-  unzip -q $WP_CORE_DIR/wp-content/plugins/woocommerce.zip -d $WP_CORE_DIR/wp-content/plugins
-  rm $WP_CORE_DIR/wp-content/plugins/woocommerce.zip
+	if [ "$WOO_VERSION" == 'nightly' ] || [ "$WOO_VERSION" == 'trunk' ]
+	then
+		WOOCOMMERCE_URL="https://downloads.wordpress.org/plugin/woocommerce.trunk.zip"
+	elif [ "$WOO_VERSION" == 'latest' ] || [ -z "$WP_VERSION" ]
+	then
+		WOOCOMMERCE_URL="https://downloads.wordpress.org/plugin/woocommerce.zip"
+	else
+		WOOCOMMERCE_URL="https://downloads.wordpress.org/plugin/woocommerce.$WOO_VERSION.zip"
+	fi
+
+
+	mkdir -p "$WP_CORE_DIR/wp-content/plugins"
+	download "$WOOCOMMERCE_URL" "$WP_CORE_DIR/wp-content/plugins/woocommerce.zip"
+  unzip -q "$WP_CORE_DIR/wp-content/plugins/woocommerce.zip" -d "$WP_CORE_DIR/wp-content/plugins"
+  rm "$WP_CORE_DIR/wp-content/plugins/woocommerce.zip"
 }
 
 install_test_suite() {
