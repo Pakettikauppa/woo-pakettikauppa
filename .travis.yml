@@ -21,6 +21,9 @@ jobs:
     # Test the next upcoming major WP release with latest PHP
     - php: '7.3'
       env: WP_VERSION=nightly
+    # Test PHP 7.4
+    - php: '7.4'
+      env: WP_VERSION=latest
     # Test the both development versions
     - php: 'nightly'
       env: WP_VERSION=nightly
