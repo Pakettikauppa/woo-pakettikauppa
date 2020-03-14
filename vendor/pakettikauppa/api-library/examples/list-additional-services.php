@@ -16,4 +16,4 @@ $client = new Client(array('test_mode' => true));
 
 $result = $client->listAdditionalServices();
 
-var_dump(json_decode($result));
+var_dump($result);

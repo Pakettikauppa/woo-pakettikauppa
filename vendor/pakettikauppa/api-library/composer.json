@@ -2,7 +2,7 @@
     "name": "pakettikauppa/api-library",
     "description": "Pakettikauppa API implementation",
     "type": "library",
-    "keywords": ["Pakettikauppa", "API"],
+    "keywords": ["Pakettikauppa", "API", "Smartship", "Smartpost", "Posti", "Matkahuolto", "DB Schenker"],
     "homepage": "https://www.pakettikauppa.fi",
     "license": "MIT",
     "authors": [
@@ -19,5 +19,10 @@
         "psr-4": {
             "Pakettikauppa\\": "src/Pakettikauppa"
         }
+    },
+    "require": {
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-simplexml": "*"
     }
 }

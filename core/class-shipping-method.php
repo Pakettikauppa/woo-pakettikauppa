@@ -153,7 +153,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       }
 
       $all_shipping_methods = $this->get_core()->shipment->services();
-      $additional_services = array();
+
+      $methods = $this->get_core()->shipment->get_pickup_point_methods();
 
       ob_start();
     ?>
@@ -201,7 +202,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                 if ( ! empty($values[ $method_id ]['service']) ) {
                   $selected_service = $values[ $method_id ]['service'];
                 }
-                if ( empty($selected_service) ) {
+                if ( empty($selected_service) && ! empty($methods) ) {
                   $selected_service = '__PICKUPPOINTS__';
                 }
                 ?>
@@ -210,7 +211,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
               <td style="vertical-align: top;">
                 <select id="<?php echo $method_id; ?>-select" name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][service]'; ?>" onchange="pkChangeOptions(this, '<?php echo $method_id; ?>');">
                   <option value="__NULL__"><?php $this->get_core()->text->no_shipping(); ?></option>
-                  <option value="__PICKUPPOINTS__" <?php echo ($selected_service === '__PICKUPPOINTS__' ? 'selected' : ''); ?>>Noutopisteet</option>
+                  <?php if( ! empty($methods) ) : ?>
+                    <option value="__PICKUPPOINTS__" <?php echo ($selected_service === '__PICKUPPOINTS__' ? 'selected' : ''); ?>>Noutopisteet</option>
+                  <?php endif; ?>
                   <?php foreach ( $all_shipping_methods as $service_id => $service_name ) : ?>
                     <option value="<?php echo $service_id; ?>" <?php echo (strval($selected_service) === strval($service_id) ? 'selected' : ''); ?>>
                       <?php echo $service_name; ?>
@@ -223,9 +226,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
               </td>
               <td style="vertical-align: top;">
                 <div style='display: none;' id="pickuppoints-<?php echo $method_id; ?>">
-                  <?php
-                  $methods = $this->get_core()->shipment->get_pickup_point_methods();
-                  ?>
                   <?php foreach ( $methods as $method_code => $method_name ) : ?>
                     <input type="hidden"
                             name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . $method_code . '][active]'; ?>"
