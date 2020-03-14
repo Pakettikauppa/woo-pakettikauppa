@@ -430,20 +430,47 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
       $account_number = isset($settings['account_number']) ? $settings['account_number'] : '';
       $secret_key     = isset($settings['secret_key']) ? $settings['secret_key'] : '';
-      $mode           = isset($settings['mode']) ? $settings['mode'] : '';
-      $is_test_mode   = ($mode === 'production' ? false : true);
+      $mode           = isset($settings['mode']) ? $settings['mode'] : 'test';
 
-      $options_array = array_merge(
+      if ( empty($this->config[$mode]) ) {
+          $this->config[$mode] = array();
+      }
+
+      $configs = $this->core->api_config;
+
+      $configs[$mode] = array_merge(
         array(
           'api_key'   => $account_number,
           'secret'    => $secret_key,
-          'test_mode' => $is_test_mode,
+          'use_posti_auth' => false,
         ),
-        $this->core->api_config
+        $this->core->api_config[$mode]
       );
 
-      $this->client = new \Pakettikauppa\Client($options_array);
+      $this->client = new \Pakettikauppa\Client($configs, $mode);
       $this->client->setComment($this->core->api_comment);
+
+      if ( $configs[$mode]['use_posti_auth'] ) {
+        $transient_name = $this->core->prefix . '_access_token';
+
+        $token = get_transient($transient_name);
+
+        /**
+         * TODO locking
+         *
+         * in case there are multiple simultanous requests to this part of the code, it will create multiple
+         * getToken() requests to the authentication server. So this needs to be eather distributedly locked or
+         * moved to a background process and run from the cron
+         */
+        if ( empty($token) ) {
+          $token = $this->client->getToken();
+
+          // let's remove 100 seconds from expires_in time so in case of a network lag, requests will still be valid on server side
+          set_transient($transient_name, $token, $token->expires_in - 100);
+        }
+
+	    $this->client->setAccessToken($token->access_token);
+      }
     }
 
     /**
@@ -457,9 +484,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       $tracking_code = get_post_meta($post_id, '_' . $this->core->prefix . '_tracking_code', true);
 
       if ( ! empty($tracking_code) ) {
-        $result = $this->client->getShipmentStatus($tracking_code);
-
-        $data = json_decode($result);
+        $data = $this->client->getShipmentStatus($tracking_code);
 
         if ( ! empty($data) && isset($data[0]) ) {
           return $data[0]->{'status_code'};
@@ -759,7 +784,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
       // This makes zero sense unless you read this issue:
       // https://github.com/Pakettikauppa/api-library/issues/11
-      if ( $pickup_point_data === '[]' ) {
+      if ( empty($pickup_point_data) ) {
         throw new \Exception($this->core->text->no_pickup_points_error());
       }
 
@@ -781,7 +806,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
       // This makes zero sense unless you read this issue:
       // https://github.com/Pakettikauppa/api-library/issues/11
-      if ( $pickup_point_data === '[]' ) {
+      if ( empty($pickup_point_data) ) {
         throw new \Exception($this->core->text->no_pickup_points_error());
       }
 
@@ -919,7 +944,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       $all_shipping_methods = get_transient($transient_name);
 
       if ( empty($all_shipping_methods) ) {
-        $all_shipping_methods = json_decode($this->client->listShippingMethods());
+        try {
+          $all_shipping_methods = $this->client->listShippingMethods();
+        } catch (\Exception $ex) {
+          $all_shipping_methods = null;
+        }
 
         if ( ! empty($all_shipping_methods) ) {
           set_transient($transient_name, $all_shipping_methods, $transient_time);

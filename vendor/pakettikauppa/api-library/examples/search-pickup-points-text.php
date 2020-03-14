@@ -11,4 +11,4 @@ $client = new Client(array('test_mode' => true));
 
 $result = $client->searchPickupPointsByText('Keskustori 1, 33100 Tampere');
 
-var_dump(json_decode($result));
+var_dump($result);

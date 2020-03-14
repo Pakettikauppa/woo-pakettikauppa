@@ -50,6 +50,11 @@ class Sender
     public $vatcode;
 
     /**
+     * @var string
+     */
+    public $email;
+
+    /**
      * @return string
      */
     public function getName1()
@@ -207,6 +212,22 @@ class Sender
     public function setVatcode($vatcode)
     {
         $this->vatcode = $vatcode;
+    }
+
+    /**
+     * @param string $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
     }
 
 
