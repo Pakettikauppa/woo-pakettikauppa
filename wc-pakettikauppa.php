@@ -58,7 +58,6 @@ $instance = new Wc_Pakettikauppa(
         'base_url' => 'https://api.pakettikauppa.fi',
       ], 
     ],
-'test_mode' => false, 'base_uri' => null], // Overrides defaults and UI settings
     // 'pakettikauppa_api_comment' => 'From WooCommerce', // Overrides default
   ]
 );
