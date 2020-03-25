@@ -410,9 +410,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
     }
 
     private function my_global_form_fields() {
-	    $wc_countries = new WC_Countries();
+      $wc_countries = new WC_Countries();
 
-	    return array(
+      return array(
         'mode'                       => array(
           'title'   => $this->get_core()->text->mode(),
           'type'    => 'select',
@@ -554,7 +554,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           'title'   => $this->get_core()->text->sender_country(),
           'type'    => 'select',
           'default' => WC()->countries->get_base_country(),
-          'options'   => $wc_countries->get_countries()
+          'options'   => $wc_countries->get_countries(),
         ),
 
         'sender_phone'                => array(

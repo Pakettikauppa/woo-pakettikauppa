@@ -373,13 +373,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
       return __('Sender city', 'woo-pakettikauppa');
     }
 
-	  public function sender_country() {
-		  return __('Sender country', 'woo-pakettikauppa');
-	  }
+    public function sender_country() {
+      return __('Sender country', 'woo-pakettikauppa');
+    }
 
-	  public function sender_phone() {
+    public function sender_phone() {
       return __('Sender phone', 'woo-pakettikauppa');
-	  }
+    }
 
     public function sender_email() {
       return __('Sender email', 'woo-pakettikauppa');
