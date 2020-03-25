@@ -51,11 +51,11 @@ $instance = new Wc_Pakettikauppa(
     'pakettikauppa_api_config' => [
       'test' => [
         'api_key' => '00000000-0000-0000-0000-000000000000',
-        'api_secret' => '1234567890ABCDEF',
-        'base_url' => 'https://apitest.pakettikauppa.fi',
+        'secret' => '1234567890ABCDEF',
+        'base_uri' => 'https://apitest.pakettikauppa.fi',
       ],
-      'test' => [
-        'base_url' => 'https://api.pakettikauppa.fi',
+      'production' => [
+        'base_uri' => 'https://api.pakettikauppa.fi',
       ], 
     ],
     // 'pakettikauppa_api_comment' => 'From WooCommerce', // Overrides default

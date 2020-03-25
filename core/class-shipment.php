@@ -447,6 +447,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         $this->core->api_config[$mode]
       );
 
+      error_log(var_export($configs,true));
+
       $this->client = new \Pakettikauppa\Client($configs, $mode);
       $this->client->setComment($this->core->api_comment);
 

@@ -455,7 +455,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
         'add_tracking_to_email'      => array(
           'title'   => $this->get_core()->text->add_tracking_link_to_email(),
           'type'    => 'checkbox',
-          'default' => 'no',
+          'default' => 'yes',
         ),
 
         'add_pickup_point_to_email'      => array(
