@@ -55,9 +55,9 @@ class Test_Frontend extends WP_UnitTestCase {
    * @depends test_init
    */
   public function test_get_pickup_points( $frontend ) {
-    $pickups = call_user_func([ $frontend->core->shipment, 'get_pickup_points' ], 00100);
-    $wc_pakettikauppa_client = new Pakettikauppa\Client(array( 'test_mode' => true ));
-    $pickup_point_data       = $wc_pakettikauppa_client->searchPickupPoints(00100);
+    $pickups = call_user_func([ $frontend->core->shipment, 'get_pickup_points' ], 00100, '' ,'FI', '2103');
+    $wc_pakettikauppa_client = new Pakettikauppa\Client();
+    $pickup_point_data       = $wc_pakettikauppa_client->searchPickupPoints(00100, '','FI','2103');
     $this->assertEquals($pickup_point_data, $pickups);
   }
 }
