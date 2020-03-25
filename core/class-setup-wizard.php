@@ -51,6 +51,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Setup_Wizard') ) {
             'sender_address',
             'sender_postal_code',
             'sender_city',
+            'sender_country',
+            'sender_phone',
+            'sender_email',
           ),
         ),
         str_replace('wc_', '', $this->core->prefix) . '_shipping_details' => array(

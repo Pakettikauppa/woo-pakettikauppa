@@ -2,6 +2,8 @@
 namespace Woo_Pakettikauppa_Core;
 
 // Prevent direct access to the script
+use WC_Countries;
+
 if ( ! defined('ABSPATH') ) {
   exit;
 }
@@ -408,6 +410,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
     }
 
     private function my_global_form_fields() {
+      $wc_countries = new WC_Countries();
+
       return array(
         'mode'                       => array(
           'title'   => $this->get_core()->text->mode(),
@@ -545,6 +549,24 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           'type'    => 'text',
           'default' => WC()->countries->get_base_city(),
         ),
+
+        'sender_country'                => array(
+          'title'   => $this->get_core()->text->sender_country(),
+          'type'    => 'select',
+          'default' => WC()->countries->get_base_country(),
+          'options'   => $wc_countries->get_countries(),
+        ),
+
+        'sender_phone'                => array(
+          'title'   => $this->get_core()->text->sender_phone(),
+          'type'    => 'text',
+        ),
+
+        'sender_email'                => array(
+          'title'   => $this->get_core()->text->sender_email(),
+          'type'    => 'email',
+        ),
+
         'info_code'                  => array(
           'title'   => $this->get_core()->text->info_code(),
           'type'    => 'text',

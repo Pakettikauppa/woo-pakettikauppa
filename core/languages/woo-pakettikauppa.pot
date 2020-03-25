@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-01-30T18:25:07+02:00\n"
+"POT-Creation-Date: 2020-03-25T09:25:57+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: woo-pakettikauppa\n"
@@ -89,8 +89,8 @@ msgstr ""
 
 #: core/class-admin.php:506
 #: core/class-admin.php:646
-#: core/class-admin.php:1033
-#: core/class-admin.php:1040
+#: core/class-admin.php:1002
+#: core/class-admin.php:1009
 msgid "Requested pickup point"
 msgstr ""
 
@@ -169,59 +169,59 @@ msgstr ""
 msgid "Deleting Pakettikauppa shipment failed! Errors: %s"
 msgstr ""
 
-#: core/class-admin.php:959
+#: core/class-admin.php:928
 msgid "Shipment tracking code is not defined."
 msgstr ""
 
-#: core/class-admin.php:969
+#: core/class-admin.php:938
 msgid "Cannot find shipment with given shipment number."
 msgstr ""
 
 #. translators: Shipment tracking url
-#: core/class-admin.php:1037
+#: core/class-admin.php:1006
 msgid ""
 "You can track your order at %1$s.\n"
 "\n"
 ""
 msgstr ""
 
-#: core/class-admin.php:1044
+#: core/class-admin.php:1013
 msgid "Tracking"
 msgstr ""
 
 #. translators: 1: Shipment tracking URL 2: Shipment tracking code
-#: core/class-admin.php:1046
+#: core/class-admin.php:1015
 msgid "You can <a href=\"%1$s\">track your order</a> with tracking code %2$s."
 msgstr ""
 
-#: core/class-frontend.php:108
+#: core/class-frontend.php:130
 msgid "An error occurred. Please try again later."
 msgstr ""
 
-#: core/class-frontend.php:291
-#: core/class-frontend.php:292
-#: core/class-frontend.php:431
+#: core/class-frontend.php:313
+#: core/class-frontend.php:314
+#: core/class-frontend.php:456
 msgid "Pickup point"
 msgstr ""
 
-#: core/class-frontend.php:301
+#: core/class-frontend.php:323
 msgid "Insert your shipping details to view nearby pickup points"
 msgstr ""
 
 #. translators: %s: Postcode
-#: core/class-frontend.php:307
+#: core/class-frontend.php:329
 msgid "Invalid postcode \"%1$s\". Please check your address information."
 msgstr ""
 
-#: core/class-frontend.php:343
+#: core/class-frontend.php:365
 msgid "Choose one of pickup points close to the address you entered:"
 msgstr ""
 
-#: core/class-frontend.php:402
+#: core/class-frontend.php:427
 msgid "Select a pickup point"
 msgstr ""
 
-#: core/class-frontend.php:445
+#: core/class-frontend.php:470
 msgid "Please choose a pickup point."
 msgstr ""
 
@@ -315,7 +315,7 @@ msgid "Label posted to URL successfully."
 msgstr ""
 
 #. translators: %s: Error message
-#: core/class-shipment.php:564
+#: core/class-shipment.php:601
 msgid "WooCommerce Pakettikauppa: tracking code creation failed: %s"
 msgstr ""
 
@@ -601,61 +601,73 @@ msgid "Sender city"
 msgstr ""
 
 #: core/class-text.php:377
-msgid "Info-code for shipments"
+msgid "Sender country"
 msgstr ""
 
 #: core/class-text.php:381
-msgid "Cash on Delivery (COD) Settings"
+msgid "Sender phone"
 msgstr ""
 
 #: core/class-text.php:385
-msgid "Bank account number for Cash on Delivery (IBAN)"
+msgid "Sender email"
 msgstr ""
 
 #: core/class-text.php:389
-msgid "BIC code for Cash on Delivery"
+msgid "Info-code for shipments"
 msgstr ""
 
 #: core/class-text.php:393
-msgid "Advanced settings"
+msgid "Cash on Delivery (COD) Settings"
 msgstr ""
 
 #: core/class-text.php:397
-msgid "Show Pakettikauppa shipping method"
+msgid "Bank account number for Cash on Delivery (IBAN)"
 msgstr ""
 
 #: core/class-text.php:401
-msgid "WooCommerce Pakettikauppa requires WooCommerce to be installed and activated!"
+msgid "BIC code for Cash on Delivery"
 msgstr ""
 
 #: core/class-text.php:405
-msgid "No pickup points were found. Check the address."
+msgid "Advanced settings"
 msgstr ""
 
 #: core/class-text.php:409
-msgid "An error occurred while searching for pickup points."
+msgid "Show Pakettikauppa shipping method"
 msgstr ""
 
 #: core/class-text.php:413
-msgid "If none of your preferred pickup points are listed, fill in a custom address above and select another pickup point."
+msgid "WooCommerce Pakettikauppa requires WooCommerce to be installed and activated!"
 msgstr ""
 
 #: core/class-text.php:417
-msgid "Custom pickup address"
+msgid "No pickup points were found. Check the address."
 msgstr ""
 
 #: core/class-text.php:421
-msgid "Pickup address"
+msgid "An error occurred while searching for pickup points."
 msgstr ""
 
 #: core/class-text.php:425
-msgid "Search pickup points near you by typing your address above."
+msgid "If none of your preferred pickup points are listed, fill in a custom address above and select another pickup point."
 msgstr ""
 
 #: core/class-text.php:429
-msgid "Show pickup point override in checkout"
+msgid "Custom pickup address"
 msgstr ""
 
 #: core/class-text.php:433
+msgid "Pickup address"
+msgstr ""
+
+#: core/class-text.php:437
+msgid "Search pickup points near you by typing your address above."
+msgstr ""
+
+#: core/class-text.php:441
+msgid "Show pickup point override in checkout"
+msgstr ""
+
+#: core/class-text.php:445
 msgid "The pickup point you've chosen is not available for public access. Are you sure that you can retrieve the package?"
 msgstr ""
