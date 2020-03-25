@@ -494,7 +494,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       $sender->setAddr1($this->settings['sender_address']);
       $sender->setPostcode($this->settings['sender_postal_code']);
       $sender->setCity($this->settings['sender_city']);
-      $sender->setCountry('FI');
+      $sender->setPhone($this->settings['sender_phone']);
+//      $sender->setEmail($this->settings['sender_email']);
+      $sender->setCountry((empty($this->settings['sender_country']) ? 'FI' : $this->settings['sender_country']));
       $shipment->setSender($sender);
 
       $receiver = new Receiver();
