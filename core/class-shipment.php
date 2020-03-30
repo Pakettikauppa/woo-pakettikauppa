@@ -469,7 +469,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           set_transient($transient_name, $token, $token->expires_in - 100);
         }
 
-	    $this->client->setAccessToken($token->access_token);
+        $this->client->setAccessToken($token->access_token);
       }
     }
 
@@ -948,7 +948,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       if ( empty($all_shipping_methods) ) {
         try {
           $all_shipping_methods = $this->client->listShippingMethods();
-        } catch (\Exception $ex) {
+        } catch ( \Exception $ex ) {
           $all_shipping_methods = null;
         }
 
