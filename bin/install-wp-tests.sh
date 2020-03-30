@@ -130,7 +130,17 @@ install_db() {
 	fi
 
 	# create database
-	mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA || echo "Failed to create database, does it already exist?"
+
+	if mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA ; then
+		echo "Created test database."
+	else
+		echo "Recreating database..."
+		mysqladmin drop -f $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA
+		echo "Old test database dropped."
+
+		mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA
+		echo "New test database created."
+	fi
 }
 
 install_wp

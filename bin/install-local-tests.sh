@@ -10,6 +10,10 @@ PHP_VERSION=7.3
 
 DIR=$(basename $(pwd))
 
+# Always use 5.7, later versions don't work with PHP, WordPress or both.
+# 7.5.x results in PHP Fatal error:  Class PHPUnit_Util_Test may not inherit from final class (PHPUnit\Util\Test) in /tmp/wordpress-tests-lib/includes/phpunit6-compat.php on line 18
+PHPUNIT_VERSION=5.7.27
+
 if [ "$DIR" != "bin" ]; then
   echo "You must run this script from the bin directory."
   exit 1
@@ -18,7 +22,7 @@ fi
 cd ..
 
 # Install phpunit 7.x as WordPress does not support 8.x yet
-if [[ "$PHP_VERSION" == "5.6" ]]; then PHPUNIT_VERSION=5.7.9; else PHPUNIT_VERSION=7.5.9; fi
+# if [[ "$PHP_VERSION" == "5.6" ]]; then PHPUNIT_VERSION=5.7.9; else PHPUNIT_VERSION=7.5.9; fi
 wget https://phar.phpunit.de/phpunit-$PHPUNIT_VERSION.phar -O /tmp/phpunit; chmod +x /tmp/phpunit
 # Install WordPress PHPUnit tests
 bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
