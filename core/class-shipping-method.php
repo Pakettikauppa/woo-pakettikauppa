@@ -211,7 +211,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
               <td style="vertical-align: top;">
                 <select id="<?php echo $method_id; ?>-select" name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][service]'; ?>" onchange="pkChangeOptions(this, '<?php echo $method_id; ?>');">
                   <option value="__NULL__"><?php $this->get_core()->text->no_shipping(); ?></option>
-                  <?php if( ! empty($methods) ) : ?>
+                  <?php if ( ! empty($methods) ) : ?>
                     <option value="__PICKUPPOINTS__" <?php echo ($selected_service === '__PICKUPPOINTS__' ? 'selected' : ''); ?>>Noutopisteet</option>
                   <?php endif; ?>
                   <?php foreach ( $all_shipping_methods as $service_id => $service_name ) : ?>
