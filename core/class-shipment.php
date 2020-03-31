@@ -231,21 +231,32 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         return null;
       }
 
-      update_post_meta($order->get_id(), '_' . $this->core->prefix . '_tracking_code', $tracking_code);
-      update_post_meta($order->get_id(), '_' . $this->core->prefix . '_custom_service_id', $service_id);
-
-      do_action(str_replace('wc_', '', $this->core->prefix) . '_post_create_shipment', $order);
+      // update_post_meta($order->get_id(), '_' . $this->core->prefix . '_tracking_code', $tracking_code);
+      // update_post_meta($order->get_id(), '_' . $this->core->prefix . '_custom_service_id', $service_id);
 
       $document_url = admin_url('admin-post.php?post=' . $order->get_id() . '&action=show_pakettikauppa&tracking_code=' . $tracking_code);
       $tracking_url = (string) $shipment->{'response.trackingcode'}['tracking_url'];
 
-      update_post_meta($order->get_id(), '_' . $this->core->prefix . '_tracking_url', $tracking_url);
+      // update_post_meta($order->get_id(), '_' . $this->core->prefix . '_tracking_url', $tracking_url);
 
       $label_code = (string) $shipment->{'response.trackingcode'}['labelcode'];
 
-      if ( ! empty($label_code) ) {
-        update_post_meta($order->get_id(), '_' . $this->core->prefix . '_label_code', $label_code);
-      }
+      // if ( ! empty($label_code) ) {
+      //   update_post_meta($order->get_id(), '_' . $this->core->prefix . '_label_code', $label_code);
+      // }
+
+      update_post_meta($order->get_id(), '_woo_pakettikauppa_shipments', array_merge_recursive(
+        get_post_meta($order->get_id(), '_woo_pakettikauppa_shipments', true),
+        [
+          'tracking_code' => $tracking_code,
+          'service_id' => $service_id,
+          'tracking_url' => $tracking_url, // Does this really need to be stored?,
+          'label_code' => $label_code,
+          'status' => null,
+        ]
+      ));
+
+      do_action(str_replace('wc_', '', $this->core->prefix) . '_post_create_shipment', $order);
 
       // Add order note
       $dl_link       = sprintf('<a href="%1$s" target="_blank">%2$s</a>', $document_url, esc_attr__('Print document', 'woo-pakettikauppa'));
@@ -453,8 +464,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      *
      * @return int The status code of the shipment
      */
-    public function get_shipment_status( $post_id ) {
-      $tracking_code = get_post_meta($post_id, '_' . $this->core->prefix . '_tracking_code', true);
+    public function get_shipment_status( $tracking_code ) {
+      // $meta = get_post_meta($post_id, '_woo_pakettikauppa_shipment');
+      // $tracking_code = $meta['tracking_code'];
+
+      // $tracking_code = get_post_meta($post_id, '_' . $this->core->prefix . '_tracking_code', true);
 
       if ( ! empty($tracking_code) ) {
         $result = $this->client->getShipmentStatus($tracking_code);
