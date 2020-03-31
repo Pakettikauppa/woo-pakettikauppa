@@ -80,6 +80,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
 
       $pickup_point_id = $_POST['pickup_point_id'];
 
+      error_log("set id $pickup_point_id");
+
       WC()->session->set(str_replace('wc_', '', $this->core->prefix) . '_pickup_point_id', $pickup_point_id);
     }
 
