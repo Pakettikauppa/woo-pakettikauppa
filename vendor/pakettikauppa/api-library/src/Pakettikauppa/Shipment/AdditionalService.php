@@ -58,13 +58,24 @@ class AdditionalService
         return $this->specifiers;
     }
 
+    public function getSpecifier($name)
+    {
+        foreach($this->specifiers as $specifier) {
+            if($specifier[0] == $name) {
+                return $specifier[1];
+            }
+        }
+
+        return null;
+    }
+
     /**
      * @param string $name
      * @param string $value
      */
     public function addSpecifier($name, $value)
     {
-        $this->specifiers[$name] = $value;
+        $this->specifiers[] = [$name, $value];
     }
 
     /**
@@ -76,7 +87,7 @@ class AdditionalService
     {
         // alternative pickup point
         if($this->service_code == 2106) {
-            if(!isset($this->specifiers['pickup_point_id']))
+            if($this->getSpecifier('pickup_point_id') === null)
                 return false;
         }
 
@@ -86,32 +97,32 @@ class AdditionalService
 
             foreach($expected_params as $param)
             {
-                if(!isset($this->specifiers[$param]))
+                if($this->getSpecifier($param) === null)
                     return false;
             }
         }
 
         // multipacket shipment requires package count
         if($this->service_code == 3102) {
-            if(!isset($this->specifiers['count']))
+            if($this->getSpecifier('count') === null)
                 return false;
 
-            if(!is_numeric($this->specifiers['count']))
+            if(!is_numeric($this->getSpecifier('count')))
                 return false;
         }
 
         if($this->service_code == 3111) {
-            if(!isset($this->specifiers['insurancevalue']))
+            if($this->getSpecifier('insurancevalue') === null)
                 return false;
         }
 
         if($this->service_code == 3120) {
-            if(!isset($this->specifiers['deliverytime']))
+            if($this->getSpecifier('deliverytime'))
                 return false;
         }
 
         if($this->service_code == 3143) {
-            if(!isset($this->specifiers['lqweight']) or !isset($this->specifiers['lqcount']))
+            if($this->getSpecifier('lqweight') === null or $this->getSpecifier('lqcount') === null)
                 return false;
         }
 

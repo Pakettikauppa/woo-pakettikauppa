@@ -485,15 +485,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       return $this->process_pickup_points_to_option_array($pickup_point_data);
     }
 
-    private function process_pickup_points_to_option_array( $pickup_point_data ) {
-      $pickup_points = json_decode($pickup_point_data);
+    private function process_pickup_points_to_option_array( $pickup_points ) {
       $options_array = array( '__NULL__' => [ 'text' => '- ' . __('Select a pickup point', 'woo-pakettikauppa') . ' -' ] );
-
-      $methods = array_flip($this->core->shipment->get_pickup_point_methods());
 
       if ( ! empty($pickup_points) ) {
         foreach ( $pickup_points as $key => $value ) {
-          $pickup_point_key = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ') (%' . $methods[ $value->provider ] . ')';
+          $pickup_point_key = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ')';
           $pickup_point_value = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
 
           // $options_array[ $pickup_point_key ] = $pickup_point_value;

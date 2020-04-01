@@ -246,6 +246,7 @@ class Test_Shipment extends WP_UnitTestCase {
     $sender_xml->addChild('Sender.Country', $data['Sender.Country']);
     $sender_xml->addChild('Sender.Phone', $data['Sender.Phone']);
     $sender_xml->addChild('Sender.Vatcode', $data['Sender.Vatcode']);
+      $sender_xml->addChild('Sender.Email');
 
     $receiver_xml = $shipment_xml->addChild('Shipment.Recipient');
     $receiver_xml->addChild('Recipient.Name1', $data['Recipient.Name1']);
@@ -290,6 +291,9 @@ class Test_Shipment extends WP_UnitTestCase {
 
       $weight['unit'] = 'kg';
       $volume['unit'] = 'm3';
+        $volume['x'] = '';
+        $volume['y'] = '';
+        $volume['z'] = '';
 
       $parcel_xml->addChild('Parcel.Infocode', $parcel['Parcel.Infocode']);
       $parcel_xml->addChild('Parcel.Contents', $parcel['Parcel.Contents']);

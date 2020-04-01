@@ -38,6 +38,12 @@ class Parcel
      */
     public $content_lines;
 
+    public $x;
+
+    public $y;
+
+    public $z;
+
     /**
      * Parcel constructor.
      */
@@ -154,6 +160,36 @@ class Parcel
     public function getContentLines()
     {
         return $this->content_lines;
+    }
+
+    public function setX($x)
+    {
+        $this->x = $x;
+    }
+
+    public function setY($y)
+    {
+        $this->y = $y;
+    }
+
+    public function setZ($z)
+    {
+        $this->z = $z;
+    }
+
+    public function getX()
+    {
+        return $this->x;
+    }
+
+    public function getY()
+    {
+        return $this->y;
+    }
+
+    public function getZ()
+    {
+        return $this->z;
     }
 
 }

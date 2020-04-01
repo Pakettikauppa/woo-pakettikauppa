@@ -48,7 +48,16 @@ $instance = new Wc_Pakettikauppa(
     'vendor_logo' => 'assets/img/pakettikauppa-logo.png',
     'setup_background' => 'assets/img/pakettikauppa-background.jpg',
     'setup_page' => 'wcpk-setup',
-    // 'pakettikauppa_api_config' => ['test_mode' => false, 'base_uri' => null], // Overrides defaults and UI settings
+    'pakettikauppa_api_config' => [
+      'test' => [
+        'api_key' => '00000000-0000-0000-0000-000000000000',
+        'secret' => '1234567890ABCDEF',
+        'base_uri' => 'https://apitest.pakettikauppa.fi',
+      ],
+      'production' => [
+        'base_uri' => 'https://api.pakettikauppa.fi',
+      ],
+    ],
     // 'pakettikauppa_api_comment' => 'From WooCommerce', // Overrides default
   ]
 );
