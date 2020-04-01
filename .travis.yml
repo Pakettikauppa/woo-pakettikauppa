@@ -37,7 +37,7 @@ jobs:
     #   access syntax with curly braces is deprecated on line 757 in file
     #   /tmp/wordpress/wp-includes/script-loader.php
     - php: nightly
-    - Gnitpick
+    - name: Gnitpick
 
 # Common for all jobs
 language: php
