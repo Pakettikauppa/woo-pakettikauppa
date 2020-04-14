@@ -102,6 +102,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
+= 2.3.1 =
+* Fix to help to fill orders from previous versions when using pickup points as shipping method
+
 = 2.3.0 =
 * Many small changes: f.ex. adding new fields to checkout and to sender configuration
 * Fixes compatibility with Klarna

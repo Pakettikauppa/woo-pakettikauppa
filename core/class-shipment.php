@@ -370,6 +370,19 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         $service_id = self::get_default_service();
       }
 
+      if ( $service_id === '__PICKUPPOINTS__' ) {
+          // This might be a bug or a version update problem
+          $pickup_point = get_post_meta($order->get_id(), '_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point', true);
+
+          $provider = explode(':', $pickup_point, 2);
+
+          if ( ! empty($provider) ) {
+              $methods = array_flip($this->core->shipment->get_pickup_point_methods());
+              $service_id = $methods[$provider[0]];
+          } else {
+              $service_id = null;
+          }
+      }
       return $service_id;
     }
 
