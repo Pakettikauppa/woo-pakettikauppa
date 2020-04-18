@@ -409,19 +409,23 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       return $fields;
     }
 
+    protected function get_form_field_mode() {
+      return array(
+        'title'   => $this->get_core()->text->mode(),
+        'type'    => 'select',
+        'default' => 'test',
+        'options' => array(
+          'test'       => $this->get_core()->text->testing_environment(),
+          'production' => $this->get_core()->text->production_environment(),
+        ),
+      );
+    }
+
     private function my_global_form_fields() {
       $wc_countries = new WC_Countries();
 
       return array(
-        'mode'                       => array(
-          'title'   => $this->get_core()->text->mode(),
-          'type'    => 'select',
-          'default' => 'test',
-          'options' => array(
-            'test'       => $this->get_core()->text->testing_environment(),
-            'production' => $this->get_core()->text->production_environment(),
-          ),
-        ),
+        'mode'                       => $this->get_form_field_mode(),
 
         'account_number'             => array(
           'title'    => $this->get_core()->text->api_key_title(),
