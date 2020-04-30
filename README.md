@@ -66,6 +66,30 @@ Before submitting your patch, please make sure it is of high quality:
 
 Please note that the official docs at https://docs.woocommerce.com/document/shipping-method-api/ contain partially outdated information. For more information, see wiki at https://github.com/woocommerce/woocommerce/wiki/Shipping-Method-API or dive directly into the source using [GitHub search](https://github.com/woocommerce/woocommerce/search?utf8=%E2%9C%93&q=extends+WC_Shipping_Method&type=) to find up-to-date examples on how to extend the shipping method class.
 
+## Running a local development environment
+
+To develop woo-pakettikauppa (or any WordPress plugin) you need to have a running WordPress installation. If you want to use [Seravo/WordPress](https://github.com/Seravo/wordpress) as a local development environment clone it to your computer and fire it up in Vagrant or Docker following its instructions. Once done, you will have a clean and pretty empty WordPress site.
+
+Assuming you have the local development environment running in directory `wordpress` and this plugin is checked out next to it, you can use [entr](http://eradman.com/entrproject/) and [rsync](https://rsync.samba.org/) to automatically sync the `woo-pakettikauppa` contents into the local development environment:
+
+```
+find * | entr rsync -vr . ../wordpress/htdocs/wp-content/plugins/woo-pakettikauppa | ts
+```
+
+This is handy, as no matter what happens to the local development environment the git checkout of `woo-pakettikauppa` is always protected from harm and you can have your text editor and git tools running in that directory always in the same way.
+
+### Running tests in local development environment
+
+There are preconfigured phpcs.xml and phpunit.xml files in the project, so running tests is very easy:
+
+```
+vagrant$ cd /data/wordpress/htdocs/wp-content/plugins/woo-pakettikauppa/
+vagrant$ phpcs
+vagrant$ phpunit --verbose
+```
+
+Note that the phpcs and phpunit versions in the local development version might differ from the versions used in the CI system and thus produce different results.
+
 ## Travis CI and automatic testing
 
 This project has a `.travis-ci.yml` definition which can be used by anybody. Just follow these steps:
@@ -78,18 +102,21 @@ This project has a `.travis-ci.yml` definition which can be used by anybody. Jus
 5. Initially the page `https://travis-ci.org/<username>/woo-pakettikauppa` will be empty, but as soon as you push your first commit Travis-CI will run the first built. You can also manually trigger a build to get it started.
 ![Travis CI: Trigger manual build](docs/travis-ci-manual-trigger.png)
 
-## Running tests locally
+### Debugging failed Travis CI jobs
 
-You can run the tests locally with by using the install-tests.sh & run-tests.sh. Note that these scripts are **destructive**, so you should probably run them in a virtual environment such as Vagrant or Docker. Assuming you're using [Seravo/wordpress](https://github.com/Seravo/wordpress):
+First read carefully all the output of the failed jobs. Most of the time the reason to the failure is clearly stated.
+
+You can also simulate the tests Travis CI runs by running inside the local development environment the same commands that [.travis.yml](.travis.yml) runs:
 
 ```
-docker-compose exec wordpress bash
-cd /data/wordpress/htdocs/wp-content/plugins/woo-pakettikauppa/bin
-
-# do not run ./install-wp-tests.sh yourself
-./install-local-tests.sh
-./run-local-tests.sh
+vagrant$ cd /data/wordpress/htdocs/wp-content/plugins/woo-pakettikauppa/
+vagrant$ SNIFF=1 ./bin/install-tests.sh
+vagrant$ SNIFF=1 ./bin/run-tests.sh
 ```
+
+To control what tests are run by setting variables like 'SNIFF' and others. See [.travis.yml](.travis.yml) for all options used in current matrix.
+
+Travis CI has published [travis-build](https://github.com/travis-ci/travis-build) for converting the `.travis.yml` file into a `.sh` script you can run if you feel adventurous. They also offer a [debug build mode](https://docs.travis-ci.com/user/running-build-in-debug-mode/) that can be used to debug failed builds via SSH directly on Travis' servers.
 
 ## Translating
 
