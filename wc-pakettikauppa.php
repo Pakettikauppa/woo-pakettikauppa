@@ -39,7 +39,7 @@ class Wc_Pakettikauppa extends Woo_Pakettikauppa_Core\Core {
 }
 
 $instance = new Wc_Pakettikauppa(
-  [
+  array(
     'root' => __FILE__,
     'version' => get_file_data(__FILE__, array( 'Version' ), 'plugin')[0],
     'shipping_method_name' => 'pakettikauppa_shipping_method',
@@ -48,16 +48,16 @@ $instance = new Wc_Pakettikauppa(
     'vendor_logo' => 'assets/img/pakettikauppa-logo.png',
     'setup_background' => 'assets/img/pakettikauppa-background.jpg',
     'setup_page' => 'wcpk-setup',
-    'pakettikauppa_api_config' => [
-      'test' => [
+    'pakettikauppa_api_config' => array(
+      'test' => array(
         'api_key' => '00000000-0000-0000-0000-000000000000',
         'secret' => '1234567890ABCDEF',
         'base_uri' => 'https://apitest.pakettikauppa.fi',
-      ],
-      'production' => [
+      ),
+      'production' => array(
         'base_uri' => 'https://api.pakettikauppa.fi',
-      ],
-    ],
+      ),
+    ),
     // 'pakettikauppa_api_comment' => 'From WooCommerce', // Overrides default
-  ]
+  )
 );

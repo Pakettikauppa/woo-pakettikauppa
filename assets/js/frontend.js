@@ -16,7 +16,7 @@ function pakettikauppa_pickup_point_change(element) {
   if (chosenIsPrivate) {
     var userKnows = confirm(global.privatePickupPointConfirm);
 
-    if (!userKnows) {
+    if (! userKnows) {
       $(element).val('__NULL__');
       return;
     }

@@ -243,7 +243,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                 <?php foreach ( $all_additional_services as $method_code => $additional_services ) : ?>
                   <div class="pk-services-<?php echo $method_id; ?>" style='display: none;' id="services-<?php echo $method_id; ?>-<?php echo $method_code; ?>">
                     <?php foreach ( $additional_services as $additional_service ) : ?>
-                      <?php if ( empty($additional_service->specifiers) || in_array($additional_service->service_code, array( '3102' )) ) : ?>
+                      <?php if ( empty($additional_service->specifiers) || in_array($additional_service->service_code, array( '3102' ), true) ) : ?>
                         <input type="hidden"
                                 name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . esc_attr($method_code) . '][additional_services][' . $additional_service->service_code . ']'; ?>"
                                 value="no">
@@ -743,7 +743,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
 
             $this->add_rate(
               array(
-                'meta_data' => [ 'service_code' => $service_code ],
+                'meta_data' => array( 'service_code' => $service_code ),
                 'label'     => $service_title,
                 'cost'      => (string) 0,
                 'package'   => $package,
@@ -796,7 +796,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
 
       $this->add_rate(
         array(
-          'meta_data' => [ 'service_code' => $service_code ],
+          'meta_data' => array( 'service_code' => $service_code ),
           'label'     => $service_title,
           'cost'      => (string) $shipping_cost,
           'taxes'     => $taxes['taxes'],

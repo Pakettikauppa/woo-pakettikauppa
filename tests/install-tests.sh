@@ -40,22 +40,21 @@ if [ -n "$TRAVIS_PHP_VERSION" ]
 then
   set_variable PHP_VERSION "$TRAVIS_PHP_VERSION"
 else
-  set_variable PHP_VERSION 7.3
+  set_variable PHP_VERSION 7.4
 fi
 
-# Install phpunit 7.x as WordPress 5.x does not support 8.x yet
-# Install phpunit 5.x for older WordPress 4.x series
-if [ "$PHP_VERSION" = "7.1" ]
-then
-  # Default to 5.7 as later versions don't work with PHP, WordPress or both.
-  # 7.5.x results in
-  #   PHP Fatal error:  Class PHPUnit_Util_Test may not inherit from final class
-  #   (PHPUnit\Util\Test) in /tmp/wordpress-tests-lib/includes/phpunit6-compat.php
-  set_variable PHPUNIT_VERSION 5.7.27
-else
-  set_variable PHPUNIT_VERSION 7.5.20
-fi
+case "$WP_VERSION" in
+  4.*)
+    # Install phpunit 5.x for older WordPress 4.x series
+    set_variable PHPUNIT_VERSION 5.7.27
+    ;;
+  *)
+    # Install phpunit 7.x as WordPress 5.x does not support 8.x nor 9.x yet
+    set_variable PHPUNIT_VERSION 7.5.20
+    ;;
+esac
 
+# Install exactly the PHP version we want to use
 curl -sS "https://phar.phpunit.de/phpunit-$PHPUNIT_VERSION.phar" -o /tmp/phpunit
 chmod +x /tmp/phpunit
 
@@ -68,12 +67,12 @@ fi
 # Use specific versions so every test run uses exactly same standards until this
 # file is explicitly updated to new standards versions
 set_variable PHPCS_DIR /tmp/phpcs
-set_variable PHPCS_VERSION 3.3.2
-set_variable WP_SNIFFS_VERSION 2.1.0
+set_variable PHPCS_VERSION 3.5.5
+set_variable WP_SNIFFS_VERSION 2.2.1
 set_variable WP_SNIFFS_DIR /tmp/wp-sniffs
-set_variable SECURITY_SNIFFS_VERSION 2.0.0
+set_variable SECURITY_SNIFFS_VERSION 2.0.1
 set_variable SECURITY_SNIFFS_DIR /tmp/security-sniffs
-set_variable PHP_COMPATIBILITY_SNIFFS_VERSION 9.1.1
+set_variable PHP_COMPATIBILITY_SNIFFS_VERSION 9.3.5
 set_variable PHP_COMPATIBILITY_SNIFFS_DIR /tmp/compatibility-sniffs
 
 rm -rfv $PHPCS_DIR $WP_SNIFFS_DIR $SECURITY_SNIFFS_DIR $PHP_COMPATIBILITY_SNIFFS_DIR

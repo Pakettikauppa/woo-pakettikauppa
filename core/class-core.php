@@ -52,25 +52,25 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
      *   'setup_page' => 'wcpk-setup',
      * ]
      */
-    public function __construct( $config = [] ) {
+    public function __construct( $config = array() ) {
       $this->version = $config['version'];
       $this->basename = plugin_basename($config['root']);
       $this->dir = plugin_dir_path($config['root']);
       $this->dir_url = plugin_dir_url($config['root']);
 
-      $this->shippingmethod = $config['shipping_method_name'] ?: str_replace('wc_', '', $this->core->prefix) . '_shipping_method';
+      $this->shippingmethod = $config['shipping_method_name'] ?? str_replace('wc_', '', $this->core->prefix) . '_shipping_method';
 
-      $this->vendor_name = $config['vendor_name'] ?: 'Pakettikauppa';
-      $this->vendor_url = $config['vendor_url'] ?: 'https://www.pakettikauppa.fi';
-      $this->vendor_logo = $this->dir_url . ($config['vendor_logo'] ?: 'assets/img/pakettikauppa-logo.png');
+      $this->vendor_name = $config['vendor_name'] ?? 'Pakettikauppa';
+      $this->vendor_url = $config['vendor_url'] ?? 'https://www.pakettikauppa.fi';
+      $this->vendor_logo = $this->dir_url . ($config['vendor_logo'] ?? 'assets/img/pakettikauppa-logo.png');
 
-      $this->setup_background = $this->dir_url . ($config['setup_background'] ?: 'assets/img/pakettikauppa-background.jpg');
-      $this->setup_page = $config['setup_page'] ?: 'wcpk-setup';
+      $this->setup_background = $this->dir_url . ($config['setup_background'] ?? 'assets/img/pakettikauppa-background.jpg');
+      $this->setup_page = $config['setup_page'] ?? 'wcpk-setup';
 
       $this->text = $this->load_text_class();
 
-      $this->api_config = isset($config['pakettikauppa_api_config']) ? $config['pakettikauppa_api_config'] : [];
-      $this->api_comment = isset($config['pakettikauppa_api_comment']) ? $config['pakettikauppa_api_comment'] : 'From WooCommerce';
+      $this->api_config = $config['pakettikauppa_api_config'] ?? array();
+      $this->api_comment = $config['pakettikauppa_api_comment'] ?? 'From WooCommerce';
 
       self::$instance = $this;
 

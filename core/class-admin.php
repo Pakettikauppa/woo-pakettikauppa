@@ -557,7 +557,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
       $return_shipments = get_post_meta($post->ID, '_' . $this->core->prefix . '_return_shipment');
 
-      $additional_service_names = [
+      $additional_service_names = array(
         '3101' => 'Postiennakko',
         '3104' => 'Särkyvä',
         '3163' => 'Henkilökohtaisesti luovutettava',
@@ -568,7 +568,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         '3143' => 'LQ Lähetys',
         '3102' => 'Monipaketti lähetys',
         '9902' => 'Asiointikoodi',
-      ];
+      );
 
       ?>
       <div>
@@ -626,13 +626,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                 <h4><?php echo esc_attr__('Additional services', 'woo-pakettikauppa'); ?>:</h4>
                 <ol style="list-style: circle;">
                   <?php foreach ( $additional_services as $i => $additional_service ) : ?>
-                    <?php if ( ! in_array($additional_service, array( '3102' )) ) : ?>
+                    <?php if ( ! in_array($additional_service, array( '3102' ), true) ) : ?>
                       <li>
                         <?php echo $additional_service_names[ $additional_service ]; ?>
                       </li>
                     <?php endif; ?>
                   <?php endforeach; ?>
-                  <?php if ( in_array('3102', $additional_services) ) : ?>
+                  <?php if ( in_array('3102', $additional_services, true) ) : ?>
                     <li>
                       <?php echo esc_html__('Parcel count', 'woo-pakettikauppa'); ?>:
                       <input type="number" name="wc_pakettikauppa_mps_count" value="1" style="width: 3em;" min="1" step="1" max="15">

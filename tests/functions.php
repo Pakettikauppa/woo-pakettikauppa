@@ -30,7 +30,7 @@ function get_plugin_main_filename() {
 
 function get_plugin_config() {
   $file = get_plugin_directory() . '/' . get_plugin_main_filename();
-  return [
+  return array(
     'root' => $file,
     'version' => get_file_data($file, array( 'Version' ), 'plugin')[0],
     'shipping_method_name' => 'pakettikauppa_shipping_method',
@@ -38,7 +38,7 @@ function get_plugin_config() {
     'vendor_url' => 'https://www.pakettikauppa.fi/',
     'vendor_logo' => 'assets/img/pakettikauppa-logo.png',
     'setup_background' => 'assets/img/pakettikauppa-background.jpg',
-  ];
+  );
 }
 
 function get_instance() {
