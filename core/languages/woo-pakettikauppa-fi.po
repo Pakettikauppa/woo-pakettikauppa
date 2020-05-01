@@ -5,15 +5,15 @@ msgstr ""
 "Project-Id-Version: WooCommerce Pakettikauppa 2.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-"
 "pakettikauppa\n"
-"POT-Creation-Date: 2020-03-25T09:25:57+00:00\n"
-"PO-Revision-Date: 2020-03-25 11:28+0200\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2020-05-01T17:35:21+03:00\n"
+"PO-Revision-Date: 2020-05-01 17:37+0300\n"
+"Last-Translator: Otto Kekäläinen <otto@seravo.com>\n"
 "Language-Team: \n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.0.6\n"
 "X-Domain: woo-pakettikauppa\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -28,11 +28,10 @@ msgstr "https://github.com/Seravo/woo-pakettikauppa"
 #. Description of the plugin
 msgid ""
 "Pakettikauppa shipping service for WooCommerce. Integrates Posti, Smartship, "
-"Matkahuolto, DB Schenker and others. Version 2 breaks 1.x pricing settings."
+"Matkahuolto, DB Schenker and others."
 msgstr ""
 "Pakettikauppa-toimitustapa WooCommercelle. Integroi Postin, Smartshipin, "
-"Matkahuollon, DB Schenkerin ja muut palvelut yhden toimitustavan alle. "
-"Versio 2.x rikkoo version 1.x hinta-asetukset."
+"Matkahuollon, DB Schenkerin ja muut palvelut yhden toimitustavan alle."
 
 #. Author of the plugin
 msgid "Seravo"
@@ -209,33 +208,33 @@ msgstr "Lähetysseuranta"
 msgid "You can <a href=\"%1$s\">track your order</a> with tracking code %2$s."
 msgstr "Voit <a href=\"%1$s\">seurata lähetystä</a> lähetystunnuksella %2$s."
 
-#: core/class-frontend.php:130
+#: core/class-frontend.php:163
 msgid "An error occurred. Please try again later."
 msgstr "Toimenpide epäonnistui! Kokeile uudelleen."
 
-#: core/class-frontend.php:313 core/class-frontend.php:314
-#: core/class-frontend.php:456
+#: core/class-frontend.php:366 core/class-frontend.php:367
+#: core/class-frontend.php:516
 msgid "Pickup point"
 msgstr "Noutopiste"
 
-#: core/class-frontend.php:323
+#: core/class-frontend.php:377
 msgid "Insert your shipping details to view nearby pickup points"
 msgstr "Syötä toimitusosoite valitaksesi lähistöllä olevan noutopisteen"
 
 #. translators: %s: Postcode
-#: core/class-frontend.php:329
+#: core/class-frontend.php:383
 msgid "Invalid postcode \"%1$s\". Please check your address information."
 msgstr "Virheellinen postinumero ”%1$s”. Ole hyvä ja tarkista osoitetietosi."
 
-#: core/class-frontend.php:365
+#: core/class-frontend.php:419
 msgid "Choose one of pickup points close to the address you entered:"
 msgstr "Valitse noutopiste joka on lähellä antamaasi osoitetta:"
 
-#: core/class-frontend.php:427
+#: core/class-frontend.php:489
 msgid "Select a pickup point"
 msgstr "Valitse noutopiste"
 
-#: core/class-frontend.php:470
+#: core/class-frontend.php:530
 msgid "Please choose a pickup point."
 msgstr "Noutopistettä ei ole valittu."
 
@@ -333,7 +332,7 @@ msgid "Label posted to URL successfully."
 msgstr "Pakettikortti lähetetty URLiin onnistuneesti."
 
 #. translators: %s: Error message
-#: core/class-shipment.php:601
+#: core/class-shipment.php:639
 msgid "WooCommerce Pakettikauppa: tracking code creation failed: %s"
 msgstr "WooCommerce Pakettikauppa: seurantakoodin luonti epäonnistui: %s"
 

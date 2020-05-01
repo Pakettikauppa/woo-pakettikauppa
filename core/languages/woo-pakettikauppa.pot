@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the WooCommerce Pakettikauppa plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Pakettikauppa 2.2.0\n"
+"Project-Id-Version: WooCommerce Pakettikauppa 2.3.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-pakettikauppa\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-03-25T09:25:57+00:00\n"
+"POT-Creation-Date: 2020-05-01T17:35:21+03:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: woo-pakettikauppa\n"
@@ -23,7 +23,7 @@ msgid "https://github.com/Seravo/woo-pakettikauppa"
 msgstr ""
 
 #. Description of the plugin
-msgid "Pakettikauppa shipping service for WooCommerce. Integrates Posti, Smartship, Matkahuolto, DB Schenker and others. Version 2 breaks 1.x pricing settings."
+msgid "Pakettikauppa shipping service for WooCommerce. Integrates Posti, Smartship, Matkahuolto, DB Schenker and others."
 msgstr ""
 
 #. Author of the plugin
@@ -194,34 +194,34 @@ msgstr ""
 msgid "You can <a href=\"%1$s\">track your order</a> with tracking code %2$s."
 msgstr ""
 
-#: core/class-frontend.php:130
+#: core/class-frontend.php:163
 msgid "An error occurred. Please try again later."
 msgstr ""
 
-#: core/class-frontend.php:313
-#: core/class-frontend.php:314
-#: core/class-frontend.php:456
+#: core/class-frontend.php:366
+#: core/class-frontend.php:367
+#: core/class-frontend.php:516
 msgid "Pickup point"
 msgstr ""
 
-#: core/class-frontend.php:323
+#: core/class-frontend.php:377
 msgid "Insert your shipping details to view nearby pickup points"
 msgstr ""
 
 #. translators: %s: Postcode
-#: core/class-frontend.php:329
+#: core/class-frontend.php:383
 msgid "Invalid postcode \"%1$s\". Please check your address information."
 msgstr ""
 
-#: core/class-frontend.php:365
+#: core/class-frontend.php:419
 msgid "Choose one of pickup points close to the address you entered:"
 msgstr ""
 
-#: core/class-frontend.php:427
+#: core/class-frontend.php:489
 msgid "Select a pickup point"
 msgstr ""
 
-#: core/class-frontend.php:470
+#: core/class-frontend.php:530
 msgid "Please choose a pickup point."
 msgstr ""
 
@@ -315,7 +315,7 @@ msgid "Label posted to URL successfully."
 msgstr ""
 
 #. translators: %s: Error message
-#: core/class-shipment.php:601
+#: core/class-shipment.php:639
 msgid "WooCommerce Pakettikauppa: tracking code creation failed: %s"
 msgstr ""
 

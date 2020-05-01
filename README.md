@@ -41,10 +41,10 @@ Naturally the store owner also needs to have a merchant account at [Pakettikaupp
 
 # Screenshots
 
-![Checkout in twentynineteen theme](assets/screenshot-1.png)
-![Order confirmation in twentynineteen theme](assets/screenshot-2.png)
-![Order screen in admin](assets/screenshot-3.png)
-![Setup wizard](assets/screenshot-4.png)
+![Checkout in twentynineteen theme](.wordpress-org/screenshot-1.png)
+![Order confirmation in twentynineteen theme](.wordpress-org/screenshot-2.png)
+![Order screen in admin](.wordpress-org/screenshot-3.png)
+![Setup wizard](.wordpress-org/screenshot-4.png)
 
 # Changelog
 
@@ -96,11 +96,11 @@ This project has a `.travis-ci.yml` definition which can be used by anybody. Jus
 1. Create an account at [Travis-CI.org](https://travis-ci.org/) by logging in with your Github.com account.
 2. Make sure you have a fork of this repository in your own Github.com account.
 3. Open the [Travis-CI.org settings page](https://travis-ci.org/account/repositories) and click "Sync repositories"
-![Travis CI: Sync repositories](docs/travis-ci-sync.png)
+![Travis CI: Sync repositories](.github/travis-ci-sync.png)
 4. Search for `woo-pakettikauppa` in your repository list and enable automatic testing for the repository it.
-![Travis CI: Activate](docs/travis-ci-repo-active.png)
+![Travis CI: Activate](.github/travis-ci-repo-active.png)
 5. Initially the page `https://travis-ci.org/<username>/woo-pakettikauppa` will be empty, but as soon as you push your first commit Travis-CI will run the first built. You can also manually trigger a build to get it started.
-![Travis CI: Trigger manual build](docs/travis-ci-manual-trigger.png)
+![Travis CI: Trigger manual build](.github/travis-ci-manual-trigger.png)
 
 ### Debugging failed Travis CI jobs
 
@@ -110,8 +110,8 @@ You can also simulate the tests Travis CI runs by running inside the local devel
 
 ```
 vagrant$ cd /data/wordpress/htdocs/wp-content/plugins/woo-pakettikauppa/
-vagrant$ SNIFF=1 ./bin/install-tests.sh
-vagrant$ SNIFF=1 ./bin/run-tests.sh
+vagrant$ SNIFF=1 ./tests/install-tests.sh
+vagrant$ SNIFF=1 ./tests/run-tests.sh
 ```
 
 To control what tests are run by setting variables like 'SNIFF' and others. See [.travis.yml](.travis.yml) for all options used in current matrix.
@@ -125,19 +125,6 @@ If you add new translatable strings or edit existing once, you have to regenerat
 ```
 wp i18n make-pot . core/languages/woo-pakettikauppa.pot
 ```
-
-If wp-cli version is less than 2.3, the order of the strings will change and existing translations will be "lost", but you can use `msgcat` to merge two .po files together.
-
-First, rename the old .po file. After that, using Poedit, generate a new .po using file from the new .pot, it can be blank. Then do the merge:
-
-```
-cd core/languages
-msgcat oldrenamed.po woo-pakettikauppa-fi.po -o woo-pakettikauppa-fi.po
-```
-
-Then generate the .mo file from the .po file, using Poedit.
-
-Rinse & repeat for all languages.
 
 ## Branching and releases
 

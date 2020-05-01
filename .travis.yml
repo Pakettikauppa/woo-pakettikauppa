@@ -12,9 +12,9 @@ jobs:
     # Test the legacy 4.9 series and an older PHP version
     - php: '7.1'
       env: WP_VERSION=4.9.12
-    # Arbitrary PHP version to run the PHPCS sniffs against, also with multisite
+    # Arbitrary PHP version to run the PHPCS sniffs against
     - php: '7.2'
-      env: WP_MULTISITE=1 SNIFF=1
+      env: SNIFF=1
     # Test PHP 7.3
     - php: '7.3'
     # Test PHP 7.4
@@ -44,10 +44,10 @@ language: php
 services: mysql
 
 install:
-  - ./bin/install-tests.sh
+  - ./tests/install-tests.sh
   # After CodeSniffer install you should refresh PHP paths on Travis-CI
   - phpenv rehash
 
 script:
   # Use installed PHPCS and PHP Unit in custom locations instead of Travis defaults
-  - ./bin/run-tests.sh
+  - ./tests/run-tests.sh

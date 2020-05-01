@@ -26,14 +26,13 @@ function set_variable() {
 
 set_variable WP_VERSION latest
 set_variable WOO_VERSION latest
-set_variable WP_MULTISITE 0
 
 # Install WordPress PHPUnit tests
 if [ -n "$TRAVIS" ]
 then
-  ./bin/install-wp-tests.sh wordpress_test root '' localhost "$WP_VERSION" "$WOO_VERSION"
+  ./tests/install-wp-tests.sh wordpress_test root '' localhost "$WP_VERSION" "$WOO_VERSION"
 else
-  ./bin/install-wp-tests.sh wordpress_test phpunit phpunitpass localhost "$WP_VERSION" "$WOO_VERSION"
+  ./tests/install-wp-tests.sh wordpress_test phpunit phpunitpass localhost "$WP_VERSION" "$WOO_VERSION"
 fi
 
 # Pass on a Travis-CI value if set
