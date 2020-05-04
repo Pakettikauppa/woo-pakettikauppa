@@ -220,20 +220,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       }
     }
 
-    /*
-    * Customize the layout of the checkout screen so that there is a section
-    * where the pickup point can be defined. Don't use the woocommerce_checkout_fields
-    * filter, it only lists fields without values, and we need to know the postcode.
-    * Also the WooCommerce_checkout_fields has separate billing and shipping address
-    * listings, when we want to have only one single pickup point per order.
-    */
-    public function pickup_point_field_html() {
+    private function shipping_needs_pickup_points() {
       $chosen_shipping_methods = WC()->session->get('chosen_shipping_methods');
-      $selected_payment_method = WC()->session->get('chosen_payment_method');
-      $is_klarna = $selected_payment_method === 'kco';
 
       if ( empty($chosen_shipping_methods) ) {
-        return;
+        return false;
       }
 
       $packages = WC()->shipping()->get_packages();
@@ -255,7 +246,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       }
 
       if ( $shipping_rate === null ) {
-        return;
+        return false;
       }
 
       $shipping_method_providers = array();
@@ -277,7 +268,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
 
         if ( count($temp_array) < 2 ) {
           // no instance_id available -> return
-          return;
+          return false;
         }
 
         $instance_id = $temp_array[1];
@@ -299,8 +290,30 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
 
       // Bail out if the shipping method is not one of the pickup point services
       if ( empty($shipping_method_providers) ) {
+        return false;
+      }
+
+      return $shipping_method_providers;
+    }
+
+    /*
+    * Customize the layout of the checkout screen so that there is a section
+    * where the pickup point can be defined. Don't use the woocommerce_checkout_fields
+    * filter, it only lists fields without values, and we need to know the postcode.
+    * Also the WooCommerce_checkout_fields has separate billing and shipping address
+    * listings, when we want to have only one single pickup point per order.
+    */
+    public function pickup_point_field_html() {
+      $shipping_method_providers = $this->shipping_needs_pickup_points();
+
+      echo '<input type="hidden" name="'.$this->core->prefix.'_validate_pickup_points" value="'. ($shipping_method_providers === false ? 'false' : 'true') .'" />';
+
+      if ($shipping_method_providers === false) {
         return;
       }
+
+      $selected_payment_method = WC()->session->get('chosen_payment_method');
+      $is_klarna = $selected_payment_method === 'kco';
 
       $shipping_postcode = WC()->customer->get_shipping_postcode();
       $shipping_address  = WC()->customer->get_shipping_address();
@@ -518,20 +531,28 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       }
     }
 
-    public function validate_checkout() {
-      if ( ! wp_verify_nonce(sanitize_key($_POST['woocommerce-process-checkout-nonce']), 'woocommerce-process_checkout') ) {
+    public function validate_checkout()
+    {
+      if (!wp_verify_nonce(sanitize_key($_POST['woocommerce-process-checkout-nonce']), 'woocommerce-process_checkout')) {
         return;
       }
 
       $key = str_replace('wc_', '', $this->core->prefix) . '_pickup_point';
-      $pickup = isset($_POST[$key]) ? $_POST[$key] : false;
+      $pickup_data = isset($_POST[$key]) ? $_POST[$key] : '__NULL__';
 
-      if ( $pickup && $pickup === '__NULL__' ) {
-        $this->add_error(__('Please choose a pickup point.', 'woo-pakettikauppa'));
-      }
+      // if there is no pickup point data, let's see do we need it
+      if ($pickup_data === '__NULL__') {
+        $key = $this->core->prefix . '_validate_pickup_points';
+        // if the value does not exists, then we expect to have pickup point data
+        $shipping_needs_pickup_points = isset($_POST[$key]) ? $_POST[$key] === "true" : true;
 
-      foreach ( $this->errors as $error ) {
-        $this->display_error($error);
+        if ($shipping_needs_pickup_points) {
+          $this->add_error(__('Please choose a pickup point.', 'woo-pakettikauppa'));
+        }
+
+        foreach ($this->errors as $error) {
+          $this->display_error($error);
+        }
       }
     }
   }
