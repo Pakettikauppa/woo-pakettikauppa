@@ -308,7 +308,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
 
       echo '<input type="hidden" name="' . $this->core->prefix . '_validate_pickup_points" value="' . ($shipping_method_providers === false ? 'false' : 'true') . '" />';
 
-      if ($shipping_method_providers === false) {
+      if ( $shipping_method_providers === false ) {
         return;
       }
 
@@ -531,8 +531,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       }
     }
 
-    public function validate_checkout()
-    {
+    public function validate_checkout() {
       if (!wp_verify_nonce(sanitize_key($_POST['woocommerce-process-checkout-nonce']), 'woocommerce-process_checkout')) {
         return;
       }
