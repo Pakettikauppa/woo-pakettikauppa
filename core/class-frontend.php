@@ -306,7 +306,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     public function pickup_point_field_html() {
       $shipping_method_providers = $this->shipping_needs_pickup_points();
 
-      echo '<input type="hidden" name="'.$this->core->prefix.'_validate_pickup_points" value="'. ($shipping_method_providers === false ? 'false' : 'true') .'" />';
+      echo '<input type="hidden" name="' . $this->core->prefix . '_validate_pickup_points" value="' . ($shipping_method_providers === false ? 'false' : 'true') . '" />';
 
       if ($shipping_method_providers === false) {
         return;
@@ -541,12 +541,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       $pickup_data = isset($_POST[$key]) ? $_POST[$key] : '__NULL__';
 
       // if there is no pickup point data, let's see do we need it
-      if ($pickup_data === '__NULL__') {
+      if ( $pickup_data === '__NULL__' ) {
         $key = $this->core->prefix . '_validate_pickup_points';
         // if the value does not exists, then we expect to have pickup point data
         $shipping_needs_pickup_points = isset($_POST[$key]) ? $_POST[$key] === "true" : true;
 
-        if ($shipping_needs_pickup_points) {
+        if ( $shipping_needs_pickup_points ) {
           $this->add_error(__('Please choose a pickup point.', 'woo-pakettikauppa'));
         }
 
