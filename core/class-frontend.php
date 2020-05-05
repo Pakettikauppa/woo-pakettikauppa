@@ -65,10 +65,17 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     }
 
     public function add_checkout_fields( $fields ) {
-      $fields['shipping']['shipping_phone'] = $fields['billing']['billing_phone'];
-      $fields['shipping']['shipping_email'] = $fields['billing']['billing_email'];
-      $fields['shipping']['shipping_phone']['required'] = 0;
-      $fields['shipping']['shipping_email']['required'] = 0;
+      // Add shipping phone is billing phone exists
+      if ( isset($fields['billing']['billing_phone']) ) {
+        $fields['shipping']['shipping_phone'] = $fields['billing']['billing_phone'];
+        $fields['shipping']['shipping_phone']['required'] = 0;
+      }
+
+      // Add shipping email if billing email exists
+      if ( isset($fields['billing']['billing_email']) ) {
+        $fields['shipping']['shipping_email'] = $fields['billing']['billing_email'];
+        $fields['shipping']['shipping_email']['required'] = 0;
+      }
 
       return $fields;
     }
