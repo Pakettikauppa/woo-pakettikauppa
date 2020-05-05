@@ -102,6 +102,10 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
+= 2.3.2 =
+* Fix to validation that checks if pickup point is chosen
+* Add checks that billing email and/or phone exists before adding those to shipping
+
 = 2.3.1 =
 * Fix to help to fill orders from previous versions when using pickup points as shipping method
 
