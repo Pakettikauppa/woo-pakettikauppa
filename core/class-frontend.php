@@ -550,7 +550,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       if ( $pickup_data === '__NULL__' ) {
         $key = $this->core->prefix . '_validate_pickup_points';
         // if the value does not exists, then we expect to have pickup point data
-        $shipping_needs_pickup_points = isset($_POST[$key]) ? $_POST[$key] === 'true' : true;
+        $shipping_needs_pickup_points = isset($_POST[$key]) ? $_POST[$key] === 'true' : false;
 
         if ( $shipping_needs_pickup_points ) {
           $this->add_error(__('Please choose a pickup point.', 'woo-pakettikauppa'));
