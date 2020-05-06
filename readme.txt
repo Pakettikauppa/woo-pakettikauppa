@@ -102,6 +102,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
+= 2.3.3 =
+* Some plugins brake because of forced validation of chosen pickup points. This update loosens the validation little bit
+
 = 2.3.2 =
 * Fix to validation that checks if pickup point is chosen
 * Add checks that billing email and/or phone exists before adding those to shipping
