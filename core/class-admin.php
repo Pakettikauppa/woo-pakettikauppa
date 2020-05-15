@@ -565,7 +565,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         $all_shipment_additional_services = $all_additional_services[$service_id];
       }
 
-      error_log(var_export($all_shipment_additional_services, true));
       if ( !empty($all_shipment_additional_services) ) {
         foreach($all_shipment_additional_services as $additional_service) {
           $additional_service_names[(string) $additional_service->service_code] = $additional_service->name;
