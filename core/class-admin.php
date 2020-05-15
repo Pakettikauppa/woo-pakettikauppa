@@ -565,8 +565,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         $all_shipment_additional_services = $all_additional_services[$service_id];
       }
 
-      if ( !empty($all_shipment_additional_services) ) {
-        foreach($all_shipment_additional_services as $additional_service) {
+      if ( ! empty($all_shipment_additional_services) ) {
+        foreach ( $all_shipment_additional_services as $additional_service ) {
           $additional_service_names[(string) $additional_service->service_code] = $additional_service->name;
         }
       }
@@ -628,9 +628,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                   <?php foreach ( $additional_services as $i => $additional_service ) : ?>
                     <?php if ( ! in_array($additional_service, array( '3102' ), true) ) : ?>
                       <li>
-                        <?php if ( isset($additional_service_names[ $additional_service ])): ?>
+                        <?php if ( isset($additional_service_names[ $additional_service ]) ) : ?>
                           <?php echo $additional_service_names[ $additional_service ]; ?>
-                        <?php else: ?>
+                        <?php else : ?>
                           <?php echo $additional_service; ?>
                         <?php endif; ?>
                       </li>

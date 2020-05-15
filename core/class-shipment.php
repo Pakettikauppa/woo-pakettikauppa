@@ -526,7 +526,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         $language = substr($language, 0, 2);
       }
 
-      error_log("Lankuake: " . $language);
       $shipment->setShippingMethod($service_id);
 
       $id = $order->get_id();
