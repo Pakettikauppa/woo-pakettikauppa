@@ -520,7 +520,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      */
     public function create_shipment_from_order( $order, $service_id = null, $additional_services = array() ) {
       $shipment   = new PK_Shipment();
+      $language = determine_locale();
 
+      if ( ! empty($language) ) {
+        $language = substr($language, 0, 2);
+      }
+
+      error_log("Lankuake: " . $language);
       $shipment->setShippingMethod($service_id);
 
       $id = $order->get_id();
@@ -633,7 +639,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       }
 
       try {
-        $this->client->createTrackingCode($shipment);
+        $this->client->createTrackingCode($shipment, $language);
       } catch ( \Exception $e ) {
         /* translators: %s: Error message */
         throw new \Exception(wp_sprintf(__('WooCommerce Pakettikauppa: tracking code creation failed: %s', 'woo-pakettikauppa'), $e->getMessage()));
@@ -945,6 +951,21 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       return $additional_services;
     }
 
+    public function get_shipping_method( $service_code ) {
+      $all_shipping_methods = $this->get_shipping_methods();
+
+      if ( $all_shipping_methods === null ) {
+        return null;
+      }
+
+      foreach ( $all_shipping_methods as $shipping_method ) {
+        if ( $shipping_method->shipping_method_code == $service_code ) {
+          return $shipping_method;
+        }
+      }
+
+      return null;
+    }
     /**
      * Fetch shipping methods from the Pakettikauppa and returns it as objects
      *
