@@ -950,21 +950,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       return $additional_services;
     }
 
-    public function get_shipping_method( $service_code ) {
-      $all_shipping_methods = $this->get_shipping_methods();
-
-      if ( $all_shipping_methods === null ) {
-        return null;
-      }
-
-      foreach ( $all_shipping_methods as $shipping_method ) {
-        if ( $shipping_method->shipping_method_code == $service_code ) {
-          return $shipping_method;
-        }
-      }
-
-      return null;
-    }
     /**
      * Fetch shipping methods from the Pakettikauppa and returns it as objects
      *
