@@ -852,7 +852,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      *
      * @return array Available shipping services
      */
-    public function services( $admin_page = false ) {
+    public function services() {
       $services = array();
 
       $all_shipping_methods = $this->get_shipping_methods();
