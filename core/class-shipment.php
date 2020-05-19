@@ -139,10 +139,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
     public function get_pickup_point_methods() {
       $methods = array(
-        '2103'  => 'Posti',
-        '90080' => 'Matkahuolto',
-        '80010' => 'DB Schenker',
-        '2711'  => 'Posti International',
+        '2103'  => 'Posti: Postipaketti',
+        '90080' => 'Matkahuolto: Lähellä-paketti',
+        '80010' => 'DB Schenker: Noutopistepaketti',
       );
 
       return $methods;
@@ -377,8 +376,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           $provider = explode(':', $pickup_point, 2);
 
           if ( ! empty($provider) ) {
+            if ( is_numeric($provider[0])) {
+              $service_id = $provider[0];
+            } else {
               $methods = array_flip($this->core->shipment->get_pickup_point_methods());
               $service_id = $methods[$provider[0]];
+            }
           } else {
               $service_id = null;
           }

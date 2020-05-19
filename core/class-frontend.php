@@ -212,7 +212,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       }
 
       if ( ! empty($pickup_point) ) {
-        update_post_meta($order_id, '_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point', sanitize_text_field($pickup_point));
+        // don't include codes to name
+        preg_match('/(.*)\|/', $pickup_point, $matches);
+        $pakettikauppa_pickup_point = $matches[1];
+        update_post_meta($order_id, '_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point', sanitize_text_field($pakettikauppa_pickup_point));
+
         // Find string like '(#6681)'
         preg_match('/\(#[0-9]+\)/', $pickup_point, $matches);
         // Cut the number out from a string of the form '(#6681)'
@@ -265,6 +269,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
         $shipping_method_id = $shipment_meta_data['service_code'];
 
         if ( $this->shipment->service_has_pickup_points($shipping_method_id) ) {
+          // check from settings is the pickup points active
+          // if it's not defined, then check the array of shipping method id's
           $shipping_method_providers[] = $shipping_method_id;
         }
       } else {
@@ -510,8 +516,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
 
       if ( ! empty($pickup_points) ) {
         foreach ( $pickup_points as $key => $value ) {
-          $pickup_point_key = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ')';
-          $pickup_point_value = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
+          $pickup_point_key =  $value->name . '|(#' . $value->pickup_point_id . ')' . '(%'.$value->service->service_code . ') ';
+          $pickup_point_value = $value->service->name . ': ' . $value->name . ' (' . $value->street_address . ')';
 
           // $options_array[ $pickup_point_key ] = $pickup_point_value;
           $options_array[ $pickup_point_key ] = array(
