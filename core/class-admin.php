@@ -63,8 +63,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $show_notice_in_screens = array( 'plugins', 'dashboard' );
 
       // Always show the setup notice in plugin settings page
-      $tab = isset($_GET['tab']) ? $_GET['tab'] : false;
-      $section = isset($_GET['section']) ? $_GET['section'] : false;
+      $tab = isset($_GET['tab']) ? sanitize_title($_GET['tab']) : false;
+      $section = isset($_GET['section']) ? sanitize_title($_GET['section']) : false;
       $is_in_wc_settings = $current_screen->id === 'woocommerce_page_wc-settings' && $tab === 'shipping' && $section === str_replace('wc_', '', $this->core->prefix) . '_shipping_method';
 
       if ( in_array($current_screen->id, $show_notice_in_screens, true) ) {
@@ -140,14 +140,20 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
     public function ajax_meta_box() {
       check_ajax_referer(str_replace('wc_', '', $this->core->prefix) . '-meta-box', 'security');
 
+      if ( empty($_POST['post_id']) || ! is_numeric($_POST['post_id']) ) {
+        wp_die('', '', 501);
+      }
+
+      $post_id = $_POST['post_id'];
+
       $error_count = count($this->get_errors());
-      $this->save_ajax_metabox($_POST['post_id']);
+      $this->save_ajax_metabox($post_id);
 
       if ( count($this->get_errors()) !== $error_count ) {
         wp_die('', '', 501);
       }
 
-      $this->meta_box(get_post($_POST['post_id']));
+      $this->meta_box(get_post($post_id));
       wp_die();
     }
 
@@ -738,7 +744,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
       $order = new \WC_Order($post_id);
 
-      $command = key($_POST['wc_pakettikauppa']);
+      $command = sanitize_key(key($_POST['wc_pakettikauppa']));
 
       $service_id = null;
 
@@ -791,7 +797,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           $this->get_status($order);
           break;
         case 'delete_shipping_label':
-          $tracking_code = $_POST['wc_pakettikauppa'][$command];
+          $tracking_code = esc_attr($_POST['wc_pakettikauppa'][$command]);
 
           $this->delete_shipping_label($order, $tracking_code);
           break;

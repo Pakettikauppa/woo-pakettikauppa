@@ -41,7 +41,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       add_action('woocommerce_checkout_update_order_meta', array( $this, 'update_order_meta_pickup_point_field' ));
       add_action('woocommerce_checkout_process', array( $this, 'validate_checkout' ));
       add_action('woocommerce_order_status_changed', array( $this, 'create_shipment_for_order_automatically' ));
-
+      add_action('woocommerce_new_order', array( $this, 'heppa'));
       add_action('wp_ajax_pakettikauppa_save_pickup_point_info_to_session', array( $this, 'save_pickup_point_info_to_session' ), 10);
       add_action('wp_ajax_nopriv_pakettikauppa_save_pickup_point_info_to_session', array( $this, 'save_pickup_point_info_to_session' ), 10);
 
@@ -54,6 +54,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       $this->shipment = $this->core->shipment;
     }
 
+    public function heppa($order) {
+        error_log('ORDER: '. $order->get_id());
+    }
     public function render_checkout_fields( $order ) { ?>
       <div style="clear: both;">
         <p>
@@ -85,7 +88,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
         return;
       }
 
-      $pickup_point_id = $_POST['pickup_point_id'];
+      $pickup_point_id = esc_attr($_POST['pickup_point_id']);
 
       $this->set_pickup_point_session_data(
         array_replace(
@@ -125,7 +128,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       }
 
       if ( ! empty($_POST['address']) ) {
-        $address = $_POST['address'];
+        $address = esc_attr($_POST['address']);
       } else {
         $address = null;
       }
@@ -204,7 +207,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
         return;
       }
 
-      $pickup_point = isset($_POST[str_replace('wc_', '', $this->core->prefix) . '_pickup_point']) ? $_POST[str_replace('wc_', '', $this->core->prefix) . '_pickup_point'] : array();
+      $pickup_point = isset($_POST[str_replace('wc_', '', $this->core->prefix) . '_pickup_point']) ? esc_attr($_POST[str_replace('wc_', '', $this->core->prefix) . '_pickup_point']) : array();
 
       if ( empty($pickup_point) ) {
         $pickup_point = WC()->session->get(str_replace('wc_', '', $this->core->prefix) . '_pickup_point_id');
@@ -550,7 +553,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       }
 
       $key = str_replace('wc_', '', $this->core->prefix) . '_pickup_point';
-      $pickup_data = isset($_POST[$key]) ? $_POST[$key] : '__NULL__';
+      $pickup_data = isset($_POST[$key]) ? esc_attr($_POST[$key]) : '__NULL__';
 
       // if there is no pickup point data, let's see do we need it
       if ( $pickup_data === '__NULL__' ) {
