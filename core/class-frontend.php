@@ -85,7 +85,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
         return;
       }
 
-      $pickup_point_id = $_POST['pickup_point_id'];
+      $pickup_point_id = esc_attr($_POST['pickup_point_id']);
 
       $this->set_pickup_point_session_data(
         array_replace(
@@ -125,7 +125,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       }
 
       if ( ! empty($_POST['address']) ) {
-        $address = $_POST['address'];
+        $address = esc_attr($_POST['address']);
       } else {
         $address = null;
       }
@@ -544,7 +544,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       }
 
       $key = str_replace('wc_', '', $this->core->prefix) . '_pickup_point';
-      $pickup_data = isset($_POST[$key]) ? $_POST[$key] : '__NULL__';
+      $pickup_data = isset($_POST[$key]) ? sanitize_key($_POST[$key]) : '__NULL__';
 
       // if there is no pickup point data, let's see do we need it
       if ( $pickup_data === '__NULL__' ) {
