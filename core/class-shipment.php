@@ -291,24 +291,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
       $label = base64_decode( $contents->{'response.file'} ); // @codingStandardsIgnoreLine
 
-      $postdata = http_build_query(array( 'label' => $label ));
-
-      $opts = array(
-        'http' => array(
-          'method'  => 'POST',
-          'header'  => 'Content-Type: application/x-www-form-urlencoded',
-          'content' => $postdata,
-        ),
-        'ssl' => array(
-          'verify_peer' => false,
-          'verify_peer_name' => false,
-          'allow_self_signed'=> true,
-        ),
-      );
-
-      $context  = stream_context_create($opts);
-
-      $result = file_get_contents($url, false, $context);
+      $result = wp_remote_post($url, array( 'label' => $label ));
 
       if ( $result === false ) {
         return false;
