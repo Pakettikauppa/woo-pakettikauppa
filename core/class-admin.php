@@ -751,7 +751,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       switch ( $command ) {
         case 'create':
           if ( ! empty($_REQUEST['wc_pakettikauppa_service_id']) ) {
-            $service_id = sanitize_key($_REQUEST['wc_pakettikauppa_service_id'];
+            $service_id = sanitize_key($_REQUEST['wc_pakettikauppa_service_id']);
           }
 
           if ( empty($_REQUEST['custom_method']) ) {
