@@ -144,18 +144,18 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       if ( ! is_numeric($_POST['post_id']) ) {
         wp_die('', '', 501);
       }
-      $this->save_ajax_metabox($_POST['post_id']);
+      $this->save_ajax_metabox((int) $_POST['post_id']);
 
       if ( count($this->get_errors()) !== $error_count ) {
         wp_die('', '', 501);
       }
 
-      $this->meta_box(get_post($_POST['post_id']));
+      $this->meta_box(get_post((int) $_POST['post_id']));
       wp_die();
     }
 
     public function save_custom_product_fields( $post_id ) {
-      if ( ! is_numeric($_POST['post_id']) ) {
+      if ( ! is_numeric($post_id) ) {
         return;
       }
       $custom_fields = array( str_replace('wc_', '', $this->core->prefix) . '_tariff_codes', str_replace('wc_', '', $this->core->prefix) . '_country_of_origin' );
@@ -165,9 +165,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       }
 
       foreach ( $custom_fields as $custom_field ) {
-        $value = $_POST[ $custom_field ];
+        $value = sanitize_text_field($_POST[ $custom_field ]);
         if ( ! empty($value) ) {
-          update_post_meta($post_id, $custom_field, strtoupper(esc_attr($value)));
+          update_post_meta($post_id, $custom_field, strtoupper($value));
         } else {
           delete_post_meta($post_id, $custom_field);
         }
@@ -325,7 +325,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         return;
       }
 
-      $tracking_codes = $this->create_shipments(sanitizize_key($_REQUEST['post']));
+      $order_ids = array();
+
+      // instead of array_map we use foreach because array_map is not allowed by sniff rules
+      foreach ( $_REQUEST['post'] as $order_id ) {
+          $order_ids[] = sanitize_text_field($order_id);
+      }
+      $tracking_codes = $this->create_shipments($order_ids);
 
       $contents = $this->fetch_shipping_labels($tracking_codes);
 
@@ -744,7 +750,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
       $order = new \WC_Order($post_id);
 
-      $command = key($_POST['wc_pakettikauppa']);
+      $command = sanitize_key(key($_POST['wc_pakettikauppa']));
 
       $service_id = null;
 
@@ -770,7 +776,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             if ( ! empty($_REQUEST['additional_services']) ) {
               foreach ( $_REQUEST['additional_services'] as $_additional_service_code ) {
                 if ( $_additional_service_code !== '3101' ) {
-                  $additional_services[] = array( $_additional_service_code => null );
+                  $additional_services[] = array( intval($_additional_service_code) => null );
                 } else {
                   $settings = $this->shipment->get_settings();
 
@@ -797,7 +803,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           $this->get_status($order);
           break;
         case 'delete_shipping_label':
-          $tracking_code = esc_attr($_POST['wc_pakettikauppa'][$command]);
+          $tracking_code = sanitize_text_field($_POST['wc_pakettikauppa'][$command]);
 
           $this->delete_shipping_label($order, $tracking_code);
           break;
@@ -939,7 +945,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         return;
       }
 
-      $tracking_code = esc_attr($_REQUEST['tracking_code']); // @codingStandardsIgnoreLine
+      $tracking_code = sanitize_text_field($_REQUEST['tracking_code']); // @codingStandardsIgnoreLine
 
       $contents = $this->shipment->fetch_shipping_label($tracking_code);
 
