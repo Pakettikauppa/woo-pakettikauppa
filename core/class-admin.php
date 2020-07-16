@@ -325,8 +325,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         return;
       }
 
-      $orderIds = array_map('sanitize_text_field', $_REQUEST['post']);
-      $tracking_codes = $this->create_shipments($orderIds);
+      $order_ids = [];
+
+      // instead of array_map we use foreach because array_map is not allowed by sniff rules
+      foreach ($_REQUEST['post'] as $order_id) {
+          $order_ids[] = sanitize_text_field($order_id);
+      }
+      $tracking_codes = $this->create_shipments($order_ids);
 
       $contents = $this->fetch_shipping_labels($tracking_codes);
 
