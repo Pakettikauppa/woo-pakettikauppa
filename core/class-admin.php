@@ -325,10 +325,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         return;
       }
 
-      $order_ids = [];
+      $order_ids = array();
 
       // instead of array_map we use foreach because array_map is not allowed by sniff rules
-      foreach ($_REQUEST['post'] as $order_id) {
+      foreach ( $_REQUEST['post'] as $order_id ) {
           $order_ids[] = sanitize_text_field($order_id);
       }
       $tracking_codes = $this->create_shipments($order_ids);
