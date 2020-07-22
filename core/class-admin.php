@@ -308,9 +308,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $action = null;
 
       if ( isset($_REQUEST['action']) && $_REQUEST['action'] !== '-1' ) {
-        $action = $_REQUEST['action'];
+        $action = sanitize_key($_REQUEST['action']);
       } elseif ( isset($_REQUEST['action2']) && $_REQUEST['action2'] !== '-1' ) {
-        $action = $_REQUEST['action2'];
+        $action = sanitize_key($_REQUEST['action2']);
       }
 
       if ( $action === null ) {
@@ -775,8 +775,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
             if ( ! empty($_REQUEST['additional_services']) ) {
               foreach ( $_REQUEST['additional_services'] as $_additional_service_code ) {
-                if ( $_additional_service_code !== '3101' ) {
-                  $additional_services[] = array( intval($_additional_service_code) => null );
+                $_additional_service_code = intval($_additional_service_code);
+                if ( $_additional_service_code !== 3101 ) {
+                  $additional_services[] = array( (string) $_additional_service_code => null );
                 } else {
                   $settings = $this->shipment->get_settings();
 
@@ -794,7 +795,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             }
 
             if ( ! empty($_REQUEST['wc_pakettikauppa_mps_count']) ) {
-              $additional_services[] = array( '3102' => array( 'count' => (int) $_REQUEST['wc_pakettikauppa_mps_count'] ) );
+              $additional_services[] = array( '3102' => array( 'count' => (string) intval($_REQUEST['wc_pakettikauppa_mps_count']) ) );
             }
           }
 
