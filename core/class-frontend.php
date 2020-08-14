@@ -118,7 +118,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       );
     }
 
-
     public function use_custom_address_for_pickup_point() {
       if ( ! check_ajax_referer(str_replace('wc_', '', $this->core->prefix) . '-pickup_point_update', 'security') ) {
         return;
@@ -182,7 +181,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
         return;
       }
 
-      wp_enqueue_style($this->core->prefix . '', $this->core->dir_url . 'assets/css/frontend.css', array(), $this->core->version);
+      wp_enqueue_style($this->core->prefix . '_css', $this->core->dir_url . 'assets/css/frontend.css', array(), $this->core->version);
       wp_enqueue_script($this->core->prefix . '_js', $this->core->dir_url . 'assets/js/frontend.js', array( 'jquery' ), $this->core->version, true);
       wp_localize_script(
         $this->core->prefix . '_js',
@@ -352,36 +351,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
         $shipping_country = 'FI';
       }
 
-      $show_pickup_point_override_query = $this->core->shipping_method_instance->get_option('show_pickup_point_override_query');
-
-      // Compatibility fixes below
-      // Klarna Checkout changes the checkout flow; user types their address into an iframe instead
-      // and selecting a pickup point is not possible
-      if ( $show_pickup_point_override_query === 'yes' || $is_klarna ) {
-        $title = $is_klarna ? $this->core->text->pickup_point_title() : $this->core->text->custom_pickup_point_title();
-
-        echo '<tr class="shipping-custom-pickup-point">';
-        echo '<th>' . $title . '</th>';
-        echo '<td data-title="' . $title . '">';
-
-        woocommerce_form_field(
-          str_replace('wc_', '', $this->core->prefix) . 'custom_pickup_point',
-          array(
-            'type'              => 'textarea',
-            'custom_attributes' => array(
-              'onchange' => 'pakettikauppa_custom_pickup_point_change(this)',
-            ),
-          ),
-          $session['custom_address']
-        );
-
-        echo '<p>';
-        echo $is_klarna ? $this->core->text->fill_pickup_address_above() : $this->core->text->custom_pickup_point_desc();
-        echo '</p>';
-
-        echo '</td></tr>';
-      }
-
       echo '<tr class="shipping-pickup-point">';
       echo '<th>' . esc_attr__('Pickup point', 'woo-pakettikauppa') . '</th>';
       echo '<td data-title="' . esc_attr__('Pickup point', 'woo-pakettikauppa') . '">';
@@ -489,6 +458,40 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
             null
           );
         }
+        // Moved this section below select, issue #163
+        $show_pickup_point_override_query = $this->core->shipping_method_instance->get_option('show_pickup_point_override_query');
+
+        // Compatibility fixes below
+        // Klarna Checkout changes the checkout flow; user types their address into an iframe instead
+        // and selecting a pickup point is not possible
+        // Also added condition that pickup point must be 'Other' to show this section - issue #163
+        if ( $show_pickup_point_override_query === 'yes' && $selected_point === 'other' || $is_klarna ) {
+          $title = $is_klarna ? $this->core->text->pickup_point_title() : $this->core->text->custom_pickup_point_title();
+
+          echo '<tr class="shipping-custom-pickup-point">';
+          echo '<th>' . $title . '</th>';
+          echo '<td data-title="' . $title . '">';
+
+          woocommerce_form_field(
+            str_replace('wc_', '', $this->core->prefix) . 'custom_pickup_point',
+            array(
+              'type'              => 'textarea',
+              'custom_attributes' => array(
+                'onchange' => 'pakettikauppa_custom_pickup_point_change(this)',
+              ),
+            ),
+            $session['custom_address']
+          );
+
+          echo '<button type="button" onclick="pakettikauppa_custom_pickup_point_change(pakettikauppacustom_pickup_point)" class="btn" id="pakettikauppacustom_pickup_point_btn"><i class="fa fa-search"></i> ';
+          echo esc_html__('Search', 'woo-pakettikauppa');
+          echo '</button>';
+          echo '<p>';
+          echo $is_klarna ? $this->core->text->fill_pickup_address_above() : $this->core->text->custom_pickup_point_desc();
+          echo '</p>';
+
+          echo '</td></tr>';
+        }
       }
       echo '</td></tr>';
     }
@@ -508,20 +511,27 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     private function process_pickup_points_to_option_array( $pickup_points ) {
       $options_array = array( '__NULL__' => array( 'text' => '- ' . __('Select a pickup point', 'woo-pakettikauppa') . ' -' ) );
 
+      // issue #163 - added 'Other' option for custom address
+        // $options_array[ $pickup_point_key ] = $pickup_point_value;
+        $options_array[ 'other' ] = array(
+          'text' => __('Other', 'woo-pakettikauppa'),
+          //'is_private' => $value->point_type === 'PRIVATE_LOCKER',
+        );
+
       if ( ! empty($pickup_points) ) {
         foreach ( $pickup_points as $key => $value ) {
-          $pickup_point_key = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ')';
-          $pickup_point_value = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
+            $pickup_point_key = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ')';
+            $pickup_point_value = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
 
-          // $options_array[ $pickup_point_key ] = $pickup_point_value;
-          $options_array[ $pickup_point_key ] = array(
-            'text' => $pickup_point_value,
-            'is_private' => $value->point_type === 'PRIVATE_LOCKER',
-          );
+            // $options_array[ $pickup_point_key ] = $pickup_point_value;
+            $options_array[ $pickup_point_key ] = array(
+              'text' => $pickup_point_value,
+              'is_private' => $value->point_type === 'PRIVATE_LOCKER',
+            );
         }
       }
 
-      return $options_array;
+        return $options_array;
     }
 
     /**

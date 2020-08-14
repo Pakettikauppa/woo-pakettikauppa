@@ -1,3 +1,31 @@
 /**
 * Add frontend style to this file.
 */
+
+#pakettikauppacustom_pickup_point {
+  border-radius: 5px;
+  resize: none;
+  height: 100px;
+  background-color: #fff;
+  border: 1px solid #C4C4C4;
+}
+
+#pakettikauppacustom_pickup_point:focus {
+  outline: none;
+  box-shadow: 0 0 0 1pt #96588A
+
+}
+
+#pakettikauppacustom_pickup_point_btn {
+  border-radius: 5px;
+  background-color: #96588A;
+  color: #fff;
+}
+
+#pakettikauppacustom_pickup_point_btn:hover {
+  background-color: #874480;
+}
+
+#pakettikauppacustom_pickup_point_btn:focus {
+  outline: none;
+}
