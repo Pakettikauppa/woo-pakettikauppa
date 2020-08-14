@@ -1,0 +1,52 @@
+# Define jobs
+jobs:
+  include:
+    # Run our custom Git commit checks
+    - name: Gnitpick
+      language: python
+      services: # none
+      install:
+      - curl -O https://raw.githubusercontent.com/Seravo/gnitpick/master/gnitpick.py
+      script:
+      - python3 ./gnitpick.py
+    # Test the legacy 4.9 series and an older PHP version
+    - php: '7.1'
+      env: WP_VERSION=4.9.12
+    # Arbitrary PHP version to run the PHPCS sniffs against
+    - php: '7.2'
+      env: SNIFF=1
+    # Test PHP 7.3
+    - php: '7.3'
+    # Test PHP 7.4
+    - php: '7.4'
+    # Test the PHP development version
+    - php: 'nightly'
+    # Test the WordPress development version
+    - php: '7.4'
+      env: WP_VERSION=nightly
+    # Test the WooCommerce development version
+    - php: '7.4'
+      env: WOO_VERSION=nightly
+    # Test the all development versions
+    - php: 'nightly'
+      env: WP_VERSION=nightly WOO_VERSION=nightly
+  allow_failures:
+    # WordPress core is currenlty not compatible with PHP 8,
+    # so tests with the PHP development version will fail with:
+    #   PHP Fatal error:  Uncaught RuntimeException: Array and string offset
+    #   access syntax with curly braces is deprecated on line 757 in file
+    #   /tmp/wordpress/wp-includes/script-loader.php
+    - php: nightly
+
+# Common for all jobs
+language: php
+services: mysql
+
+install:
+  - ./tests/install-tests.sh
+  # After CodeSniffer install you should refresh PHP paths on Travis-CI
+  - phpenv rehash
+
+script:
+  # Use installed PHPCS and PHP Unit in custom locations instead of Travis defaults
+  - ./tests/run-tests.sh

@@ -1,0 +1,85 @@
+p.pakettikauppa-shipment {
+  border-bottom: 1px solid #dddddd;
+  padding-left: 12px;
+  padding-right: 12px;
+  margin-left: -12px;
+  margin-right: -12px;
+  margin-bottom: 10px;
+  padding-bottom: 15px;
+}
+
+.pakettikauppa-services fieldset h4 {
+  margin: 10px 0 5px;
+}
+
+.pakettikauppa-services div#woo-pakettikauppa-pickup-points-wrapper {
+  width: 95%;
+}
+
+.wc_pakettikauppa_pickup_point_id {
+  width: 100%;
+}
+
+.pakettikauppa-services div#woo-pakettikauppa-cod-amount-wrapper,
+.pakettikauppa-services div#woo-pakettikauppa-cod-reference-wrapper,
+.pakettikauppa-services div#woo-pakettikauppa-pickup-points-wrapper
+{
+  display: none;
+}
+
+.button.woo-pakettikauppa-delete-button {
+    color: #a00 !important;
+}
+
+.woo-pakettikauppa-metabox-error {
+  color: #a00;
+}
+
+.widefat .column-wc_actions a.pakettikauppa_create_shipping_label::after {
+  content: '\f491';
+}
+
+select.pakettikauppa_metabox_values {
+  width: 100%;
+}
+
+.pakettikauppa-notice--setup {
+  display: flex;
+  flex-flow: column nowrap;
+
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
+  color: #000;
+}
+
+.pakettikauppa-notice--setup p {
+  font-size: 1.3em;
+  max-width: 700px;
+}
+
+.pakettikauppa-notice--setup .pakettikauppa-notice__content {
+  margin: 0;
+  padding: 0;
+  flex: 1 1 70%;
+}
+
+.pakettikauppa-notice--setup .pakettikauppa-notice__logo {
+  margin-bottom: 1rem;
+  flex: 1 1 20%;
+  text-align: center;
+  /* max-width: 250px; */
+}
+
+@media (min-width: 1200px) {
+  .pakettikauppa-notice--setup {
+    flex-flow: row nowrap;
+    text-align: left;
+  }
+
+  .pakettikauppa-notice--setup .pakettikauppa-notice__logo {
+    margin-right: 1rem;
+    margin-bottom: 0;
+  }
+}

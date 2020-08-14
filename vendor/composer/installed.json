@@ -1,0 +1,128 @@
+[
+    {
+        "name": "composer/installers",
+        "version": "v1.0.12",
+        "version_normalized": "1.0.12.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/composer/installers.git",
+            "reference": "4127333b03e8b4c08d081958548aae5419d1a2fa"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/composer/installers/zipball/4127333b03e8b4c08d081958548aae5419d1a2fa",
+            "reference": "4127333b03e8b4c08d081958548aae5419d1a2fa",
+            "shasum": ""
+        },
+        "replace": {
+            "shama/baton": "*"
+        },
+        "require-dev": {
+            "composer/composer": "1.0.*@dev",
+            "phpunit/phpunit": "3.7.*"
+        },
+        "time": "2014-02-24T04:21:34+00:00",
+        "type": "composer-installer",
+        "extra": {
+            "class": "Composer\\Installers\\Installer",
+            "branch-alias": {
+                "dev-master": "1.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Composer\\Installers\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Kyle Robinson Young",
+                "email": "kyle@dontkry.com",
+                "homepage": "https://github.com/shama",
+                "role": "Developer"
+            }
+        ],
+        "description": "A multi-framework Composer library installer",
+        "homepage": "http://composer.github.com/installers/",
+        "keywords": [
+            "Craft",
+            "Hurad",
+            "MODX Evo",
+            "OXID",
+            "WolfCMS",
+            "agl",
+            "annotatecms",
+            "cakephp",
+            "codeigniter",
+            "concrete5",
+            "croogo",
+            "drupal",
+            "elgg",
+            "fuelphp",
+            "installer",
+            "joomla",
+            "kohana",
+            "laravel",
+            "lithium",
+            "magento",
+            "mako",
+            "mediawiki",
+            "modulework",
+            "phpbb",
+            "piwik",
+            "ppi",
+            "shopware",
+            "silverstripe",
+            "symfony",
+            "typo3",
+            "wordpress",
+            "zend",
+            "zikula"
+        ]
+    },
+    {
+        "name": "pakettikauppa/api-library",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Pakettikauppa/api-library.git",
+            "reference": "1cc7fdf3d97221f474ae67bbd1c3c562167f7503"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Pakettikauppa/api-library/zipball/1cc7fdf3d97221f474ae67bbd1c3c562167f7503",
+            "reference": "1cc7fdf3d97221f474ae67bbd1c3c562167f7503",
+            "shasum": ""
+        },
+        "time": "2017-09-20T10:07:23+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Pakettikauppa\\": "src/Pakettikauppa"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Matti Särkikoski",
+                "email": "matti@pakettikauppa.fi"
+            }
+        ],
+        "description": "Pakettikauppa API implementation",
+        "homepage": "https://www.pakettikauppa.fi",
+        "keywords": [
+            "Pakettikauppa",
+            "api"
+        ]
+    }
+]

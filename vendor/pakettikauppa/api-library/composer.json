@@ -1,0 +1,28 @@
+{
+    "name": "pakettikauppa/api-library",
+    "description": "Pakettikauppa API implementation",
+    "type": "library",
+    "keywords": ["Pakettikauppa", "API", "Smartship", "Smartpost", "Posti", "Matkahuolto", "DB Schenker"],
+    "homepage": "https://www.pakettikauppa.fi",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Matti Särkikoski",
+            "email": "matti@pakettikauppa.fi"
+        }
+    ],
+    "support": {
+        "email": "integration@pakettikauppa.fi"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Pakettikauppa\\": "src/Pakettikauppa"
+        }
+    },
+    "require": {
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-simplexml": "*"
+    }
+}
