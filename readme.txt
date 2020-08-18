@@ -1,6 +1,6 @@
 === WooCommerce Pakettikauppa ===
 Contributors: joosev, ottok, leotoikka, serter, k1sul1
-Donate link: https://seravo.com/
+Donate link: https://pakettikauppa.fi/
 Tags: woocommerce, shipping, toimitustavat, smartship, pakettikauppa, posti, smartpost, prinetti, matkahuolto, schenker, seravo, gls
 Requires at least: 4.6
 Tested up to: 5.4
