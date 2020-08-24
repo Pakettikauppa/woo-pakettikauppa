@@ -465,7 +465,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
         // Klarna Checkout changes the checkout flow; user types their address into an iframe instead
         // and selecting a pickup point is not possible
         // Also added condition that pickup point must be 'Other' to show this section - issue #163
-        if ( $show_pickup_point_override_query === 'yes' && $selected_point === 'other' || $is_klarna ) {
+        if ( $show_pickup_point_override_query === 'yes' && ($selected_point === 'other' || $is_klarna || ! $options_array) ) {
           $title = $is_klarna ? $this->core->text->pickup_point_title() : $this->core->text->custom_pickup_point_title();
 
           echo '<tr class="shipping-custom-pickup-point">';
@@ -497,7 +497,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     }
 
     private function fetch_pickup_point_options( $shipping_postcode, $shipping_address, $shipping_country, $shipping_method_provider ) {
-      $custom_address = WC()->session->get(str_replace('wc_', '', $this->core->prefix) . '_custom_pickup_point_address');
+      $custom_address = WC()->session->get(str_replace('wc_', 'woo_', $this->core->prefix) . '_pickup_point')['custom_address'];
 
       if ( $custom_address && $this->core->shipping_method_instance->get_option('show_pickup_point_override_query') === 'yes' ) {
         $pickup_point_data = $this->shipment->get_pickup_points_by_free_input($custom_address, $shipping_method_provider);
@@ -530,6 +530,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
             );
         }
       }
+
+        //else unset($options_array['__NULL__']);
 
         return $options_array;
     }
