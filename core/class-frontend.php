@@ -557,6 +557,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
 
       $key = str_replace('wc_', '', $this->core->prefix) . '_pickup_point';
       $pickup_data = isset($_POST[$key]) ? sanitize_key($_POST[$key]) : '__NULL__';
+      $pickup_data = $pickup_data === '__null__' ? strtoupper($pickup_data) : $pickup_data;
 
       // if there is no pickup point data, let's see do we need it
       if ( $pickup_data === '__NULL__' ) {
