@@ -23,7 +23,8 @@ function pakettikauppa_pickup_point_change(element) {
   }
 
   $.post(wc_checkout_params.ajax_url, data, function (response) {
-    // do nothing
+    // Update checkout after selection changes
+    $('body').trigger('update_checkout');
   }).fail(function (e) {
     // do nothing
   });
@@ -41,6 +42,8 @@ function pakettikauppa_custom_pickup_point_change(element) {
 
   $.post(wc_checkout_params.ajax_url, data, function (response) {
     $('body').trigger('update_checkout');
+    // change pickup point value to Other, so custom field is still visible
+    $('#pakettikauppa_pickup_point').val('other').change();
   }).fail(function (e) {
     // should probably do SOMETHING?
   });
