@@ -102,6 +102,10 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
+= 2.4.0 =
+* New pickup point chooser for checkout
+* Fixing pickup point related bugs
+
 = 2.3.3 =
 * Some plugins brake because of forced validation of chosen pickup points. This update loosens the validation little bit
 
