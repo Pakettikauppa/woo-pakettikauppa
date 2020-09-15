@@ -441,7 +441,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
     }
 
     public function plugin_row_meta_wrapper( $links, $file ) {
-      return $this->core->admin->plugin_row_meta( $links, $file );
+      return $this->core->admin->plugin_row_meta($links, $file);
     }
 
     /**
