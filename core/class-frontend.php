@@ -518,13 +518,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     private function process_pickup_points_to_option_array( $pickup_points ) {
       $options_array = array( '__NULL__' => array( 'text' => '- ' . __('Select a pickup point', 'woo-pakettikauppa') . ' -' ) );
 
-      // issue #163 - added 'Other' option for custom address
-      // $options_array[ $pickup_point_key ] = $pickup_point_value;
-      $options_array['other'] = array(
-        'text' => __('Other', 'woo-pakettikauppa'),
-        //'is_private' => $value->point_type === 'PRIVATE_LOCKER',
-      );
-
       if ( ! empty($pickup_points) ) {
         foreach ( $pickup_points as $key => $value ) {
           $pickup_point_key = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ')';
@@ -537,6 +530,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
           );
         }
       }
+
+      // issue #163 - added 'Other' option for custom address
+      // $options_array[ $pickup_point_key ] = $pickup_point_value;
+      $options_array['other'] = array(
+        'text' => __('Other', 'woo-pakettikauppa'),
+        //'is_private' => $value->point_type === 'PRIVATE_LOCKER',
+      );
 
       //else unset($options_array['__NULL__']);
 
