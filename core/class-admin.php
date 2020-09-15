@@ -37,7 +37,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
     public function load() {
       add_action('current_screen', array( $this, 'maybe_show_notices' ));
       add_filter('plugin_action_links_' . $this->core->basename, array( $this, 'add_settings_link' ));
-      add_filter('plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2);
+      add_filter('plugin_row_meta', array( $this, 'plugin_row_meta_wrapper' ), 10, 2);
       add_filter('bulk_actions-edit-shop_order', array( $this, 'register_multi_create_orders' ));
       add_action('woocommerce_admin_order_actions_end', array( $this, 'register_quick_create_order' ), 10, 2); //to add print option at the end of each orders in orders page
       add_action('admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ));
@@ -438,6 +438,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         $print_error = wp_sprintf(__('An error occurred: %s', 'woo-pakettikauppa'), $message);
         printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($print_error));
       }
+    }
+
+    public function plugin_row_meta_wrapper( $links, $file ) {
+      return $this->core->admin->plugin_row_meta($links, $file);
     }
 
     /**
