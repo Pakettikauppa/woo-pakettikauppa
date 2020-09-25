@@ -400,6 +400,16 @@ class Client
     }
 
     /**
+     * @param array $post_params
+     *
+     * @return string
+     */
+    public function checkApi($post_params = array())    
+    {   
+        return $this->doPost('/shipping-methods/list', $post_params);   
+    }
+
+    /**
      * Search pickup points.
      *
      * @param int $postcode

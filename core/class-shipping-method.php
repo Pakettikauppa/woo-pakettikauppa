@@ -84,6 +84,29 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
         );
       }
 
+      $settings = $this->get_core()->shipment->get_settings();
+      $mode = $settings['mode'];
+      $configs = $this->get_core()->api_config;
+      $configs[$mode] = array_merge(
+        array(
+          'api_key'   => $settings['account_number'],
+          'secret'    => $settings['secret_key'],
+          'use_posti_auth' => false,
+        ),
+        $this->get_core()->api_config[$mode]
+      );
+      $this->client = new \Pakettikauppa\Client($configs, $mode);
+      $this->client->setComment($this->get_core()->api_comment);
+      if ( $configs[$mode]['use_posti_auth'] ) {
+        $transient_name = $this->get_core()->prefix . '_access_token';
+        $token = get_transient($transient_name);
+        if ( empty($token) ) {
+          $token = $this->client->getToken();
+          set_transient($transient_name, $token, $token->expires_in - 100);
+        }
+        $this->client->setAccessToken($token->access_token);
+      }
+
       $this->is_loaded = true;
     }
 
@@ -138,6 +161,73 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
     public function validate_pickuppoints_field( $key, $value ) {
       $values = wp_json_encode($value);
       return $values;
+    }
+
+    public function generate_notices_html( $key, $value ) {
+      $settings = $this->get_core()->shipment->get_settings();
+      $shipping_method = $this->get_core()->shippingmethod;
+      $field_pref = 'woocommerce_' . $shipping_method . '_';
+      $configs = $this->get_core()->api_config;
+      if ( isset($_POST[$field_pref . 'mode']) ) {
+        $settings['mode'] = $_POST[$field_pref . 'mode'];
+        $settings['account_number'] = $_POST[$field_pref . 'account_number'];
+        $settings['secret_key'] = $_POST[$field_pref . 'secret_key'];
+      }
+      $mode = $settings['mode'];
+
+      $api_good = true;
+      if ( $mode == 'production' ) {
+        if ( empty($settings['account_number']) || empty($settings['secret_key']) ) {
+          $api_good = false;
+        } else {
+          $result = $this->client->checkApi();
+          if ( $result == 'Bad request' ) {
+            $api_good = false;
+          }
+        }
+      }
+
+      ob_start();
+      ?>
+      <script>
+      jQuery(function( $ ) {
+        $( document ).ready(function() {
+          hide_mode_react();
+          $( document ).on("change", "#woocommerce_pakettikauppa_shipping_method_mode", function() {
+            hide_mode_react();
+          });
+        });
+        function hide_mode_react() {
+          var show = true;
+          if ($("#woocommerce_pakettikauppa_shipping_method_mode").val() == 'production') {
+            <?php if ( $api_good ) : ?>
+              show = true;
+            <?php else : ?>
+              show = false;
+            <?php endif; ?>
+          }
+          if (show) {
+            $(".mode_react").closest("tr").removeClass("row-disabled");
+            $("h3.mode_react").removeClass("row-disabled");
+          }
+          else {
+            $(".mode_react").closest("tr").addClass("row-disabled");
+            $("h3.mode_react").addClass("row-disabled");
+          }
+        }
+      });
+      </script>
+      <?php if ( ! $api_good ) : ?>
+        <tr><td colspan="2">
+          <div class="pakettikauppa-notice notice-error">
+            <p><?php esc_attr_e('API credentials are not working. Please check that API credentials are correct.', 'woo-pakettikauppa'); ?></p>
+          </div>
+        </td></tr>
+      <?php endif; ?>
+      <?php
+      $html = ob_get_contents();
+      ob_end_clean();
+      return $html;
     }
 
     public function generate_pickuppoints_html( $key, $value ) {
@@ -425,7 +515,17 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       $wc_countries = new WC_Countries();
 
       return array(
-        'mode'                       => $this->get_form_field_mode(),
+        'notices'    => array(
+          'type'     => 'notices',
+        ),
+
+        array(
+          'title' => '',
+          'type'  => 'title',
+          'class' => 'hidden',
+        ),
+
+        'mode'       => $this->get_form_field_mode(),
 
         'account_number'             => array(
           'title'    => $this->get_core()->text->api_key_title(),
@@ -453,19 +553,20 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           'type'        => 'title',
           /* translators: %s: url to documentation */
           'description' => $this->get_core()->text->shipping_settings_desc(),
-
         ),
 
         'add_tracking_to_email'      => array(
           'title'   => $this->get_core()->text->add_tracking_link_to_email(),
           'type'    => 'checkbox',
           'default' => 'yes',
+          'class'   => 'mode_react',
         ),
 
         'add_pickup_point_to_email'      => array(
           'title'   => $this->get_core()->text->add_pickup_point_to_email(),
           'type'    => 'checkbox',
           'default' => 'yes',
+          'class'   => 'mode_react',
         ),
 
         'change_order_status_to'      => array(
@@ -477,6 +578,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
             'completed'  => __('Completed', 'woocommerce'),
             'processing' => __('Processing', 'woocommerce'),
           ),
+          'class'   => 'mode_react',
         ),
 
         'create_shipments_automatically'     => array(
@@ -490,6 +592,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
             /* translators: %s: order status */
             'processing' => $this->get_core()->text->when_order_status_is(__('Processing', 'woocommerce')),
           ),
+          'class'   => 'mode_react',
         ),
 
         'download_type_of_labels'     => array(
@@ -500,6 +603,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
             'browser'  => $this->get_core()->text->download_type_of_labels_option_browser(),
             'download'  => $this->get_core()->text->download_type_of_labels_option_download(),
           ),
+          'class'   => 'mode_react',
         ),
 
         'post_label_to_url' => array(
@@ -507,6 +611,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           'type'    => 'text',
           'default' => '',
           'description' => $this->get_core()->text->post_shipping_label_to_url_desc(),
+          'class'   => 'mode_react',
         ),
 
         'pickup_points_search_limit' => array(
@@ -515,6 +620,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           'default'     => 5,
           'description' => $this->get_core()->text->pickup_points_search_limit_desc(),
           'desc_tip'    => true,
+          'class'       => 'mode_react',
         ),
         'pickup_point_list_type'     => array(
           'title'   => $this->get_core()->text->pickup_point_list_type_title(),
@@ -524,6 +630,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
             'menu'  => $this->get_core()->text->pickup_point_list_type_option_menu(),
             'list'  => $this->get_core()->text->pickup_point_list_type_option_list(),
           ),
+          'class'   => 'mode_react',
         ),
         array(
           'title' => $this->get_core()->text->store_owner_information(),
