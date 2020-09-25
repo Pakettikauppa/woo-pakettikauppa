@@ -369,11 +369,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
 
       // Return if the customer has not yet chosen a postcode
       if ( empty($shipping_postcode) ) {
-        echo '<p>';
-        esc_attr_e('Insert your shipping details to view nearby pickup points', 'woo-pakettikauppa');
+        echo '<p class="error-pickup">';
+        esc_attr_e('Empty postcode. Please check your address information.', 'woo-pakettikauppa');
         echo '</p>';
       } else if ( ! is_numeric($shipping_postcode) ) {
-        echo '<p>';
+        echo '<p class="error-pickup">';
         printf(
         /* translators: %s: Postcode */
           esc_attr__('Invalid postcode "%1$s". Please check your address information.', 'woo-pakettikauppa'),
@@ -402,6 +402,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
           $error = $e->getMessage();
         }
 
+        $selected_point = false;
         if ( $error ) {
           $name = esc_attr(str_replace('wc_', '', $this->core->prefix) . '_pickup_point');
 
@@ -504,7 +505,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     }
 
     private function fetch_pickup_point_options( $shipping_postcode, $shipping_address, $shipping_country, $shipping_method_provider ) {
-      $custom_address = WC()->session->get(str_replace('wc_', 'woo_', $this->core->prefix) . '_pickup_point')['custom_address'];
+      $pickup_point = WC()->session->get(str_replace('wc_', 'woo_', $this->core->prefix) . '_pickup_point');
+      if ( $pickup_point != null && isset($pickup_point['custom_address']) ) {
+        $custom_address = $pickup_point['custom_address'];
+      } else {
+        $custom_address = false;
+      }
 
       if ( $custom_address && $this->core->shipping_method_instance->get_option('show_pickup_point_override_query') === 'yes' ) {
         $pickup_point_data = $this->shipment->get_pickup_points_by_free_input($custom_address, $shipping_method_provider);
