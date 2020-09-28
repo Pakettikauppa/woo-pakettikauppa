@@ -565,9 +565,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       $key = str_replace('wc_', '', $this->core->prefix) . '_pickup_point';
       $pickup_data = isset($_POST[$key]) ? sanitize_key($_POST[$key]) : '__NULL__';
       $pickup_data = $pickup_data === '__null__' ? strtoupper($pickup_data) : $pickup_data;
-
+      $pickup_point = sanitize_key($_POST['pakettikauppa_pickup_point']);
       // if there is no pickup point data, let's see do we need it
-      if ( $pickup_data === '__NULL__' ) {
+      if ( $pickup_data === '__NULL__' || $pickup_point === 'other' ) {
         $key = $this->core->prefix . '_validate_pickup_points';
         // if the value does not exists, then we expect to have pickup point data
         $shipping_needs_pickup_points = isset($_POST[$key]) ? $_POST[$key] === 'true' : false;
