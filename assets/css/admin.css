@@ -107,6 +107,31 @@ table .pakettikauppa-notice p {
   /* max-width: 250px; */
 }
 
+.pakettikauppa-pickup-changer > div {
+  margin-bottom: 10px;
+}
+
+.pakettikauppa-pickup-changer textarea {
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.pakettikauppa-pickup-search > * {
+  vertical-align: middle;
+}
+
+.pakettikauppa-pickup-search-error {
+  color: #a00;
+}
+
+.pakettikauppa-metabox-footer {
+  margin: 0;
+}
+
+.pakettikauppa_meta_box.button-primary {
+  float: right;
+}
+
 @media (min-width: 1200px) {
   .pakettikauppa-notice--setup {
     flex-flow: row nowrap;

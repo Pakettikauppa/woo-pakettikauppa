@@ -102,6 +102,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
+= 3.0.0 =
+* Remove shipping method option
+
 = 2.4.0 =
 * New pickup point chooser for checkout
 * Fixing pickup point related bugs
