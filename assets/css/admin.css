@@ -72,6 +72,38 @@ select.pakettikauppa_metabox_values {
   /* max-width: 250px; */
 }
 
+.pakettikauppa-pickup-changer > div {
+  margin-bottom: 10px;
+}
+
+.pakettikauppa-pickup-changer textarea {
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.pakettikauppa-pickup-search > * {
+  vertical-align: middle;
+}
+
+.pakettikauppa-pickup-search-error {
+  color: #a00;
+}
+
+.pakettikauppa-metabox-footer {
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+}
+
+.pakettikauppa-metabox-footer .button {
+  width: 100%;
+  margin-bottom: 7px;
+}
+
+.pakettikauppa-metabox-footer .button:last-child {
+  margin-bottom: 0;
+}
+
 @media (min-width: 1200px) {
   .pakettikauppa-notice--setup {
     flex-flow: row nowrap;
