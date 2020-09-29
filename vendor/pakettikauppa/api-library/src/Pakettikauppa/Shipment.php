@@ -229,8 +229,13 @@ class Shipment
         $sender->addChild('Sender.Email', $this->sender->getEmail());
 
         $receiver = $shipment->addChild('Shipment.Recipient');
-        $receiver->addChild('Recipient.Name1', $this->receiver->getName1());
-        $receiver->addChild('Recipient.Name2', $this->receiver->getName2());
+        if ( ! empty($this->receiver->getCompany())) {
+            $receiver->addChild('Recipient.Name1', $this->receiver->getCompany());
+            $receiver->addChild('Recipient.Name2', $this->receiver->getName1());
+        } else {
+            $receiver->addChild('Recipient.Name1', $this->receiver->getName1());
+            $receiver->addChild('Recipient.Name2', $this->receiver->getName2());
+        }
         $receiver->addChild('Recipient.Addr1', $this->receiver->getAddr1());
         $receiver->addChild('Recipient.Addr2', $this->receiver->getAddr2());
         $receiver->addChild('Recipient.Addr3', $this->receiver->getAddr3());

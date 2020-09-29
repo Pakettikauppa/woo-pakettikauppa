@@ -527,6 +527,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
       $receiver = new Receiver();
       $receiver->setName1($order->get_formatted_shipping_full_name());
+      $receiver->setCompany($order->get_shipping_company());
       $receiver->setAddr1($order->get_shipping_address_1());
       $receiver->setAddr2($order->get_shipping_address_2());
       $receiver->setPostcode($order->get_shipping_postcode());

@@ -19,6 +19,10 @@ class Receiver
     /**
      * @var string
      */
+    public $company;
+    /**
+     * @var string
+     */
     public $addr1;
     /**
      * @var string
@@ -83,6 +87,22 @@ class Receiver
     public function setName2($name2)
     {
         $this->name2 = $name2;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCompany()
+    {
+        return $this->company;
+    }
+
+    /**
+     * @param string $company
+     */
+    public function setCompany($company)
+    {
+        $this->company = $company;
     }
 
     /**
