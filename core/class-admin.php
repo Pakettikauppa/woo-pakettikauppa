@@ -740,7 +740,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                       <h4><?php echo __('Search pickup points', 'woo-pakettikauppa'); ?></h4>
                       <input class="pakettikauppa-pickup-method" type="hidden" value="<?php echo $method_code; ?>">
                       <textarea class="pakettikauppa-pickup-search-field" rows="2" onchange="pakettikauppa_change_element_value('.pakettikauppa-pickup-search-field',this.value);"><?php echo $custom_address; ?></textarea>
-                      <button type="button" value="search" class="button button-small btn-search" onclick="pakettikauppa_pickup_points_by_custom_address(btn_values_<?php echo $method_code; ?>);">Search</button>
+                      <button type="button" value="search" class="button button-small btn-search" onclick="pakettikauppa_pickup_points_by_custom_address(btn_values_<?php echo $method_code; ?>);"><?php echo __('Search', 'woo-pakettikauppa'); ?></button>
                       <span class="pakettikauppa-pickup-search-error" style="display:none;"><?php echo __('No pickup points were found', 'woo-pakettikauppa'); ?></span>
                     </div>
                     <div class="pakettikauppa-pickup-select-block">
@@ -762,12 +762,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             </fieldset>
           </div>
           <p class="pakettikauppa-metabox-footer">
-            <button type="button" value="create" id="pakettikauppa_metabtn_create" name="wc_pakettikauppa[create]" class="button pakettikauppa_meta_box button-primary" onclick="pakettikauppa_meta_box_submit(this);">
-              <?php echo __('Create', 'woo-pakettikauppa'); ?>
-            </button>
             <?php $button_text = __('Custom shipping...', 'woo-pakettikauppa'); ?>
             <button type="button" value="change" id="pakettikauppa_metabtn_change" class="button pakettikauppa_meta_box" onclick="pakettikauppa_change_method(this);" data-txt1="<?php echo $button_text; ?>" data-txt2="<?php echo __('Original shipping...', 'woo-pakettikauppa'); ?>">
               <?php echo $button_text; ?>
+            </button>
+            <button type="button" value="create" id="pakettikauppa_metabtn_create" name="wc_pakettikauppa[create]" class="button pakettikauppa_meta_box button-primary" onclick="pakettikauppa_meta_box_submit(this);">
+              <?php echo __('Create', 'woo-pakettikauppa'); ?>
             </button>
           </p>
         <?php endif; ?>
