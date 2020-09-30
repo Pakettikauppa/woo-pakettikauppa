@@ -460,7 +460,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
                 'data-private-points' => join(';', array_keys($private_points)),
               ),
               'options' => $all_points,
-
+              'required' => true,
               'default' => $selected_point,
             ),
             null
@@ -522,7 +522,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     }
 
     private function process_pickup_points_to_option_array( $pickup_points ) {
-      $options_array = array( '__NULL__' => array( 'text' => '- ' . __('Select a pickup point', 'woo-pakettikauppa') . ' -' ) );
+      $options_array = array( '' => array( 'text' => '- ' . __('Select a pickup point', 'woo-pakettikauppa') . ' -' ) );
 
       // issue #163 - added 'Other' option for custom address
       // $options_array[ $pickup_point_key ] = $pickup_point_value;
@@ -573,7 +573,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       $pickup_data = $pickup_data === '__null__' ? strtoupper($pickup_data) : $pickup_data;
 
       // if there is no pickup point data, let's see do we need it
-      if ( $pickup_data === '__NULL__' ) {
+      if ( $pickup_data === '__NULL__' || $pickup_data === '' ) {
         $key = $this->core->prefix . '_validate_pickup_points';
         // if the value does not exists, then we expect to have pickup point data
         $shipping_needs_pickup_points = isset($_POST[$key]) ? $_POST[$key] === 'true' : false;
