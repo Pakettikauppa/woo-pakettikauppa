@@ -132,10 +132,17 @@ table .pakettikauppa-notice p {
 
 .pakettikauppa-metabox-footer {
   margin: 0;
+  padding-top: 10px;  
+  border-top: 1px solid #ddd;
 }
 
-.pakettikauppa_meta_box.button-primary {
-  float: right;
+.pakettikauppa-metabox-footer .button { 
+  width: 100%;  
+  margin-bottom: 7px; 
+} 
+    
+.pakettikauppa-metabox-footer .button:last-child {  
+  margin-bottom: 0; 
 }
 
 @media (min-width: 1200px) {
