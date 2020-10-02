@@ -518,13 +518,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     private function process_pickup_points_to_option_array( $pickup_points ) {
       $options_array = array( '__NULL__' => array( 'text' => '- ' . __('Select a pickup point', 'woo-pakettikauppa') . ' -' ) );
 
-      // issue #163 - added 'Other' option for custom address
-      // $options_array[ $pickup_point_key ] = $pickup_point_value;
-      $options_array['other'] = array(
-        'text' => __('Other', 'woo-pakettikauppa'),
-        //'is_private' => $value->point_type === 'PRIVATE_LOCKER',
-      );
-
       if ( ! empty($pickup_points) ) {
         foreach ( $pickup_points as $key => $value ) {
           $pickup_point_key = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ')';
@@ -537,6 +530,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
           );
         }
       }
+
+      // issue #163 - added 'Other' option for custom address
+      // $options_array[ $pickup_point_key ] = $pickup_point_value;
+      $options_array['other'] = array(
+        'text' => __('Other', 'woo-pakettikauppa'),
+        //'is_private' => $value->point_type === 'PRIVATE_LOCKER',
+      );
 
       //else unset($options_array['__NULL__']);
 
@@ -565,9 +565,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       $key = str_replace('wc_', '', $this->core->prefix) . '_pickup_point';
       $pickup_data = isset($_POST[$key]) ? sanitize_key($_POST[$key]) : '__NULL__';
       $pickup_data = $pickup_data === '__null__' ? strtoupper($pickup_data) : $pickup_data;
-
       // if there is no pickup point data, let's see do we need it
-      if ( $pickup_data === '__NULL__' ) {
+      if ( $pickup_data === '__NULL__' || $pickup_data === 'other' ) {
         $key = $this->core->prefix . '_validate_pickup_points';
         // if the value does not exists, then we expect to have pickup point data
         $shipping_needs_pickup_points = isset($_POST[$key]) ? $_POST[$key] === 'true' : false;
