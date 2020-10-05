@@ -11,7 +11,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-09-29 13:55+0000\n"
+"POT-Creation-Date: 2020-10-01 06:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: Loco https://localise.biz/\n"
 "X-Domain: woo-pakettikauppa\n"
@@ -531,7 +531,7 @@ msgid "Label posted to URL successfully."
 msgstr ""
 
 #. %s: Error message
-#: core/class-shipment.php:627
+#: core/class-shipment.php:634
 #, php-format
 msgid "WooCommerce Pakettikauppa: tracking code creation failed: %s"
 msgstr ""
@@ -635,6 +635,10 @@ msgstr ""
 msgid "Search pickup points"
 msgstr ""
 
+#: core/class-admin.php:743 core/class-frontend.php:495
+msgid "Search"
+msgstr ""
+
 #: core/class-admin.php:744
 msgid "No pickup points were found"
 msgstr ""
@@ -643,16 +647,16 @@ msgstr ""
 msgid "Select pickup point"
 msgstr ""
 
-#: core/class-admin.php:766
-msgid "Create"
-msgstr ""
-
-#: core/class-admin.php:768
+#: core/class-admin.php:765
 msgid "Custom shipping..."
 msgstr ""
 
-#: core/class-admin.php:769
+#: core/class-admin.php:766
 msgid "Original shipping..."
+msgstr ""
+
+#: core/class-admin.php:770
+msgid "Create"
 msgstr ""
 
 #: core/class-admin.php:933
@@ -703,12 +707,12 @@ msgid "An error occurred. Please try again later."
 msgstr ""
 
 #: core/class-frontend.php:361 core/class-frontend.php:362
-#: core/class-frontend.php:555
+#: core/class-frontend.php:561
 msgid "Pickup point"
 msgstr ""
 
 #: core/class-frontend.php:373
-msgid "Insert your shipping details to view nearby pickup points"
+msgid "Empty postcode. Please check your address information."
 msgstr ""
 
 #. %s: Postcode
@@ -717,24 +721,26 @@ msgstr ""
 msgid "Invalid postcode \"%1$s\". Please check your address information."
 msgstr ""
 
-#: core/class-frontend.php:415
+#: core/class-frontend.php:416
 msgid "Choose one of pickup points close to the address you entered:"
 msgstr ""
 
-#: core/class-frontend.php:494
-msgid "Search"
-msgstr ""
-
-#: core/class-frontend.php:519
+#: core/class-frontend.php:525
 msgid "Select a pickup point"
 msgstr ""
 
-#: core/class-frontend.php:524
+#: core/class-frontend.php:530
 msgid "Other"
 msgstr ""
 
-#: core/class-frontend.php:576
+#: core/class-frontend.php:582
 msgid "Please choose a pickup point."
+msgstr ""
+
+#: core/class-shipping-method.php:185
+msgid ""
+"API credentials are not working. Please check that API credentials are "
+"correct."
 msgstr ""
 
 #. Name of the plugin

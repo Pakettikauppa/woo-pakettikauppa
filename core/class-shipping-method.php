@@ -73,12 +73,26 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       add_action('woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ));
 
       $settings = $this->get_core()->shipment->get_settings();
-      $mode = $settings['mode'];
+      if ( isset($_POST['woocommerce_pakettikauppa_shipping_method_mode']) ) {
+        $mode = sanitize_text_field($_POST['woocommerce_pakettikauppa_shipping_method_mode']);
+      } else {
+        $mode = $settings['mode'];
+      }
+      if ( isset($_POST['woocommerce_pakettikauppa_shipping_method_account_number']) ) {
+        $acc_no = sanitize_text_field($_POST['woocommerce_pakettikauppa_shipping_method_account_number']);
+      } else {
+        $acc_no = $settings['account_number'];
+      }
+      if ( isset($_POST['woocommerce_pakettikauppa_shipping_method_secret_key']) ) {
+        $sec_key = sanitize_text_field($_POST['woocommerce_pakettikauppa_shipping_method_secret_key']);
+      } else {
+        $sec_key = $settings['secret_key'];
+      }
       $configs = $this->get_core()->api_config;
       $configs[$mode] = array_merge(
         array(
-          'api_key'   => $settings['account_number'],
-          'secret'    => $settings['secret_key'],
+          'api_key'   => $acc_no,
+          'secret'    => $sec_key,
           'use_posti_auth' => false,
         ),
         $this->get_core()->api_config[$mode]
@@ -117,9 +131,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       $field_pref = 'woocommerce_' . $shipping_method . '_';
       $configs = $this->get_core()->api_config;
       if ( isset($_POST[$field_pref . 'mode']) ) {
-        $settings['mode'] = $_POST[$field_pref . 'mode'];
-        $settings['account_number'] = $_POST[$field_pref . 'account_number'];
-        $settings['secret_key'] = $_POST[$field_pref . 'secret_key'];
+        $settings['mode'] = sanitize_text_field($_POST[$field_pref . 'mode']);
+        $settings['account_number'] = sanitize_text_field($_POST[$field_pref . 'account_number']);
+        $settings['secret_key'] = sanitize_text_field($_POST[$field_pref . 'secret_key']);
       }
       $mode = $settings['mode'];
 
@@ -219,10 +233,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
         }
       </script>
       <tr>
-        <th colspan="2" class="titledesc" scope="row"><?php echo esc_html($value['title']); ?></th>
+        <th colspan="2" class="titledesc mode_react" scope="row"><?php echo esc_html($value['title']); ?></th>
       </tr>
       <tr>
-        <td colspan="2">
+        <td colspan="2" class="mode_react">
           <?php foreach ( \WC_Shipping_Zones::get_zones('admin') as $zone_raw ) : ?>
             <hr>
             <?php $zone = new \WC_Shipping_Zone($zone_raw['zone_id']); ?>
