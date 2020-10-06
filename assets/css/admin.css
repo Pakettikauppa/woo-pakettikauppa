@@ -126,7 +126,7 @@ table .pakettikauppa-notice p {
   vertical-align: middle;
 }
 
-.pakettikauppa-pickup-search-error {
+.pakettikauppa-msg-error {
   color: #a00;
 }
 
@@ -143,6 +143,11 @@ table .pakettikauppa-notice p {
     
 .pakettikauppa-metabox-footer .button:last-child {  
   margin-bottom: 0; 
+}
+
+#order_data .order_data_column p.pakettikauppa-field {
+  width: 100%;
+  margin-bottom: 9px;
 }
 
 @media (min-width: 1200px) {
