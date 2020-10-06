@@ -93,7 +93,7 @@ jQuery(function( $ ) {
     var method = $("#"+values.container_id).find(".pakettikauppa-pickup-method").val();
     var select_field = $("#"+values.container_id).find(".pakettikauppa-pickup-select");
 
-    $("#"+values.container_id).find(".pakettikauppa-pickup-search-error").hide();
+    $("#"+values.container_id).find(".error-pickup-search").hide();
 
     $(select_field).empty();
     $(select_field).append($('<option>', { value: "__NULL__", text : "..." }));
@@ -109,8 +109,10 @@ jQuery(function( $ ) {
       $(select_field).empty();
       var selected_value = $(select_field).data("selected");
       if (response == "error-zip") {
-        $("#"+values.container_id).find(".pakettikauppa-pickup-search-error").show();
+        $("#"+values.container_id).find(".error-pickup-search").show();
         console.log("Search error: Postcode is required.");
+        var option = $('<option>', { text : "---" });
+        $(select_field).append(option);
         pakettikauppa_change_selected_pickup_point(select_field);
       } else {
         var pickup_points = JSON.parse(response);
@@ -147,7 +149,7 @@ jQuery(function( $ ) {
   };
 
   window.pakettikauppa_change_selected_pickup_point = function(select_field) {
-    if ($(select_field).val() != "__NULL__") {
+    if ($(select_field).val() != "__NULL__" || $(select_field).val() != "") {
       var value = $(select_field).val();
       $(select_field).data("selected",value);
     } else {

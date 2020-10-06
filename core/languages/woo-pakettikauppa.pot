@@ -11,7 +11,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-10-01 06:47+0000\n"
+"POT-Creation-Date: 2020-10-06 11:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: Loco https://localise.biz/\n"
 "X-Domain: woo-pakettikauppa\n"
@@ -40,7 +40,7 @@ msgstr ""
 msgid "Selected shipping method: %s"
 msgstr ""
 
-#: core/class-text.php:50 core/class-admin.php:690
+#: core/class-text.php:50 core/class-admin.php:695
 msgid "No shipping"
 msgstr ""
 
@@ -496,7 +496,7 @@ msgstr ""
 
 #. %s: Error message
 #: core/class-shipment.php:213 core/class-admin.php:440
-#: core/class-admin.php:995 core/class-admin.php:1022
+#: core/class-admin.php:1004 core/class-admin.php:1031
 #, php-format
 msgid "An error occurred: %s"
 msgstr ""
@@ -506,13 +506,13 @@ msgstr ""
 msgid "Failed to create Pakettikauppa shipment."
 msgstr ""
 
-#: core/class-shipment.php:251 core/class-admin.php:612
-#: core/class-admin.php:638
+#: core/class-shipment.php:251 core/class-admin.php:616
+#: core/class-admin.php:642
 msgid "Print document"
 msgstr ""
 
-#: core/class-shipment.php:252 core/class-admin.php:614
-#: core/class-admin.php:639
+#: core/class-shipment.php:252 core/class-admin.php:618
+#: core/class-admin.php:643
 msgid "Track"
 msgstr ""
 
@@ -588,116 +588,125 @@ msgstr ""
 msgid "Show site Pakettikauppa"
 msgstr ""
 
+#: core/class-admin.php:527
+msgid "Pakettikaupa Shipping"
+msgstr ""
+
 #. %s: Shipment tracking URL
-#: core/class-admin.php:527 core/class-admin.php:679 core/class-admin.php:1109
-#: core/class-admin.php:1116
+#: core/class-admin.php:528 core/class-admin.php:683 core/class-admin.php:1118
+#: core/class-admin.php:1125
 msgid "Requested pickup point"
 msgstr ""
 
-#: core/class-admin.php:549
+#: core/class-admin.php:550
 msgid ""
 "Please add shipping info to the order to manage Pakettikauppa shipments."
 msgstr ""
 
-#: core/class-admin.php:608 core/class-admin.php:634
+#: core/class-admin.php:612 core/class-admin.php:638
 msgid "Label code"
 msgstr ""
 
-#: core/class-admin.php:618
+#: core/class-admin.php:622
 msgid "Update Status"
 msgstr ""
 
-#: core/class-admin.php:619
+#: core/class-admin.php:623
 msgid "Create Return Label"
 msgstr ""
 
-#: core/class-admin.php:622 core/class-admin.php:642
+#: core/class-admin.php:626 core/class-admin.php:646
 msgid "Delete Shipping Label"
 msgstr ""
 
-#: core/class-admin.php:624
+#: core/class-admin.php:628
 msgid "Delete Shipping Label and return labels"
 msgstr ""
 
-#: core/class-admin.php:651
+#: core/class-admin.php:655
 msgid "Additional services"
 msgstr ""
 
-#: core/class-admin.php:666 core/class-admin.php:720
+#: core/class-admin.php:670 core/class-admin.php:729
 msgid "Parcel count"
 msgstr ""
 
-#: core/class-admin.php:731
-msgid "Select"
+#: core/class-admin.php:708
+#, php-format
+msgid "Service not working. Please check <a href=\"%s\">settings</a>."
 msgstr ""
 
 #: core/class-admin.php:740
+msgid "Select"
+msgstr ""
+
+#: core/class-admin.php:749
 msgid "Search pickup points"
 msgstr ""
 
-#: core/class-admin.php:743 core/class-frontend.php:495
+#: core/class-admin.php:752 core/class-frontend.php:495
 msgid "Search"
 msgstr ""
 
-#: core/class-admin.php:744
+#: core/class-admin.php:753
 msgid "No pickup points were found"
 msgstr ""
 
-#: core/class-admin.php:747
+#: core/class-admin.php:756
 msgid "Select pickup point"
 msgstr ""
 
-#: core/class-admin.php:765
+#: core/class-admin.php:774
 msgid "Custom shipping..."
 msgstr ""
 
-#: core/class-admin.php:766
+#: core/class-admin.php:775
 msgid "Original shipping..."
 msgstr ""
 
-#: core/class-admin.php:770
+#: core/class-admin.php:779
 msgid "Create"
 msgstr ""
 
-#: core/class-admin.php:933
+#: core/class-admin.php:942
 msgid "Unable to create return label for this shipment type."
 msgstr ""
 
 #. %%s: tracking code
-#: core/class-admin.php:976 core/class-admin.php:984
+#: core/class-admin.php:985 core/class-admin.php:993
 #, php-format
 msgid "Successfully deleted Pakettikauppa shipping label %s."
 msgstr ""
 
 #. %s: Error message
-#: core/class-admin.php:1002
+#: core/class-admin.php:1011
 #, php-format
 msgid "Deleting Pakettikauppa shipment failed! Errors: %s"
 msgstr ""
 
 #. @codingStandardsIgnoreLine
-#: core/class-admin.php:1035
+#: core/class-admin.php:1044
 msgid "Shipment tracking code is not defined."
 msgstr ""
 
-#: core/class-admin.php:1045
+#: core/class-admin.php:1054
 msgid "Cannot find shipment with given shipment number."
 msgstr ""
 
 #. Shipment tracking url
-#: core/class-admin.php:1113
+#: core/class-admin.php:1122
 #, php-format
 msgid ""
 "You can track your order at %1$s.\n"
 "\n"
 msgstr ""
 
-#: core/class-admin.php:1120
+#: core/class-admin.php:1129
 msgid "Tracking"
 msgstr ""
 
 #. 1: Shipment tracking URL 2: Shipment tracking code
-#: core/class-admin.php:1122
+#: core/class-admin.php:1131
 #, php-format
 msgid "You can <a href=\"%1$s\">track your order</a> with tracking code %2$s."
 msgstr ""

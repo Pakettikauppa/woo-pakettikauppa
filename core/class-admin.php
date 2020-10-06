@@ -524,7 +524,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
      * @param WC_Order $order The order that is currently being viewed in wp-admin
      */
     public function show_pickup_point_in_admin_order_meta( $order ) {
-      echo sprintf('<p class="form-field"><strong>%s:</strong><br>', esc_attr__('Requested pickup point', 'woo-pakettikauppa'));
+      echo '<h4>' . esc_attr__('Pakettikaupa Shipping', 'woo-pakettikauppa') . '</h4>';
+      echo sprintf('<p class="form-field pakettikauppa-field"><strong>%s:</strong><br>', esc_attr__('Requested pickup point', 'woo-pakettikauppa'));
       if ( $order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point') ) {
         echo esc_attr($order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point'));
       } else {
@@ -581,8 +582,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $all_shipment_services = $this->shipment->services();
 
       $all_additional_services = $this->shipment->get_additional_services();
+      if ( empty($all_additional_services) ) {
+        $all_additional_services = array();
+      }
       $all_shipment_additional_services = array();
-      if ( ! empty($all_additional_services) ) {
+      if ( ! empty($all_additional_services) && ! empty($service_id) ) {
         $all_shipment_additional_services = $all_additional_services[$service_id];
       }
 
@@ -686,6 +690,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             </fieldset>
 
             <fieldset class="pakettikauppa-metabox-fieldset" id="wc_pakettikauppa_custom_shipping_method" style="display: none;">
+              <?php if ( ! empty($all_shipment_services) ) : ?>
               <select name="wc_pakettikauppa_service_id" id="pakettikauppa-service" class="pakettikauppa_metabox_values" onchange="pakettikauppa_change_shipping_method();">
                 <option value="__NULL__"><?php esc_html_e('No shipping', 'woo-pakettikauppa'); ?></option>
                 <?php foreach ( $all_shipment_services as $_service_code => $_service_title ) : ?>
@@ -698,6 +703,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                   </option>
                 <?php endforeach; ?>
               </select>
+              <?php else : ?>
+                <?php
+                $settings_url = '/wp-admin/admin.php?page=wc-settings&tab=shipping&section=pakettikauppa_shipping_method';
+                /* translators: %s: Settings page url */
+                $message = sprintf(__('Service not working. Please check <a href="%s">settings</a>.', 'woo-pakettikauppa'), $settings_url);
+                ?>
+                <span class="pakettikauppa-msg-error"><?php echo $message; ?></span>
+              <?php endif; ?>
 
               <?php foreach ( $all_additional_services as $method_code => $_additional_services ) : ?>
                 <ol style="list-style: circle; display: none;" class="pk-admin-additional-services" id="pk-admin-additional-services-<?php echo $method_code; ?>">
@@ -741,7 +754,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                       <input class="pakettikauppa-pickup-method" type="hidden" value="<?php echo $method_code; ?>">
                       <textarea class="pakettikauppa-pickup-search-field" rows="2" onchange="pakettikauppa_change_element_value('.pakettikauppa-pickup-search-field',this.value);"><?php echo $custom_address; ?></textarea>
                       <button type="button" value="search" class="button button-small btn-search" onclick="pakettikauppa_pickup_points_by_custom_address(btn_values_<?php echo $method_code; ?>);"><?php echo __('Search', 'woo-pakettikauppa'); ?></button>
-                      <span class="pakettikauppa-pickup-search-error" style="display:none;"><?php echo __('No pickup points were found', 'woo-pakettikauppa'); ?></span>
+                      <span class="pakettikauppa-msg-error error-pickup-search" style="display:none;"><?php echo __('No pickup points were found', 'woo-pakettikauppa'); ?></span>
                     </div>
                     <div class="pakettikauppa-pickup-select-block">
                       <h4><?php echo __('Select pickup point', 'woo-pakettikauppa'); ?></h4>
