@@ -928,6 +928,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
               );
             }
           }
+
           $creating_shipment = get_post_meta($post_id, '_' . $this->core->prefix . '_creating_shipment', 'true');
           if ( empty($creating_shipment) ) {
             update_post_meta($post_id, '_' . $this->core->prefix . '_creating_shipment', 'true');
