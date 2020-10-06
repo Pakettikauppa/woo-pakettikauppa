@@ -191,6 +191,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       }
 
       $all_shipping_methods = $this->get_core()->shipment->services();
+      if ( empty($all_shipping_methods) ) {
+        $all_shipping_methods = array();
+      }
 
       $methods = $this->get_core()->shipment->get_pickup_point_methods();
 
@@ -277,7 +280,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                   <?php endforeach; ?>
                 </div>
 
-                <?php $all_additional_services = $this->get_core()->shipment->get_additional_services(); ?>
+                <?php
+                $all_additional_services = $this->get_core()->shipment->get_additional_services();
+                if ( empty($all_additional_services) ) {
+                  $all_additional_services = array();
+                }
+                ?>
                 <?php foreach ( $all_additional_services as $method_code => $additional_services ) : ?>
                   <div class="pk-services-<?php echo $method_id; ?>" style='display: none;' id="services-<?php echo $method_id; ?>-<?php echo $method_code; ?>">
                     <?php foreach ( $additional_services as $additional_service ) : ?>
