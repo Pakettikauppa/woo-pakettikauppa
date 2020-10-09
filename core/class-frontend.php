@@ -559,9 +559,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
 
     public function validate_checkout() {
       if ( ! wp_verify_nonce(sanitize_key($_POST['woocommerce-process-checkout-nonce']), 'woocommerce-process_checkout') ) {
-        return;
+        $this->add_error(__('We were unable to process your order, please try again.', 'woo-pakettikauppa'));
+        //return;
       }
-
       $key = str_replace('wc_', '', $this->core->prefix) . '_pickup_point';
       $pickup_data = isset($_POST[$key]) ? sanitize_key($_POST[$key]) : '__NULL__';
       $pickup_data = $pickup_data === '__null__' ? strtoupper($pickup_data) : $pickup_data;
