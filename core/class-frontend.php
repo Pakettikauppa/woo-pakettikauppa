@@ -565,7 +565,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
 
     public function validate_checkout() {
       if ( ! wp_verify_nonce(sanitize_key($_POST['woocommerce-process-checkout-nonce']), 'woocommerce-process_checkout') ) {
-        return;
+          $this->add_error(__('We were unable to process your order, please try again.', 'woo-pakettikauppa'));
+          //return;
       }
 
       $key = str_replace('wc_', '', $this->core->prefix) . '_pickup_point';
@@ -573,7 +574,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       $pickup_data = $pickup_data === '__null__' ? strtoupper($pickup_data) : $pickup_data;
 
       // if there is no pickup point data, let's see do we need it
-      if ( $pickup_data === '__NULL__' || $pickup_data === '' ) {
+      if ( $pickup_data === '__NULL__' || $pickup_data === '' || $pickup_data === 'other' ) {
         $key = $this->core->prefix . '_validate_pickup_points';
         // if the value does not exists, then we expect to have pickup point data
         $shipping_needs_pickup_points = isset($_POST[$key]) ? $_POST[$key] === 'true' : false;
