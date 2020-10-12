@@ -103,6 +103,75 @@ jQuery(function( $ ) {
     $(select_field).empty();
     $(select_field).append($('<option>', { value: "__NULL__", text : "..." }));
 
+    var data = {
+      action: 'get_pickup_point_by_custom_address',
+      security: $("#pakettikauppa_metabox_nonce").val(),
+      address: address,
+      method: method
+    }
+
+    jQuery.post(ajaxurl, data, function(response) {
+      $(select_field).empty();
+      var selected_value = $(select_field).data("selected");
+      if (response == "error-zip") {
+        $("#"+values.container_id).find(".error-pickup-search").show();
+        console.log("Search error: Postcode is required.");
+        var option = $('<option>', { text : "---" });
+        $(select_field).append(option);
+        pakettikauppa_change_selected_pickup_point(select_field);
+      } else {
+        var pickup_points = JSON.parse(response);
+        $.each(pickup_points, function (i, point) {
+          var option_value = "" + point.provider + ": " + point.name + " (#" + point.pickup_point_id + ")";
+          var option_name = "" + point.provider + ": " + point.name + " (" + point.street_address + ")";
+          var option = $('<option>', { 
+            value: option_value,
+            text : option_name
+          });
+          if (selected_value == option_value) {
+            $(option).attr('selected','selected');
+          }
+          $(option).data("id",point.pickup_point_id);
+          $(select_field).append(option);
+        });
+      }
+    });
+  };
+
+  window.pakettikauppa_change_element_value = function(element,value) {
+    $(element).val(value);
+  };
+  window.pakettikauppa_change_element_html = function(element,html) {
+    $(element).html(html);
+  };
+  window.pakettikauppa_change_element_text = function(element,text) {
+    $(element).text(text);
+  };
+
+  window.pakettikauppa_trigger_pickup_list = function(id) {
+    var changer_id = "pickup-changer-" + id;
+    $("#"+changer_id+" .btn-search").trigger("click");
+  };
+
+  window.pakettikauppa_change_selected_pickup_point = function(select_field) {
+    if ($(select_field).val() != "__NULL__" || $(select_field).val() != "") {
+      var value = $(select_field).val();
+      $(select_field).data("selected",value);
+    } else {
+      $(select_field).data("selected",null);
+    }
+  };
+
+  window.pakettikauppa_pickup_points_by_custom_address = function(values) {
+    var address = $("#"+values.container_id).find(".pakettikauppa-pickup-search-field").val();
+    var method = $("#"+values.container_id).find(".pakettikauppa-pickup-method").val();
+    var select_field = $("#"+values.container_id).find(".pakettikauppa-pickup-select");
+
+    $("#"+values.container_id).find(".error-pickup-search").hide();
+
+    $(select_field).empty();
+    $(select_field).append($('<option>', { value: "__NULL__", text : "..." }));
+
           var data = {
             action: 'get_pickup_point_by_custom_address',
             security: $("#pakettikauppa_metabox_nonce").val(),
