@@ -564,8 +564,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     }
 
     public function validate_checkout() {
+      $logger = wc_get_logger();
       if ( ! wp_verify_nonce(sanitize_key($_POST['woocommerce-process-checkout-nonce']), 'woocommerce-process_checkout') ) {
-          $this->add_error(__('We were unable to process your order, please try again.', 'woo-pakettikauppa'));
+          $logger->error('Checkout nonce failed to verify');
+          //$this->add_error(__('We were unable to process your order, please try again.', 'woo-pakettikauppa'));
           //return;
       }
 
