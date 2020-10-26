@@ -26,6 +26,7 @@ jQuery(function( $ ) {
     } else {
       $("#wc_pakettikauppa_shipping_method").html('');
 
+      // Get shipping method
       var shipping_method = $('#pakettikauppa-service').val();
 
       data['wc_pakettikauppa_service_id'] = shipping_method;
