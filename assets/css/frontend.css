@@ -29,3 +29,7 @@
 #pakettikauppacustom_pickup_point_btn:focus {
   outline: none;
 }
+
+.woocommerce-checkout .woocommerce-invalid select {
+  border: 2px solid #cd2653;
+}

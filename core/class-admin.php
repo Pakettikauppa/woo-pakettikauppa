@@ -903,12 +903,22 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             }
           }
 
-          return $this->shipment->create_shipment($order, $service_id, $additional_services);
+          $creating_shipment = get_post_meta($post_id, '_' . $this->core->prefix . '_creating_shipment', 'true');
+          if ( empty($creating_shipment) ) {
+            update_post_meta($post_id, '_' . $this->core->prefix . '_creating_shipment', 'true');
+            $result = $this->shipment->create_shipment($order, $service_id, $additional_services);
+            if ( $result === null ) {
+              update_post_meta($post_id, '_' . $this->core->prefix . '_creating_shipment', '');
+            }
+            return $result;
+          }
+          break;
         case 'get_status':
           $this->get_status($order);
           break;
         case 'delete_shipping_label':
           $tracking_code = sanitize_text_field($_POST['wc_pakettikauppa'][$command]);
+          update_post_meta($post_id, '_' . $this->core->prefix . '_creating_shipment', '');
 
           $this->delete_shipping_label($order, $tracking_code);
           break;
