@@ -906,11 +906,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           $creating_shipment = get_post_meta($post_id, '_' . $this->core->prefix . '_creating_shipment', 'true');
           if ( empty($creating_shipment) ) {
             update_post_meta($post_id, '_' . $this->core->prefix . '_creating_shipment', 'true');
-            $result = $this->shipment->create_shipment($order, $service_id, $additional_services);
-            if ( $result === null ) {
+            $res = $this->shipment->create_shipment($order, $service_id, $additional_services);
+            if ( $res === null ) {
               update_post_meta($post_id, '_' . $this->core->prefix . '_creating_shipment', '');
             }
-            return $result;
+            return $res;
           }
           break;
         case 'get_status':
