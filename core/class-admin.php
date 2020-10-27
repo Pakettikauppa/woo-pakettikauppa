@@ -524,7 +524,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
      * @param WC_Order $order The order that is currently being viewed in wp-admin
      */
     public function show_pickup_point_in_admin_order_meta( $order ) {
-      echo '<h4>' . esc_attr__('Pakettikaupa Shipping', 'woo-pakettikauppa') . '</h4>';
+      echo '<h4>' . esc_attr__('Pakettikauppa Shipping', 'woo-pakettikauppa') . '</h4>';
       echo sprintf('<p class="form-field pakettikauppa-field"><strong>%s:</strong><br>', esc_attr__('Requested pickup point', 'woo-pakettikauppa'));
       if ( $order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point') ) {
         echo esc_attr($order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point'));
