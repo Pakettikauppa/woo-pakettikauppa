@@ -124,14 +124,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       $mode = $settings['mode'];
 
       $api_good = true;
-      if ( $mode == 'production' ) {
-        if ( empty($settings['account_number']) || empty($settings['secret_key']) ) {
+      if ( empty($settings['account_number']) || empty($settings['secret_key']) ) {
+        $api_good = false;
+      } else {
+        $result = $this->client->listShippingMethods();
+        if ( empty($result) ) {
           $api_good = false;
-        } else {
-          $result = $this->client->listShippingMethods();
-          if ( empty($result) ) {
-            $api_good = false;
-          }
         }
       }
 
@@ -165,7 +163,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
         }
       });
       </script>
-      <?php if ( ! $api_good ) : ?>
+      <?php if ( $mode == 'production' && ! $api_good ) : ?>
         <tr><td colspan="2">
           <div class="pakettikauppa-notice notice-error">
             <p><?php esc_attr_e('API credentials are not working. Please check that API credentials are correct.', 'woo-pakettikauppa'); ?></p>
@@ -222,10 +220,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
         }
       </script>
       <tr>
-        <th colspan="2" class="titledesc" scope="row"><?php echo esc_html($value['title']); ?></th>
+        <th colspan="2" class="titledesc mode_react" scope="row"><?php echo esc_html($value['title']); ?></th>
       </tr>
       <tr>
-        <td colspan="2">
+        <td colspan="2" class="mode_react">
           <?php foreach ( \WC_Shipping_Zones::get_zones('admin') as $zone_raw ) : ?>
             <hr>
             <?php $zone = new \WC_Shipping_Zone($zone_raw['zone_id']); ?>
