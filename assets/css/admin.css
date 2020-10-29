@@ -43,6 +43,49 @@ select.pakettikauppa_metabox_values {
   width: 100%;
 }
 
+.pakettikauppa-notice {
+  background: #fff;
+  border: 1px solid #ccd0d4;
+  border-left-width: 4px;
+  box-shadow: 0 1px 1px rgba(0,0,0,.04);
+  padding: 1px 12px;
+}
+
+.pakettikauppa-notice p {
+  margin: .5em 0;
+  padding: 2px;
+}
+
+table .pakettikauppa-notice {
+  margin-left: -10px;
+}
+
+table .pakettikauppa-notice p {
+  margin: .5em 0;
+  font-size: 13px;
+}
+
+.pakettikauppa-notice.notice-error {
+  border-left-color: #dc3232;
+}
+
+.row-disabled > th,
+.row-disabled > td {
+  position: relative;
+}
+
+.row-disabled > th:after,
+.row-disabled > td:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #f1f1f1;
+  opacity: 0.7;
+}
+
 .pakettikauppa-notice--setup {
   display: flex;
   flex-flow: column nowrap;
@@ -70,6 +113,43 @@ select.pakettikauppa_metabox_values {
   flex: 1 1 20%;
   text-align: center;
   /* max-width: 250px; */
+}
+
+.pakettikauppa-pickup-changer > div {
+  margin-bottom: 10px;
+}
+
+.pakettikauppa-pickup-changer textarea {
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.pakettikauppa-pickup-search > * {
+  vertical-align: middle;
+}
+
+.pakettikauppa-msg-error {
+  color: #a00;
+}
+
+.pakettikauppa-metabox-footer {
+  margin: 0;
+  padding-top: 10px;  
+  border-top: 1px solid #ddd;
+}
+
+.pakettikauppa-metabox-footer .button { 
+  width: 100%;  
+  margin-bottom: 7px; 
+} 
+    
+.pakettikauppa-metabox-footer .button:last-child {  
+  margin-bottom: 0; 
+}
+
+#order_data .order_data_column p.pakettikauppa-field {
+  width: 100%;
+  margin-bottom: 9px;
 }
 
 @media (min-width: 1200px) {

@@ -1,333 +1,22 @@
 # Copyright (C) 2020 Seravo
 # This file is distributed under the same license as the WooCommerce Pakettikauppa plugin.
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce Pakettikauppa 2.3.3\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-pakettikauppa\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-"
+"pakettikauppa\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-08-12T17:23:40+03:00\n"
+"POT-Creation-Date: 2020-09-29 13:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.4.0\n"
+"X-Generator: Loco https://localise.biz/\n"
 "X-Domain: woo-pakettikauppa\n"
-
-#. Plugin Name of the plugin
-msgid "WooCommerce Pakettikauppa"
-msgstr ""
-
-#. Plugin URI of the plugin
-msgid "https://github.com/Seravo/woo-pakettikauppa"
-msgstr ""
-
-#. Description of the plugin
-msgid "Pakettikauppa shipping service for WooCommerce. Integrates Posti, Smartship, Matkahuolto, DB Schenker and others."
-msgstr ""
-
-#. Author of the plugin
-msgid "Seravo"
-msgstr ""
-
-#. Author URI of the plugin
-msgid "https://seravo.com/"
-msgstr ""
-
-#: core/class-admin.php:93
-#: core/class-admin.php:116
-msgid "Thank you for installing WooCommerce Pakettikauppa! To get started smoothly, please open our setup wizard."
-msgstr ""
-
-#: core/class-admin.php:180
-msgid "HS tariff number"
-msgstr ""
-
-#: core/class-admin.php:182
-msgid "The HS tariff number must be based on the Harmonized Commodity Description and Coding System developed by the World Customs Organization."
-msgstr ""
-
-#: core/class-admin.php:188
-msgid "Country of origin"
-msgstr ""
-
-#: core/class-admin.php:190
-msgid "\"Country of origin\" means the country where the goods originated, e.g. were produced/manufactured or assembled."
-msgstr ""
-
-#: core/class-admin.php:255
-msgid "Create and fetch shipping labels"
-msgstr ""
-
-#: core/class-admin.php:286
-msgid "Create shipping label"
-msgstr ""
-
-#: core/class-admin.php:339
-msgid "Cannot find shipments with given shipment numbers."
-msgstr ""
-
-#: core/class-admin.php:401
-msgid "WooCommerce Pakettikauppa has been installed/updated but no shipping methods are currently active!"
-msgstr ""
-
-#. translators: %s: Error message
-#: core/class-admin.php:438
-#: core/class-admin.php:904
-#: core/class-admin.php:931
-#: core/class-shipment.php:213
-msgid "An error occurred: %s"
-msgstr ""
-
-#: core/class-admin.php:457
-msgid "Visit Pakettikauppa"
-msgstr ""
-
-#: core/class-admin.php:458
-msgid "Show site Pakettikauppa"
-msgstr ""
-
-#: core/class-admin.php:518
-#: core/class-admin.php:662
-#: core/class-admin.php:1018
-#: core/class-admin.php:1025
-msgid "Requested pickup point"
-msgstr ""
-
-#: core/class-admin.php:540
-msgid "Please add shipping info to the order to manage Pakettikauppa shipments."
-msgstr ""
-
-#: core/class-admin.php:595
-#: core/class-admin.php:621
-msgid "Label code"
-msgstr ""
-
-#: core/class-admin.php:599
-#: core/class-admin.php:625
-#: core/class-shipment.php:251
-msgid "Print document"
-msgstr ""
-
-#: core/class-admin.php:601
-#: core/class-admin.php:626
-#: core/class-shipment.php:252
-msgid "Track"
-msgstr ""
-
-#: core/class-admin.php:605
-msgid "Update Status"
-msgstr ""
-
-#: core/class-admin.php:606
-msgid "Create Return Label"
-msgstr ""
-
-#: core/class-admin.php:609
-#: core/class-admin.php:629
-msgid "Delete Shipping Label"
-msgstr ""
-
-#: core/class-admin.php:611
-msgid "Delete Shipping Label and return labels"
-msgstr ""
-
-#: core/class-admin.php:638
-msgid "Additional services"
-msgstr ""
-
-#: core/class-admin.php:653
-#: core/class-admin.php:702
-msgid "Parcel count"
-msgstr ""
-
-#: core/class-admin.php:672
-#: core/class-text.php:50
-msgid "No shipping"
-msgstr ""
-
-#: core/class-admin.php:712
-msgid "Create"
-msgstr ""
-
-#: core/class-admin.php:715
-msgid "Change shipping..."
-msgstr ""
-
-#: core/class-admin.php:842
-msgid "Unable to create return label for this shipment type."
-msgstr ""
-
-#. translators: %%s: tracking code
-#: core/class-admin.php:885
-#: core/class-admin.php:893
-msgid "Successfully deleted Pakettikauppa shipping label %s."
-msgstr ""
-
-#. translators: %s: Error message
-#: core/class-admin.php:911
-msgid "Deleting Pakettikauppa shipment failed! Errors: %s"
-msgstr ""
-
-#: core/class-admin.php:944
-msgid "Shipment tracking code is not defined."
-msgstr ""
-
-#: core/class-admin.php:954
-msgid "Cannot find shipment with given shipment number."
-msgstr ""
-
-#. translators: Shipment tracking url
-#: core/class-admin.php:1022
-msgid ""
-"You can track your order at %1$s.\n"
-"\n"
-""
-msgstr ""
-
-#: core/class-admin.php:1029
-msgid "Tracking"
-msgstr ""
-
-#. translators: 1: Shipment tracking URL 2: Shipment tracking code
-#: core/class-admin.php:1031
-msgid "You can <a href=\"%1$s\">track your order</a> with tracking code %2$s."
-msgstr ""
-
-#: core/class-frontend.php:171
-msgid "An error occurred. Please try again later."
-msgstr ""
-
-#: core/class-frontend.php:362
-#: core/class-frontend.php:363
-#: core/class-frontend.php:555
-msgid "Pickup point"
-msgstr ""
-
-#: core/class-frontend.php:373
-msgid "Insert your shipping details to view nearby pickup points"
-msgstr ""
-
-#. translators: %s: Postcode
-#: core/class-frontend.php:379
-msgid "Invalid postcode \"%1$s\". Please check your address information."
-msgstr ""
-
-#: core/class-frontend.php:415
-msgid "Choose one of pickup points close to the address you entered:"
-msgstr ""
-
-#: core/class-frontend.php:492
-#: core/class-text.php:449
-msgid "Search"
-msgstr ""
-
-#: core/class-frontend.php:518
-msgid "Select a pickup point"
-msgstr ""
-
-#: core/class-frontend.php:525
-#: core/class-text.php:453
-msgid "Other"
-msgstr ""
-
-#: core/class-frontend.php:575
-msgid "Please choose a pickup point."
-msgstr ""
-
-#: core/class-shipment.php:92
-msgid "Item is collected from sender - picked up"
-msgstr ""
-
-#: core/class-shipment.php:95
-msgid "Exception"
-msgstr ""
-
-#: core/class-shipment.php:98
-msgid "Item has been handed over to the recipient"
-msgstr ""
-
-#: core/class-shipment.php:101
-msgid "Item is in transport"
-msgstr ""
-
-#: core/class-shipment.php:104
-msgid "C.O.D payment is paid to the sender"
-msgstr ""
-
-#: core/class-shipment.php:107
-msgid "Informed consignee of arrival"
-msgstr ""
-
-#: core/class-shipment.php:110
-msgid "Item is loaded onto a means of transport"
-msgstr ""
-
-#: core/class-shipment.php:113
-msgid "Item not delivered – delivery attempt made"
-msgstr ""
-
-#: core/class-shipment.php:116
-msgid "Pre-information is received from sender"
-msgstr ""
-
-#: core/class-shipment.php:119
-msgid "Item is ready for delivery transportation"
-msgstr ""
-
-#: core/class-shipment.php:122
-msgid "Item is returning to the sender"
-msgstr ""
-
-#: core/class-shipment.php:125
-msgid "Item is arrived to a post office"
-msgstr ""
-
-#: core/class-shipment.php:128
-msgid "Outbound"
-msgstr ""
-
-#. translators: %s: Status code
-#: core/class-shipment.php:132
-msgid "Unknown status: %s"
-msgstr ""
-
-#: core/class-shipment.php:167
-msgid "The shipping label was not created because the order does not contain valid shipping method."
-msgstr ""
-
-#: core/class-shipment.php:179
-msgid "The shipping label was not created because the order does not contain valid shipping details."
-msgstr ""
-
-#. translators: %s: Error message
-#: core/class-shipment.php:208
-msgid "Failed to create Pakettikauppa shipment. Errors: %s"
-msgstr ""
-
-#. translators: %s: Error message
-#: core/class-shipment.php:222
-#: core/class-shipment.php:227
-msgid "Failed to create Pakettikauppa shipment."
-msgstr ""
-
-#. translators: 1: Shipping service title 2: Shipment tracking code 3: Shipping label URL 4: Shipment tracking URL
-#: core/class-shipment.php:259
-msgid "Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s"
-msgstr ""
-
-#: core/class-shipment.php:272
-msgid "Posting label to URL failed!"
-msgstr ""
-
-#: core/class-shipment.php:276
-msgid "Label posted to URL successfully."
-msgstr ""
-
-#. translators: %s: Error message
-#: core/class-shipment.php:627
-msgid "WooCommerce Pakettikauppa: tracking code creation failed: %s"
-msgstr ""
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;"
 
 #: core/class-text.php:26
 msgid "WooCommerce Pakettikauppa &rsaquo; Setup Wizard"
@@ -345,9 +34,14 @@ msgstr ""
 msgid "Edit to select shipping company and shipping prices."
 msgstr ""
 
-#. translators: %s: shipping method
+#. %s: shipping method
 #: core/class-text.php:44
+#, php-format
 msgid "Selected shipping method: %s"
+msgstr ""
+
+#: core/class-text.php:50 core/class-admin.php:690
+msgid "No shipping"
 msgstr ""
 
 #: core/class-text.php:54
@@ -359,12 +53,18 @@ msgid "Select one shipping method"
 msgstr ""
 
 #: core/class-text.php:62
-msgid "Can not connect to Pakettikauppa server - please check Pakettikauppa API credentials, servers error log and firewall settings."
+msgid ""
+"Can not connect to Pakettikauppa server - please check Pakettikauppa API "
+"credentials, servers error log and firewall settings."
 msgstr ""
 
-#. translators: Vendor name, not translatable
+#. Vendor name, not translatable
 #: core/class-text.php:72
-msgid "Only use this shipping method if no other shipping methods are available and suitable. Using this shipping method is not required to be able to use %s plugin."
+#, php-format
+msgid ""
+"Only use this shipping method if no other shipping methods are available and "
+"suitable. Using this shipping method is not required to be able to use %s "
+"plugin."
 msgstr ""
 
 #: core/class-text.php:81
@@ -403,8 +103,9 @@ msgstr ""
 msgid "No shipping class cost (vat included)"
 msgstr ""
 
-#. translators: Vendor name, not translatable
+#. Vendor name, not translatable
 #: core/class-text.php:123
+#, php-format
 msgid "Link to %s website"
 msgstr ""
 
@@ -429,21 +130,40 @@ msgid "Exit"
 msgstr ""
 
 #: core/class-text.php:147
-msgid "Thank you for installing WooCommerce Pakettikauppa! This wizard will guide you through the setup process to get you started."
+msgid ""
+"Thank you for installing WooCommerce Pakettikauppa! This wizard will guide "
+"you through the setup process to get you started."
 msgstr ""
 
-#. translators: %1$s: Vendor name, not translateable %2$s: Vendor url, not translateable
+#. %1$s: Vendor name, not translateable
+#. %2$s: Vendor url, not translateable
 #: core/class-text.php:165
-msgid "If you have already registered with %1$s, please choose \"Production mode\" and enter the credentials you received from %1$s. If you have not yet registered, please register at <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"%2$s\">%2$s</a>. If you wish to test the plugin before making a contract with %1$s, please choose \"Test mode\" and leave the API secret/key fields empty."
+#, php-format
+msgid ""
+"If you have already registered with %1$s, please choose \"Production mode\" "
+"and enter the credentials you received from %1$s. If you have not yet "
+"registered, please register at <a target=\"_blank\" rel=\"noopener "
+"noreferrer\" href=\"%2$s\">%2$s</a>. If you wish to test the plugin before "
+"making a contract with %1$s, please choose \"Test mode\" and leave the API "
+"secret/key fields empty."
 msgstr ""
 
 #: core/class-text.php:175
-msgid "Please fill the details of the merchant below. The information provided here will be used as the sender in shipping labels."
+msgid ""
+"Please fill the details of the merchant below. The information provided here "
+"will be used as the sender in shipping labels."
 msgstr ""
 
-#. translators: %1$s: link to WooCommerce shipping zone setting page %2$s: link to external WooCommerce documentation
+#. %1$s: link to WooCommerce shipping zone setting page
+#. %2$s: link to external WooCommerce documentation
 #: core/class-text.php:188
-msgid "Please configure the shipping methods of the currently active shipping zones to use Pakettikauppa shipping. Note that this plugin requires WooCommerce shipping zones and methods to be preconfigured in <a href=\"%1$s\">WooCommerce > Settings > Shipping > Shipping zones</a>. For more information, visit <a target=\"_blank\" href=\"%2$s\">%2$s</a>."
+#, php-format
+msgid ""
+"Please configure the shipping methods of the currently active shipping zones "
+"to use Pakettikauppa shipping. Note that this plugin requires WooCommerce "
+"shipping zones and methods to be preconfigured in <a href=\"%1$s\">"
+"WooCommerce > Settings > Shipping > Shipping zones</a>. For more information,"
+" visit <a target=\"_blank\" href=\"%2$s\">%2$s</a>."
 msgstr ""
 
 #: core/class-text.php:195
@@ -451,7 +171,9 @@ msgid "Customize the order processing phase."
 msgstr ""
 
 #: core/class-text.php:199
-msgid "Congratulations, everything is now set up and you are now ready to start using the plugin!"
+msgid ""
+"Congratulations, everything is now set up and you are now ready to start "
+"using the plugin!"
 msgstr ""
 
 #: core/class-text.php:203
@@ -494,8 +216,9 @@ msgstr ""
 msgid "API key"
 msgstr ""
 
-#. translators: %1$s: Vendor name, not translatable
+#. %1$s: Vendor name, not translatable
 #: core/class-text.php:248
+#, php-format
 msgid "API key provided by %1$s"
 msgstr ""
 
@@ -503,8 +226,9 @@ msgstr ""
 msgid "API secret"
 msgstr ""
 
-#. translators: %1$s: Vendor name, not translatable
+#. %1$s: Vendor name, not translatable
 #: core/class-text.php:263
+#, php-format
 msgid "API secret provided by %1$s"
 msgstr ""
 
@@ -516,9 +240,13 @@ msgstr ""
 msgid "Shipping settings"
 msgstr ""
 
-#. translators: %1$s: WooCommerce URL, not translatable
+#. %1$s: WooCommerce URL, not translatable
 #: core/class-text.php:282
-msgid "You can activate new shipping method to checkout in <b>WooCommerce > Settings > Shipping > Shipping zones</b>. For more information, see <a target=\"_blank\" href=\"%1$s\">%1$s</a>"
+#, php-format
+msgid ""
+"You can activate new shipping method to checkout in <b>WooCommerce > "
+"Settings > Shipping > Shipping zones</b>. For more information, see <a "
+"target=\"_blank\" href=\"%1$s\">%1$s</a>"
 msgstr ""
 
 #: core/class-text.php:288
@@ -545,8 +273,9 @@ msgstr ""
 msgid "No automatic creation of shipping labels"
 msgstr ""
 
-#. translators: order status, pretranslated
+#. order status, pretranslated
 #: core/class-text.php:313
+#, php-format
 msgid "When order status is \"%s\""
 msgstr ""
 
@@ -567,7 +296,9 @@ msgid "Post shipping label to URL"
 msgstr ""
 
 #: core/class-text.php:333
-msgid "Plugin can upload shipping label to an URL when creating shipping label. Define URL if you want to upload PDF."
+msgid ""
+"Plugin can upload shipping label to an URL when creating shipping label. "
+"Define URL if you want to upload PDF."
 msgstr ""
 
 #: core/class-text.php:337
@@ -647,7 +378,8 @@ msgid "Show Pakettikauppa shipping method"
 msgstr ""
 
 #: core/class-text.php:413
-msgid "WooCommerce Pakettikauppa requires WooCommerce to be installed and activated!"
+msgid ""
+"WooCommerce Pakettikauppa requires WooCommerce to be installed and activated!"
 msgstr ""
 
 #: core/class-text.php:417
@@ -659,7 +391,9 @@ msgid "An error occurred while searching for pickup points."
 msgstr ""
 
 #: core/class-text.php:425
-msgid "If none of your preferred pickup points are listed, fill in a custom address above and select another pickup point."
+msgid ""
+"If none of your preferred pickup points are listed, fill in a custom address "
+"above and select another pickup point."
 msgstr ""
 
 #: core/class-text.php:429
@@ -679,5 +413,348 @@ msgid "Show pickup point override in checkout"
 msgstr ""
 
 #: core/class-text.php:445
-msgid "The pickup point you've chosen is not available for public access. Are you sure that you can retrieve the package?"
+msgid ""
+"The pickup point you've chosen is not available for public access. Are you "
+"sure that you can retrieve the package?"
+msgstr ""
+
+#: core/class-shipment.php:92
+msgid "Item is collected from sender - picked up"
+msgstr ""
+
+#: core/class-shipment.php:95
+msgid "Exception"
+msgstr ""
+
+#: core/class-shipment.php:98
+msgid "Item has been handed over to the recipient"
+msgstr ""
+
+#: core/class-shipment.php:101
+msgid "Item is in transport"
+msgstr ""
+
+#: core/class-shipment.php:104
+msgid "C.O.D payment is paid to the sender"
+msgstr ""
+
+#: core/class-shipment.php:107
+msgid "Informed consignee of arrival"
+msgstr ""
+
+#: core/class-shipment.php:110
+msgid "Item is loaded onto a means of transport"
+msgstr ""
+
+#: core/class-shipment.php:113
+msgid "Item not delivered – delivery attempt made"
+msgstr ""
+
+#: core/class-shipment.php:116
+msgid "Pre-information is received from sender"
+msgstr ""
+
+#: core/class-shipment.php:119
+msgid "Item is ready for delivery transportation"
+msgstr ""
+
+#: core/class-shipment.php:122
+msgid "Item is returning to the sender"
+msgstr ""
+
+#: core/class-shipment.php:125
+msgid "Item is arrived to a post office"
+msgstr ""
+
+#: core/class-shipment.php:128
+msgid "Outbound"
+msgstr ""
+
+#. %s: Status code
+#: core/class-shipment.php:132
+#, php-format
+msgid "Unknown status: %s"
+msgstr ""
+
+#: core/class-shipment.php:167
+msgid ""
+"The shipping label was not created because the order does not contain valid "
+"shipping method."
+msgstr ""
+
+#: core/class-shipment.php:179
+msgid ""
+"The shipping label was not created because the order does not contain valid "
+"shipping details."
+msgstr ""
+
+#. %s: Error message
+#: core/class-shipment.php:208
+#, php-format
+msgid "Failed to create Pakettikauppa shipment. Errors: %s"
+msgstr ""
+
+#. %s: Error message
+#: core/class-shipment.php:213 core/class-admin.php:440
+#: core/class-admin.php:995 core/class-admin.php:1022
+#, php-format
+msgid "An error occurred: %s"
+msgstr ""
+
+#. %s: Error message
+#: core/class-shipment.php:222 core/class-shipment.php:227
+msgid "Failed to create Pakettikauppa shipment."
+msgstr ""
+
+#: core/class-shipment.php:251 core/class-admin.php:612
+#: core/class-admin.php:638
+msgid "Print document"
+msgstr ""
+
+#: core/class-shipment.php:252 core/class-admin.php:614
+#: core/class-admin.php:639
+msgid "Track"
+msgstr ""
+
+#. 1: Shipping service title 2: Shipment tracking code 3: Shipping label URL 4: Shipment tracking URL
+#: core/class-shipment.php:259
+#, php-format
+msgid "Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s"
+msgstr ""
+
+#: core/class-shipment.php:272
+msgid "Posting label to URL failed!"
+msgstr ""
+
+#: core/class-shipment.php:276
+msgid "Label posted to URL successfully."
+msgstr ""
+
+#. %s: Error message
+#: core/class-shipment.php:627
+#, php-format
+msgid "WooCommerce Pakettikauppa: tracking code creation failed: %s"
+msgstr ""
+
+#: core/class-admin.php:94 core/class-admin.php:117
+msgid ""
+"Thank you for installing WooCommerce Pakettikauppa! To get started smoothly, "
+"please open our setup wizard."
+msgstr ""
+
+#: core/class-admin.php:181
+msgid "HS tariff number"
+msgstr ""
+
+#: core/class-admin.php:183
+msgid ""
+"The HS tariff number must be based on the Harmonized Commodity Description "
+"and Coding System developed by the World Customs Organization."
+msgstr ""
+
+#: core/class-admin.php:189
+msgid "Country of origin"
+msgstr ""
+
+#: core/class-admin.php:191
+msgid ""
+"\"Country of origin\" means the country where the goods originated, e.g. "
+"were produced/manufactured or assembled."
+msgstr ""
+
+#: core/class-admin.php:256
+msgid "Create and fetch shipping labels"
+msgstr ""
+
+#: core/class-admin.php:287
+msgid "Create shipping label"
+msgstr ""
+
+#: core/class-admin.php:340
+msgid "Cannot find shipments with given shipment numbers."
+msgstr ""
+
+#: core/class-admin.php:402
+msgid ""
+"WooCommerce Pakettikauppa has been installed/updated but no shipping methods "
+"are currently active!"
+msgstr ""
+
+#: core/class-admin.php:466
+msgid "Visit Pakettikauppa"
+msgstr ""
+
+#: core/class-admin.php:467
+msgid "Show site Pakettikauppa"
+msgstr ""
+
+#. %s: Shipment tracking URL
+#: core/class-admin.php:527 core/class-admin.php:679 core/class-admin.php:1109
+#: core/class-admin.php:1116
+msgid "Requested pickup point"
+msgstr ""
+
+#: core/class-admin.php:549
+msgid ""
+"Please add shipping info to the order to manage Pakettikauppa shipments."
+msgstr ""
+
+#: core/class-admin.php:608 core/class-admin.php:634
+msgid "Label code"
+msgstr ""
+
+#: core/class-admin.php:618
+msgid "Update Status"
+msgstr ""
+
+#: core/class-admin.php:619
+msgid "Create Return Label"
+msgstr ""
+
+#: core/class-admin.php:622 core/class-admin.php:642
+msgid "Delete Shipping Label"
+msgstr ""
+
+#: core/class-admin.php:624
+msgid "Delete Shipping Label and return labels"
+msgstr ""
+
+#: core/class-admin.php:651
+msgid "Additional services"
+msgstr ""
+
+#: core/class-admin.php:666 core/class-admin.php:720
+msgid "Parcel count"
+msgstr ""
+
+#: core/class-admin.php:731
+msgid "Select"
+msgstr ""
+
+#: core/class-admin.php:740
+msgid "Search pickup points"
+msgstr ""
+
+#: core/class-admin.php:744
+msgid "No pickup points were found"
+msgstr ""
+
+#: core/class-admin.php:747
+msgid "Select pickup point"
+msgstr ""
+
+#: core/class-admin.php:766
+msgid "Create"
+msgstr ""
+
+#: core/class-admin.php:768
+msgid "Custom shipping..."
+msgstr ""
+
+#: core/class-admin.php:769
+msgid "Original shipping..."
+msgstr ""
+
+#: core/class-admin.php:933
+msgid "Unable to create return label for this shipment type."
+msgstr ""
+
+#. %%s: tracking code
+#: core/class-admin.php:976 core/class-admin.php:984
+#, php-format
+msgid "Successfully deleted Pakettikauppa shipping label %s."
+msgstr ""
+
+#. %s: Error message
+#: core/class-admin.php:1002
+#, php-format
+msgid "Deleting Pakettikauppa shipment failed! Errors: %s"
+msgstr ""
+
+#. @codingStandardsIgnoreLine
+#: core/class-admin.php:1035
+msgid "Shipment tracking code is not defined."
+msgstr ""
+
+#: core/class-admin.php:1045
+msgid "Cannot find shipment with given shipment number."
+msgstr ""
+
+#. Shipment tracking url
+#: core/class-admin.php:1113
+#, php-format
+msgid ""
+"You can track your order at %1$s.\n"
+"\n"
+msgstr ""
+
+#: core/class-admin.php:1120
+msgid "Tracking"
+msgstr ""
+
+#. 1: Shipment tracking URL 2: Shipment tracking code
+#: core/class-admin.php:1122
+#, php-format
+msgid "You can <a href=\"%1$s\">track your order</a> with tracking code %2$s."
+msgstr ""
+
+#: core/class-frontend.php:171
+msgid "An error occurred. Please try again later."
+msgstr ""
+
+#: core/class-frontend.php:361 core/class-frontend.php:362
+#: core/class-frontend.php:555
+msgid "Pickup point"
+msgstr ""
+
+#: core/class-frontend.php:373
+msgid "Insert your shipping details to view nearby pickup points"
+msgstr ""
+
+#. %s: Postcode
+#: core/class-frontend.php:379
+#, php-format
+msgid "Invalid postcode \"%1$s\". Please check your address information."
+msgstr ""
+
+#: core/class-frontend.php:415
+msgid "Choose one of pickup points close to the address you entered:"
+msgstr ""
+
+#: core/class-frontend.php:494
+msgid "Search"
+msgstr ""
+
+#: core/class-frontend.php:519
+msgid "Select a pickup point"
+msgstr ""
+
+#: core/class-frontend.php:524
+msgid "Other"
+msgstr ""
+
+#: core/class-frontend.php:576
+msgid "Please choose a pickup point."
+msgstr ""
+
+#. Name of the plugin
+msgid "WooCommerce Pakettikauppa"
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"Pakettikauppa shipping service for WooCommerce. Integrates Posti, Smartship, "
+"Matkahuolto, DB Schenker and others."
+msgstr ""
+
+#. URI of the plugin
+msgid "https://github.com/Seravo/woo-pakettikauppa"
+msgstr ""
+
+#. Author of the plugin
+msgid "Seravo"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://seravo.com/"
 msgstr ""
