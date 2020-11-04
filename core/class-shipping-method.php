@@ -73,26 +73,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       add_action('woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ));
 
       $settings = $this->get_core()->shipment->get_settings();
-      if ( isset($_POST['woocommerce_pakettikauppa_shipping_method_mode']) ) {
-        $mode = sanitize_text_field($_POST['woocommerce_pakettikauppa_shipping_method_mode']);
-      } else {
-        $mode = $settings['mode'];
-      }
-      if ( isset($_POST['woocommerce_pakettikauppa_shipping_method_account_number']) ) {
-        $acc_no = sanitize_text_field($_POST['woocommerce_pakettikauppa_shipping_method_account_number']);
-      } else {
-        $acc_no = $settings['account_number'];
-      }
-      if ( isset($_POST['woocommerce_pakettikauppa_shipping_method_secret_key']) ) {
-        $sec_key = sanitize_text_field($_POST['woocommerce_pakettikauppa_shipping_method_secret_key']);
-      } else {
-        $sec_key = $settings['secret_key'];
-      }
+      $mode = $settings['mode'];
       $configs = $this->get_core()->api_config;
       $configs[$mode] = array_merge(
         array(
-          'api_key'   => $acc_no,
-          'secret'    => $sec_key,
+          'api_key'   => $settings['account_number'],
+          'secret'    => $settings['secret_key'],
           'use_posti_auth' => false,
         ),
         $this->get_core()->api_config[$mode]
@@ -138,14 +124,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       $mode = $settings['mode'];
 
       $api_good = true;
-      if ( $mode == 'production' ) {
-        if ( empty($settings['account_number']) || empty($settings['secret_key']) ) {
+      if ( empty($settings['account_number']) || empty($settings['secret_key']) ) {
+        $api_good = false;
+      } else {
+        $result = $this->client->listShippingMethods();
+        if ( empty($result) ) {
           $api_good = false;
-        } else {
-          $result = $this->client->listShippingMethods();
-          if ( empty($result) ) {
-            $api_good = false;
-          }
         }
       }
 
@@ -179,7 +163,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
         }
       });
       </script>
-      <?php if ( ! $api_good ) : ?>
+
+      <?php if ( $mode == 'production' && ! $api_good ) : ?>
         <tr><td colspan="2">
           <div class="pakettikauppa-notice notice-error">
             <p><?php esc_attr_e('API credentials are not working. Please check that API credentials are correct.', 'woo-pakettikauppa'); ?></p>

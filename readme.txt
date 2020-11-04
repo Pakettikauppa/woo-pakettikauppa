@@ -103,7 +103,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 = 3.0.0 =
-* Remove shipping method option
+* Remove Pakettikauppa shipping method option
+* Add possibility to choose pickup point in order view
+* Fix bug for pickup point not saving in checkout
 
 = 2.4.0 =
 * New pickup point chooser for checkout

@@ -5,8 +5,8 @@ msgstr ""
 "Project-Id-Version: WooCommerce Pakettikauppa 2.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-"
 "pakettikauppa\n"
-"POT-Creation-Date: 2020-10-06 11:15+0000\n"
-"PO-Revision-Date: 2020-10-06 11:17+0000\n"
+"POT-Creation-Date: 2020-09-29 13:55+0000\n"
+"PO-Revision-Date: 2020-09-29 13:58+0000\n"
 "Last-Translator: \n"
 "Language-Team: Finnish\n"
 "Language: fi\n"
@@ -40,7 +40,7 @@ msgstr "Muokkaa jotta voit valita toimitusyhtiön ja -hinnat."
 msgid "Selected shipping method: %s"
 msgstr "Valittu toimitustapa: %s"
 
-#: core/class-text.php:50 core/class-admin.php:695
+#: core/class-text.php:50 core/class-admin.php:690
 msgid "No shipping"
 msgstr "Ei toimitusta"
 
@@ -533,7 +533,7 @@ msgstr "Pakettikauppa-lähetystä ei voitu luoda. Virheet: %s"
 
 #. %s: Error message
 #: core/class-shipment.php:213 core/class-admin.php:440
-#: core/class-admin.php:1004 core/class-admin.php:1031
+#: core/class-admin.php:995 core/class-admin.php:1022
 #, php-format
 msgid "An error occurred: %s"
 msgstr "Tapahtui virhe: %s"
@@ -543,13 +543,13 @@ msgstr "Tapahtui virhe: %s"
 msgid "Failed to create Pakettikauppa shipment."
 msgstr "Pakettikauppa-lähetystä ei voitu luoda."
 
-#: core/class-shipment.php:251 core/class-admin.php:616
-#: core/class-admin.php:642
+#: core/class-shipment.php:251 core/class-admin.php:612
+#: core/class-admin.php:638
 msgid "Print document"
 msgstr "Pakettikortti"
 
-#: core/class-shipment.php:252 core/class-admin.php:618
-#: core/class-admin.php:643
+#: core/class-shipment.php:252 core/class-admin.php:614
+#: core/class-admin.php:639
 msgid "Track"
 msgstr "Seuranta"
 
@@ -639,110 +639,101 @@ msgid "Pakettikaupa Shipping"
 msgstr ""
 
 #. %s: Shipment tracking URL
-#: core/class-admin.php:528 core/class-admin.php:683 core/class-admin.php:1118
-#: core/class-admin.php:1125
+#: core/class-admin.php:527 core/class-admin.php:679 core/class-admin.php:1109
+#: core/class-admin.php:1116
 msgid "Requested pickup point"
 msgstr "Valittu noutopiste"
 
-#: core/class-admin.php:550
+#: core/class-admin.php:549
 msgid ""
 "Please add shipping info to the order to manage Pakettikauppa shipments."
 msgstr ""
 "Lisää tilaukselle vastaanottaja hallinnoidaksesi Pakettikauppa-"
 "toimitustapoja."
 
-#: core/class-admin.php:612 core/class-admin.php:638
+#: core/class-admin.php:608 core/class-admin.php:634
 msgid "Label code"
 msgstr "Asiointikoodi"
 
-#: core/class-admin.php:622
+#: core/class-admin.php:618
 msgid "Update Status"
 msgstr "Päivitä tila"
 
-#: core/class-admin.php:623
+#: core/class-admin.php:619
 msgid "Create Return Label"
 msgstr "Luo palautuspakettikortti"
 
-#: core/class-admin.php:626 core/class-admin.php:646
+#: core/class-admin.php:622 core/class-admin.php:642
 msgid "Delete Shipping Label"
 msgstr "Poista pakettikortti"
 
-#: core/class-admin.php:628
+#: core/class-admin.php:624
 msgid "Delete Shipping Label and return labels"
 msgstr "Poista kaikki pakettikortit"
 
-#: core/class-admin.php:655
+#: core/class-admin.php:651
 msgid "Additional services"
 msgstr "Lisäpalvelut"
 
-#: core/class-admin.php:670 core/class-admin.php:729
+#: core/class-admin.php:666 core/class-admin.php:720
 msgid "Parcel count"
 msgstr "Pakettien määrä"
 
-#: core/class-admin.php:708
-#, php-format
-msgid "Service not working. Please check <a href=\"%s\">settings</a>."
-msgstr "Palvelu ei toimi. Tarkista <a href=\"%s\">asetukset</a>."
-
-#: core/class-admin.php:740
+#: core/class-admin.php:731
 msgid "Select"
 msgstr "Valitse"
 
-#: core/class-admin.php:749
+#: core/class-admin.php:740
 msgid "Search pickup points"
 msgstr "Etsi noutopisteitä"
 
-#: core/class-admin.php:752 core/class-frontend.php:495
-msgid "Search"
-msgstr "Hae"
-
-#: core/class-admin.php:753
+#: core/class-admin.php:744
 msgid "No pickup points were found"
 msgstr "Noutopisteitä ei löytynyt"
 
-#: core/class-admin.php:756
+#: core/class-admin.php:747
 msgid "Select pickup point"
 msgstr "Valitse noutopiste"
 
-#: core/class-admin.php:774
-msgid "Custom shipping..."
-msgstr "Muu toimitustapa..."
-
-#: core/class-admin.php:775
-msgid "Original shipping..."
-msgstr "Alkuperäinen toimitustapa..."
-
-#: core/class-admin.php:779
+#: core/class-admin.php:766
 msgid "Create"
 msgstr "Luo pakettikortti"
 
-#: core/class-admin.php:942
+#: core/class-admin.php:768
+msgid "Custom shipping..."
+msgstr "Muu toimitustapa..."
+
+#: core/class-admin.php:769
+msgid "Original shipping..."
+msgstr "Alkuperäinen toimitustapa..."
+
+#: core/class-admin.php:933
 msgid "Unable to create return label for this shipment type."
 msgstr "Palautuslähetystä ei voitu luoda automaattisesti tälle lähetystavalle."
 
 #. %%s: tracking code
-#: core/class-admin.php:985 core/class-admin.php:993
+#: core/class-admin.php:976 core/class-admin.php:984
 #, php-format
 msgid "Successfully deleted Pakettikauppa shipping label %s."
 msgstr "Pakettikauppa-lähetyksen pakettikortti (%s) poistettiin onnistuneesti."
 
 #. %s: Error message
-#: core/class-admin.php:1011
+#: core/class-admin.php:1002
 #, php-format
 msgid "Deleting Pakettikauppa shipment failed! Errors: %s"
 msgstr "Toimenpide epäonnistui! Virheet: %s"
 
 #. @codingStandardsIgnoreLine
-#: core/class-admin.php:1044
+#: core/class-admin.php:1035
 msgid "Shipment tracking code is not defined."
 msgstr "Lähetystä ei löytynyt annetulla seurantanumerolla."
 
-#: core/class-admin.php:1054
+#: core/class-admin.php:1045
 msgid "Cannot find shipment with given shipment number."
 msgstr "Lähetystä ei löytynyt annetulla seurantanumerolla."
 
 #. Shipment tracking url
-#: core/class-admin.php:1122
+#: core/class-admin.php:1113
 #, php-format
 msgid ""
 "You can track your order at %1$s.\n"
@@ -750,12 +741,12 @@ msgid ""
 msgstr ""
 "Voit seurata <a href=\"%1$s\">seurata lähetystä täältä</a>.\n"
 
-#: core/class-admin.php:1129
+#: core/class-admin.php:1120
 msgid "Tracking"
 msgstr "Lähetysseuranta"
 
 #. 1: Shipment tracking URL 2: Shipment tracking code
-#: core/class-admin.php:1131
+#: core/class-admin.php:1122
 #, php-format
 msgid "You can <a href=\"%1$s\">track your order</a> with tracking code %2$s."
 msgstr "Voit <a href=\"%1$s\">seurata lähetystä</a> lähetystunnuksella %2$s."
@@ -765,13 +756,13 @@ msgid "An error occurred. Please try again later."
 msgstr "Toimenpide epäonnistui! Kokeile uudelleen."
 
 #: core/class-frontend.php:361 core/class-frontend.php:362
-#: core/class-frontend.php:561
+#: core/class-frontend.php:555
 msgid "Pickup point"
 msgstr "Noutopiste"
 
 #: core/class-frontend.php:373
-msgid "Empty postcode. Please check your address information."
-msgstr "Tyhjä postinumero. Tarkista osoitetietosi."
+msgid "Insert your shipping details to view nearby pickup points"
+msgstr "Syötä toimitusosoite valitaksesi lähistöllä olevan noutopisteen"
 
 #. %s: Postcode
 #: core/class-frontend.php:379
@@ -779,19 +770,23 @@ msgstr "Tyhjä postinumero. Tarkista osoitetietosi."
 msgid "Invalid postcode \"%1$s\". Please check your address information."
 msgstr "Virheellinen postinumero ”%1$s”. Ole hyvä ja tarkista osoitetietosi."
 
-#: core/class-frontend.php:416
+#: core/class-frontend.php:415
 msgid "Choose one of pickup points close to the address you entered:"
 msgstr "Valitse noutopiste joka on lähellä antamaasi osoitetta:"
 
-#: core/class-frontend.php:525
+#: core/class-frontend.php:494
+msgid "Search"
+msgstr "Hae"
+
+#: core/class-frontend.php:519
 msgid "Select a pickup point"
 msgstr "Valitse noutopiste"
 
-#: core/class-frontend.php:530
+#: core/class-frontend.php:524
 msgid "Other"
 msgstr "Muu noutopiste"
 
-#: core/class-frontend.php:582
+#: core/class-frontend.php:576
 msgid "Please choose a pickup point."
 msgstr "Noutopistettä ei ole valittu."
 

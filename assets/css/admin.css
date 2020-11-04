@@ -69,11 +69,21 @@ table .pakettikauppa-notice p {
   border-left-color: #dc3232;
 }
 
+<<<<<<< HEAD
 .row-disabled {
   position: relative;
 }
 
 .row-disabled:after {
+=======
+.row-disabled > th,
+.row-disabled > td {
+  position: relative;
+}
+
+.row-disabled > th:after,
+.row-disabled > td:after {
+>>>>>>> upstream/development
   content: "";
   position: absolute;
   left: 0;

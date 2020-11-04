@@ -524,7 +524,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
      * @param WC_Order $order The order that is currently being viewed in wp-admin
      */
     public function show_pickup_point_in_admin_order_meta( $order ) {
-      echo '<h4>' . esc_attr__('Pakettikaupa Shipping', 'woo-pakettikauppa') . '</h4>';
+      echo '<h4>' . esc_attr__('Pakettikauppa Shipping', 'woo-pakettikauppa') . '</h4>';
+
       echo sprintf('<p class="form-field pakettikauppa-field"><strong>%s:</strong><br>', esc_attr__('Requested pickup point', 'woo-pakettikauppa'));
       if ( $order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point') ) {
         echo esc_attr($order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point'));
@@ -903,12 +904,22 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             }
           }
 
-          return $this->shipment->create_shipment($order, $service_id, $additional_services);
+          $creating_shipment = get_post_meta($post_id, '_' . $this->core->prefix . '_creating_shipment', 'true');
+          if ( empty($creating_shipment) ) {
+            update_post_meta($post_id, '_' . $this->core->prefix . '_creating_shipment', 'true');
+            $res = $this->shipment->create_shipment($order, $service_id, $additional_services);
+            if ( $res === null ) {
+              update_post_meta($post_id, '_' . $this->core->prefix . '_creating_shipment', '');
+            }
+            return $res;
+          }
+          break;
         case 'get_status':
           $this->get_status($order);
           break;
         case 'delete_shipping_label':
           $tracking_code = sanitize_text_field($_POST['wc_pakettikauppa'][$command]);
+          update_post_meta($post_id, '_' . $this->core->prefix . '_creating_shipment', '');
 
           $this->delete_shipping_label($order, $tracking_code);
           break;
