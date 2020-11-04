@@ -201,8 +201,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
      * @param int $order_id The id of the order to update
      */
     public function update_order_meta_pickup_point_field( $order_id ) {
+      $logger = wc_get_logger();
       if ( ! wp_verify_nonce(sanitize_key($_POST['woocommerce-process-checkout-nonce']), 'woocommerce-process_checkout') ) {
-        return;
+        $logger->error('update_order_meta_pickup_point_field nonce failed to verify');
+        //        return;
       }
 
       $pickup_point = isset($_POST[str_replace('wc_', '', $this->core->prefix) . '_pickup_point']) ? $_POST[str_replace('wc_', '', $this->core->prefix) . '_pickup_point'] : array();
@@ -566,9 +568,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     public function validate_checkout() {
       $logger = wc_get_logger();
       if ( ! wp_verify_nonce(sanitize_key($_POST['woocommerce-process-checkout-nonce']), 'woocommerce-process_checkout') ) {
-          $logger->error('Checkout nonce failed to verify');
-          //$this->add_error(__('We were unable to process your order, please try again.', 'woo-pakettikauppa'));
-          //return;
+        $logger->error('Checkout nonce failed to verify');
+        //$this->add_error(__('We were unable to process your order, please try again.', 'woo-pakettikauppa'));
+        //return;
       }
 
       $key = str_replace('wc_', '', $this->core->prefix) . '_pickup_point';
