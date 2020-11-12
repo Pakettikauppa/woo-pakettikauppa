@@ -100,16 +100,16 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     }
 
     public function reset_pickup_point_session_data() {
-      WC()->session->set('woo_pakettikauppa_pickup_point', null);
+      WC()->session->set(str_replace('wc_', 'woo_', $this->core->prefix) . '_pickup_point', null);
     }
 
     public function set_pickup_point_session_data( $data ) {
-      WC()->session->set('woo_pakettikauppa_pickup_point', $data);
+      WC()->session->set(str_replace('wc_', 'woo_', $this->core->prefix) . '_pickup_point', $data);
     }
 
     public function get_pickup_point_session_data() {
       return WC()->session->get(
-        'woo_pakettikauppa_pickup_point',
+        str_replace('wc_', 'woo_', $this->core->prefix) . '_pickup_point',
         array(
           'address' => WC()->customer->get_shipping_address(),
           'postcode' => WC()->customer->get_shipping_postcode(),
@@ -483,7 +483,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
           echo '<td data-title="' . $title . '">';
 
           woocommerce_form_field(
-            str_replace('wc_', '', $this->core->prefix) . 'custom_pickup_point',
+            'pakettikauppacustom_pickup_point',
             array(
               'type' => 'textarea',
               'custom_attributes' => array(
