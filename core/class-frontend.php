@@ -483,7 +483,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
           echo '<td data-title="' . $title . '">';
 
           woocommerce_form_field(
-            str_replace('wc_', '', $this->core->prefix) . 'custom_pickup_point',
+            'pakettikauppacustom_pickup_point',
             array(
               'type' => 'textarea',
               'custom_attributes' => array(
