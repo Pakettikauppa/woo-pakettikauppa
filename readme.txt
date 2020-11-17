@@ -2,7 +2,7 @@
 Contributors: joosev, ottok, leotoikka, serter, k1sul1
 Donate link: https://seravo.com/
 Tags: woocommerce, shipping, toimitustavat, smartship, pakettikauppa, posti, smartpost, prinetti, matkahuolto, schenker, seravo, gls
-Requires at least: 4.6
+Requires at least: 5.0
 Tested up to: 5.4
 Requires PHP: 7.1
 Stable tag: trunk
