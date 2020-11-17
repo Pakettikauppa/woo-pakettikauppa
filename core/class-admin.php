@@ -281,7 +281,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
       $document_url = wp_nonce_url(admin_url('admin-post.php?post[]=' . $order->get_id() . '&action=quick_create_label'), 'bulk-posts');
 
-      $class = str_replace('wc_', '', $this->core->prefix) . '_create_shipping_label';
+      $class = 'pakettikauppa_create_shipping_label';
 
       $actions = array(
         'name'   => __('Create shipping label', 'woo-pakettikauppa'),
