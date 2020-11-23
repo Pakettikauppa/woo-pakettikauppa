@@ -300,7 +300,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         'pickup_name' => $pickup_point_name,
         'shipment_status' => '',
         'products' => $selected_products,
-        'additional_services' => $save_additional_services
+        'additional_services' => $save_additional_services,
       );
       $this->save_label($order->get_id(), $tracking_info);
 
@@ -528,7 +528,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
     }
 
     /**
-     * 
+     * ...
      *
      * @param string $url
      * @param string $tracking_code
@@ -550,7 +550,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
     }
 
     /**
-     * 
+     * ...
      *
      * @param WC_Order $order The order that is currently being viewed in wp-admin
      * @param bool $return_default_shipping_method
@@ -575,7 +575,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       }
 
       if ( empty($service_id) ) { //Dedicated for multi labels, but not sure if that’s useful
-        $labels = $this->get_labels( $order->get_id() );
+        $labels = $this->get_labels($order->get_id());
         foreach ( $labels as $label ) {
           if ( ! empty($label['service_id']) ) {
             $service_id = $label['service_id'];
@@ -860,12 +860,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             continue;
           }
 
-          if ( ! self::check_selected_product( $item_data['product_id'], $selected_products ) ) {
+          if ( ! self::check_selected_product($item_data['product_id'], $selected_products) ) {
             continue;
           }
 
           $product = $wcpf->get_product($item_data['product_id']);
-          $selected_product = self::get_selected_product( $item_data['product_id'], $selected_products );
+          $selected_product = self::get_selected_product($item_data['product_id'], $selected_products);
 
           if ( empty($product) ) {
             continue;
@@ -938,18 +938,18 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       $weight = 0;
 
       $wcpf = new \WC_Product_Factory();
-      
+
       foreach ( $order->get_items() as $item ) {
         if ( empty($item['product_id']) ) {
           continue;
         }
 
-        if ( ! self::check_selected_product( $item['product_id'], $selected_products ) ) {
+        if ( ! self::check_selected_product($item['product_id'], $selected_products) ) {
           continue;
         }
 
         $product = $wcpf->get_product($item['product_id']);
-        $selected_product = self::get_selected_product( $item['product_id'], $selected_products );
+        $selected_product = self::get_selected_product($item['product_id'], $selected_products);
 
         if ( $product->is_virtual() ) {
           continue;
@@ -984,12 +984,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           continue;
         }
 
-        if ( ! self::check_selected_product( $item['product_id'], $selected_products ) ) {
+        if ( ! self::check_selected_product($item['product_id'], $selected_products) ) {
           continue;
         }
 
         $product = $wcpf->get_product($item['product_id']);
-        $selected_product = self::get_selected_product( $item['product_id'], $selected_products );
+        $selected_product = self::get_selected_product($item['product_id'], $selected_products);
 
         if ( $product->is_virtual() ) {
           continue;
