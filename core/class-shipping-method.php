@@ -129,7 +129,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       } else {
         try {
           $result = $this->client->listShippingMethods();
-        } catch (\Exception $e) {
+        } catch ( \Exception $e ) {
           $result = null;
         }
         if ( empty($result) ) {
