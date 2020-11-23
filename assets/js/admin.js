@@ -49,7 +49,21 @@ jQuery(function( $ ) {
       });
     }
 
-    data[$(obj).attr('name')] = $(obj).val();
+    data['for_products'] = [];
+    $('.prod_select_dropdown .item_cb').each(function (i, obj) {
+      if ($(this).is(':checked')) {
+        data['for_products'].push({
+          prod: $(this).val(),
+          qty: $(this).siblings('.quantity').val()
+        });
+      }
+    });
+
+    if ($(obj).prop('tagName') == 'A') {
+      data[$(obj).attr('name')] = $(obj).data('value');
+    } else {
+      data[$(obj).attr('name')] = $(obj).val();
+    }
 
     $.post(woocommerce_admin_meta_boxes.ajax_url, data, function(response) {
       $("#woo-pakettikauppa .inside").html(response);
@@ -157,3 +171,65 @@ jQuery(function( $ ) {
     }
   };
 });
+
+/* Multiple tracking codes */
+function init_prod_select() {
+  var txt = document.getElementById( 'prod_select_droptxt' ),
+  content = document.getElementById( 'prod_select_content' ),
+  list = document.querySelectorAll( '.prod_select_dropdown .content input[type="checkbox"]' ),
+  quantity = document.querySelectorAll( '.prod_select_dropdown .quantity' );
+
+  if ( ! txt ) return;
+
+  txt.addEventListener( 'click', function() {
+    content.classList.toggle( 'show' );
+  } );
+
+  window.onclick = function( e ) {
+    if ( ! e.target.closest( '.list' ) ) {
+      if ( content.classList.contains( 'show' ) ) {
+        content.classList.remove( 'show' );
+      }
+    }
+  }
+
+  list.forEach( function( item, index ) {
+    item.addEventListener( 'click', function() {
+      quantity[ index ].type = ( item.checked ) ? 'number' : 'hidden';
+      update_prod_select(list, quantity, txt);
+    } );
+    item.click();
+  } );
+
+  quantity.forEach( function( item ) {
+    item.addEventListener( 'input', function() {
+      var max = parseInt(this.max);
+      if (parseInt(this.value) < 1) {
+        this.value = 1;
+      }
+      if (parseInt(this.value) > max) {
+        this.value = max;
+      }
+      update_prod_select(list, quantity, txt)
+    } );
+  } );
+}
+
+function update_prod_select(list, quantity, txt) {
+  for ( var i = 0, arr = []; i < list.length; i++ ) {
+    if ( list[ i ].checked ) arr.push( quantity[ i ].value + ' x ' + list[ i ].getAttribute('data-name') );
+  }
+
+  if (arr.length) {
+    txt.value = arr.join( ', ' );
+    resize_textarea(txt);
+  } else {
+    txt.value = '-'
+    resize_textarea(txt);
+  }
+}
+
+function resize_textarea(element) {
+  element.style.height = "1px";
+  element.style.height = (3+element.scrollHeight)+"px";
+}
