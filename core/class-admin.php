@@ -354,7 +354,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
       foreach ( $order_ids as $order_id ) {
         $order = new \WC_Order($order_id);
-          
+
         $tracking_code = $this->shipment->create_shipment($order);
 
         if ( $tracking_code !== null ) {
@@ -523,7 +523,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
     public function show_pickup_point_in_admin_order_meta( $order ) {
       $service_id = get_post_meta($order->get_id(), '_' . $this->core->prefix . '_custom_service_id', true);
       $default_service_id = $this->shipment->get_service_id_from_order($order, false);
-      if ( empty($service_id) && empty($default_service_id)) {
+      if ( empty($service_id) && empty($default_service_id) ) {
         return;
       }
       echo '<h4>' . esc_attr__('Pakettikauppa Shipping', 'woo-pakettikauppa') . '</h4>';
@@ -553,9 +553,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
      * Template for metabox section end.
      */
     private function tpl_section_end() {
-    	?>
-    	<hr>
-    	<?php
+      ?>
+      <hr>
+      <?php
     }
 
     /**
@@ -584,7 +584,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             <?php if ( ! empty($label['additional_services']) ) : ?>
               <?php
               $services = '';
-              $exclude = array('2106', '3102');
+              $exclude = array( '2106', '3102' );
               foreach ( $label['additional_services'] as $serv_key => $serv_content ) {
                 if ( ! in_array($serv_key, $exclude) && isset($serv_content['name']) ) {
                   if ( ! empty($services) ) {
@@ -602,7 +602,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
               <?php
               $products = '';
               foreach ( $label['products'] as $prod ) {
-                $product = wc_get_product( $prod['prod'] );
+                $product = wc_get_product($prod['prod']);
                 $products .= '<br/>' . $prod['qty'] . ' x ' . $product->get_title();
               }
               ?>
@@ -663,18 +663,20 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
      * @param WC_Order $order The order that is currently being viewed in wp-admin
      */
     private function tpl_products_selector( $order ) {
-    	?>
-    	<div class="pakettikauppa-metabox-products">
+      ?>
+      <div class="pakettikauppa-metabox-products">
         <?php
         $items = $order->get_items();
         $order_items = array();
-        foreach($items as $item) {
+        foreach ( $items as $item ) {
           $item_data = $item->get_data();
-          array_push($order_items, array(
-            'id' => $item_data['product_id'],
-            'name' => $item_data['name'],
-            'max' => $item_data['quantity'],
-          ));
+          array_push($order_items,
+            array(
+              'id' => $item_data['product_id'],
+              'name' => $item_data['name'],
+              'max' => $item_data['quantity'],
+            )
+          );
         }
         ?>
         <h4><?php echo __('Create for products', 'woo-pakettikauppa'); ?></h4>
@@ -734,7 +736,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           $labels[$key]['service_id'] = $this->shipment->get_service_id_from_order($order, false);
         }
         if ( empty($service_id) ) {
-        	$service_id = $labels[$key]['service_id'];
+          $service_id = $labels[$key]['service_id'];
         }
         $labels[$key]['document_url'] = admin_url('admin-post.php?post=' . $post->ID . '&action=show_pakettikauppa&tracking_code=' . $label['tracking_code']);
       }
@@ -917,17 +919,17 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                     <div class="pakettikauppa-pickup-select-block">
                       <h4><?php echo __('Select pickup point', 'woo-pakettikauppa'); ?></h4>
                       <select class="pakettikauppa_metabox_values pakettikauppa-pickup-select" onchange="pakettikauppa_change_selected_pickup_point(this);">
-                      	<?php if (is_array($pickup_points)) : ?>
-                        	<?php foreach ( $pickup_points as $point ) : ?>
-                          	<?php
-                          	$point_name    = $point->provider . ': ' . $point->name;
-                          	$point_id      = ' (#' . $point->pickup_point_id . ')';
-                          	$point_address = ' (' . $point->street_address . ')';
-                          	?>
-                          	<option value="<?php echo $point_name . $point_id; ?>" data-id="<?php echo $point->pickup_point_id; ?>"><?php echo $point_name . $point_address; ?></option>
-                        	<?php endforeach; ?>
+                        <?php if (is_array($pickup_points)) : ?>
+                          <?php foreach ( $pickup_points as $point ) : ?>
+                            <?php
+                            $point_name    = $point->provider . ': ' . $point->name;
+                            $point_id      = ' (#' . $point->pickup_point_id . ')';
+                            $point_address = ' (' . $point->street_address . ')';
+                            ?>
+                            <option value="<?php echo $point_name . $point_id; ?>" data-id="<?php echo $point->pickup_point_id; ?>"><?php echo $point_name . $point_address; ?></option>
+                          <?php endforeach; ?>
                         <?php else : ?>
-                        	<option>---</option>
+                          <option>---</option>
                         <?php endif; ?>
                       </select>
                     </div>
@@ -1099,14 +1101,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
     private function create_return_label( \WC_Order $order ) {
       $shipping_label = $this->shipment->get_single_label( $order->get_id() );
       if ( ! $shipping_label ) {
-      	$this->add_error_notice(esc_attr__('It is not allowed to create a return label when shipping labels not exists', 'woo-pakettikauppa'));
-      	return;
+        $this->add_error_notice(esc_attr__('It is not allowed to create a return label when shipping labels not exists', 'woo-pakettikauppa'));
+        return;
       }
 
       if ( isset($shipping_label['service_id']) && ! empty($shipping_label['service_id']) ) {
-      	$service_id = $shipping_label['service_id'];
+        $service_id = $shipping_label['service_id'];
       } else {
-      	$service_id = $this->shipment->get_service_id_from_order($order, false);
+        $service_id = $this->shipment->get_service_id_from_order($order, false);
       }
 
       $service_provider = $this->shipment->service_provider($service_id);
@@ -1164,7 +1166,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         $old_label = get_post_meta($order->get_id(), '_' . $this->core->prefix . '_tracking_code', true);
         $labels = get_post_meta($order->get_id(), '_' . $this->core->prefix . '_labels', true);
         if ($tracking_code == $old_label) {
-        	$this->shipment->delete_old_structure_label( $order->get_id() );
+          $this->shipment->delete_old_structure_label( $order->get_id() );
         }
         foreach ($labels as $key => $label) {
           if ($label['tracking_code'] == $tracking_code) {
@@ -1236,8 +1238,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       try {
         $status_code = $this->shipment->get_shipment_status($tracking_code);
         $this->shipment->save_label( $order->get_id(), array(
-        	'tracking_code' => $tracking_code,
-        	'shipment_status' => $status_code
+          'tracking_code' => $tracking_code,
+          'shipment_status' => $status_code
         ) );
       } catch ( \Exception $e ) {
         $this->add_error($e->getMessage());
@@ -1324,50 +1326,50 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
       $labels = $this->shipment->get_labels($order->get_ID());
 
-			$tracking_codes = array();
-			foreach ($labels as $label) {
-				if (!empty($label['tracking_code'])) {
-					array_push($tracking_codes, array(
-						'code' => $label['tracking_code'],
-						'url' => $label['tracking_url'],
-						'point' => $label['pickup_name']
-					));
-				}
-			}
+      $tracking_codes = array();
+      foreach ($labels as $label) {
+        if (!empty($label['tracking_code'])) {
+          array_push($tracking_codes, array(
+            'code' => $label['tracking_code'],
+            'url' => $label['tracking_url'],
+            'point' => $label['pickup_name']
+          ));
+        }
+      }
 
-			if (empty($tracking_codes)) {
-				return;
-			}
+      if (empty($tracking_codes)) {
+        return;
+      }
 
-			if ( $plain_text ) {
-				echo sprintf("%s:\n\n", esc_attr__('Tracking', 'woo-pakettikauppa'));
-			} else {
-				echo sprintf('<h2>%s</h2>', esc_attr__('Tracking', 'woo-pakettikauppa'));
-			}
+      if ( $plain_text ) {
+        echo sprintf("%s:\n\n", esc_attr__('Tracking', 'woo-pakettikauppa'));
+      } else {
+        echo sprintf('<h2>%s</h2>', esc_attr__('Tracking', 'woo-pakettikauppa'));
+      }
       foreach($tracking_codes as $code) {
-      	if ( $plain_text ) {
-      		if ( $add_pickup_point_to_email === 'yes' ) {
-      			/* translators: 1: Name 2: Shipment tracking code */
-      			if ( ! empty($code['point']) ) {
-      				echo sprintf("%1\$s: %2\$s.\n", __('Pickup point', 'woo-pakettikauppa'), $code['point']);
-      			} else {
-      				echo sprintf("%1\$s: %2\$s.\n", __('Pickup point', 'woo-pakettikauppa'), '—');
-      			}
-      		}
-      		/* translators: Shipment tracking url */
-        	echo sprintf(__("You can track your order at %1\$s.\n\n", 'woo-pakettikauppa'), esc_url($code['url']));
-      	} else {
-      		echo '<p>';
-      		if ( $add_pickup_point_to_email === 'yes' ) {
-      			if ( ! empty($code['point']) ) {
-      				echo '<b>' . esc_attr__('Pickup point', 'woo-pakettikauppa') . ':</b> ' . esc_attr($code['point']) . '.<br/>';
-      			} else {
-      				echo '<b>' . esc_attr__('Pickup point', 'woo-pakettikauppa') . ':</b> —<br/>';
-      			}
-      		}
-      		/* translators: 1: Shipment tracking URL 2: Shipment tracking code */
-        	echo sprintf(__('You can <a href="%1$s">track your order</a> with tracking code <b>%2$s</b>.', 'woo-pakettikauppa'), esc_url($code['url']), esc_attr($code['code'])) . '</p>';
-      	}
+        if ( $plain_text ) {
+          if ( $add_pickup_point_to_email === 'yes' ) {
+            /* translators: 1: Name 2: Shipment tracking code */
+            if ( ! empty($code['point']) ) {
+              echo sprintf("%1\$s: %2\$s.\n", __('Pickup point', 'woo-pakettikauppa'), $code['point']);
+            } else {
+              echo sprintf("%1\$s: %2\$s.\n", __('Pickup point', 'woo-pakettikauppa'), '—');
+            }
+          }
+          /* translators: Shipment tracking url */
+          echo sprintf(__("You can track your order at %1\$s.\n\n", 'woo-pakettikauppa'), esc_url($code['url']));
+        } else {
+          echo '<p>';
+          if ( $add_pickup_point_to_email === 'yes' ) {
+            if ( ! empty($code['point']) ) {
+              echo '<b>' . esc_attr__('Pickup point', 'woo-pakettikauppa') . ':</b> ' . esc_attr($code['point']) . '.<br/>';
+            } else {
+              echo '<b>' . esc_attr__('Pickup point', 'woo-pakettikauppa') . ':</b> —<br/>';
+            }
+          }
+          /* translators: 1: Shipment tracking URL 2: Shipment tracking code */
+          echo sprintf(__('You can <a href="%1$s">track your order</a> with tracking code <b>%2$s</b>.', 'woo-pakettikauppa'), esc_url($code['url']), esc_attr($code['code'])) . '</p>';
+        }
       }
     }
   }
