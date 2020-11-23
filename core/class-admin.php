@@ -1338,13 +1338,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             array(
               'code' => $label['tracking_code'],
               'url' => $label['tracking_url'],
-              'point' => $label['pickup_name']
+              'point' => $label['pickup_name'],
             )
           );
         }
       }
 
-      if (empty($tracking_codes)) {
+      if ( empty($tracking_codes) ) {
         return;
       }
 
@@ -1353,7 +1353,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       } else {
         echo sprintf('<h2>%s</h2>', esc_attr__('Tracking', 'woo-pakettikauppa'));
       }
-      foreach( $tracking_codes as $code ) {
+      foreach ( $tracking_codes as $code ) {
         if ( $plain_text ) {
           if ( $add_pickup_point_to_email === 'yes' ) {
             /* translators: 1: Name 2: Shipment tracking code */

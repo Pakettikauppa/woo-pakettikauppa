@@ -276,10 +276,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         foreach ( $order->get_items() as $item_id => $item ) {
           $product_id = $item->get_product_id();
           $item_quantity  = $item->get_quantity();
-          array_push($selected_products, array(
-            'prod' => $product_id,
-            'qty' => $item_quantity,
-          ));
+          array_push(
+            $selected_products,
+            array(
+              'prod' => $product_id,
+              'qty' => $item_quantity,
+            )
+          );
         }
       }
 
@@ -361,8 +364,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       $pickup_id = get_post_meta($post_id, '_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point_id', true);
       $pickup_name = get_post_meta($post_id, '_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point', true);
       $ship_status = get_post_meta($post_id, '_' . $this->core->prefix . '_shipment_status', true);
-      
-      $order = new \WC_Order( $post_id );
+
+      $order = new \WC_Order($post_id);
       $additional_services = $this->get_additional_services_from_order($order);
       $save_additional_services = array();
       $all_additional_services = $this->get_additional_services();
@@ -436,7 +439,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         $labels = array();
       }
       if ( $old_label ) {
-        array_unshift($labels,$old_label);
+        array_unshift($labels, $old_label);
       }
 
       return $labels;
@@ -468,24 +471,27 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      * @param array $save_values Values for want to save. A 'tracking_code' is required for saving to occur.
      */
     public function save_label( $post_id, $save_values = array() ) {
-      $label_values = array_replace([
-        'service_id' => '',
-        'tracking_code' => '',
-        'tracking_url' => '',
-        'label_code' => '',
-        'pickup_id' => '',
-        'pickup_name' => '',
-        'shipment_status' => '',
-        'products' => array(),
-        'additional_services' => array(),
-      ], $save_values);
+      $label_values = array_replace(
+        array(
+          'service_id' => '',
+          'tracking_code' => '',
+          'tracking_url' => '',
+          'label_code' => '',
+          'pickup_id' => '',
+          'pickup_name' => '',
+          'shipment_status' => '',
+          'products' => array(),
+          'additional_services' => array(),
+        ),
+        $save_values
+      );
       if ( ! empty($label_values['tracking_code']) ) {
         $all_labels = $this->get_labels($post_id);
         $insert = true;
         foreach ( $all_labels as $key => $label ) {
           if ( $label['tracking_code'] == $label_values['tracking_code'] ) {
             foreach ( $label_values as $name => $value ) {
-              if ( array_key_exists($name,$save_values) ) {
+              if ( array_key_exists($name, $save_values) ) {
                 if ( $name == 'pickup_id' && empty($label_values['pickup_name']) ) {
                   $pickup_name = $this->get_pickup_name($value, $label['service_id']);
                   $all_labels[$key]['pickup_name'] = $pickup_name;
@@ -497,10 +503,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           }
         }
         if ( $insert ) {
-          array_push($all_labels,$label_values);
+          array_push($all_labels, $label_values);
         }
         update_post_meta($post_id, '_' . $this->core->prefix . '_labels', $all_labels);
-        $this->delete_old_structure_label( $post_id );
+        $this->delete_old_structure_label($post_id);
       }
     }
 
@@ -513,7 +519,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      * @return string Pickup point name
      */
     public function get_pickup_name( $pickup_id, $service_id ) {
-      $pickup_info = json_decode($this->client->getPickupPointInfo($pickup_id,$service_id),true);
+      $pickup_info = json_decode($this->client->getPickupPointInfo($pickup_id, $service_id), true);
       if ( isset($pickup_info['name']) ) {
         return $pickup_info['name'] . ' (#' . $pickup_id . ')';
       } else {
