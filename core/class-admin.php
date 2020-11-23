@@ -688,7 +688,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
               <div class="list list_item">
                 <label for="prod_<?php echo $item['id']; ?>" class="list item_label">
                   <input type="checkbox" id="prod_<?php echo $item['id']; ?>" class="list item_cb" value="<?php echo $item['id']; ?>" data-name="<?php echo $item['name']; ?>" />
-                  <span><?=$item['name']?> </span>
+                  <span><?php echo $item['name']; ?> </span>
                   <input type="hidden" class="list quantity" min="1" max="<?php echo $item['max']; ?>" value="<?php echo $item['max']; ?>" />
                 </label>
               </div>
@@ -791,7 +791,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           }
         }
         if ( (! empty($labels) || ! empty($return_shipments)) && ! empty($service_id) ) {
-          $this->tpl_section_title( __('Return labels', 'woo-pakettikauppa') );
+          $this->tpl_section_title(__('Return labels', 'woo-pakettikauppa'));
           if ( ! empty($return_shipments) ) {
             foreach ( $return_shipments as $return_label ) {
               $this->tpl_return_label($return_label);
@@ -1071,7 +1071,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           }
 
           $tracking_code = $this->shipment->create_shipment($order, $service_id, $additional_services, $_REQUEST['for_products']);
-          
+
           return $tracking_code;
           break;
         case 'get_status':
@@ -1170,7 +1170,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           $this->shipment->delete_old_structure_label($order->get_id());
         }
         foreach ( $labels as $key => $label ) {
-          if ($label['tracking_code'] == $tracking_code) {
+          if ( $label['tracking_code'] == $tracking_code ) {
             unset($labels[$key]);
           }
         }
@@ -1242,7 +1242,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           $order->get_id(),
           array(
             'tracking_code' => $tracking_code,
-            'shipment_status' => $status_code
+            'shipment_status' => $status_code,
           )
         );
       } catch ( \Exception $e ) {
@@ -1331,13 +1331,16 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $labels = $this->shipment->get_labels($order->get_ID());
 
       $tracking_codes = array();
-      foreach ($labels as $label) {
-        if (!empty($label['tracking_code'])) {
-          array_push($tracking_codes, array(
-            'code' => $label['tracking_code'],
-            'url' => $label['tracking_url'],
-            'point' => $label['pickup_name']
-          ));
+      foreach ( $labels as $label ) {
+        if ( ! empty($label['tracking_code']) ) {
+          array_push(
+            $tracking_codes,
+            array(
+              'code' => $label['tracking_code'],
+              'url' => $label['tracking_url'],
+              'point' => $label['pickup_name']
+            )
+          );
         }
       }
 
@@ -1350,7 +1353,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       } else {
         echo sprintf('<h2>%s</h2>', esc_attr__('Tracking', 'woo-pakettikauppa'));
       }
-      foreach($tracking_codes as $code) {
+      foreach( $tracking_codes as $code ) {
         if ( $plain_text ) {
           if ( $add_pickup_point_to_email === 'yes' ) {
             /* translators: 1: Name 2: Shipment tracking code */
