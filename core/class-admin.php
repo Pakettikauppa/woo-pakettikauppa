@@ -670,7 +670,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         $order_items = array();
         foreach ( $items as $item ) {
           $item_data = $item->get_data();
-          array_push($order_items,
+          array_push(
+            $order_items,
             array(
               'id' => $item_data['product_id'],
               'name' => $item_data['name'],
@@ -683,12 +684,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         <div class="prod_select_dropdown">
           <textarea id="prod_select_droptxt" class="list" readonly>-</textarea>
           <div id="prod_select_content" class="content">
-            <?php foreach($order_items as $item) : ?>
+            <?php foreach ( $order_items as $item ) : ?>
               <div class="list list_item">
-                <label for="prod_<?=$item['id']?>" class="list item_label">
-                  <input type="checkbox" id="prod_<?=$item['id']?>" class="list item_cb" value="<?=$item['id']?>" data-name="<?=$item['name']?>" />
+                <label for="prod_<?php echo $item['id']; ?>" class="list item_label">
+                  <input type="checkbox" id="prod_<?php echo $item['id']; ?>" class="list item_cb" value="<?php echo $item['id']; ?>" data-name="<?php echo $item['name']; ?>" />
                   <span><?=$item['name']?> </span>
-                  <input type="hidden" class="list quantity" min="1" max="<?=$item['max']?>" value="<?=$item['max']?>" />
+                  <input type="hidden" class="list quantity" min="1" max="<?php echo $item['max']; ?>" value="<?php echo $item['max']; ?>" />
                 </label>
               </div>
             <?php endforeach; ?>
@@ -728,7 +729,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $labels = $this->shipment->get_labels($post->ID);
       $service_id = '';
 
-      foreach ($labels as $key => $label) {
+      foreach ( $labels as $key => $label ) {
         if ( empty($label['tracking_url']) ) {
           $labels[$key]['tracking_url'] = Shipment::tracking_url($label['tracking_code']);
         }
@@ -781,15 +782,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         <input type="hidden" name="pakettikauppa_nonce" value="<?php echo wp_create_nonce(str_replace('wc_', '', $this->core->prefix) . '-meta-box'); ?>" id="pakettikauppa_metabox_nonce" />
         <?php
         if ( empty($service_id) ) {
-          $this->tpl_section_title( __('Send order via Pakettikauppa', 'woo-pakettikauppa') );
+          $this->tpl_section_title(__('Send order via Pakettikauppa', 'woo-pakettikauppa'));
         }
         if ( ! empty($labels) ) {
-          $this->tpl_section_title( __('Shipping labels', 'woo-pakettikauppa') );
-          foreach ($labels as $label) {
+          $this->tpl_section_title(__('Shipping labels', 'woo-pakettikauppa'));
+          foreach ( $labels as $label ) {
             $this->tpl_shipping_label($label);
           }
         }
-        if ( ( ! empty($labels) || ! empty($return_shipments) ) && ! empty($service_id) ) {
+        if ( (! empty($labels) || ! empty($return_shipments)) && ! empty($service_id) ) {
           $this->tpl_section_title( __('Return labels', 'woo-pakettikauppa') );
           if ( ! empty($return_shipments) ) {
             foreach ( $return_shipments as $return_label ) {
@@ -808,7 +809,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         ?>
           <div class="pakettikauppa-services">
             <?php $show_main = ($show_section == 'main') ? '' : 'display:none;'; ?>
-            <fieldset class="pakettikauppa-metabox-fieldset" id="wc_pakettikauppa_shipping_method" style="<?=$show_main?>">
+            <fieldset class="pakettikauppa-metabox-fieldset" id="wc_pakettikauppa_shipping_method" style="<?php echo $show_main; ?>">
               <h4><?php echo esc_html($this->shipment->service_title($default_service_id)); ?></h4>
               <?php if ( ! empty($additional_services) ) : ?>
                 <h4><?php echo esc_attr__('Additional services', 'woo-pakettikauppa'); ?>:</h4>
@@ -849,7 +850,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             </fieldset>
 
             <?php $show_custom = ($show_section == 'custom') ? '' : 'display:none;'; ?>
-            <fieldset class="pakettikauppa-metabox-fieldset" id="wc_pakettikauppa_custom_shipping_method" style="<?=$show_custom?>">
+            <fieldset class="pakettikauppa-metabox-fieldset" id="wc_pakettikauppa_custom_shipping_method" style="<?php echo $show_custom; ?>">
               <?php if ( ! empty($all_shipment_services) ) : ?>
               <select name="wc_pakettikauppa_service_id" id="pakettikauppa-service" class="pakettikauppa_metabox_values" onchange="pakettikauppa_change_shipping_method();">
                 <option value="__NULL__"><?php esc_html_e('No shipping', 'woo-pakettikauppa'); ?></option>
@@ -919,7 +920,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                     <div class="pakettikauppa-pickup-select-block">
                       <h4><?php echo __('Select pickup point', 'woo-pakettikauppa'); ?></h4>
                       <select class="pakettikauppa_metabox_values pakettikauppa-pickup-select" onchange="pakettikauppa_change_selected_pickup_point(this);">
-                        <?php if (is_array($pickup_points)) : ?>
+                        <?php if ( is_array($pickup_points) ) : ?>
                           <?php foreach ( $pickup_points as $point ) : ?>
                             <?php
                             $point_name    = $point->provider . ': ' . $point->name;
@@ -938,7 +939,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
               <?php endforeach; ?>
             </fieldset>
           </div>
-          <?php $this->tpl_products_selector( $order ); ?>
+          <?php $this->tpl_products_selector($order); ?>
           <p class="pakettikauppa-metabox-footer">
             <?php if ( ! empty($service_id) ) : ?>
               <?php $button_text = __('Custom shipping...', 'woo-pakettikauppa'); ?>
@@ -1099,7 +1100,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
      * @throws Exception
      */
     private function create_return_label( \WC_Order $order ) {
-      $shipping_label = $this->shipment->get_single_label( $order->get_id() );
+      $shipping_label = $this->shipment->get_single_label($order->get_id());
       if ( ! $shipping_label ) {
         $this->add_error_notice(esc_attr__('It is not allowed to create a return label when shipping labels not exists', 'woo-pakettikauppa'));
         return;
@@ -1165,10 +1166,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       try {
         $old_label = get_post_meta($order->get_id(), '_' . $this->core->prefix . '_tracking_code', true);
         $labels = get_post_meta($order->get_id(), '_' . $this->core->prefix . '_labels', true);
-        if ($tracking_code == $old_label) {
-          $this->shipment->delete_old_structure_label( $order->get_id() );
+        if ( $tracking_code == $old_label ) {
+          $this->shipment->delete_old_structure_label($order->get_id());
         }
-        foreach ($labels as $key => $label) {
+        foreach ( $labels as $key => $label ) {
           if ($label['tracking_code'] == $tracking_code) {
             unset($labels[$key]);
           }
@@ -1237,10 +1238,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
     private function get_status( \WC_Order $order, $tracking_code ) {
       try {
         $status_code = $this->shipment->get_shipment_status($tracking_code);
-        $this->shipment->save_label( $order->get_id(), array(
-          'tracking_code' => $tracking_code,
-          'shipment_status' => $status_code
-        ) );
+        $this->shipment->save_label(
+          $order->get_id(),
+          array(
+            'tracking_code' => $tracking_code,
+            'shipment_status' => $status_code
+          )
+        );
       } catch ( \Exception $e ) {
         $this->add_error($e->getMessage());
         add_action(
