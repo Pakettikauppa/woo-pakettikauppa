@@ -57,7 +57,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     public function render_checkout_fields( $order ) {
       $service_id = get_post_meta($order->get_id(), '_' . $this->core->prefix . '_custom_service_id', true);
       $default_service_id = $this->shipment->get_service_id_from_order($order, false);
-      if ( empty($service_id) && empty($default_service_id)) {
+      if ( empty($service_id) && empty($default_service_id) ) {
         return;
       }
       ?>

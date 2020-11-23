@@ -187,7 +187,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       }
 
       $pickup_point_id = $order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point_id');
-      
+
       if ( $additional_services === null ) {
         $additional_services = $this->get_additional_services_from_order($order);
 
@@ -243,25 +243,31 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       $save_additional_services = array();
       $all_additional_services = $this->get_additional_services();
       $has_pickuppoint = false;
-      foreach ($additional_services as $service) {
+      foreach ( $additional_services as $service ) {
         if ( isset($service['2106']['pickup_point_id']) ) {
           $pickup_point_id = $service['2106']['pickup_point_id'];
           $has_pickuppoint = true;
         }
-        foreach ($service as $serv_key => $serv_value) {
+        foreach ( $service as $serv_key => $serv_value ) {
           $serv_name = $serv_key;
-          if (isset($all_additional_services[$service_id])) {
-            foreach ($all_additional_services[$service_id] as $serv_obj) {
-              if ($serv_obj->service_code == $serv_key) {
+          if ( isset($all_additional_services[$service_id]) ) {
+            foreach ( $all_additional_services[$service_id] as $serv_obj ) {
+              if ( $serv_obj->service_code == $serv_key ) {
                 $serv_name = $serv_obj->name;
                 break;
               }
             }
           }
-          if (empty($serv_value)) {
-            $save_additional_services[$serv_key] = array('name' => $serv_name, 'values' => array());
+          if ( empty($serv_value) ) {
+            $save_additional_services[$serv_key] = array(
+              'name' => $serv_name,
+              'values' => array(),
+            );
           } else {
-            $save_additional_services[$serv_key] = array('name' => $serv_name, 'values' => $serv_value);
+            $save_additional_services[$serv_key] = array(
+              'name' => $serv_name,
+              'values' => $serv_value,
+            );
           }
         }
       }
@@ -272,12 +278,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           $item_quantity  = $item->get_quantity();
           array_push($selected_products, array(
             'prod' => $product_id,
-            'qty' => $item_quantity
+            'qty' => $item_quantity,
           ));
         }
       }
 
-      if ($has_pickuppoint) {
+      if ( $has_pickuppoint ) {
         $pickup_point_name = $this->get_pickup_name($pickup_point_id, $service_id);
       } else {
         $pickup_point_name = '';
@@ -360,21 +366,27 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       $additional_services = $this->get_additional_services_from_order($order);
       $save_additional_services = array();
       $all_additional_services = $this->get_additional_services();
-      foreach ($additional_services as $service) {
-        foreach ($service as $serv_key => $serv_value) {
+      foreach ( $additional_services as $service ) {
+        foreach ( $service as $serv_key => $serv_value ) {
           $serv_name = $serv_key;
-          if (isset($all_additional_services[$service_id])) {
-            foreach ($all_additional_services[$service_id] as $serv_obj) {
-              if ($serv_obj->service_code == $serv_key) {
+          if ( isset($all_additional_services[$service_id]) ) {
+            foreach ( $all_additional_services[$service_id] as $serv_obj ) {
+              if ( $serv_obj->service_code == $serv_key ) {
                 $serv_name = $serv_obj->name;
                 break;
               }
             }
           }
-          if (empty($serv_value)) {
-            $save_additional_services[$serv_key] = array('name' => $serv_name, 'values' => array());
+          if ( empty($serv_value) ) {
+            $save_additional_services[$serv_key] = array(
+              'name' => $serv_name,
+              'values' => array(),
+            );
           } else {
-            $save_additional_services[$serv_key] = array('name' => $serv_name, 'values' => $serv_value);
+            $save_additional_services[$serv_key] = array(
+              'name' => $serv_name,
+              'values' => $serv_value,
+            );
           }
         }
       }
@@ -388,7 +400,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         'pickup_name' => $pickup_name,
         'shipment_status' => $ship_status,
         'products' => array(),
-        'additional_services' => $save_additional_services
+        'additional_services' => $save_additional_services,
       );
     }
 
@@ -423,7 +435,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       if ( empty($labels) ) {
         $labels = array();
       }
-      if ($old_label) {
+      if ( $old_label ) {
         array_unshift($labels,$old_label);
       }
 
@@ -440,8 +452,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      */
     public function get_single_label( $post_id, $tracking_code = '' ) {
       $labels = $this->get_labels($post_id);
-      foreach ($labels as $label) {
-        if (empty($tracking_code) || $label['tracking_code'] == $tracking_code) {
+      foreach ( $labels as $label ) {
+        if ( empty($tracking_code) || $label['tracking_code'] == $tracking_code ) {
           return $label;
         }
       }
@@ -465,16 +477,16 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         'pickup_name' => '',
         'shipment_status' => '',
         'products' => array(),
-        'additional_services' => array()
+        'additional_services' => array(),
       ], $save_values);
-      if (!empty($label_values['tracking_code'])) {
+      if ( ! empty($label_values['tracking_code']) ) {
         $all_labels = $this->get_labels($post_id);
         $insert = true;
-        foreach ($all_labels as $key => $label) {
-          if ($label['tracking_code'] == $label_values['tracking_code']) {
-            foreach ($label_values as $name => $value) {
-              if (array_key_exists($name,$save_values)) {
-                if ($name == 'pickup_id' && empty($label_values['pickup_name'])) {
+        foreach ( $all_labels as $key => $label ) {
+          if ( $label['tracking_code'] == $label_values['tracking_code'] ) {
+            foreach ( $label_values as $name => $value ) {
+              if ( array_key_exists($name,$save_values) ) {
+                if ( $name == 'pickup_id' && empty($label_values['pickup_name']) ) {
                   $pickup_name = $this->get_pickup_name($value, $label['service_id']);
                   $all_labels[$key]['pickup_name'] = $pickup_name;
                 }
@@ -484,7 +496,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             $insert = false;
           }
         }
-        if ($insert) {
+        if ( $insert ) {
           array_push($all_labels,$label_values);
         }
         update_post_meta($post_id, '_' . $this->core->prefix . '_labels', $all_labels);
@@ -502,7 +514,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      */
     public function get_pickup_name( $pickup_id, $service_id ) {
       $pickup_info = json_decode($this->client->getPickupPointInfo($pickup_id,$service_id),true);
-      if (isset($pickup_info['name'])) {
+      if ( isset($pickup_info['name']) ) {
         return $pickup_info['name'] . ' (#' . $pickup_id . ')';
       } else {
         return '(#' . $pickup_id . ')';
@@ -558,8 +570,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
       if ( empty($service_id) ) { //Dedicated for multi labels, but not sure if that’s useful
         $labels = $this->get_labels( $order->get_id() );
-        foreach ($labels as $label) {
-          if (!empty($label['service_id'])) {
+        foreach ( $labels as $label ) {
+          if ( ! empty($label['service_id']) ) {
             $service_id = $label['service_id'];
             break;
           }
