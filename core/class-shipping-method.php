@@ -127,7 +127,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       if ( empty($settings['account_number']) || empty($settings['secret_key']) ) {
         $api_good = false;
       } else {
-        $result = $this->client->listShippingMethods();
+        try {
+          $result = $this->client->listShippingMethods();
+        } catch ( \Exception $e ) {
+          $result = null;
+        }
         if ( empty($result) ) {
           $api_good = false;
         }
