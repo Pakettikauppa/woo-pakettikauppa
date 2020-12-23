@@ -19,6 +19,8 @@ jobs:
     - php: '7.3'
     # Test PHP 7.4
     - php: '7.4'
+    # Test PHP 8.0
+    - php: '8.0'
     # Test the PHP development version
     - php: 'nightly'
     # Test the WordPress development version
