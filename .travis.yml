@@ -10,8 +10,8 @@ jobs:
       script:
       - python3 ./gnitpick.py
     # Test the legacy 4.9 series and an older PHP version
-    # - php: '7.1'
-    #   env: WP_VERSION=4.9.12
+    - php: '7.1'
+      env: WP_VERSION=4.9.12
     # Arbitrary PHP version to run the PHPCS sniffs against
     - php: '7.2'
       env: SNIFF=1
@@ -37,6 +37,7 @@ jobs:
     #   PHP Fatal error:  Uncaught RuntimeException: Array and string offset
     #   access syntax with curly braces is deprecated on line 757 in file
     #   /tmp/wordpress/wp-includes/script-loader.php
+    - php: 7.1
     - php: 8.0
     - php: nightly
 
