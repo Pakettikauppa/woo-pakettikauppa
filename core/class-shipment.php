@@ -128,8 +128,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           $status = __('Outbound', 'woo-pakettikauppa');
           break;
         default:
-          /* translators: %s: Status code */
-          $status = wp_sprintf(__('Unknown status: %s', 'woo-pakettikauppa'), $status_code);
+          $status = __('Unknown status', 'woo-pakettikauppa');
+          if ( ! empty($status_code) ) {
+            $status .= ': ' . $status_code;
+          }
           break;
       }
 
@@ -155,7 +157,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      *
      * @return string|null
      */
-    public function create_shipment( \WC_Order $order, $service_id = null, $additional_services = null ) {
+    public function create_shipment( \WC_Order $order, $service_id = null, $additional_services = null, $selected_products = array() ) {
       do_action(str_replace('wc_', '', $this->core->prefix) . '_prepare_create_shipment', $order, $service_id, $additional_services);
 
       if ( $service_id === null ) {
@@ -184,10 +186,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         return null;
       }
 
+      $pickup_point_id = $order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point_id');
+
       if ( $additional_services === null ) {
         $additional_services = $this->get_additional_services_from_order($order);
-
-        $pickup_point_id = $order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point_id');
 
         if ( ! empty($pickup_point_id) ) {
           $additional_services[] = array(
@@ -199,7 +201,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       }
 
       try {
-        $shipment = $this->create_shipment_from_order($order, $service_id, $additional_services);
+        $shipment = $this->create_shipment_from_order($order, $service_id, $additional_services, $selected_products);
         $tracking_code = $shipment->{'response.trackingcode'}->__toString();
       } catch ( \Exception $e ) {
         $this->add_error($e->getMessage());
@@ -231,21 +233,76 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         return null;
       }
 
-      update_post_meta($order->get_id(), '_' . $this->core->prefix . '_tracking_code', $tracking_code);
-      update_post_meta($order->get_id(), '_' . $this->core->prefix . '_custom_service_id', $service_id);
-
       do_action(str_replace('wc_', '', $this->core->prefix) . '_post_create_shipment', $order);
 
       $document_url = admin_url('admin-post.php?post=' . $order->get_id() . '&action=show_pakettikauppa&tracking_code=' . $tracking_code);
       $tracking_url = (string) $shipment->{'response.trackingcode'}['tracking_url'];
 
-      update_post_meta($order->get_id(), '_' . $this->core->prefix . '_tracking_url', $tracking_url);
-
       $label_code = (string) $shipment->{'response.trackingcode'}['labelcode'];
 
-      if ( ! empty($label_code) ) {
-        update_post_meta($order->get_id(), '_' . $this->core->prefix . '_label_code', $label_code);
+      $save_additional_services = array();
+      $all_additional_services = $this->get_additional_services();
+      $has_pickuppoint = false;
+      foreach ( $additional_services as $service ) {
+        if ( isset($service['2106']['pickup_point_id']) ) {
+          $pickup_point_id = $service['2106']['pickup_point_id'];
+          $has_pickuppoint = true;
+        }
+        foreach ( $service as $serv_key => $serv_value ) {
+          $serv_name = $serv_key;
+          if ( isset($all_additional_services[$service_id]) ) {
+            foreach ( $all_additional_services[$service_id] as $serv_obj ) {
+              if ( $serv_obj->service_code == $serv_key ) {
+                $serv_name = $serv_obj->name;
+                break;
+              }
+            }
+          }
+          if ( empty($serv_value) ) {
+            $save_additional_services[$serv_key] = array(
+              'name' => $serv_name,
+              'values' => array(),
+            );
+          } else {
+            $save_additional_services[$serv_key] = array(
+              'name' => $serv_name,
+              'values' => $serv_value,
+            );
+          }
+        }
       }
+
+      if ( empty($selected_products) ) {
+        foreach ( $order->get_items() as $item_id => $item ) {
+          $product_id = $item->get_product_id();
+          $item_quantity  = $item->get_quantity();
+          array_push(
+            $selected_products,
+            array(
+              'prod' => $product_id,
+              'qty' => $item_quantity,
+            )
+          );
+        }
+      }
+
+      if ( $has_pickuppoint ) {
+        $pickup_point_name = $this->get_pickup_name($pickup_point_id, $service_id);
+      } else {
+        $pickup_point_name = '';
+      }
+      $tracking_info = array(
+        'service_id' => $service_id,
+        'tracking_code' => $tracking_code,
+        'tracking_url' => $tracking_url,
+        'label_code' => $label_code,
+        'pickup_id' => ($has_pickuppoint) ? $pickup_point_id : '',
+        'pickup_name' => $pickup_point_name,
+        'shipment_status' => '',
+        'products' => $selected_products,
+        'additional_services' => $save_additional_services,
+      );
+      $this->save_label($order->get_id(), $tracking_info);
 
       // Add order note
       $dl_link       = sprintf('<a href="%1$s" target="_blank">%2$s</a>', $document_url, esc_attr__('Print document', 'woo-pakettikauppa'));
@@ -286,6 +343,198 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       return $tracking_code;
     }
 
+    /**
+     * Function for maintain compatibility with previously used a single shipping label.
+     * Required as long as there are old orders that store only one shipping label.
+     *
+     * @param int $post_id The post/order id
+     *
+     * @return array Previously used a single shipping label data converted in to new structure
+     */
+    public function get_old_structure_label( $post_id ) {
+      $tracking_code = get_post_meta($post_id, '_' . $this->core->prefix . '_tracking_code', true);
+
+      if ( empty($tracking_code) ) {
+        return false;
+      }
+
+      $label_code = get_post_meta($post_id, '_' . $this->core->prefix . '_label_code', true);
+      $tracking_url = get_post_meta($post_id, '_' . $this->core->prefix . '_tracking_url', true);
+      $service_id = get_post_meta($post_id, '_' . $this->core->prefix . '_custom_service_id', true);
+      $pickup_id = get_post_meta($post_id, '_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point_id', true);
+      $pickup_name = get_post_meta($post_id, '_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point', true);
+      $ship_status = get_post_meta($post_id, '_' . $this->core->prefix . '_shipment_status', true);
+
+      $order = new \WC_Order($post_id);
+      $additional_services = $this->get_additional_services_from_order($order);
+      $save_additional_services = array();
+      $all_additional_services = $this->get_additional_services();
+      foreach ( $additional_services as $service ) {
+        foreach ( $service as $serv_key => $serv_value ) {
+          $serv_name = $serv_key;
+          if ( isset($all_additional_services[$service_id]) ) {
+            foreach ( $all_additional_services[$service_id] as $serv_obj ) {
+              if ( $serv_obj->service_code == $serv_key ) {
+                $serv_name = $serv_obj->name;
+                break;
+              }
+            }
+          }
+          if ( empty($serv_value) ) {
+            $save_additional_services[$serv_key] = array(
+              'name' => $serv_name,
+              'values' => array(),
+            );
+          } else {
+            $save_additional_services[$serv_key] = array(
+              'name' => $serv_name,
+              'values' => $serv_value,
+            );
+          }
+        }
+      }
+
+      return array(
+        'service_id' => $service_id,
+        'tracking_code' => $tracking_code,
+        'tracking_url' => $tracking_url,
+        'label_code' => $label_code,
+        'pickup_id' => $pickup_id,
+        'pickup_name' => $pickup_name,
+        'shipment_status' => $ship_status,
+        'products' => array(),
+        'additional_services' => $save_additional_services,
+      );
+    }
+
+    /**
+     * Delete previously used single shipping label data.
+     *
+     * @param int $post_id The post/order id
+     */
+    public function delete_old_structure_label( $post_id ) {
+      $old_label = get_post_meta($post_id, '_' . $this->core->prefix . '_tracking_code', true);
+      if ( ! empty($old_label) ) {
+        delete_post_meta($post_id, '_' . $this->core->prefix . '_tracking_code');
+        delete_post_meta($post_id, '_' . $this->core->prefix . '_tracking_url');
+        delete_post_meta($post_id, '_' . $this->core->prefix . '_label_code');
+        delete_post_meta($post_id, '_' . $this->core->prefix . '_creating_shipment');
+        delete_post_meta($post_id, '_' . $this->core->prefix . '_custom_service_id');
+      }
+    }
+
+    /**
+     * Get post meta of all shipping labels.
+     * Include previously used single shipping label.
+     *
+     * @param int $post_id The post/order id
+     *
+     * @return array All Order shipping labels
+     */
+    public function get_labels( $post_id ) {
+      $old_label = $this->get_old_structure_label($post_id);
+      $labels = get_post_meta($post_id, '_' . $this->core->prefix . '_labels', true);
+
+      if ( empty($labels) ) {
+        $labels = array();
+      }
+      if ( $old_label ) {
+        array_unshift($labels, $old_label);
+      }
+
+      return $labels;
+    }
+
+    /**
+     * Get data of one shipping label.
+     *
+     * @param int $post_id The post/order id
+     * @param string $tracking_code Shipping label tracking code if want get specific label.
+     *
+     * @return array|bool Shipping label data or false if not exist
+     */
+    public function get_single_label( $post_id, $tracking_code = '' ) {
+      $labels = $this->get_labels($post_id);
+      foreach ( $labels as $label ) {
+        if ( empty($tracking_code) || $label['tracking_code'] == $tracking_code ) {
+          return $label;
+        }
+      }
+      return false;
+    }
+
+    /**
+     * Save shipping label data to labels array in database.
+     * If the order uses a single shipping label used previously, this function will convert it to the new structure.
+     *
+     * @param int $post_id The post/order id
+     * @param array $save_values Values for want to save. A 'tracking_code' is required for saving to occur.
+     */
+    public function save_label( $post_id, $save_values = array() ) {
+      $label_values = array_replace(
+        array(
+          'service_id' => '',
+          'tracking_code' => '',
+          'tracking_url' => '',
+          'label_code' => '',
+          'pickup_id' => '',
+          'pickup_name' => '',
+          'shipment_status' => '',
+          'products' => array(),
+          'additional_services' => array(),
+        ),
+        $save_values
+      );
+      if ( ! empty($label_values['tracking_code']) ) {
+        $all_labels = $this->get_labels($post_id);
+        $insert = true;
+        foreach ( $all_labels as $key => $label ) {
+          if ( $label['tracking_code'] == $label_values['tracking_code'] ) {
+            foreach ( $label_values as $name => $value ) {
+              if ( array_key_exists($name, $save_values) ) {
+                if ( $name == 'pickup_id' && empty($label_values['pickup_name']) ) {
+                  $pickup_name = $this->get_pickup_name($value, $label['service_id']);
+                  $all_labels[$key]['pickup_name'] = $pickup_name;
+                }
+                $all_labels[$key][$name] = $value;
+              }
+            }
+            $insert = false;
+          }
+        }
+        if ( $insert ) {
+          array_push($all_labels, $label_values);
+        }
+        update_post_meta($post_id, '_' . $this->core->prefix . '_labels', $all_labels);
+        $this->delete_old_structure_label($post_id);
+      }
+    }
+
+    /**
+     * Get pickup point name.
+     *
+     * @param int $pickup_id Pickup point ID
+     * @param int $service_id Service ID
+     *
+     * @return string Pickup point name
+     */
+    public function get_pickup_name( $pickup_id, $service_id ) {
+      $pickup_info = json_decode($this->client->getPickupPointInfo($pickup_id, $service_id), true);
+      if ( isset($pickup_info['name']) ) {
+        return $pickup_info['name'] . ' (#' . $pickup_id . ')';
+      } else {
+        return '(#' . $pickup_id . ')';
+      }
+    }
+
+    /**
+     * ...
+     *
+     * @param string $url
+     * @param string $tracking_code
+     *
+     * @return string|bool
+     */
     private function post_label_to_url( $url, $tracking_code ) {
       $contents = $this->shipment->fetch_shipping_label($tracking_code);
 
@@ -300,6 +549,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       return $result;
     }
 
+    /**
+     * ...
+     *
+     * @param WC_Order $order The order that is currently being viewed in wp-admin
+     * @param bool $return_default_shipping_method
+     *
+     * @return int|null
+     */
     public function get_service_id_from_order( \WC_Order $order, $return_default_shipping_method = true ) {
       if ( $order === null ) {
         return null;
@@ -314,6 +571,16 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
         if ( ! empty($shipping_method) ) {
           $service_id = $shipping_method->get_meta('service_code');
+        }
+      }
+
+      if ( empty($service_id) ) { //Dedicated for multi labels, but not sure if that’s useful
+        $labels = $this->get_labels($order->get_id());
+        foreach ( $labels as $label ) {
+          if ( ! empty($label['service_id']) ) {
+            $service_id = $label['service_id'];
+            break;
+          }
         }
       }
 
@@ -476,18 +743,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      *
      * @return int The status code of the shipment
      */
-    public function get_shipment_status( $post_id ) {
-      $tracking_code = get_post_meta($post_id, '_' . $this->core->prefix . '_tracking_code', true);
-
+    public function get_shipment_status( $tracking_code ) {
       if ( ! empty($tracking_code) ) {
         $data = $this->client->getShipmentStatus($tracking_code);
-
         if ( ! empty($data) && isset($data[0]) ) {
           return $data[0]->{'status_code'};
         }
-
-        return '';
       }
+      return '';
     }
 
     /**
@@ -501,7 +764,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      * @return SimpleXMLElement
      * @throws Exception
      */
-    public function create_shipment_from_order( $order, $service_id = null, $additional_services = array() ) {
+    public function create_shipment_from_order( $order, $service_id = null, $additional_services = array(), $selected_products = array() ) {
       $shipment   = new PK_Shipment();
       $language = determine_locale();
 
@@ -570,8 +833,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         $shipment->addAdditionalService($additional_service);
       }
 
-      $order_total_weight = self::order_weight($order);
-      $order_total_volume = self::order_volume($order);
+      $order_total_weight = self::order_weight($order, $selected_products);
+      $order_total_volume = self::order_volume($order, $selected_products);
 
       for ( $i = 0; $i < $parcel_total_count; $i++ ) {
         $parcel = new Parcel();
@@ -597,7 +860,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             continue;
           }
 
+          if ( ! self::check_selected_product($item_data['product_id'], $selected_products) ) {
+            continue;
+          }
+
           $product = $wcpf->get_product($item_data['product_id']);
+          $selected_product = self::get_selected_product($item_data['product_id'], $selected_products);
 
           if ( empty($product) ) {
             continue;
@@ -609,16 +877,17 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
           $tariff_code       = $product->get_meta(str_replace('wc_', '', $this->core->prefix) . '_tariff_codes', true);
           $country_of_origin = $product->get_meta(str_replace('wc_', '', $this->core->prefix) . '_country_of_origin', true);
+          $quantity = ($selected_product !== false) ? $selected_product['qty'] : $item->get_quantity();
 
           $content_line                    = new ContentLine();
           $content_line->currency          = 'EUR';
           $content_line->country_of_origin = $country_of_origin;
           $content_line->tariff_code       = $tariff_code;
           $content_line->description       = $product->get_name();
-          $content_line->quantity          = $item->get_quantity();
+          $content_line->quantity          = $quantity;
 
           if ( ! empty($product->get_weight()) ) {
-            $content_line->netweight = wc_get_weight($product->get_weight() * $item->get_quantity(), 'g');
+            $content_line->netweight = wc_get_weight($product->get_weight() * $quantity, 'g');
           }
 
           $content_line->value = round($item_data['total'] + $item_data['total_tax'], 2);
@@ -637,6 +906,27 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       return $this->client->getResponse();
     }
 
+    public static function check_selected_product( $prod_id, $selected_products ) {
+      if ( empty($selected_products) ) {
+        return true;
+      }
+      foreach ( $selected_products as $product ) {
+        if ( $prod_id == $product['prod'] ) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    public static function get_selected_product( $prod_id, $selected_products ) {
+      foreach ( $selected_products as $product ) {
+        if ( $prod_id == $product['prod'] ) {
+          return $product;
+        }
+      }
+      return false;
+    }
+
     /**
      * Calculate the total shipping weight of an order.
      *
@@ -644,7 +934,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      *
      * @return int The total weight of the order
      */
-    public static function order_weight( $order ) {
+    public static function order_weight( $order, $selected_products = array() ) {
       $weight = 0;
 
       $wcpf = new \WC_Product_Factory();
@@ -654,7 +944,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           continue;
         }
 
+        if ( ! self::check_selected_product($item['product_id'], $selected_products) ) {
+          continue;
+        }
+
         $product = $wcpf->get_product($item['product_id']);
+        $selected_product = self::get_selected_product($item['product_id'], $selected_products);
 
         if ( $product->is_virtual() ) {
           continue;
@@ -664,7 +959,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           continue;
         }
 
-        $weight += wc_get_weight($product->get_weight() * $item->get_quantity(), 'kg');
+        $quantity = ($selected_product !== false) ? $selected_product['qty'] : $item->get_quantity();
+
+        $weight += wc_get_weight($product->get_weight() * $quantity, 'kg');
       }
 
       return $weight;
@@ -677,7 +974,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      *
      * @return int The total volume of the order (m^3)
      */
-    public static function order_volume( $order ) {
+    public static function order_volume( $order, $selected_products = array() ) {
       $volume = 0;
 
       $wcpf = new \WC_Product_Factory();
@@ -687,7 +984,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           continue;
         }
 
+        if ( ! self::check_selected_product($item['product_id'], $selected_products) ) {
+          continue;
+        }
+
         $product = $wcpf->get_product($item['product_id']);
+        $selected_product = self::get_selected_product($item['product_id'], $selected_products);
 
         if ( $product->is_virtual() ) {
           continue;
@@ -715,7 +1017,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             $dim_multiplier = 1;
         }
         // Calculate total volume
-        $volume += pow($dim_multiplier, 3) * $product->get_width() * $product->get_height() * $product->get_length() * $item['qty'];
+        $quantity = ($selected_product !== false) ? $selected_product['qty'] : $item['qty'];
+        $volume += pow($dim_multiplier, 3) * $product->get_width() * $product->get_height() * $product->get_length() * $quantity;
       }
 
       return $volume;
