@@ -526,7 +526,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       if ( empty($service_id) && empty($default_service_id) ) {
         return;
       }
-      echo '<h4>' . esc_attr__('Pakettikauppa Shipping', 'woo-pakettikauppa') . '</h4>';
+      echo '<div style="clear: both;"></div><h4>' . esc_attr__('Pakettikauppa Shipping', 'woo-pakettikauppa') . '</h4>';
       echo sprintf('<p class="form-field pakettikauppa-field"><strong>%s:</strong><br>', esc_attr__('Requested pickup point', 'woo-pakettikauppa'));
       if ( $order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point') ) {
         echo esc_attr($order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point'));
