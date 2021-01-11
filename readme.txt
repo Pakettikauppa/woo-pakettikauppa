@@ -2,7 +2,7 @@
 Contributors: joosev, ottok, leotoikka, serter, k1sul1
 Donate link: https://pakettikauppa.fi/
 Tags: woocommerce, shipping, toimitustavat, smartship, pakettikauppa, posti, smartpost, prinetti, matkahuolto, schenker, seravo, gls
-Requires at least: 4.6
+Requires at least: 5.0
 Tested up to: 5.4
 Requires PHP: 7.1
 Stable tag: trunk
@@ -102,6 +102,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
+= 3.1.0 =
+* Create multiple shipping labels from order view
+
 = 3.0.1 =
 * Fix bug in pickup point saving in checkout
 
