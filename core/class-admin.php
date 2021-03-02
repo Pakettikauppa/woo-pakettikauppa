@@ -356,7 +356,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         $order = new \WC_Order($order_id);
 
         $labels = $this->shipment->get_labels($order_id);
-        if ( !empty($labels) ) {
+        if ( ! empty($labels) ) {
           $last_label = end($labels);
           $tracking_code = $last_label['tracking_code'];
         } else {
