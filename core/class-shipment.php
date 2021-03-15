@@ -207,7 +207,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         $this->add_error($e->getMessage());
 
         /* translators: %s: Error message */
-        $order->add_order_note(sprintf(esc_attr__('Failed to create Pakettikauppa shipment. Errors: %s', 'woo-pakettikauppa'), $e->getMessage()));
+        $order->add_order_note(sprintf(esc_attr__('Failed to create shipment. Errors: %s', 'woo-pakettikauppa'), $e->getMessage()));
         add_action(
           'admin_notices',
           function() use ( $e ) {
@@ -221,12 +221,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
       if ( $tracking_code === null ) {
         $this->add_error('error');
-        $order->add_order_note(esc_attr__('Failed to create Pakettikauppa shipment.', 'woo-pakettikauppa'));
+        $order->add_order_note(esc_attr__('Failed to create shipment.', 'woo-pakettikauppa'));
         add_action(
           'admin_notices',
           function() {
             /* translators: %s: Error message */
-            $this->add_error_notice(esc_attr__('Failed to create Pakettikauppa shipment.', 'woo-pakettikauppa'));
+            $this->add_error_notice(esc_attr__('Failed to create shipment.', 'woo-pakettikauppa'));
           }
         );
 
@@ -313,8 +313,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       $order->add_order_note(
         sprintf(
           /* translators: 1: Shipping service title 2: Shipment tracking code 3: Shipping label URL 4: Shipment tracking URL */
-          __('Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s', 'woo-pakettikauppa'),
-          $this->service_title($service_id),
+          __('Created %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s', 'woo-pakettikauppa'),
+          $this->core->vendor_name . ' ' . $this->service_title($service_id),
           $tracking_code,
           $dl_link,
           $tracking_link
@@ -900,7 +900,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         $this->client->createTrackingCode($shipment, $language);
       } catch ( \Exception $e ) {
         /* translators: %s: Error message */
-        throw new \Exception(wp_sprintf(__('WooCommerce Pakettikauppa: tracking code creation failed: %s', 'woo-pakettikauppa'), $e->getMessage()));
+        throw new \Exception(wp_sprintf(__('Tracking code creation failed: %s', 'woo-pakettikauppa'), $e->getMessage()));
       }
 
       return $this->client->getResponse();

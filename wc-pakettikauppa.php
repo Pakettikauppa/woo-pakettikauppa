@@ -44,6 +44,7 @@ $instance = new Wc_Pakettikauppa(
     'version' => get_file_data(__FILE__, array( 'Version' ), 'plugin')[0],
     'shipping_method_name' => 'pakettikauppa_shipping_method',
     'vendor_name' => 'Pakettikauppa',
+    'vendor_fullname' => 'Woocommerce Pakettikauppa',
     'vendor_url' => 'https://www.pakettikauppa.fi/',
     'vendor_logo' => 'assets/img/pakettikauppa-logo.png',
     'setup_background' => 'assets/img/pakettikauppa-background.jpg',
