@@ -402,7 +402,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
       if ( ! $shipping_method_found ) {
         echo '<div class="updated warning">';
-        echo sprintf('<p>%s</p>', sprintf(__('%s has been installed/updated but no shipping methods are currently active!', 'woo-pakettikauppa'), $this->core->vendor_fullname));
+        /* translators: %s: Vendor full name */
+        echo '<p>' . sprintf(__('%s has been installed/updated but no shipping methods are currently active!', 'woo-pakettikauppa'), $this->core->vendor_fullname) . '</p>';
         echo '</div>';
       }
     }
@@ -467,6 +468,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             '<a href="%1$s" aria-label="%2$s">%3$s</a>',
             esc_url('https://www.pakettikauppa.fi'),
             esc_attr__('Visit Website', 'woo-pakettikauppa'),
+            /* translators: %s: Vendor name */
             sprintf(esc_html__('Show site %s', 'woo-pakettikauppa'), $this->core->vendor_name)
           ),
         );
@@ -532,6 +534,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       if ( empty($service_id) && empty($default_service_id) ) {
         return;
       }
+      /* translators: %s: Vendor name */
       echo '<div style="clear: both;"></div><h4>' . sprintf(esc_attr__('%s Shipping', 'woo-pakettikauppa'), $this->core->vendor_name) . '</h4>';
       echo sprintf('<p class="form-field pakettikauppa-field"><strong>%s:</strong><br>', esc_attr__('Requested pickup point', 'woo-pakettikauppa'));
       if ( $order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point') ) {
@@ -1181,7 +1184,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           }
         }
         update_post_meta($order->get_id(), '_' . $this->core->prefix . '_labels', $labels);
-        /* translators: %%s: tracking code */
+        /* translators: %1$s: Vendor name, %2$s: tracking code */
         $order->add_order_note(sprintf(esc_attr__('Deleted %1$s shipping label %2$s.', 'woo-pakettikauppa'), $this->core->vendor_name, $tracking_code));
       } catch ( \Exception $e ) {
         $this->add_error($e->getMessage());
@@ -1195,9 +1198,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
         $order->add_order_note(
           sprintf(
-            /* translators: %s: Error message */
-            esc_attr__('Deleting %s shipment failed! Errors: %s', 'woo-pakettikauppa'),
-            $this->core->vendor_name, $e->getMessage()
+            /* translators: %1$s: Vendor name, %2$s: Error message */
+            esc_attr__('Deleting %1$s shipment failed! Errors: %2$s', 'woo-pakettikauppa'),
+            $this->core->vendor_name,
+            $e->getMessage()
           )
         );
       }
@@ -1230,9 +1234,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
         $order->add_order_note(
           sprintf(
-            /* translators: %s: Error message */
+            /* translators: %1$s: Vendor name, %2$s: Error message */
             esc_attr__('Deleting %1$s return label failed! Errors: %2$s', 'woo-pakettikauppa'),
-            $this->core->vendor_name, $e->getMessage()
+            $this->core->vendor_name,
+            $e->getMessage()
           )
         );
       }

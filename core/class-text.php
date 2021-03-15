@@ -23,6 +23,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
     }
 
     public function setup_title() {
+      /* translators: %s: Vendor full name */
       return sprintf(esc_html__('%s&rsaquo; Setup Wizard', 'woo-pakettikauppa'), $this->core->vendor_fullname);
     }
 
@@ -144,6 +145,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
     }
 
     public function setup_intro() {
+      /* translators: %s: Vendor full name */
       return sprintf(esc_html__('Thank you for installing %s! This wizard will guide you through the setup process to get you started.', 'woo-pakettikauppa'), $this->core->vendor_fullname);
     }
 
@@ -411,6 +413,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
     }
 
     public function no_woo_error() {
+      /* translators: %s: Vendor full name */
       return sprintf(__('%s requires WooCommerce to be installed and activated!', 'woo-pakettikauppa'), $this->core->vendor_fullname);
     }
 
