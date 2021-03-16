@@ -91,7 +91,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
         <div class="pakettikauppa-notice__content">
           <p>
-            <?php esc_html_e('Thank you for installing WooCommerce Pakettikauppa! To get started smoothly, please open our setup wizard.', 'woo-pakettikauppa'); ?>
+            <?php sprintf(esc_html_e('Thank you for installing $s! To get started smoothly, please open our setup wizard.', 'woo-pakettikauppa'), $this->core->vendor_fullname); ?>
 
             <br />
             <br />
@@ -114,7 +114,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
         <div class="pakettikauppa-notice__content">
           <p>
-            <?php esc_html_e('Thank you for installing WooCommerce Pakettikauppa! To get started smoothly, please open our setup wizard.', 'woo-pakettikauppa'); ?>
+            <?php sprintf(esc_html_e('Thank you for installing $s! To get started smoothly, please open our setup wizard.', 'woo-pakettikauppa'), $this->core->vendor_fullname); ?>
 
             <br />
             <br />
@@ -402,7 +402,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
       if ( ! $shipping_method_found ) {
         echo '<div class="updated warning">';
-        echo sprintf('<p>%s</p>', __('WooCommerce Pakettikauppa has been installed/updated but no shipping methods are currently active!', 'woo-pakettikauppa'));
+        /* translators: %s: Vendor full name */
+        echo '<p>' . sprintf(__('%s has been installed/updated but no shipping methods are currently active!', 'woo-pakettikauppa'), $this->core->vendor_fullname) . '</p>';
         echo '</div>';
       }
     }
@@ -466,8 +467,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           'service' => sprintf(
             '<a href="%1$s" aria-label="%2$s">%3$s</a>',
             esc_url('https://www.pakettikauppa.fi'),
-            esc_attr__('Visit Pakettikauppa', 'woo-pakettikauppa'),
-            esc_html__('Show site Pakettikauppa', 'woo-pakettikauppa')
+            esc_attr__('Visit Website', 'woo-pakettikauppa'),
+            /* translators: %s: Vendor name */
+            sprintf(esc_html__('Show site %s', 'woo-pakettikauppa'), $this->core->vendor_name)
           ),
         );
 
@@ -532,7 +534,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       if ( empty($service_id) && empty($default_service_id) ) {
         return;
       }
-      echo '<div style="clear: both;"></div><h4>' . esc_attr__('Pakettikauppa Shipping', 'woo-pakettikauppa') . '</h4>';
+      /* translators: %s: Vendor name */
+      echo '<div style="clear: both;"></div><h4>' . sprintf(esc_attr__('%s Shipping', 'woo-pakettikauppa'), $this->core->vendor_name) . '</h4>';
       echo sprintf('<p class="form-field pakettikauppa-field"><strong>%s:</strong><br>', esc_attr__('Requested pickup point', 'woo-pakettikauppa'));
       if ( $order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point') ) {
         echo esc_attr($order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point'));
@@ -727,7 +730,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       }
 
       if ( ! Shipment::validate_order_shipping_receiver($order) ) {
-        esc_attr_e('Please add shipping info to the order to manage Pakettikauppa shipments.', 'woo-pakettikauppa');
+        esc_attr_e('Please add shipping info to the order to manage shipments.', 'woo-pakettikauppa');
 
         return;
       }
@@ -788,7 +791,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         <input type="hidden" name="pakettikauppa_nonce" value="<?php echo wp_create_nonce(str_replace('wc_', '', $this->core->prefix) . '-meta-box'); ?>" id="pakettikauppa_metabox_nonce" />
         <?php
         if ( empty($service_id) ) {
-          $this->tpl_section_title(__('Send order via Pakettikauppa', 'woo-pakettikauppa'));
+          $this->tpl_section_title(__('Send order', 'woo-pakettikauppa'));
         }
         if ( ! empty($labels) ) {
           $this->tpl_section_title(__('Shipping labels', 'woo-pakettikauppa'));
@@ -1181,8 +1184,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           }
         }
         update_post_meta($order->get_id(), '_' . $this->core->prefix . '_labels', $labels);
-        /* translators: %%s: tracking code */
-        $order->add_order_note(sprintf(esc_attr__('Deleted Pakettikauppa shipping label %s.', 'woo-pakettikauppa'), $tracking_code));
+        /* translators: %1$s: Vendor name, %2$s: tracking code */
+        $order->add_order_note(sprintf(esc_attr__('Deleted %1$s shipping label %2$s.', 'woo-pakettikauppa'), $this->core->vendor_name, $tracking_code));
       } catch ( \Exception $e ) {
         $this->add_error($e->getMessage());
         add_action(
@@ -1195,8 +1198,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
         $order->add_order_note(
           sprintf(
-            /* translators: %s: Error message */
-            esc_attr__('Deleting Pakettikauppa shipment failed! Errors: %s', 'woo-pakettikauppa'),
+            /* translators: %1$s: Vendor name, %2$s: Error message */
+            esc_attr__('Deleting %1$s shipment failed! Errors: %2$s', 'woo-pakettikauppa'),
+            $this->core->vendor_name,
             $e->getMessage()
           )
         );
@@ -1214,7 +1218,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           if ( $return_shipment['tracking_code'] === $tracking_code ) {
             delete_post_meta($order->get_id(), '_' . $this->core->prefix . '_return_shipment', $return_shipment);
             /* translators: %%s: tracking code */
-            $order->add_order_note(sprintf(esc_attr__('Deleted Pakettikauppa return label %s.', 'woo-pakettikauppa'), $tracking_code));
+            $order->add_order_note(sprintf(esc_attr__('Deleted %1$s return label %2$s.', 'woo-pakettikauppa'), $this->core->vendor_name, $tracking_code));
             return;
           }
         }
@@ -1230,8 +1234,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
         $order->add_order_note(
           sprintf(
-            /* translators: %s: Error message */
-            esc_attr__('Deleting Pakettikauppa return label failed! Errors: %s', 'woo-pakettikauppa'),
+            /* translators: %1$s: Vendor name, %2$s: Error message */
+            esc_attr__('Deleting %1$s return label failed! Errors: %2$s', 'woo-pakettikauppa'),
+            $this->core->vendor_name,
             $e->getMessage()
           )
         );
