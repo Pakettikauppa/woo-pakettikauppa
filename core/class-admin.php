@@ -355,7 +355,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       foreach ( $order_ids as $order_id ) {
         $order = new \WC_Order($order_id);
 
-        $tracking_code = $this->shipment->create_shipment($order);
+        $labels = $this->shipment->get_labels($order_id);
+        if ( ! empty($labels) ) {
+          $last_label = end($labels);
+          $tracking_code = $last_label['tracking_code'];
+        } else {
+          $tracking_code = $this->shipment->create_shipment($order);
+        }
 
         if ( $tracking_code !== null ) {
           $tracking_codes[] = $tracking_code;
