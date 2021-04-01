@@ -253,7 +253,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
      * @return mixed
      */
     public function register_multi_create_orders( $bulk_actions ) {
-      $bulk_actions[str_replace('wc_', '', $this->core->prefix) . '_create_multiple_shipping_labels'] = __('Create and fetch shipping labels', 'woo-pakettikauppa');
+      $bulk_actions[$this->core->vendor_name] = array(
+        str_replace('wc_', '', $this->core->prefix) . '_create_multiple_shipping_labels' => __('Create and fetch shipping labels', 'woo-pakettikauppa'),
+      );
 
       return $bulk_actions;
     }
