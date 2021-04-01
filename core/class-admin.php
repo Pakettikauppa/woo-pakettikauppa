@@ -566,10 +566,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       if ( 'shop_order' != $post_type ) {
         return $post_id;
       }
-      if (isset($_POST['_shipping_phone'])) {
+      if ( isset($_POST['_shipping_phone']) ) {
         update_post_meta($post_id, '_shipping_phone', wc_clean($_POST['_shipping_phone']));
       }
-      if (isset($_POST['_shipping_email'])) {
+      if ( isset($_POST['_shipping_email']) ) {
         update_post_meta($post_id, '_shipping_email', wc_clean($_POST['_shipping_email']));
       }
     }
