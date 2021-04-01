@@ -765,8 +765,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      * @throws Exception
      */
     public function create_shipment_from_order( $order, $service_id = null, $additional_services = array(), $selected_products = array() ) {
-      $shipment   = new PK_Shipment();
-      $language = determine_locale();
+      $shipment = new PK_Shipment();
+      $language = (function_exists('get_user_locale')) ? ( (function_exists('determine_locale')) ? determine_locale() : get_user_locale() ) : get_locale();
 
       if ( ! empty($language) ) {
         $language = substr($language, 0, 2);
