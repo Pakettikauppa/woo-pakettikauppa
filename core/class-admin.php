@@ -46,6 +46,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       add_action('admin_post_quick_create_label', array( $this, 'create_multiple_shipments' ), 10);
       add_action('woocommerce_email_order_meta', array( $this, 'attach_tracking_to_email' ), 10, 4);
       add_action('woocommerce_admin_order_data_after_shipping_address', array( $this, 'show_pickup_point_in_admin_order_meta' ), 10, 1);
+      add_action('save_post', array( $this, 'save_admin_order_meta' ));
       add_action('handle_bulk_actions-edit-shop_order', array( $this, 'create_multiple_shipments' )); // admin_action_{action name}
       add_action(str_replace('wc_', '', $this->core->prefix) . '_create_shipments', array( $this, 'hook_create_shipments' ), 10, 2);
       add_action(str_replace('wc_', '', $this->core->prefix) . '_fetch_shipping_labels', array( $this, 'hook_fetch_shipping_labels' ), 10, 2);
@@ -543,6 +544,34 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         echo esc_attr__('None');
       }
       echo '</p>';
+
+      echo '<div class="edit_address pakettikauppa">';
+      echo '<p class="form-field _shipping_phone">';
+      echo '<label for="_shipping_phone">' . esc_attr__('Phone', 'woo-pakettikauppa') . '</label>';
+      echo '<input type="text" class="short" name="_shipping_phone" id="_shipping_phone" value="' . esc_attr($order->get_meta('_shipping_phone')) . '">';
+      echo '</p>';
+      echo '<p class="form-field _shipping_email">';
+      echo '<label for="_shipping_email">' . esc_attr__('Email', 'woo-pakettikauppa') . '</label>';
+      echo '<input type="email" class="short" name="_shipping_email" id="_shipping_email" value="' . esc_attr($order->get_meta('_shipping_email')) . '">';
+      echo '</p>';
+      echo '</div>';
+      echo '<div class="clear"></div>';
+    }
+
+    /**
+     * Save custom order meta in order edit page
+     */
+    public function save_admin_order_meta( $post_id ) {
+      global $post_type;
+      if ( 'shop_order' != $post_type ) {
+        return $post_id;
+      }
+      if ( isset($_POST['_shipping_phone']) ) {
+        update_post_meta($post_id, '_shipping_phone', wc_clean($_POST['_shipping_phone']));
+      }
+      if ( isset($_POST['_shipping_email']) ) {
+        update_post_meta($post_id, '_shipping_email', wc_clean($_POST['_shipping_email']));
+      }
     }
 
     /**

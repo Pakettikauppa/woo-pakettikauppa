@@ -274,6 +274,14 @@ table .pakettikauppa-notice p {
   display: block
 }
 
+#order_data .order_data_column .edit_address.pakettikauppa {
+  overflow: hidden;
+}
+#order_data .order_data_column .pakettikauppa ._shipping_email {
+  float: right;
+  clear: right;
+}
+
 /* Responsive */
 @media (min-width: 1200px) {
   .pakettikauppa-notice--setup {
