@@ -11,7 +11,7 @@
  * License: GPL v3 or later
  *
  * WC requires at least: 3.4
- * WC tested up to: 4.0
+ * WC tested up to: 4.4
  *
  * Copyright: © 2017-2020 Seravo Oy, 2020 E-Log Services Oy
  * License: GNU General Public License v3.0
