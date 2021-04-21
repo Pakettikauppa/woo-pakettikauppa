@@ -771,7 +771,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
       foreach ( $labels as $key => $label ) {
         if ( empty($label['tracking_url']) ) {
-          $labels[$key]['tracking_url'] = Shipment::tracking_url($label['tracking_code']);
+          $labels[$key]['tracking_url'] = Shipment::tracking_url($this->core->tracking_base_url, $label['tracking_code']);
         }
         if ( empty($label['service_id']) ) {
           $labels[$key]['service_id'] = $this->shipment->get_service_id_from_order($order, false);

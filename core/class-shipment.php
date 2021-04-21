@@ -640,16 +640,17 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      * Get the full-length tracking url of a shipment by providing its service id and tracking code.
      * Use tracking url provided by pakettikauppa.fi.
      *
+     * @param string $base_url The base tracking page url
      * @param string $tracking_code The tracking code of the shipment
      *
      * @return string The full tracking url for the order
      */
-    public static function tracking_url( $tracking_code ) {
+    public static function tracking_url( $base_url, $tracking_code ) {
 
-      if ( empty($tracking_code) ) {
+      if ( empty($base_url) || empty($tracking_code) ) {
         return '';
       }
-      $tracking_url = 'https://www.pakettikauppa.fi/seuranta/?' . $tracking_code;
+      $tracking_url = $base_url . '?' . $tracking_code;
 
       return $tracking_url;
     }
