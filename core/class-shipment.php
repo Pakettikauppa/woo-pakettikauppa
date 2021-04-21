@@ -40,7 +40,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      * @var Client
      */
     private $client = null;
-    protected $settings = null;
+    protected $settings = array(
+      'mode' => 'test',
+      'account_number' => '00000000-0000-0000-0000-000000000000',
+      'secret_key' => '1234567890ABCDEF'
+    );
 
     private $errors = array();
 
