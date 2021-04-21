@@ -43,7 +43,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
     protected $settings = array(
       'mode' => 'test',
       'account_number' => '00000000-0000-0000-0000-000000000000',
-      'secret_key' => '1234567890ABCDEF'
+      'secret_key' => '1234567890ABCDEF',
     );
 
     private $errors = array();
