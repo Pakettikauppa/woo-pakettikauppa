@@ -59,7 +59,7 @@ $instance = new Wc_Pakettikauppa(
         'base_uri' => 'https://api.pakettikauppa.fi',
       ),
     ),
-    'tracking_base_url' => 'https://www.pakettikauppa.fi/seuranta/',
+    'tracking_base_url' => 'https://www.pakettikauppa.fi/seuranta/?',
     // 'pakettikauppa_api_comment' => 'From WooCommerce', // Overrides default
   )
 );

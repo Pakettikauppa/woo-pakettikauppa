@@ -654,7 +654,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       if ( empty($base_url) || empty($tracking_code) ) {
         return '';
       }
-      $tracking_url = $base_url . '?' . $tracking_code;
+      $tracking_url = $base_url . $tracking_code;
 
       return $tracking_url;
     }

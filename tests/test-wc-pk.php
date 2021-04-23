@@ -46,7 +46,7 @@ class Test_Frontend extends WP_UnitTestCase {
     $inputs = array(
       0 => 90080,
       1 => 'seurantakoodi',
-      2 => 'https://www.pakettikauppa.fi/seuranta/',
+      2 => 'https://www.pakettikauppa.fi/seuranta/?',
     );
     $output = call_user_func(array( $frontend->core->shipment, 'tracking_url' ), $inputs[2], $inputs[1]);
     $this->assertEquals('https://www.pakettikauppa.fi/seuranta/?seurantakoodi', $output);
