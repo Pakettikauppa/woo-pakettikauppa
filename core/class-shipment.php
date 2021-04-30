@@ -150,7 +150,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       return $methods;
     }
 
-    public function check_api_credentials($account_number, $secret_key) {
+    public function check_api_credentials( $account_number, $secret_key ) {
       $api_good = true;
       $status = array(
         'api_good' => true,

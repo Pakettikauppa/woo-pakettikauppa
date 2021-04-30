@@ -122,7 +122,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
         $settings['secret_key'] = $_POST[$field_pref . 'secret_key'];
       }
       $mode = $settings['mode'];
-      
+
       ob_start();
       ?>
       <script>
@@ -140,7 +140,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
             },
             dataType: 'json'
           }).done(function( status ) {
-            <?php if ($mode == 'production') : ?>
+            <?php if ( $mode == 'production' ) : ?>
               hide_mode_react(status.api_good);
               if (status.api_good) {
                 show_api_notice("", false);
