@@ -56,6 +56,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       add_action('wp_ajax_pakettikauppa_meta_box', array( $this, 'ajax_meta_box' ));
       add_action('woocommerce_order_status_changed', array( $this, 'create_shipment_for_order_automatically' ));
       add_action('wp_ajax_get_pickup_point_by_custom_address', array( $this, 'get_pickup_point_by_custom_address' ));
+      add_action('wp_ajax_check_api', array( $this, 'ajax_check_credentials' ));
 
       $this->shipment = $this->core->shipment;
     }
@@ -1019,6 +1020,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         $pickup_points = 'error-zip';
       }
       return $pickup_points;
+    }
+
+    public function ajax_check_credentials() {
+      $account_number = $_POST['api_account'];
+      $secret_key = $_POST['api_secret'];
+      $api_check = $this->shipment->check_api_credentials($account_number, $secret_key);
+      echo json_encode($api_check);
+      wp_die();
     }
 
     /**
