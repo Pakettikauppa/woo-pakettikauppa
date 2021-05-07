@@ -161,18 +161,26 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         $status['msg'] = __('Bad API key or API secret', 'woo-pakettikauppa');
       } else {
         try {
-          $token = $this->client->getToken();
-          if ( empty($token) ) {
+          $checker = $this->client->listShippingMethods();
+          if ( empty($checker) ) {
             $status['api_good'] = false;
-            $status['msg'] = __('Failed to connect with server', 'woo-pakettikauppa');
+            $status['msg'] = __('Failed to check API credentials', 'woo-pakettikauppa');
           }
-          if ( isset($token->error) ) {
-            $status['api_good'] = false;
-            $status['msg'] = $token->error . ': ' . $token->message;
+          $configs = $this->core->api_config;
+          if ( $configs['production']['use_posti_auth'] ) {
+            $token = $this->client->getToken();
+            if ( empty($token) ) {
+              $status['api_good'] = false;
+              $status['msg'] = __('Failed to connect with server', 'woo-pakettikauppa');
+            }
+            if ( isset($token->error) ) {
+              $status['api_good'] = false;
+              $status['msg'] = $token->error . ': ' . $token->message;
+            }
           }
         } catch ( \Exception $e ) {
           $status['api_good'] = false;
-          $status['msg'] = __('Failed to check API credentials', 'woo-pakettikauppa');
+          $status['msg'] = __('An error occurred while checking API credentials', 'woo-pakettikauppa');
         }
       }
       return $status;
