@@ -164,7 +164,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           $checker = $this->client->listShippingMethods();
           if ( empty($checker) ) {
             $status['api_good'] = false;
-            $status['msg'] = __('Failed to check API credentials', 'woo-pakettikauppa');
+            $status['msg'] = __('Failed to check API credentials or them are bad', 'woo-pakettikauppa');
           }
           $configs = $this->core->api_config;
           if ( $configs['production']['use_posti_auth'] ) {
