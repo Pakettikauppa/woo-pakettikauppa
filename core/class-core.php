@@ -65,6 +65,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       $this->vendor_url = $config['vendor_url'] ?? 'https://www.pakettikauppa.fi';
       $this->vendor_logo = $this->dir_url . ($config['vendor_logo'] ?? 'assets/img/pakettikauppa-logo.png');
 
+      $this->tracking_base_url = $config['tracking_base_url'] ?? 'https://www.pakettikauppa.fi/seuranta/?';
+
       $this->setup_background = $this->dir_url . ($config['setup_background'] ?? 'assets/img/pakettikauppa-background.jpg');
       $this->setup_page = $config['setup_page'] ?? 'wcpk-setup';
 
