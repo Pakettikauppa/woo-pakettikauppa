@@ -161,11 +161,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         $status['msg'] = __('Bad API key or API secret', 'woo-pakettikauppa');
       } else {
         try {
-          $checker = $this->client->listShippingMethods();
-          if ( empty($checker) ) {
-            $status['api_good'] = false;
-            $status['msg'] = __('Failed to check API credentials or them are bad', 'woo-pakettikauppa');
-          }
           $configs = $this->core->api_config;
           if ( $configs['production']['use_posti_auth'] ) {
             $token = $this->client->getToken();
@@ -176,6 +171,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             if ( isset($token->error) ) {
               $status['api_good'] = false;
               $status['msg'] = $token->error . ': ' . $token->message;
+            }
+          } else {
+            $checker = $this->client->listShippingMethods();
+            if ( empty($checker) ) {
+              $status['api_good'] = false;
+              $status['msg'] = __('Failed to check API credentials or them are bad', 'woo-pakettikauppa');
             }
           }
         } catch ( \Exception $e ) {
