@@ -167,10 +167,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             if ( empty($token) ) {
               $status['api_good'] = false;
               $status['msg'] = __('Failed to connect with server', 'woo-pakettikauppa');
-            }
-            if ( isset($token->error) ) {
+            } elseif ( isset($token->error) ) {
               $status['api_good'] = false;
               $status['msg'] = $token->error . ': ' . $token->message;
+            } else {
+              $checker = $this->client->listShippingMethods();
+              if ( empty($checker) ) {
+                $status['api_good'] = false;
+                $status['msg'] = __('Failed to check API credentials or them are bad', 'woo-pakettikauppa');
+              }
             }
           } else {
             $checker = $this->client->listShippingMethods();
