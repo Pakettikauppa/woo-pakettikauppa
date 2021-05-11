@@ -162,7 +162,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       } else {
         try {
           $configs = $this->core->api_config;
-          if ( $configs['production']['use_posti_auth'] ) {
+          if ( ! empty($configs['production']['use_posti_auth']) ) {
             $token = $this->client->getToken();
             if ( empty($token) ) {
               $status['api_good'] = false;
