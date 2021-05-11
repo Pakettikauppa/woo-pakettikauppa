@@ -123,39 +123,40 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       }
       $mode = $settings['mode'];
 
-      $api_good = true;
-      if ( empty($settings['account_number']) || empty($settings['secret_key']) ) {
-        $api_good = false;
-      } else {
-        try {
-          $result = $this->client->listShippingMethods();
-        } catch ( \Exception $e ) {
-          $result = null;
-        }
-        if ( empty($result) ) {
-          $api_good = false;
-        }
-      }
-
       ob_start();
       ?>
       <script>
       jQuery(function( $ ) {
         $( document ).ready(function() {
           hide_mode_react();
+
+          $.ajax({
+            type: "POST",
+            url: ajaxurl,
+            data: {
+              action: 'check_api',
+              api_account: "<?php echo $settings['account_number']; ?>",
+              api_secret: "<?php echo $settings['secret_key']; ?>"
+            },
+            dataType: 'json'
+          }).done(function( status ) {
+            <?php if ( $mode == 'production' ) : ?>
+              hide_mode_react(status.api_good);
+              if (status.api_good) {
+                show_api_notice("", false);
+              } else {
+                show_api_notice(status.msg, true);
+              }
+            <?php endif; ?>
+          });
+
           $( document ).on("change", "#woocommerce_pakettikauppa_shipping_method_mode", function() {
             hide_mode_react();
+            show_api_notice("", false);
           });
         });
-        function hide_mode_react() {
-          var show = true;
-          if ($("#woocommerce_pakettikauppa_shipping_method_mode").val() == 'production') {
-            <?php if ( $api_good ) : ?>
-              show = true;
-            <?php else : ?>
-              show = false;
-            <?php endif; ?>
-          }
+
+        function hide_mode_react( show = true ) {
           if (show) {
             $(".mode_react").closest("tr").removeClass("row-disabled");
             $("h3.mode_react").removeClass("row-disabled");
@@ -165,15 +166,25 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
             $("h3.mode_react").addClass("row-disabled");
           }
         }
+
+        function show_api_notice(text, show = true) {
+          if (show) {
+            $("#pakettikauppa_notices").show();
+            $("#pakettikauppa_notice_api span").text(text+".");
+            $("#pakettikauppa_notice_api").show();
+          } else {
+            $("#pakettikauppa_notices").hide();
+            $("#pakettikauppa_notice_api").hide();
+            $("#pakettikauppa_notice_api p").text('');
+          }
+        }
       });
       </script>
-      <?php if ( $mode == 'production' && ! $api_good ) : ?>
-        <tr><td colspan="2">
-          <div class="pakettikauppa-notice notice-error">
-            <p><?php esc_attr_e('API credentials are not working. Please check that API credentials are correct.', 'woo-pakettikauppa'); ?></p>
-          </div>
-        </td></tr>
-      <?php endif; ?>
+      <tr id="pakettikauppa_notices" style="display:none;"><td colspan="2">
+        <div id="pakettikauppa_notice_api" class="pakettikauppa-notice notice-error">
+          <p><b><?php echo strtoupper(__('API error!', 'woo-pakettikauppa')); ?></b> <span></span></p>
+        </div>
+      </td></tr>
       <?php
       $html = ob_get_contents();
       ob_end_clean();
