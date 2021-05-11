@@ -150,6 +150,48 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       return $methods;
     }
 
+    public function check_api_credentials( $account_number, $secret_key ) {
+      $api_good = true;
+      $status = array(
+        'api_good' => true,
+        'msg' => __('API is good', 'woo-pakettikauppa'),
+      );
+      if ( empty($account_number) || empty($secret_key) ) {
+        $status['api_good'] = false;
+        $status['msg'] = __('Bad API key or API secret', 'woo-pakettikauppa');
+      } else {
+        try {
+          $configs = $this->core->api_config;
+          if ( ! empty($configs['production']['use_posti_auth']) ) {
+            $token = $this->client->getToken();
+            if ( empty($token) ) {
+              $status['api_good'] = false;
+              $status['msg'] = __('Failed to connect with server', 'woo-pakettikauppa');
+            } elseif ( isset($token->error) ) {
+              $status['api_good'] = false;
+              $status['msg'] = $token->error . ': ' . $token->message;
+            } else {
+              $checker = $this->client->listShippingMethods();
+              if ( empty($checker) ) {
+                $status['api_good'] = false;
+                $status['msg'] = __('Failed to check API credentials or them are bad', 'woo-pakettikauppa');
+              }
+            }
+          } else {
+            $checker = $this->client->listShippingMethods();
+            if ( empty($checker) ) {
+              $status['api_good'] = false;
+              $status['msg'] = __('Failed to check API credentials or them are bad', 'woo-pakettikauppa');
+            }
+          }
+        } catch ( \Exception $e ) {
+          $status['api_good'] = false;
+          $status['msg'] = __('An error occurred while checking API credentials', 'woo-pakettikauppa');
+        }
+      }
+      return $status;
+    }
+
     /**
      * @param WC_Order $order
      * @param null $service_id
