@@ -271,7 +271,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                     <option value="__PICKUPPOINTS__" <?php echo ($selected_service === '__PICKUPPOINTS__' ? 'selected' : ''); ?>>Noutopisteet</option>
                   <?php endif; ?>
                   <?php foreach ( $all_shipping_methods as $service_id => $service_name ) : ?>
-                    <?php $has_pp = ( $this->get_core()->shipment->service_has_pickup_points($service_id) ) ? true : false; ?>
+                    <?php $has_pp = ($this->get_core()->shipment->service_has_pickup_points($service_id)) ? true : false; ?>
                     <option value="<?php echo $service_id; ?>" <?php echo (strval($selected_service) === strval($service_id) ? 'selected' : ''); ?> data-haspp="<?php echo ($has_pp) ? 'true' : 'false'; ?>">
                       <?php echo $service_name; ?>
                       <?php if ( $has_pp ) : ?>
@@ -332,7 +332,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                         <label>
                           <input type="checkbox"
                             name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . esc_attr($service_id) . '][pickuppoints]'; ?>"
-                            value="yes" <?php echo ( (! empty($values[ $method_id ][ $service_id ]['pickuppoints']) && $values[ $method_id ][ $service_id ]['pickuppoints'] === 'yes') || empty($values[ $method_id ][ $service_id ]['pickuppoints']) ) ? 'checked' : ''; ?>>
+                            value="yes" <?php echo ((! empty($values[ $method_id ][ $service_id ]['pickuppoints']) && $values[ $method_id ][ $service_id ]['pickuppoints'] === 'yes') || empty($values[ $method_id ][ $service_id ]['pickuppoints'])) ? 'checked' : ''; ?>>
                           <?php echo __('Pickup points', 'woo-pakettikauppa'); ?>
                         </label>
                       </p>
