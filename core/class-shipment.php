@@ -40,11 +40,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      * @var Client
      */
     private $client = null;
-    protected $settings = array(
-      'mode' => 'test',
-      'account_number' => '00000000-0000-0000-0000-000000000000',
-      'secret_key' => '1234567890ABCDEF',
-    );
+    protected $settings = null;
 
     private $errors = array();
 
@@ -1381,6 +1377,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         // WooCommerce breaks the entire site.
         $this->settings = get_option('woocommerce_' . $this->core->shippingmethod . '_settings', array());
         // $this->settings = get_option('woocommerce_pakettikauppa_shipping_method_settings', array());
+        if ( empty($this->settings) ) {
+          $this->settings = array(
+            'mode' => 'test',
+            'account_number' => '00000000-0000-0000-0000-000000000000',
+            'secret_key' => '1234567890ABCDEF',
+          );
+        }
       }
 
       return $this->settings;
