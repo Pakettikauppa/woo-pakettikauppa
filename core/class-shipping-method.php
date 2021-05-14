@@ -220,6 +220,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
 
             var servicesElement = document.getElementById('services-' + methodId + '-' + strUser);
             var pickuppointsElement = document.getElementById('pickuppoints-' + methodId);
+            var servicePickuppointsElement = document.getElementById('service-' + methodId + '-' + strUser + '-pickuppoints');
 
             for(var i=0; i<elements.length; ++i) {
                 elements[i].style.display = "none";
@@ -231,6 +232,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
             } else {
               if (pickuppointsElement) pickuppointsElement.style.display = "none";
               if (servicesElement) servicesElement.style.display = "block";
+              if (elem.options[elem.selectedIndex].getAttribute('data-haspp') == 'true') servicePickuppointsElement.style.display = "block";
             }
         }
       </script>
@@ -269,10 +271,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                     <option value="__PICKUPPOINTS__" <?php echo ($selected_service === '__PICKUPPOINTS__' ? 'selected' : ''); ?>>Noutopisteet</option>
                   <?php endif; ?>
                   <?php foreach ( $all_shipping_methods as $service_id => $service_name ) : ?>
-                    <option value="<?php echo $service_id; ?>" <?php echo (strval($selected_service) === strval($service_id) ? 'selected' : ''); ?>>
+                    <?php $has_pp = ($this->get_core()->shipment->service_has_pickup_points($service_id)) ? true : false; ?>
+                    <option value="<?php echo $service_id; ?>" <?php echo (strval($selected_service) === strval($service_id) ? 'selected' : ''); ?> data-haspp="<?php echo ($has_pp) ? 'true' : 'false'; ?>">
                       <?php echo $service_name; ?>
-                      <?php if ( $this->get_core()->shipment->service_has_pickup_points($service_id) ) : ?>
-                        (<?php $this->get_core()->text->includes_pickup_points(); ?>)
+                      <?php if ( $has_pp ) : ?>
+                        (<?php echo $this->get_core()->text->includes_pickup_points(); ?>)
                       <?php endif; ?>
                     </option>
                   <?php endforeach; ?>
@@ -285,10 +288,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                             name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . $method_code . '][active]'; ?>"
                             value="no">
                     <p>
-                      <input type="checkbox"
+                      <label>
+                        <input type="checkbox"
                               name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . $method_code . '][active]'; ?>"
                               value="yes" <?php echo (! empty($values[ $method_id ][ $method_code ]['active']) && $values[ $method_id ][ $method_code ]['active'] === 'yes') ? 'checked' : ''; ?>>
-                      <?php echo $method_name; ?>
+                        <?php echo $method_name; ?>
+                      </label>
                     </p>
                   <?php endforeach; ?>
                 </div>
@@ -307,14 +312,32 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                                 name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . esc_attr($method_code) . '][additional_services][' . $additional_service->service_code . ']'; ?>"
                                 value="no">
                         <p>
-                          <input type="checkbox"
+                          <label>
+                            <input type="checkbox"
                                   name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . esc_attr($method_code) . '][additional_services][' . $additional_service->service_code . ']'; ?>"
                                   value="yes" <?php echo (! empty($values[ $method_id ][ $method_code ]['additional_services'][ $additional_service->service_code ]) && $values[ $method_id ][ $method_code ]['additional_services'][ $additional_service->service_code ] === 'yes') ? 'checked' : ''; ?>>
-                          <?php echo $additional_service->name; ?>
+                            <?php echo $additional_service->name; ?>
+                          </label>
                         </p>
                       <?php endif; ?>
                     <?php endforeach; ?>
                   </div>
+                <?php endforeach; ?>
+                <?php foreach ( $all_shipping_methods as $service_id => $service_name ) : ?>
+                  <?php if ( $this->get_core()->shipment->service_has_pickup_points($service_id) ) : ?>
+                    <div id="service-<?php echo $method_id; ?>-<?php echo $service_id; ?>-pickuppoints" class="pk-services-<?php echo $method_id; ?>" style="display: none;">
+                      <input type="hidden"
+                        name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . esc_attr($service_id) . '][pickuppoints]'; ?>" value="no">
+                      <p>
+                        <label>
+                          <input type="checkbox"
+                            name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . esc_attr($service_id) . '][pickuppoints]'; ?>"
+                            value="yes" <?php echo ((! empty($values[ $method_id ][ $service_id ]['pickuppoints']) && $values[ $method_id ][ $service_id ]['pickuppoints'] === 'yes') || empty($values[ $method_id ][ $service_id ]['pickuppoints'])) ? 'checked' : ''; ?>>
+                          <?php echo __('Pickup points', 'woo-pakettikauppa'); ?>
+                        </label>
+                      </p>
+                    </div>
+                  <?php endif; ?>
                 <?php endforeach; ?>
               </td>
             </table>
