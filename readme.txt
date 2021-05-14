@@ -105,6 +105,7 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 = 3.1.0 =
 * Create multiple shipping labels from order view
 * Allow editing of order phone number and email address
+* Make pickup point search optional
 * Various bug fixes
 
 = 3.0.1 =
