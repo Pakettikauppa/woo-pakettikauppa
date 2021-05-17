@@ -123,39 +123,40 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       }
       $mode = $settings['mode'];
 
-      $api_good = true;
-      if ( empty($settings['account_number']) || empty($settings['secret_key']) ) {
-        $api_good = false;
-      } else {
-        try {
-          $result = $this->client->listShippingMethods();
-        } catch ( \Exception $e ) {
-          $result = null;
-        }
-        if ( empty($result) ) {
-          $api_good = false;
-        }
-      }
-
       ob_start();
       ?>
       <script>
       jQuery(function( $ ) {
         $( document ).ready(function() {
           hide_mode_react();
+
+          $.ajax({
+            type: "POST",
+            url: ajaxurl,
+            data: {
+              action: 'check_api',
+              api_account: "<?php echo $settings['account_number']; ?>",
+              api_secret: "<?php echo $settings['secret_key']; ?>"
+            },
+            dataType: 'json'
+          }).done(function( status ) {
+            <?php if ( $mode == 'production' ) : ?>
+              hide_mode_react(status.api_good);
+              if (status.api_good) {
+                show_api_notice("", false);
+              } else {
+                show_api_notice(status.msg, true);
+              }
+            <?php endif; ?>
+          });
+
           $( document ).on("change", "#woocommerce_pakettikauppa_shipping_method_mode", function() {
             hide_mode_react();
+            show_api_notice("", false);
           });
         });
-        function hide_mode_react() {
-          var show = true;
-          if ($("#woocommerce_pakettikauppa_shipping_method_mode").val() == 'production') {
-            <?php if ( $api_good ) : ?>
-              show = true;
-            <?php else : ?>
-              show = false;
-            <?php endif; ?>
-          }
+
+        function hide_mode_react( show = true ) {
           if (show) {
             $(".mode_react").closest("tr").removeClass("row-disabled");
             $("h3.mode_react").removeClass("row-disabled");
@@ -165,15 +166,25 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
             $("h3.mode_react").addClass("row-disabled");
           }
         }
+
+        function show_api_notice(text, show = true) {
+          if (show) {
+            $("#pakettikauppa_notices").show();
+            $("#pakettikauppa_notice_api span").text(text+".");
+            $("#pakettikauppa_notice_api").show();
+          } else {
+            $("#pakettikauppa_notices").hide();
+            $("#pakettikauppa_notice_api").hide();
+            $("#pakettikauppa_notice_api p").text('');
+          }
+        }
       });
       </script>
-      <?php if ( $mode == 'production' && ! $api_good ) : ?>
-        <tr><td colspan="2">
-          <div class="pakettikauppa-notice notice-error">
-            <p><?php esc_attr_e('API credentials are not working. Please check that API credentials are correct.', 'woo-pakettikauppa'); ?></p>
-          </div>
-        </td></tr>
-      <?php endif; ?>
+      <tr id="pakettikauppa_notices" style="display:none;"><td colspan="2">
+        <div id="pakettikauppa_notice_api" class="pakettikauppa-notice notice-error">
+          <p><b><?php echo strtoupper(__('API error!', 'woo-pakettikauppa')); ?></b> <span></span></p>
+        </div>
+      </td></tr>
       <?php
       $html = ob_get_contents();
       ob_end_clean();
@@ -209,6 +220,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
 
             var servicesElement = document.getElementById('services-' + methodId + '-' + strUser);
             var pickuppointsElement = document.getElementById('pickuppoints-' + methodId);
+            var servicePickuppointsElement = document.getElementById('service-' + methodId + '-' + strUser + '-pickuppoints');
 
             for(var i=0; i<elements.length; ++i) {
                 elements[i].style.display = "none";
@@ -220,6 +232,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
             } else {
               if (pickuppointsElement) pickuppointsElement.style.display = "none";
               if (servicesElement) servicesElement.style.display = "block";
+              if (elem.options[elem.selectedIndex].getAttribute('data-haspp') == 'true') servicePickuppointsElement.style.display = "block";
             }
         }
       </script>
@@ -258,10 +271,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                     <option value="__PICKUPPOINTS__" <?php echo ($selected_service === '__PICKUPPOINTS__' ? 'selected' : ''); ?>>Noutopisteet</option>
                   <?php endif; ?>
                   <?php foreach ( $all_shipping_methods as $service_id => $service_name ) : ?>
-                    <option value="<?php echo $service_id; ?>" <?php echo (strval($selected_service) === strval($service_id) ? 'selected' : ''); ?>>
+                    <?php $has_pp = ($this->get_core()->shipment->service_has_pickup_points($service_id)) ? true : false; ?>
+                    <option value="<?php echo $service_id; ?>" <?php echo (strval($selected_service) === strval($service_id) ? 'selected' : ''); ?> data-haspp="<?php echo ($has_pp) ? 'true' : 'false'; ?>">
                       <?php echo $service_name; ?>
-                      <?php if ( $this->get_core()->shipment->service_has_pickup_points($service_id) ) : ?>
-                        (<?php $this->get_core()->text->includes_pickup_points(); ?>)
+                      <?php if ( $has_pp ) : ?>
+                        (<?php echo $this->get_core()->text->includes_pickup_points(); ?>)
                       <?php endif; ?>
                     </option>
                   <?php endforeach; ?>
@@ -274,10 +288,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                             name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . $method_code . '][active]'; ?>"
                             value="no">
                     <p>
-                      <input type="checkbox"
+                      <label>
+                        <input type="checkbox"
                               name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . $method_code . '][active]'; ?>"
                               value="yes" <?php echo (! empty($values[ $method_id ][ $method_code ]['active']) && $values[ $method_id ][ $method_code ]['active'] === 'yes') ? 'checked' : ''; ?>>
-                      <?php echo $method_name; ?>
+                        <?php echo $method_name; ?>
+                      </label>
                     </p>
                   <?php endforeach; ?>
                 </div>
@@ -296,14 +312,32 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                                 name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . esc_attr($method_code) . '][additional_services][' . $additional_service->service_code . ']'; ?>"
                                 value="no">
                         <p>
-                          <input type="checkbox"
+                          <label>
+                            <input type="checkbox"
                                   name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . esc_attr($method_code) . '][additional_services][' . $additional_service->service_code . ']'; ?>"
                                   value="yes" <?php echo (! empty($values[ $method_id ][ $method_code ]['additional_services'][ $additional_service->service_code ]) && $values[ $method_id ][ $method_code ]['additional_services'][ $additional_service->service_code ] === 'yes') ? 'checked' : ''; ?>>
-                          <?php echo $additional_service->name; ?>
+                            <?php echo $additional_service->name; ?>
+                          </label>
                         </p>
                       <?php endif; ?>
                     <?php endforeach; ?>
                   </div>
+                <?php endforeach; ?>
+                <?php foreach ( $all_shipping_methods as $service_id => $service_name ) : ?>
+                  <?php if ( $this->get_core()->shipment->service_has_pickup_points($service_id) ) : ?>
+                    <div id="service-<?php echo $method_id; ?>-<?php echo $service_id; ?>-pickuppoints" class="pk-services-<?php echo $method_id; ?>" style="display: none;">
+                      <input type="hidden"
+                        name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . esc_attr($service_id) . '][pickuppoints]'; ?>" value="no">
+                      <p>
+                        <label>
+                          <input type="checkbox"
+                            name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . esc_attr($service_id) . '][pickuppoints]'; ?>"
+                            value="yes" <?php echo ((! empty($values[ $method_id ][ $service_id ]['pickuppoints']) && $values[ $method_id ][ $service_id ]['pickuppoints'] === 'yes') || empty($values[ $method_id ][ $service_id ]['pickuppoints'])) ? 'checked' : ''; ?>>
+                          <?php echo __('Pickup points', 'woo-pakettikauppa'); ?>
+                        </label>
+                      </p>
+                    </div>
+                  <?php endif; ?>
                 <?php endforeach; ?>
               </td>
             </table>

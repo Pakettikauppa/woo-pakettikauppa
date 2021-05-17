@@ -28,6 +28,7 @@ jobs:
     - php: '7.4'
       env: WOO_VERSION=nightly
     # Test the all development versions
+    - php: '8.0'
     - php: 'nightly'
       env: WP_VERSION=nightly WOO_VERSION=nightly
   allow_failures:
@@ -36,6 +37,8 @@ jobs:
     #   PHP Fatal error:  Uncaught RuntimeException: Array and string offset
     #   access syntax with curly braces is deprecated on line 757 in file
     #   /tmp/wordpress/wp-includes/script-loader.php
+    - php: 7.1
+    - php: 8.0
     - php: nightly
 
 # Common for all jobs

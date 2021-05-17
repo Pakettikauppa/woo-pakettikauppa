@@ -23,7 +23,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
     }
 
     public function setup_title() {
-      return esc_html__('WooCommerce Pakettikauppa &rsaquo; Setup Wizard', 'woo-pakettikauppa');
+      /* translators: %s: Vendor full name */
+      return sprintf(esc_html__('%s&rsaquo; Setup Wizard', 'woo-pakettikauppa'), $this->core->vendor_fullname);
     }
 
     public function setup_button_text() {
@@ -31,7 +32,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
     }
 
     public function shipping_method_name() {
-      return __('Pakettikauppa', 'woo-pakettikauppa');
+      return $this->core->vendor_name;
     }
 
     public function shipping_method_desc() {
@@ -59,7 +60,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
     }
 
     public function unable_connect_to_vendor_server() {
-      return __('Can not connect to Pakettikauppa server - please check Pakettikauppa API credentials, servers error log and firewall settings.', 'woo-pakettikauppa');
+      return __('Can not connect to server - please check API credentials, servers error log and firewall settings.', 'woo-pakettikauppa');
     }
 
     public function legacy_shipping_method_desc( $vendor_name = null ) {
@@ -144,7 +145,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
     }
 
     public function setup_intro() {
-      return esc_html__('Thank you for installing WooCommerce Pakettikauppa! This wizard will guide you through the setup process to get you started.', 'woo-pakettikauppa');
+      /* translators: %s: Vendor full name */
+      return sprintf(esc_html__('Thank you for installing %s! This wizard will guide you through the setup process to get you started.', 'woo-pakettikauppa'), $this->core->vendor_fullname);
     }
 
     public function setup_credential_info( $vendor_name = null, $vendor_url = null ) {
@@ -185,7 +187,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
          * %1$s: link to WooCommerce shipping zone setting page
          * %2$s: link to external WooCommerce documentation
          */
-        __('Please configure the shipping methods of the currently active shipping zones to use Pakettikauppa shipping. Note that this plugin requires WooCommerce shipping zones and methods to be preconfigured in <a href="%1$s">WooCommerce > Settings > Shipping > Shipping zones</a>. For more information, visit <a target="_blank" href="%2$s">%2$s</a>.', 'woo-pakettikauppa'),
+        __('Please configure the shipping methods of the currently active shipping zones to use %1$s shipping. Note that this plugin requires WooCommerce shipping zones and methods to be preconfigured in <a href="%2$s">WooCommerce > Settings > Shipping > Shipping zones</a>. For more information, visit <a target="_blank" href="%2$s">%3$s</a>.', 'woo-pakettikauppa'),
+        $this->core->vendor_name,
         esc_url(admin_url('admin.php?page=wc-settings&tab=shipping')),
         esc_attr('https://docs.woocommerce.com/document/setting-up-shipping-zones/')
       );
@@ -406,11 +409,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
     }
 
     public function show_shipping_method() {
-      return __('Show Pakettikauppa shipping method', 'woo-pakettikauppa');
+      return __('Show shipping method', 'woo-pakettikauppa');
     }
 
     public function no_woo_error() {
-      return __('WooCommerce Pakettikauppa requires WooCommerce to be installed and activated!', 'woo-pakettikauppa');
+      /* translators: %s: Vendor full name */
+      return sprintf(__('%s requires WooCommerce to be installed and activated!', 'woo-pakettikauppa'), $this->core->vendor_fullname);
     }
 
     public function no_pickup_points_error() {

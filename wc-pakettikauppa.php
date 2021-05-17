@@ -1,19 +1,19 @@
 <?php
 /**
  * Plugin Name: WooCommerce Pakettikauppa
- * Version: 3.0.1
+ * Version: 3.1.0
  * Plugin URI: https://github.com/Seravo/woo-pakettikauppa
  * Description: Pakettikauppa shipping service for WooCommerce. Integrates Posti, Smartship, Matkahuolto, DB Schenker and others.
- * Author: Seravo
- * Author URI: https://seravo.com/
+ * Author: Pakettikauppa
+ * Author URI: https://pakettikauppa.fi/
  * Text Domain: woo-pakettikauppa
  * Domain Path: /languages/
  * License: GPL v3 or later
  *
  * WC requires at least: 3.4
- * WC tested up to: 4.0
+ * WC tested up to: 4.4
  *
- * Copyright: © 2017-2020 Seravo Oy
+ * Copyright: © 2017-2020 Seravo Oy, 2020-2021 E-Log Services Oy
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  */
@@ -44,6 +44,7 @@ $instance = new Wc_Pakettikauppa(
     'version' => get_file_data(__FILE__, array( 'Version' ), 'plugin')[0],
     'shipping_method_name' => 'pakettikauppa_shipping_method',
     'vendor_name' => 'Pakettikauppa',
+    'vendor_fullname' => 'Woocommerce Pakettikauppa',
     'vendor_url' => 'https://www.pakettikauppa.fi/',
     'vendor_logo' => 'assets/img/pakettikauppa-logo.png',
     'setup_background' => 'assets/img/pakettikauppa-background.jpg',
@@ -58,7 +59,7 @@ $instance = new Wc_Pakettikauppa(
         'base_uri' => 'https://api.pakettikauppa.fi',
       ),
     ),
+    'tracking_base_url' => 'https://www.pakettikauppa.fi/seuranta/?',
     // 'pakettikauppa_api_comment' => 'From WooCommerce', // Overrides default
   )
 );
-

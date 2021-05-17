@@ -1,9 +1,9 @@
 === WooCommerce Pakettikauppa ===
 Contributors: joosev, ottok, leotoikka, serter, k1sul1
-Donate link: https://seravo.com/
+Donate link: https://pakettikauppa.fi/
 Tags: woocommerce, shipping, toimitustavat, smartship, pakettikauppa, posti, smartpost, prinetti, matkahuolto, schenker, seravo, gls
-Requires at least: 4.6
-Tested up to: 5.4
+Requires at least: 5.0
+Tested up to: 5.6
 Requires PHP: 7.1
 Stable tag: trunk
 License: GPLv3 or later
@@ -102,6 +102,12 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
+= 3.1.0 =
+* Create multiple shipping labels from order view
+* Allow editing of order phone number and email address
+* Make pickup point search optional
+* Various bug fixes
+
 = 3.0.1 =
 * Fix bug in pickup point saving in checkout
 

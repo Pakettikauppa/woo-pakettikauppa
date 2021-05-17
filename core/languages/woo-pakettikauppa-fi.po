@@ -6,7 +6,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-"
 "pakettikauppa\n"
 "POT-Creation-Date: 2020-09-29 13:55+0000\n"
-"PO-Revision-Date: 2020-09-29 13:58+0000\n"
+"PO-Revision-Date: 2021-05-11 06:43+0000\n"
 "Last-Translator: \n"
 "Language-Team: Finnish\n"
 "Language: fi\n"
@@ -16,136 +16,318 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Domain: woo-pakettikauppa\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Loco-Version: 2.4.3; wp-5.5.1"
+"X-Loco-Version: 2.5.2; wp-5.7.1"
 
-#: core/class-text.php:26
-msgid "WooCommerce Pakettikauppa &rsaquo; Setup Wizard"
-msgstr "WooCommerce Pakettikauppa &rsaquo; Asetusvelho"
-
-#: core/class-text.php:30
-msgid "Start the setup wizard"
-msgstr "Käynnistä asetuksien konfigurointi"
-
-#: core/class-text.php:34
-msgid "Pakettikauppa"
-msgstr "Pakettikauppa"
-
-#: core/class-text.php:38
-msgid "Edit to select shipping company and shipping prices."
-msgstr "Muokkaa jotta voit valita toimitusyhtiön ja -hinnat."
-
-#. %s: shipping method
-#: core/class-text.php:44
-#, php-format
-msgid "Selected shipping method: %s"
-msgstr "Valittu toimitustapa: %s"
-
-#: core/class-text.php:50 core/class-admin.php:690
-msgid "No shipping"
-msgstr "Ei toimitusta"
-
-#: core/class-text.php:54
-msgid "includes pickup points"
-msgstr "sisältää noutopisteet"
-
-#: core/class-text.php:58
-msgid "Select one shipping method"
-msgstr "Valitse yksi toimitustapa"
-
-#: core/class-text.php:62
+#: core/class-admin.php:193
 msgid ""
-"Can not connect to Pakettikauppa server - please check Pakettikauppa API "
-"credentials, servers error log and firewall settings."
+"\"Country of origin\" means the country where the goods originated, e.g. "
+"were produced/manufactured or assembled."
 msgstr ""
-"Ei voitu yhdistää pakettikaupan palvelimeen - ole hyvä ja tarkista "
-"Pakettikaupan API tunnukset, palvelimen virheloki ja palomuuriasetukset."
+"Tavaran alkuperämaa, jolla on usein merkitystä tuontimaksuja ja veroja "
+"laskettaessa."
 
-#. Vendor name, not translatable
-#: core/class-text.php:72
+#. %s: Vendor full name
+#: core/class-admin.php:410
 #, php-format
 msgid ""
-"Only use this shipping method if no other shipping methods are available and "
-"suitable. Using this shipping method is not required to be able to use %s "
-"plugin."
+"%s has been installed/updated but no shipping methods are currently active!"
 msgstr ""
-"Käytä vain tätä toimitustapaa mikäli ei ole muita toimitustapoja saatavilla "
-"tai soveltuvia. Tämän toimitustavan käyttö ei ole vaadittu jotta voi käyttää "
-"Pakettikaupan pluginia."
 
-#: core/class-text.php:81
-msgid "Shipping methods"
-msgstr "Toimitustavat"
+#. %s: Vendor full name
+#: core/class-text.php:417
+#, php-format
+msgid "%s requires WooCommerce to be installed and activated!"
+msgstr ""
 
-#: core/class-text.php:85
-msgid "Shipping method"
-msgstr "Toimitustapa"
+#. %s: Vendor name
+#: core/class-admin.php:542
+#, php-format
+msgid "%s Shipping"
+msgstr ""
 
-#: core/class-text.php:89
-msgid "Price (vat included)"
-msgstr "Hinta (ALV sisältyy hintaan)"
+#. %s: Vendor full name
+#: core/class-text.php:27
+#, php-format
+msgid "%s&rsaquo; Setup Wizard"
+msgstr ""
 
-#: core/class-text.php:93
-msgid "Shipping cost"
-msgstr "Toimituksen hinta"
+#: core/class-text.php:295
+msgid "Add selected pickup point information to the order completed email"
+msgstr "Liitä noutopisteen tiedot \"Tilaus valmis\" sähköpostiin"
 
-#: core/class-text.php:97
-msgid "Shipping cost  (vat included)"
-msgstr "Toimituksen hinta (ALV sisältyy hintaan)"
+#: core/class-text.php:291
+msgid "Add tracking link to the order completed email"
+msgstr "Liitä seurantatunnus \"Tilaus valmis\" sähköpostiin"
 
-#: core/class-text.php:101
-msgid "Free shipping tier"
-msgstr "Ilmaisen toimituksen raja"
+#: core/class-admin.php:856
+msgid "Additional services"
+msgstr "Lisäpalvelut"
 
-#: core/class-text.php:105
+#: core/class-text.php:408
+msgid "Advanced settings"
+msgstr "Kehittyneet ominaisuudet"
+
+#: core/class-text.php:106
 msgid "After which amount shipping is free."
 msgstr "Summa minkä jälkeen toimitus on ilmainen."
 
-#: core/class-text.php:109
-msgid "Default shipping class cost"
-msgstr "Oletushinta toimitusluokalle"
+#: core/class-shipment.php:189
+msgid "An error occurred while checking API credentials"
+msgstr ""
+"Tapahtui virhe API-tunnuksia varmistaessa. Tarkista, että API-tunnukset ovat "
+"syötetty oikein"
 
-#: core/class-text.php:113
-msgid "No shipping class cost (vat included)"
-msgstr "Oletushinta toimitusluokalle (ALV sisältyy hintaan)"
+#: core/class-text.php:425
+msgid "An error occurred while searching for pickup points."
+msgstr "Noutopisteitä haettaessa tapahtui virhe."
 
-#. Vendor name, not translatable
-#: core/class-text.php:123
+#: core/class-frontend.php:171
+msgid "An error occurred. Please try again later."
+msgstr "Toimenpide epäonnistui! Kokeile uudelleen."
+
+#. %s: Error message
+#: core/class-shipment.php:257 core/class-admin.php:448
+#: core/class-admin.php:1235 core/class-admin.php:1271
+#: core/class-admin.php:1305
 #, php-format
-msgid "Link to %s website"
-msgstr "Linkki %s:n"
+msgid "An error occurred: %s"
+msgstr "Tapahtui virhe: %s"
 
-#: core/class-text.php:127
-msgid "Not now"
-msgstr "Ei nyt"
+#: core/class-shipping-method.php:185
+msgid "API error!"
+msgstr ""
 
-#: core/class-text.php:131
-msgid "Skip this step"
-msgstr "Ohita tämä vaihe"
+#: core/class-shipment.php:157
+msgid "API is good"
+msgstr "API-avaimet toimivat"
 
-#: core/class-text.php:135
-msgid "Let's start!"
-msgstr "Aloita!"
+#: core/class-text.php:242
+msgid "API key"
+msgstr "Käyttäjätunnus (API key)"
 
-#: core/class-text.php:139
+#. %1$s: Vendor name, not translatable
+#: core/class-text.php:251
+#, php-format
+msgid "API key provided by %1$s"
+msgstr "Pakettikaupalta saatu käyttäjätunnus"
+
+#: core/class-text.php:257
+msgid "API secret"
+msgstr "Salainen avain (API secret)"
+
+#. %1$s: Vendor name, not translatable
+#: core/class-text.php:266
+#, php-format
+msgid "API secret provided by %1$s"
+msgstr "Pakettikaupalta saatu salainen avain"
+
+#: core/class-shipment.php:161
+msgid "Bad API key or API secret"
+msgstr "API-tunnukset eivät toimineet"
+
+#: core/class-text.php:400
+msgid "Bank account number for Cash on Delivery (IBAN)"
+msgstr "Postiennakko: tilinumero IBAN-muodossa"
+
+#: core/class-text.php:404
+msgid "BIC code for Cash on Delivery"
+msgstr "Postiennakko: tilin BIC-koodi"
+
+#: core/class-text.php:324
+msgid "Browser"
+msgstr "Selainikkunaan"
+
+#: core/class-shipment.php:104
+msgid "C.O.D payment is paid to the sender"
+msgstr "Lähetykseen liittyvä postiennakkomaksu on suoritettu"
+
+#: core/class-text.php:63
+msgid ""
+"Can not connect to server - please check API credentials, servers error log "
+"and firewall settings."
+msgstr ""
+
+#: core/class-admin.php:1328
+msgid "Cannot find shipment with given shipment number."
+msgstr "Lähetystä ei löytynyt annetulla seurantanumerolla."
+
+#: core/class-admin.php:344
+msgid "Cannot find shipments with given shipment numbers."
+msgstr "Lähetystä ei löytynyt annetuilla seurantanumeroilla."
+
+#: core/class-text.php:396
+msgid "Cash on Delivery (COD) Settings"
+msgstr "Postiennakkoasetukset"
+
+#: core/class-frontend.php:418
+msgid "Choose one of pickup points close to the address you entered:"
+msgstr "Valitse noutopiste joka on lähellä antamaasi osoitetta:"
+
+#: core/class-text.php:202
+msgid ""
+"Congratulations, everything is now set up and you are now ready to start "
+"using the plugin!"
+msgstr ""
+"Onneksi olkoon, kaikki tarvittavat asetukset on nyt määritetty ja lisäosa on "
+"nyt valmis käytettäväksi!"
+
+#: core/class-text.php:140
 msgid "Continue"
 msgstr "Jatka"
 
-#: core/class-text.php:143
+#: core/class-admin.php:191
+msgid "Country of origin"
+msgstr "Tavaran alkuperämaa"
+
+#: core/class-admin.php:992
+msgid "Create"
+msgstr "Luo pakettikortti"
+
+#: core/class-admin.php:259
+msgid "Create and fetch shipping labels"
+msgstr "Luo ja hae pakettikortit"
+
+#: core/class-admin.php:724
+msgid "Create for products"
+msgstr "Luo tuotteille"
+
+#: core/class-admin.php:696
+msgid "Create Return Label"
+msgstr "Luo palautuspakettikortti"
+
+#: core/class-admin.php:291
+msgid "Create shipping label"
+msgstr "Luo ja hae pakettikortti"
+
+#: core/class-text.php:307
+msgid "Create shipping labels automatically"
+msgstr "Luo pakettikortit automaattisesti"
+
+#. 1: Shipping service title 2: Shipment tracking code 3: Shipping label URL 4: Shipment tracking URL
+#: core/class-shipment.php:358
+#, php-format
+#| msgid "Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s"
+msgid "Created %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s"
+msgstr "Luotiin Pakettikauppa %1$s-lähetys.<br>%2$s<br>%1$s - %3$s<br>%4$s"
+
+#: core/class-text.php:206
+msgid "Credentials"
+msgstr "Tunnukset"
+
+#: core/class-text.php:433
+msgid "Custom pickup address"
+msgstr "Hae vaihtoehtoista noutopistettä"
+
+#: core/class-admin.php:986
+msgid "Custom shipping..."
+msgstr "Muu toimitustapa..."
+
+#: core/class-text.php:198
+msgid "Customize the order processing phase."
+msgstr "Muokkaa tilauksen prosessointivaihetta."
+
+#: core/class-text.php:110
+msgid "Default shipping class cost"
+msgstr "Oletushinta toimitusluokalle"
+
+#: core/class-admin.php:658 core/class-admin.php:684
+msgid "Delete"
+msgstr "Poista"
+
+#. %%s: tracking code
+#: core/class-admin.php:1261
+#, php-format
+msgid "Deleted %1$s return label %2$s."
+msgstr ""
+
+#. %1$s: Vendor name, %2$s: tracking code
+#: core/class-admin.php:1228
+#, php-format
+msgid "Deleted %1$s shipping label %2$s."
+msgstr ""
+
+#. %1$s: Vendor name, %2$s: Error message
+#: core/class-admin.php:1278
+#, php-format
+msgid "Deleting %1$s return label failed! Errors: %2$s"
+msgstr ""
+
+#. %1$s: Vendor name, %2$s: Error message
+#: core/class-admin.php:1242
+#, php-format
+msgid "Deleting %1$s shipment failed! Errors: %2$s"
+msgstr ""
+
+#: core/class-text.php:328
+msgid "Download"
+msgstr "Ladattavaksi"
+
+#: core/class-text.php:39
+msgid "Edit to select shipping company and shipping prices."
+msgstr "Muokkaa jotta voit valita toimitusyhtiön ja -hinnat."
+
+#: core/class-admin.php:557
+msgid "Email"
+msgstr ""
+
+#: core/class-frontend.php:375
+msgid "Empty postcode. Please check your address information."
+msgstr "Ei postinumeroa. Ole hyvä ja tarkista osoitetietosi."
+
+#: core/class-shipment.php:95
+msgid "Exception"
+msgstr "Lähetykselle on tehty poikkeama"
+
+#: core/class-text.php:144
 msgid "Exit"
 msgstr "Poistu"
 
-#: core/class-text.php:147
-msgid ""
-"Thank you for installing WooCommerce Pakettikauppa! This wizard will guide "
-"you through the setup process to get you started."
+#: core/class-shipment.php:177 core/class-shipment.php:184
+msgid "Failed to check API credentials or them are bad"
+msgstr "API-tunnuksia ei pystytty varmistamaan tai ne olivat syötetty väärin"
+
+#: core/class-shipment.php:169
+msgid "Failed to connect with server"
+msgstr "Yhteyttä palvelimeen ei saatu"
+
+#. %s: Error message
+#: core/class-shipment.php:266 core/class-shipment.php:271
+msgid "Failed to create shipment."
 msgstr ""
-"Kiitos WooCommerce Pakettikauppa -lisäosan asentamisesta! Tämä velho käy "
-"läpi lisäosan asetukset vaihe vaiheelta, jotta käyttöönotto olisi "
-"mahdollisimman vaivatonta."
+
+#. %s: Error message
+#: core/class-shipment.php:252
+#, php-format
+msgid "Failed to create shipment. Errors: %s"
+msgstr ""
+
+#: core/class-text.php:102
+msgid "Free shipping tier"
+msgstr "Ilmaisen toimituksen raja"
+
+#: core/class-admin.php:183
+msgid "HS tariff number"
+msgstr "CN nimike"
+
+#. URI of the plugin
+msgid "https://github.com/Seravo/woo-pakettikauppa"
+msgstr "https://github.com/Seravo/woo-pakettikauppa"
+
+#. Author URI of the plugin
+msgid "https://pakettikauppa.fi/"
+msgstr ""
+
+#: core/class-text.php:429
+msgid ""
+"If none of your preferred pickup points are listed, fill in a custom address "
+"above and select another pickup point."
+msgstr ""
+"Voit myös hakea noutopisteitä syöttämällä vaihtoehtoisen osoitteen "
+"ylläolevaan kenttään."
 
 #. %1$s: Vendor name, not translateable
 #. %2$s: Vendor url, not translateable
-#: core/class-text.php:165
+#: core/class-text.php:167
 #, php-format
 msgid ""
 "If you have already registered with %1$s, please choose \"Production mode\" "
@@ -163,7 +345,234 @@ msgstr ""
 "pakettikauppa.fi</a>. Lisäosan testaamista varten valitse “Testitila” ja "
 "jätä käyttäjätunnus ja salainen avain tyhjiksi."
 
-#: core/class-text.php:175
+#: core/class-text.php:55
+msgid "includes pickup points"
+msgstr "sisältää noutopisteet"
+
+#: core/class-text.php:392
+msgid "Info-code for shipments"
+msgstr "Lähetyksien info-koodi"
+
+#: core/class-shipment.php:107
+msgid "Informed consignee of arrival"
+msgstr "Lähetyksestä on lähetetty saapumisilmoitus"
+
+#. %s: Postcode
+#: core/class-frontend.php:381
+#, php-format
+msgid "Invalid postcode \"%1$s\". Please check your address information."
+msgstr "Virheellinen postinumero ”%1$s”. Ole hyvä ja tarkista osoitetietosi."
+
+#: core/class-admin.php:1154
+msgid ""
+"It is not allowed to create a return label when shipping labels not exists"
+msgstr ""
+"Palautuslähetyksiä ei voi luoda, mikäli ei ole alkuperäistä lähetystä luotuna"
+
+#: core/class-shipment.php:98
+msgid "Item has been handed over to the recipient"
+msgstr "Lähetys on luovutettu vastaanottajalle"
+
+#: core/class-shipment.php:125
+msgid "Item is arrived to a post office"
+msgstr "Lähetys on saapunut postitoimipaikkaan"
+
+#: core/class-shipment.php:92
+msgid "Item is collected from sender - picked up"
+msgstr "Lähetys on noudettu lähettäjältä"
+
+#: core/class-shipment.php:101
+msgid "Item is in transport"
+msgstr "Lähetys on kuljetuksessa"
+
+#: core/class-shipment.php:110
+msgid "Item is loaded onto a means of transport"
+msgstr "Lähetys on lastattu runkokuljetukseen"
+
+#: core/class-shipment.php:119
+msgid "Item is ready for delivery transportation"
+msgstr "Lähetys on lastattu jakelukuljetukseen"
+
+#: core/class-shipment.php:122
+msgid "Item is returning to the sender"
+msgstr "Lähetys palautuu lähettäjälle"
+
+#: core/class-shipment.php:113
+msgid "Item not delivered – delivery attempt made"
+msgstr "Lähetystä ei ole toimitettu – luovutusyritys on tehty"
+
+#: core/class-admin.php:620 core/class-admin.php:680
+msgid "Label code"
+msgstr "Asiointikoodi"
+
+#: core/class-shipment.php:375
+msgid "Label posted to URL successfully."
+msgstr "Pakettikortti lähetetty URLiin onnistuneesti."
+
+#: core/class-text.php:136
+msgid "Let's start!"
+msgstr "Aloita!"
+
+#: core/class-text.php:344
+msgid "Limit the amount of nearest pickup points shown."
+msgstr "Rajoita noutopistelistassa näkyvien noutopisteiden lukumäärää."
+
+#. Vendor name, not translatable
+#: core/class-text.php:124
+#, php-format
+msgid "Link to %s website"
+msgstr "Linkki %s:n"
+
+#: core/class-text.php:356
+msgid "List"
+msgstr "Listana"
+
+#: core/class-text.php:352
+msgid "Menu"
+msgstr "Valikkona"
+
+#: core/class-text.php:210
+msgid "Merchant"
+msgstr "Kauppias"
+
+#: core/class-text.php:230
+msgid "Mode"
+msgstr "Tila"
+
+#: core/class-text.php:311
+msgid "No automatic creation of shipping labels"
+msgstr "Ei automaattisesti pakettikorttien luomista"
+
+#: core/class-text.php:303
+msgid "No order status change"
+msgstr "Ei tilan muutosta"
+
+#: core/class-admin.php:959
+msgid "No pickup points were found"
+msgstr "Noutopisteitä ei löytynyt"
+
+#: core/class-text.php:421
+msgid "No pickup points were found. Check the address."
+msgstr "Noutopisteitä ei löytynyt. Tarkista osoite."
+
+#: core/class-text.php:51 core/class-admin.php:897
+msgid "No shipping"
+msgstr "Ei toimitusta"
+
+#: core/class-text.php:114
+msgid "No shipping class cost (vat included)"
+msgstr "Oletushinta toimitusluokalle (ALV sisältyy hintaan)"
+
+#: core/class-text.php:128
+msgid "Not now"
+msgstr "Ei nyt"
+
+#: core/class-text.php:226
+msgid "Note"
+msgstr "Huom"
+
+#. Vendor name, not translatable
+#: core/class-text.php:73
+#, php-format
+msgid ""
+"Only use this shipping method if no other shipping methods are available and "
+"suitable. Using this shipping method is not required to be able to use %s "
+"plugin."
+msgstr ""
+"Käytä vain tätä toimitustapaa mikäli ei ole muita toimitustapoja saatavilla "
+"tai soveltuvia. Tämän toimitustavan käyttö ei ole vaadittu jotta voi käyttää "
+"Pakettikaupan pluginia."
+
+#: core/class-text.php:218
+msgid "Order Processing"
+msgstr "Tilauksen käsittely"
+
+#: core/class-admin.php:987
+msgid "Original shipping..."
+msgstr "Alkuperäinen toimitustapa..."
+
+#: core/class-frontend.php:545
+msgid "Other"
+msgstr "Muu noutopiste"
+
+#: core/class-shipment.php:128
+msgid "Outbound"
+msgstr "Lähetys on lähdössä ulkomaille"
+
+#. Author of the plugin
+msgid "Pakettikauppa"
+msgstr "Pakettikauppa"
+
+#. Description of the plugin
+msgid ""
+"Pakettikauppa shipping service for WooCommerce. Integrates Posti, Smartship, "
+"Matkahuolto, DB Schenker and others."
+msgstr ""
+"Pakettikauppa-toimitustapa WooCommercelle. Integroi Postin, Smartshipin, "
+"Matkahuollon, DB Schenkerin ja muut palvelut yhden toimitustavan alle."
+
+#: core/class-admin.php:871 core/class-admin.php:935
+msgid "Parcel count"
+msgstr "Pakettien määrä"
+
+#: core/class-admin.php:553
+msgid "Phone"
+msgstr ""
+
+#: core/class-text.php:437
+msgid "Pickup address"
+msgstr "Noutopisteen osoite"
+
+#. 1: Name 2: Shipment tracking code
+#: core/class-admin.php:623 core/class-admin.php:1412 core/class-admin.php:1414
+#: core/class-admin.php:1423 core/class-admin.php:1425
+#: core/class-frontend.php:363 core/class-frontend.php:364
+#: core/class-frontend.php:563
+msgid "Pickup point"
+msgstr "Noutopiste"
+
+#: core/class-text.php:340
+msgid "Pickup point search limit"
+msgstr "Noutopistehaun rajoitus"
+
+#: core/class-shipping-method.php:336
+msgid "Pickup points"
+msgstr ""
+
+#: core/class-admin.php:765
+#| msgid ""
+#| "Please add shipping info to the order to manage Pakettikauppa shipments."
+msgid "Please add shipping info to the order to manage shipments."
+msgstr ""
+"Lisää tilaukselle vastaanottaja hallinnoidaksesi Pakettikauppa-"
+"toimitustapoja."
+
+#: core/class-frontend.php:587
+msgid "Please choose a pickup point."
+msgstr "Noutopistettä ei ole valittu."
+
+#. %1$s: link to WooCommerce shipping zone setting page
+#. %2$s: link to external WooCommerce documentation
+#: core/class-text.php:190
+#, fuzzy, php-format
+#| msgid ""
+#| "Please configure the shipping methods of the currently active shipping "
+#| "zones to use Pakettikauppa shipping. Note that this plugin requires "
+#| "WooCommerce shipping zones and methods to be preconfigured in <a "
+#| "href=\"%1$s\">WooCommerce > Settings > Shipping > Shipping zones</a>. For "
+#| "more information, visit <a target=\"_blank\" href=\"%2$s\">%2$s</a>."
+msgid ""
+"Please configure the shipping methods of the currently active shipping zones "
+"to use %1$s shipping. Note that this plugin requires WooCommerce shipping "
+"zones and methods to be preconfigured in <a href=\"%2$s\">WooCommerce > "
+"Settings > Shipping > Shipping zones</a>. For more information, visit <a "
+"target=\"_blank\" href=\"%2$s\">%3$s</a>."
+msgstr ""
+"Voit kytkeä päälle toimitustapoja kassalle toimitusluokan asetuksista: <b>"
+"WooCommerce > Settings > Shipping > Shipping zones</b>. Lisätietoja, katso "
+"<a target=”_blank” href=”%1$s”>%1$s</a>."
+
+#: core/class-text.php:177
 msgid ""
 "Please fill the details of the merchant below. The information provided here "
 "will be used as the sender in shipping labels."
@@ -171,99 +580,323 @@ msgstr ""
 "Syötä kauppiaan nimi- ja osoitetiedot alle. Näitä tietoja käytetään muun "
 "muassa pakettikorteissa lähettäjänä."
 
-#. %1$s: link to WooCommerce shipping zone setting page
-#. %2$s: link to external WooCommerce documentation
-#: core/class-text.php:188
-#, php-format
+#: core/class-text.php:336
 msgid ""
-"Please configure the shipping methods of the currently active shipping zones "
-"to use Pakettikauppa shipping. Note that this plugin requires WooCommerce "
-"shipping zones and methods to be preconfigured in <a href=\"%1$s\">"
-"WooCommerce > Settings > Shipping > Shipping zones</a>. For more information,"
-" visit <a target=\"_blank\" href=\"%2$s\">%2$s</a>."
+"Plugin can upload shipping label to an URL when creating shipping label. "
+"Define URL if you want to upload PDF."
 msgstr ""
-"Voit kytkeä päälle toimitustapoja kassalle toimitusluokan asetuksista: <b>"
-"WooCommerce > Settings > Shipping > Shipping zones</b>. Lisätietoja, katso "
-"<a target=”_blank” href=”%1$s”>%1$s</a>."
+"Tämä laajennus voi lähettää pakettikortit määriteltyyn URLiin kun "
+"pakettikorttia luodaan. Määrittele URL, mikäli haluat lähettää luodun PDF:n "
+"sinne."
 
-#: core/class-text.php:195
-msgid "Customize the order processing phase."
-msgstr "Muokkaa tilauksen prosessointivaihetta."
+#: core/class-text.php:332
+msgid "Post shipping label to URL"
+msgstr "Lähetä pakettikortit URLiin"
 
-#: core/class-text.php:199
-msgid ""
-"Congratulations, everything is now set up and you are now ready to start "
-"using the plugin!"
-msgstr ""
-"Onneksi olkoon, kaikki tarvittavat asetukset on nyt määritetty ja lisäosa on "
-"nyt valmis käytettäväksi!"
+#: core/class-shipment.php:371
+msgid "Posting label to URL failed!"
+msgstr "Pakettikortin lähettäminen URLiin epäonnistui!"
 
-#: core/class-text.php:203
-msgid "Credentials"
-msgstr "Tunnukset"
+#: core/class-shipment.php:116
+msgid "Pre-information is received from sender"
+msgstr "Lähetyksen EDI-tiedot vastaanotettu lähettäjältä"
 
-#: core/class-text.php:207
-msgid "Merchant"
-msgstr "Kauppias"
+#: core/class-text.php:90
+msgid "Price (vat included)"
+msgstr "Hinta (ALV sisältyy hintaan)"
 
-#: core/class-text.php:211
-msgid "Shipping"
-msgstr "Toimitus"
+#: core/class-admin.php:653 core/class-admin.php:682
+msgid "Print"
+msgstr "Tulosta"
 
-#: core/class-text.php:215
-msgid "Order Processing"
-msgstr "Tilauksen käsittely"
+#: core/class-shipment.php:350
+msgid "Print document"
+msgstr "Pakettikortti"
 
-#: core/class-text.php:219
-msgid "Ready!"
-msgstr "Valmis!"
+#: core/class-text.php:320
+msgid "Print labels"
+msgstr "Tulosta pakettikortit"
 
-#: core/class-text.php:223
-msgid "Note"
-msgstr "Huom"
-
-#: core/class-text.php:227
-msgid "Mode"
-msgstr "Tila"
-
-#: core/class-text.php:231
-msgid "Testing environment"
-msgstr "Testaustila"
-
-#: core/class-text.php:235
+#: core/class-text.php:238
 msgid "Production environment"
 msgstr "Tuotantotila"
 
-#: core/class-text.php:239
-msgid "API key"
-msgstr "Käyttäjätunnus (API key)"
+#: core/class-admin.php:650
+msgid "Products"
+msgstr "Tuotteet"
 
-#. %1$s: Vendor name, not translatable
-#: core/class-text.php:248
+#: core/class-text.php:222
+msgid "Ready!"
+msgstr "Valmis!"
+
+#: core/class-admin.php:657
+msgid "Refresh"
+msgstr "Päivitä"
+
+#: core/class-admin.php:543 core/class-admin.php:884
+msgid "Requested pickup point"
+msgstr "Valittu noutopiste"
+
+#: core/class-admin.php:835
+msgid "Return labels"
+msgstr "Palautus pakettikortit"
+
+#: core/class-admin.php:958 core/class-frontend.php:497
+msgid "Search"
+msgstr "Hae"
+
+#: core/class-admin.php:955
+msgid "Search pickup points"
+msgstr "Etsi noutopisteitä"
+
+#: core/class-text.php:441
+msgid "Search pickup points near you by typing your address above."
+msgstr ""
+"Etsi lähelläsi olevia noutopisteitä kirjoittamalla osoitteesi yläpuolella "
+"olevaan kenttään."
+
+#: core/class-admin.php:946
+msgid "Select"
+msgstr "Valitse"
+
+#: core/class-frontend.php:527
+msgid "Select a pickup point"
+msgstr "Valitse noutopiste"
+
+#: core/class-text.php:59
+msgid "Select one shipping method"
+msgstr "Valitse yksi toimitustapa"
+
+#: core/class-admin.php:962
+msgid "Select pickup point"
+msgstr "Valitse noutopiste"
+
+#. %s: shipping method
+#: core/class-text.php:45
 #, php-format
-msgid "API key provided by %1$s"
-msgstr "Pakettikaupalta saatu käyttäjätunnus"
+msgid "Selected shipping method: %s"
+msgstr "Valittu toimitustapa: %s"
 
-#: core/class-text.php:254
-msgid "API secret"
-msgstr "Salainen avain (API secret)"
+#: core/class-admin.php:826
+msgid "Send order"
+msgstr ""
 
-#. %1$s: Vendor name, not translatable
-#: core/class-text.php:263
+#: core/class-text.php:368
+msgid "Sender address"
+msgstr "Lähettäjän osoite"
+
+#: core/class-text.php:376
+msgid "Sender city"
+msgstr "Lähettäjän kaupunki"
+
+#: core/class-text.php:380
+msgid "Sender country"
+msgstr "Lähettäjän maa"
+
+#: core/class-text.php:388
+msgid "Sender email"
+msgstr "Lähettäjän sähköposti"
+
+#: core/class-text.php:364
+msgid "Sender name"
+msgstr "Lähettäjän nimi"
+
+#: core/class-text.php:384
+msgid "Sender phone"
+msgstr "Lähettäjän puhelin"
+
+#: core/class-text.php:372
+msgid "Sender postal code"
+msgstr "Lähettäjän postinumero"
+
+#. %s: Settings page url
+#: core/class-admin.php:912
 #, php-format
-msgid "API secret provided by %1$s"
-msgstr "Pakettikaupalta saatu salainen avain"
+msgid "Service not working. Please check <a href=\"%s\">settings</a>."
+msgstr "Palvelu ei toimi. Tarkistathan asetukset."
 
-#: core/class-text.php:269
+#: core/class-admin.php:639
+msgid "Services"
+msgstr "Lisäpalvelut"
+
+#. @codingStandardsIgnoreLine
+#: core/class-admin.php:1318
+msgid "Shipment tracking code is not defined."
+msgstr "Lähetystä ei löytynyt annetulla seurantanumerolla."
+
+#: core/class-text.php:214
+msgid "Shipping"
+msgstr "Toimitus"
+
+#: core/class-text.php:94
+msgid "Shipping cost"
+msgstr "Toimituksen hinta"
+
+#: core/class-text.php:98
+msgid "Shipping cost  (vat included)"
+msgstr "Toimituksen hinta (ALV sisältyy hintaan)"
+
+#: core/class-admin.php:829
+msgid "Shipping labels"
+msgstr "Pakettikortit"
+
+#: core/class-text.php:86
+msgid "Shipping method"
+msgstr "Toimitustapa"
+
+#: core/class-text.php:82
+msgid "Shipping methods"
+msgstr "Toimitustavat"
+
+#: core/class-text.php:272
 msgid "Shipping methods mapping"
 msgstr "Toimitustapojen määritykset"
 
-#: core/class-text.php:273
+#: core/class-text.php:276
 msgid "Shipping settings"
 msgstr "Toimitustapojen asetukset"
 
+#: core/class-text.php:445
+msgid "Show pickup point override in checkout"
+msgstr "Näytä noutopisteen yliajo kassalla"
+
+#: core/class-text.php:348
+msgid "Show pickup points as"
+msgstr "Näytä noutopisteet"
+
+#: core/class-text.php:412
+msgid "Show shipping method"
+msgstr ""
+
+#. %s: Vendor name
+#: core/class-admin.php:476
+#, php-format
+msgid "Show site %s"
+msgstr ""
+
+#: core/class-text.php:132
+msgid "Skip this step"
+msgstr "Ohita tämä vaihe"
+
+#: core/class-text.php:31
+msgid "Start the setup wizard"
+msgstr "Käynnistä asetuksien konfigurointi"
+
+#: core/class-admin.php:618
+msgid "Status"
+msgstr "Tila"
+
+#: core/class-text.php:360
+msgid "Store owner information"
+msgstr "Kauppiaan tiedot"
+
+#: core/class-text.php:234
+msgid "Testing environment"
+msgstr "Testaustila"
+
+#: core/class-admin.php:96 core/class-admin.php:119
+msgid ""
+"Thank you for installing $s! To get started smoothly, please open our setup "
+"wizard."
+msgstr ""
+
+#. %s: Vendor full name
+#: core/class-text.php:149
+#, fuzzy
+#| msgid ""
+#| "Thank you for installing WooCommerce Pakettikauppa! This wizard will "
+#| "guide you through the setup process to get you started."
+msgid ""
+"Thank you for installing %s! This wizard will guide you through the setup "
+"process to get you started."
+msgstr ""
+"Kiitos WooCommerce Pakettikauppa -lisäosan asentamisesta! Tämä velho käy "
+"läpi lisäosan asetukset vaihe vaiheelta, jotta käyttöönotto olisi "
+"mahdollisimman vaivatonta."
+
+#: core/class-admin.php:185
+msgid ""
+"The HS tariff number must be based on the Harmonized Commodity Description "
+"and Coding System developed by the World Customs Organization."
+msgstr ""
+"Harmonisoitu tullin tariffinumero, joka tulee ilmoittaa kaupallisessa "
+"tarkoituksessa lähetettäville tavaroille."
+
+#: core/class-text.php:449
+msgid ""
+"The pickup point you've chosen is not available for public access. Are you "
+"sure that you can retrieve the package?"
+msgstr ""
+"Valitsemasi noutopiste ei ole julkinen. Oletko varma, että saat noudettua "
+"pakettisi?"
+
+#: core/class-shipment.php:223
+msgid ""
+"The shipping label was not created because the order does not contain valid "
+"shipping details."
+msgstr "Pakettikorttia ei luotu, koska tilauksella ei ole vastaanottajaa."
+
+#: core/class-shipment.php:211
+msgid ""
+"The shipping label was not created because the order does not contain valid "
+"shipping method."
+msgstr ""
+"Pakettikorttia ei luotu, koska tilauksella ei ole validia toimitustapaa."
+
+#: core/class-shipment.php:351 core/class-admin.php:655
+#: core/class-admin.php:683
+msgid "Track"
+msgstr "Seuranta"
+
+#: core/class-admin.php:1403 core/class-admin.php:1405
+msgid "Tracking"
+msgstr "Lähetysseuranta"
+
+#. %s: Error message
+#: core/class-shipment.php:945
+#, php-format
+msgid "Tracking code creation failed: %s"
+msgstr ""
+
+#: core/class-admin.php:1181
+msgid "Unable to create return label for this shipment type."
+msgstr "Palautuslähetystä ei voitu luoda automaattisesti tälle lähetystavalle."
+
+#: core/class-shipment.php:131
+#, php-format
+#| msgid "Unknown status: %s"
+msgid "Unknown status"
+msgstr "Tuntematon tila"
+
+#: core/class-admin.php:474
+msgid "Visit Website"
+msgstr ""
+
+#: core/class-text.php:299
+msgid "When creating shipping label change order status to"
+msgstr "Kun pakettikortti luodaan, vaihda tilauksen tila seuraavaksi"
+
+#. order status, pretranslated
+#: core/class-text.php:316
+#, php-format
+msgid "When order status is \"%s\""
+msgstr "Kun tilauksen tila on ”%s”"
+
+#. Name of the plugin
+msgid "WooCommerce Pakettikauppa"
+msgstr "WooCommerce Pakettikauppa"
+
+#. 1: Shipment tracking URL 2: Shipment tracking code
+#: core/class-admin.php:1429
+#, php-format
+#| msgid ""
+#| "You can <a href=\"%1$s\">track your order</a> with tracking code %2$s."
+msgid ""
+"You can <a href=\"%1$s\">track your order</a> with tracking code <b>%2$s</b>."
+msgstr "Voit <a href=\"%1$s\">seurata lähetystä</a> lähetystunnuksella %2$s."
+
 #. %1$s: WooCommerce URL, not translatable
-#: core/class-text.php:282
+#: core/class-text.php:285
 #, php-format
 msgid ""
 "You can activate new shipping method to checkout in <b>WooCommerce > "
@@ -274,538 +907,11 @@ msgstr ""
 "WooCommerce > Settings > Shipping > Shipping zones</b>. Lisätietoja, katso "
 "<a target=”_blank” href=”%1$s”>%1$s</a>"
 
-#: core/class-text.php:288
-msgid "Add tracking link to the order completed email"
-msgstr "Liitä seurantatunnus \"Tilaus valmis\" sähköpostiin"
-
-#: core/class-text.php:292
-msgid "Add selected pickup point information to the order completed email"
-msgstr "Liitä noutopisteen tiedot \"Tilaus valmis\" sähköpostiin"
-
-#: core/class-text.php:296
-msgid "When creating shipping label change order status to"
-msgstr "Kun pakettikortti luodaan, vaihda tilauksen tila seuraavaksi"
-
-#: core/class-text.php:300
-msgid "No order status change"
-msgstr "Ei tilan muutosta"
-
-#: core/class-text.php:304
-msgid "Create shipping labels automatically"
-msgstr "Luo pakettikortit automaattisesti"
-
-#: core/class-text.php:308
-msgid "No automatic creation of shipping labels"
-msgstr "Ei automaattisesti pakettikorttien luomista"
-
-#. order status, pretranslated
-#: core/class-text.php:313
-#, php-format
-msgid "When order status is \"%s\""
-msgstr "Kun tilauksen tila on ”%s”"
-
-#: core/class-text.php:317
-msgid "Print labels"
-msgstr "Tulosta pakettikortit"
-
-#: core/class-text.php:321
-msgid "Browser"
-msgstr "Selainikkunaan"
-
-#: core/class-text.php:325
-msgid "Download"
-msgstr "Ladattavaksi"
-
-#: core/class-text.php:329
-msgid "Post shipping label to URL"
-msgstr "Lähetä pakettikortit URLiin"
-
-#: core/class-text.php:333
-msgid ""
-"Plugin can upload shipping label to an URL when creating shipping label. "
-"Define URL if you want to upload PDF."
-msgstr ""
-"Tämä laajennus voi lähettää pakettikortit määriteltyyn URLiin kun "
-"pakettikorttia luodaan. Määrittele URL, mikäli haluat lähettää luodun PDF:n "
-"sinne."
-
-#: core/class-text.php:337
-msgid "Pickup point search limit"
-msgstr "Noutopistehaun rajoitus"
-
-#: core/class-text.php:341
-msgid "Limit the amount of nearest pickup points shown."
-msgstr "Rajoita noutopistelistassa näkyvien noutopisteiden lukumäärää."
-
-#: core/class-text.php:345
-msgid "Show pickup points as"
-msgstr "Näytä noutopisteet"
-
-#: core/class-text.php:349
-msgid "Menu"
-msgstr "Valikkona"
-
-#: core/class-text.php:353
-msgid "List"
-msgstr "Listana"
-
-#: core/class-text.php:357
-msgid "Store owner information"
-msgstr "Kauppiaan tiedot"
-
-#: core/class-text.php:361
-msgid "Sender name"
-msgstr "Lähettäjän nimi"
-
-#: core/class-text.php:365
-msgid "Sender address"
-msgstr "Lähettäjän osoite"
-
-#: core/class-text.php:369
-msgid "Sender postal code"
-msgstr "Lähettäjän postinumero"
-
-#: core/class-text.php:373
-msgid "Sender city"
-msgstr "Lähettäjän kaupunki"
-
-#: core/class-text.php:377
-msgid "Sender country"
-msgstr "Lähettäjän maa"
-
-#: core/class-text.php:381
-msgid "Sender phone"
-msgstr "Lähettäjän puhelin"
-
-#: core/class-text.php:385
-msgid "Sender email"
-msgstr "Lähettäjän sähköposti"
-
-#: core/class-text.php:389
-msgid "Info-code for shipments"
-msgstr "Lähetyksien info-koodi"
-
-#: core/class-text.php:393
-msgid "Cash on Delivery (COD) Settings"
-msgstr "Postiennakkoasetukset"
-
-#: core/class-text.php:397
-msgid "Bank account number for Cash on Delivery (IBAN)"
-msgstr "Postiennakko: tilinumero IBAN-muodossa"
-
-#: core/class-text.php:401
-msgid "BIC code for Cash on Delivery"
-msgstr "Postiennakko: tilin BIC-koodi"
-
-#: core/class-text.php:405
-msgid "Advanced settings"
-msgstr "Kehittyneet ominaisuudet"
-
-#: core/class-text.php:409
-msgid "Show Pakettikauppa shipping method"
-msgstr "Näytä Pakettikauppa toimitustapa"
-
-#: core/class-text.php:413
-msgid ""
-"WooCommerce Pakettikauppa requires WooCommerce to be installed and activated!"
-msgstr ""
-"WooCommerce Pakettikauppa vaatii WooCommerce-lisäosan asennettuna ja "
-"aktivoituna!"
-
-#: core/class-text.php:417
-msgid "No pickup points were found. Check the address."
-msgstr "Noutopisteitä ei löytynyt. Tarkista osoite."
-
-#: core/class-text.php:421
-msgid "An error occurred while searching for pickup points."
-msgstr "Noutopisteitä haettaessa tapahtui virhe."
-
-#: core/class-text.php:425
-msgid ""
-"If none of your preferred pickup points are listed, fill in a custom address "
-"above and select another pickup point."
-msgstr ""
-"Voit myös hakea noutopisteitä syöttämällä vaihtoehtoisen osoitteen "
-"ylläolevaan kenttään."
-
-#: core/class-text.php:429
-msgid "Custom pickup address"
-msgstr "Hae vaihtoehtoista noutopistettä"
-
-#: core/class-text.php:433
-msgid "Pickup address"
-msgstr "Noutopisteen osoite"
-
-#: core/class-text.php:437
-msgid "Search pickup points near you by typing your address above."
-msgstr ""
-"Etsi lähelläsi olevia noutopisteitä kirjoittamalla osoitteesi yläpuolella "
-"olevaan kenttään."
-
-#: core/class-text.php:441
-msgid "Show pickup point override in checkout"
-msgstr "Näytä noutopisteen yliajo kassalla"
-
-#: core/class-text.php:445
-msgid ""
-"The pickup point you've chosen is not available for public access. Are you "
-"sure that you can retrieve the package?"
-msgstr ""
-"Valitsemasi noutopiste ei ole julkinen. Oletko varma, että saat noudettua "
-"pakettisi?"
-
-#: core/class-shipment.php:92
-msgid "Item is collected from sender - picked up"
-msgstr "Lähetys on noudettu lähettäjältä"
-
-#: core/class-shipment.php:95
-msgid "Exception"
-msgstr "Lähetykselle on tehty poikkeama"
-
-#: core/class-shipment.php:98
-msgid "Item has been handed over to the recipient"
-msgstr "Lähetys on luovutettu vastaanottajalle"
-
-#: core/class-shipment.php:101
-msgid "Item is in transport"
-msgstr "Lähetys on kuljetuksessa"
-
-#: core/class-shipment.php:104
-msgid "C.O.D payment is paid to the sender"
-msgstr "Lähetykseen liittyvä postiennakkomaksu on suoritettu"
-
-#: core/class-shipment.php:107
-msgid "Informed consignee of arrival"
-msgstr "Lähetyksestä on lähetetty saapumisilmoitus"
-
-#: core/class-shipment.php:110
-msgid "Item is loaded onto a means of transport"
-msgstr "Lähetys on lastattu runkokuljetukseen"
-
-#: core/class-shipment.php:113
-msgid "Item not delivered – delivery attempt made"
-msgstr "Lähetystä ei ole toimitettu – luovutusyritys on tehty"
-
-#: core/class-shipment.php:116
-msgid "Pre-information is received from sender"
-msgstr "Lähetyksen EDI-tiedot vastaanotettu lähettäjältä"
-
-#: core/class-shipment.php:119
-msgid "Item is ready for delivery transportation"
-msgstr "Lähetys on lastattu jakelukuljetukseen"
-
-#: core/class-shipment.php:122
-msgid "Item is returning to the sender"
-msgstr "Lähetys palautuu lähettäjälle"
-
-#: core/class-shipment.php:125
-msgid "Item is arrived to a post office"
-msgstr "Lähetys on saapunut postitoimipaikkaan"
-
-#: core/class-shipment.php:128
-msgid "Outbound"
-msgstr "Lähetys on lähdössä ulkomaille"
-
-#. %s: Status code
-#: core/class-shipment.php:132
-#, php-format
-msgid "Unknown status: %s"
-msgstr "Tuntematon tila: %s"
-
-#: core/class-shipment.php:167
-msgid ""
-"The shipping label was not created because the order does not contain valid "
-"shipping method."
-msgstr ""
-"Pakettikorttia ei luotu, koska tilauksella ei ole validia toimitustapaa."
-
-#: core/class-shipment.php:179
-msgid ""
-"The shipping label was not created because the order does not contain valid "
-"shipping details."
-msgstr "Pakettikorttia ei luotu, koska tilauksella ei ole vastaanottajaa."
-
-#. %s: Error message
-#: core/class-shipment.php:208
-#, php-format
-msgid "Failed to create Pakettikauppa shipment. Errors: %s"
-msgstr "Pakettikauppa-lähetystä ei voitu luoda. Virheet: %s"
-
-#. %s: Error message
-#: core/class-shipment.php:213 core/class-admin.php:440
-#: core/class-admin.php:995 core/class-admin.php:1022
-#, php-format
-msgid "An error occurred: %s"
-msgstr "Tapahtui virhe: %s"
-
-#. %s: Error message
-#: core/class-shipment.php:222 core/class-shipment.php:227
-msgid "Failed to create Pakettikauppa shipment."
-msgstr "Pakettikauppa-lähetystä ei voitu luoda."
-
-#: core/class-shipment.php:251 core/class-admin.php:612
-#: core/class-admin.php:638
-msgid "Print document"
-msgstr "Pakettikortti"
-
-#: core/class-shipment.php:252 core/class-admin.php:614
-#: core/class-admin.php:639
-msgid "Track"
-msgstr "Seuranta"
-
-#. 1: Shipping service title 2: Shipment tracking code 3: Shipping label URL 4: Shipment tracking URL
-#: core/class-shipment.php:259
-#, php-format
-msgid "Created Pakettikauppa %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s"
-msgstr "Luotiin Pakettikauppa %1$s-lähetys.<br>%2$s<br>%1$s - %3$s<br>%4$s"
-
-#: core/class-shipment.php:272
-msgid "Posting label to URL failed!"
-msgstr "Pakettikortin lähettäminen URLiin epäonnistui!"
-
-#: core/class-shipment.php:276
-msgid "Label posted to URL successfully."
-msgstr "Pakettikortti lähetetty URLiin onnistuneesti."
-
-#. %s: Error message
-#: core/class-shipment.php:627
-#, php-format
-msgid "WooCommerce Pakettikauppa: tracking code creation failed: %s"
-msgstr "WooCommerce Pakettikauppa: seurantakoodin luonti epäonnistui: %s"
-
-#: core/class-admin.php:94 core/class-admin.php:117
-msgid ""
-"Thank you for installing WooCommerce Pakettikauppa! To get started smoothly, "
-"please open our setup wizard."
-msgstr ""
-"Kiitos Pakettikaupan WooCommerce -lisäosan asentamisesta! Aloittaaksesi "
-"lisäosan käytön mahdollisimman sulavasti ja vaivattomasti, käynnistä alta "
-"asetuksien konfigurointi."
-
-#: core/class-admin.php:181
-msgid "HS tariff number"
-msgstr "CN nimike"
-
-#: core/class-admin.php:183
-msgid ""
-"The HS tariff number must be based on the Harmonized Commodity Description "
-"and Coding System developed by the World Customs Organization."
-msgstr ""
-"Harmonisoitu tullin tariffinumero, joka tulee ilmoittaa kaupallisessa "
-"tarkoituksessa lähetettäville tavaroille."
-
-#: core/class-admin.php:189
-msgid "Country of origin"
-msgstr "Tavaran alkuperämaa"
-
-#: core/class-admin.php:191
-msgid ""
-"\"Country of origin\" means the country where the goods originated, e.g. "
-"were produced/manufactured or assembled."
-msgstr ""
-"Tavaran alkuperämaa, jolla on usein merkitystä tuontimaksuja ja veroja "
-"laskettaessa."
-
-#: core/class-admin.php:256
-msgid "Create and fetch shipping labels"
-msgstr "Luo ja hae pakettikortit"
-
-#: core/class-admin.php:287
-msgid "Create shipping label"
-msgstr "Luo ja hae pakettikortti"
-
-#: core/class-admin.php:340
-msgid "Cannot find shipments with given shipment numbers."
-msgstr "Lähetystä ei löytynyt annetuilla seurantanumeroilla."
-
-#: core/class-admin.php:402
-msgid ""
-"WooCommerce Pakettikauppa has been installed/updated but no shipping methods "
-"are currently active!"
-msgstr ""
-"WooCommerce Pakettikauppa on asennettu/päivitetty mutta yhtään toimitustapaa "
-"ei ole aktiivisena!"
-
-#: core/class-admin.php:466
-msgid "Visit Pakettikauppa"
-msgstr "Vieraile Pakettikauppa -sivustolla"
-
-#: core/class-admin.php:467
-msgid "Show site Pakettikauppa"
-msgstr "Näytä palvelun sivusto Pakettikauppa"
-
-#. %s: Shipment tracking URL
-#: core/class-admin.php:527 core/class-admin.php:679 core/class-admin.php:1109
-#: core/class-admin.php:1116
-msgid "Requested pickup point"
-msgstr "Valittu noutopiste"
-
-#: core/class-admin.php:549
-msgid ""
-"Please add shipping info to the order to manage Pakettikauppa shipments."
-msgstr ""
-"Lisää tilaukselle vastaanottaja hallinnoidaksesi Pakettikauppa-"
-"toimitustapoja."
-
-#: core/class-admin.php:608 core/class-admin.php:634
-msgid "Label code"
-msgstr "Asiointikoodi"
-
-#: core/class-admin.php:618
-msgid "Update Status"
-msgstr "Päivitä tila"
-
-#: core/class-admin.php:619
-msgid "Create Return Label"
-msgstr "Luo palautuspakettikortti"
-
-#: core/class-admin.php:622 core/class-admin.php:642
-msgid "Delete Shipping Label"
-msgstr "Poista pakettikortti"
-
-#: core/class-admin.php:624
-msgid "Delete Shipping Label and return labels"
-msgstr "Poista kaikki pakettikortit"
-
-#: core/class-admin.php:651
-msgid "Additional services"
-msgstr "Lisäpalvelut"
-
-#: core/class-admin.php:666 core/class-admin.php:720
-msgid "Parcel count"
-msgstr "Pakettien määrä"
-
-#: core/class-admin.php:731
-msgid "Select"
-msgstr "Valitse"
-
-#: core/class-admin.php:740
-msgid "Search pickup points"
-msgstr "Etsi noutopisteitä"
-
-#: core/class-admin.php:744
-msgid "No pickup points were found"
-msgstr "Noutopisteitä ei löytynyt"
-
-#: core/class-admin.php:747
-msgid "Select pickup point"
-msgstr "Valitse noutopiste"
-
-#: core/class-admin.php:766
-msgid "Create"
-msgstr "Luo pakettikortti"
-
-#: core/class-admin.php:768
-msgid "Custom shipping..."
-msgstr "Muu toimitustapa..."
-
-#: core/class-admin.php:769
-msgid "Original shipping..."
-msgstr "Alkuperäinen toimitustapa..."
-
-#: core/class-admin.php:933
-msgid "Unable to create return label for this shipment type."
-msgstr "Palautuslähetystä ei voitu luoda automaattisesti tälle lähetystavalle."
-
-#. %%s: tracking code
-#: core/class-admin.php:976 core/class-admin.php:984
-#, php-format
-msgid "Successfully deleted Pakettikauppa shipping label %s."
-msgstr "Pakettikauppa-lähetyksen pakettikortti (%s) poistettiin onnistuneesti."
-
-#. %s: Error message
-#: core/class-admin.php:1002
-#, php-format
-msgid "Deleting Pakettikauppa shipment failed! Errors: %s"
-msgstr "Toimenpide epäonnistui! Virheet: %s"
-
-#. @codingStandardsIgnoreLine
-#: core/class-admin.php:1035
-msgid "Shipment tracking code is not defined."
-msgstr "Lähetystä ei löytynyt annetulla seurantanumerolla."
-
-#: core/class-admin.php:1045
-msgid "Cannot find shipment with given shipment number."
-msgstr "Lähetystä ei löytynyt annetulla seurantanumerolla."
-
 #. Shipment tracking url
-#: core/class-admin.php:1113
+#: core/class-admin.php:1418
 #, php-format
 msgid ""
 "You can track your order at %1$s.\n"
 "\n"
 msgstr ""
 "Voit seurata <a href=\"%1$s\">seurata lähetystä täältä</a>.\n"
-
-#: core/class-admin.php:1120
-msgid "Tracking"
-msgstr "Lähetysseuranta"
-
-#. 1: Shipment tracking URL 2: Shipment tracking code
-#: core/class-admin.php:1122
-#, php-format
-msgid "You can <a href=\"%1$s\">track your order</a> with tracking code %2$s."
-msgstr "Voit <a href=\"%1$s\">seurata lähetystä</a> lähetystunnuksella %2$s."
-
-#: core/class-frontend.php:171
-msgid "An error occurred. Please try again later."
-msgstr "Toimenpide epäonnistui! Kokeile uudelleen."
-
-#: core/class-frontend.php:361 core/class-frontend.php:362
-#: core/class-frontend.php:555
-msgid "Pickup point"
-msgstr "Noutopiste"
-
-#: core/class-frontend.php:373
-msgid "Insert your shipping details to view nearby pickup points"
-msgstr "Syötä toimitusosoite valitaksesi lähistöllä olevan noutopisteen"
-
-#. %s: Postcode
-#: core/class-frontend.php:379
-#, php-format
-msgid "Invalid postcode \"%1$s\". Please check your address information."
-msgstr "Virheellinen postinumero ”%1$s”. Ole hyvä ja tarkista osoitetietosi."
-
-#: core/class-frontend.php:415
-msgid "Choose one of pickup points close to the address you entered:"
-msgstr "Valitse noutopiste joka on lähellä antamaasi osoitetta:"
-
-#: core/class-frontend.php:494
-msgid "Search"
-msgstr "Hae"
-
-#: core/class-frontend.php:519
-msgid "Select a pickup point"
-msgstr "Valitse noutopiste"
-
-#: core/class-frontend.php:524
-msgid "Other"
-msgstr "Muu noutopiste"
-
-#: core/class-frontend.php:576
-msgid "Please choose a pickup point."
-msgstr "Noutopistettä ei ole valittu."
-
-#. Name of the plugin
-msgid "WooCommerce Pakettikauppa"
-msgstr "WooCommerce Pakettikauppa"
-
-#. Description of the plugin
-msgid ""
-"Pakettikauppa shipping service for WooCommerce. Integrates Posti, Smartship, "
-"Matkahuolto, DB Schenker and others."
-msgstr ""
-"Pakettikauppa-toimitustapa WooCommercelle. Integroi Postin, Smartshipin, "
-"Matkahuollon, DB Schenkerin ja muut palvelut yhden toimitustavan alle."
-
-#. URI of the plugin
-msgid "https://github.com/Seravo/woo-pakettikauppa"
-msgstr "https://github.com/Seravo/woo-pakettikauppa"
-
-#. Author of the plugin
-msgid "Seravo"
-msgstr "Seravo"
-
-#. Author URI of the plugin
-msgid "https://seravo.com/"
-msgstr "https://seravo.com/"
