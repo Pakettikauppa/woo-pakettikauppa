@@ -292,7 +292,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
             }
           } else if ( ! empty($pickup_points[$instance_id]['service']) ) {
             if ( $this->shipment->service_has_pickup_points($pickup_points[$instance_id]['service']) ) {
-              if ( ! ( isset($pickup_points[$instance_id][$pickup_points[$instance_id]['service']]['pickuppoints']) && $pickup_points[$instance_id][$pickup_points[$instance_id]['service']]['pickuppoints'] !== 'yes' ) ) {
+              if ( ! (isset($pickup_points[$instance_id][$pickup_points[$instance_id]['service']]['pickuppoints']) && $pickup_points[$instance_id][$pickup_points[$instance_id]['service']]['pickuppoints'] !== 'yes') ) {
                 $shipping_method_providers[] = $pickup_points[$instance_id]['service'];
               }
             }
