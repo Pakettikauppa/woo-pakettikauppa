@@ -789,7 +789,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           $service_id = $labels[$key]['service_id'];
         }
         if ( isset($label['date']) ) {
-            $labels[$key]['date'] = date('d.m.Y', strtotime($label['date']));
+            $labels[$key]['date'] = get_date_from_gmt($label['date'], 'd.m.Y');
         } else {
             $labels[$key]['date'] = '';
         }
@@ -815,7 +815,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
       foreach ( $return_shipments as $key => $label ) {
         if ( isset($label['date']) ) {
-            $return_shipments[$key]['date'] = date('d.m.Y', strtotime($label['date']));
+            $return_shipments[$key]['date'] = get_date_from_gmt($label['date'], 'd.m.Y');
         } else {
             $return_shipments[$key]['date'] = '';
         }
