@@ -524,7 +524,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           'shipment_status' => '',
           'products' => array(),
           'additional_services' => array(),
-          'date' => date('Y-m-d H:i:s'),
+          'date' => gmdate('Y-m-d H:i:s'),
         ),
         $save_values
       );
