@@ -783,6 +783,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         $labels[$key]['document_url'] = admin_url('admin-post.php?post=' . $post->ID . '&action=show_pakettikauppa&tracking_code=' . $label['tracking_code']);
       }
 
+      $array_columns = array_column($labels, 'tracking_code');
+      array_multisort($array_columns, SORT_DESC, $labels);
+
       $default_service_id = $this->shipment->get_service_id_from_order($order, false);
       if ( empty($service_id) ) {
         $service_id = $default_service_id;
@@ -796,6 +799,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       }
 
       $return_shipments = get_post_meta($post->ID, '_' . $this->core->prefix . '_return_shipment');
+
+      $array_columns = array_column($return_shipments, 'tracking_code');
+      array_multisort($array_columns, SORT_DESC, $return_shipments);
 
       $all_shipment_services = $this->shipment->services();
 
