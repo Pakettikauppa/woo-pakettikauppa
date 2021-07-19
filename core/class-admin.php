@@ -613,7 +613,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           </div>
           <p>
             <strong><?php echo esc_attr($label['tracking_code']); ?></strong><br />
-            <span><?php echo esc_attr($this->shipment->service_title($label['service_id'])); ?></span><br />
+            <span><?php echo esc_attr($this->shipment->service_title($label['service_id'])); ?></span>
+            <?php if ( ! empty($label['date']) ) : ?>
+                <span class="label-date">(<?php echo esc_attr($label['date']); ?>)</span>
+            <?php endif; ?>
+            <br />
             <br />
             <strong><?php echo __('Status', 'woo-pakettikauppa'); ?>:</strong> <span><?php echo esc_attr(Shipment::get_status_text($label['shipment_status'])); ?></span><br />
             <?php if ( ! empty($label['label_code']) ) : ?>
@@ -675,7 +679,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         </div>
         <p>
           <strong><?php echo esc_attr($label['tracking_code']); ?></strong><br />
-          <span><?php echo esc_attr($this->shipment->service_title($label['service_id'])); ?></span><br />
+          <span><?php echo esc_attr($this->shipment->service_title($label['service_id'])); ?></span>
+          <?php if ( ! empty($label['date']) ) : ?>
+            <span class="label-date">(<?php echo esc_attr($label['date']); ?>)</span>
+          <?php endif; ?>
+          <br />
           <br />
           <strong><?php echo __('Label code', 'woo-pakettikauppa'); ?>:</strong> <span><?php echo $label['label_code']; ?></span><br />
           <br />
@@ -780,6 +788,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         if ( empty($service_id) ) {
           $service_id = $labels[$key]['service_id'];
         }
+        if ( isset($label['date']) ) {
+            $labels[$key]['date'] = date("d.m.Y", strtotime($label['date']));
+        } else {
+            $labels[$key]['date'] = '';
+        }
         $labels[$key]['document_url'] = admin_url('admin-post.php?post=' . $post->ID . '&action=show_pakettikauppa&tracking_code=' . $label['tracking_code']);
       }
 
@@ -799,6 +812,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       }
 
       $return_shipments = get_post_meta($post->ID, '_' . $this->core->prefix . '_return_shipment');
+
+      foreach ( $return_shipments as $key => $label ) {
+        if ( isset($label['date']) ) {
+            $return_shipments[$key]['date'] = date("d.m.Y", strtotime($label['date']));
+        } else {
+            $return_shipments[$key]['date'] = '';
+        }
+      }
 
       $array_columns = array_column($return_shipments, 'tracking_code');
       array_multisort($array_columns, SORT_DESC, $return_shipments);
@@ -1208,6 +1229,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
               'document_url' => $document_url,
               'tracking_url' => $tracking_url,
               'label_code' => $label_code,
+              'date' => date('Y-m-d H:i:s'),
             )
           );
         }

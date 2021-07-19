@@ -162,6 +162,11 @@ table .pakettikauppa-notice p {
 .pakettikauppa-global-labels-buttons button {
   width: 100%;
 }
+.pakettikauppa-shiplabel .label-date,
+.pakettikauppa-returnlabel .label-date {
+    font-style: italic;
+    opacity: 0.5;
+}
 
 /* Labels folded-corner design */
 .pakettikauppa-design-foldedcorner {
