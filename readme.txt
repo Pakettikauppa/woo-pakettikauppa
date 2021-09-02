@@ -102,6 +102,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
+= 3.1.1 =
+* If product does not exists, display "unknown product"
+
 = 3.1.0 =
 * Create multiple shipping labels from order view
 * Allow editing of order phone number and email address
