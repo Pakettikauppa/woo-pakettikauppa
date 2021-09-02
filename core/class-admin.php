@@ -644,7 +644,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
               $products = '';
               foreach ( $label['products'] as $prod ) {
                 $product = wc_get_product($prod['prod']);
-                $products .= '<br/>' . $prod['qty'] . ' x ' . $product->get_title();
+                $product_name = ($product) ? $product->get_title() : __('Unknown product', 'woo-pakettikauppa') . ' (ID: ' . $prod['prod'] . ')';
+                $products .= '<br/>' . $prod['qty'] . ' x ' . $product_name;
               }
               ?>
               <strong><?php echo __('Products', 'woo-pakettikauppa'); ?>:</strong> <span><?php echo $products; ?></span><br />

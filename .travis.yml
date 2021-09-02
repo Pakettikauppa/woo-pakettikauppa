@@ -22,8 +22,8 @@ jobs:
     # Test the PHP development version
     - php: 'nightly'
     # Test the WordPress development version
-    - php: '7.4'
-      env: WP_VERSION=nightly
+#    - php: '7.4'
+#      env: WP_VERSION=nightly
     # Test the WooCommerce development version
     - php: '7.4'
       env: WOO_VERSION=nightly
