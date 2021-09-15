@@ -145,7 +145,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
        * If the shipping method is added too late, errors will ensue.
        */
       add_action(
-        'wp_loaded',
+        'posti_shipping_method',
         function() {
           // Instance is only used for hacking classes together.
           // It's not used by WooCommerce. WooCommerce creates it's own instances, otherwise the legacy
