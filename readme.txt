@@ -102,6 +102,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
+= 3.1.2 =
+* Backwards compatibility for bulk actions
+
 = 3.1.1 =
 * If product does not exists, display "unknown product"
 
