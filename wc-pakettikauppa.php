@@ -10,8 +10,9 @@
  * Domain Path: /languages/
  * License: GPL v3 or later
  *
+ * Tested up to: 5.8.1
  * WC requires at least: 3.4
- * WC tested up to: 4.4
+ * WC tested up to: 5.7.0
  *
  * Copyright: © 2017-2020 Seravo Oy, 2020-2021 E-Log Services Oy
  * License: GNU General Public License v3.0
