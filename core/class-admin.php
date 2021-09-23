@@ -93,7 +93,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
         <div class="pakettikauppa-notice__content">
           <p>
-            <?php sprintf(esc_html_e('Thank you for installing $s! To get started smoothly, please open our setup wizard.', 'woo-pakettikauppa'), $this->core->vendor_fullname); ?>
+            <?php printf(esc_html__('Thank you for installing %s! To get started smoothly, please open our setup wizard.', 'woo-pakettikauppa'), $this->core->vendor_fullname); ?>
 
             <br />
             <br />
@@ -116,7 +116,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
         <div class="pakettikauppa-notice__content">
           <p>
-            <?php sprintf(esc_html_e('Thank you for installing $s! To get started smoothly, please open our setup wizard.', 'woo-pakettikauppa'), $this->core->vendor_fullname); ?>
+            <?php printf(esc_html__('Thank you for installing %s! To get started smoothly, please open our setup wizard.', 'woo-pakettikauppa'), $this->core->vendor_fullname); ?>
 
             <br />
             <br />
