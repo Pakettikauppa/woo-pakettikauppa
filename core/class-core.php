@@ -58,7 +58,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       $this->dir = plugin_dir_path($config['root']);
       $this->dir_url = plugin_dir_url($config['root']);
 
-      $this->shippingmethod = $config['shipping_method_name'] ?? str_replace('wc_', '', $this->core->prefix) . '_shipping_method';
+      $this->shippingmethod = $config['shipping_method_name'] ?? str_replace('wc_', '', $this->prefix) . '_shipping_method';
 
       $this->vendor_name = $config['vendor_name'] ?? 'Pakettikauppa';
       $this->vendor_fullname = $config['vendor_fullname'] ?? 'Woocommerce Pakettikauppa';

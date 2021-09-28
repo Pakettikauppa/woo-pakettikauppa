@@ -771,6 +771,20 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         if ( empty($token) ) {
           $token = $this->client->getToken();
 
+          if ( isset($token->error) ) {
+            add_action(
+              'admin_notices',
+              function() use ( $token ) {
+                if ( $_GET['page'] === 'wc-settings' && $_GET['tab'] === 'shipping' ) {
+                  $message = (isset($token->message)) ? $token->message : __('Unknown error', 'woo-pakettikauppa');
+                  echo '<div class="notice notice-error"><p><b>' . $this->core->vendor_fullname . ' ' . __('error', 'woo-pakettikauppa') . ':</b> ' . $message . '</p></div>';
+                }
+              }
+            );
+
+            return;
+          }
+
           // let's remove 100 seconds from expires_in time so in case of a network lag, requests will still be valid on server side
           set_transient($transient_name, $token, $token->expires_in - 100);
         }
