@@ -233,3 +233,8 @@ function resize_textarea(element) {
   element.style.height = "1px";
   element.style.height = (3+element.scrollHeight)+"px";
 }
+
+function click_enchancedtextarea_code(field_key, param_key) {
+  var $ = jQuery;
+  $("#" + field_key).val($("#" + field_key).val() + "{" + param_key + "}");
+}

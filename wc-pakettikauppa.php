@@ -7,7 +7,7 @@
  * Author: Pakettikauppa
  * Author URI: https://pakettikauppa.fi/
  * Text Domain: woo-pakettikauppa
- * Domain Path: /languages/
+ * Domain Path: /core/languages
  * License: GPL v3 or later
  *
  * Tested up to: 5.8.1

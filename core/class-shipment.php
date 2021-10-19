@@ -863,11 +863,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       $receiver->setPhone(! empty($shipping_phone) ? $shipping_phone : $order->get_billing_phone());
       $shipment->setReceiver($receiver);
 
-      $info = new Info();
-      $info->setReference($order->get_order_number());
-      $info->setCurrency(get_woocommerce_currency());
-      $shipment->setShipmentInfo($info);
-
       $parcel_total_count = 1;
 
       foreach ( $additional_services as $_additional_service ) {
@@ -909,6 +904,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
       $wcpf = new \WC_Product_Factory();
 
+      $products_info = array();
+
       if ( ! empty($items) ) {
         foreach ( $items as $item ) {
           $item_data = $item->get_data();
@@ -936,6 +933,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           $country_of_origin = $product->get_meta(str_replace('wc_', '', $this->core->prefix) . '_country_of_origin', true);
           $quantity = ($selected_product !== false) ? $selected_product['qty'] : $item->get_quantity();
 
+          $products_info[] = array(
+            'name' => $product->get_name(),
+            'sku' => $product->get_sku(),
+            'qty' => $quantity,
+          );
+
           $content_line                    = new ContentLine();
           $content_line->currency          = 'EUR';
           $content_line->country_of_origin = $country_of_origin;
@@ -953,6 +956,18 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         }
       }
 
+      $info = new Info();
+      $info->setReference($order->get_order_number());
+      $info->setCurrency(get_woocommerce_currency());
+      if (!empty($this->settings['label_additional_info'])) {
+        $additional_info = array(
+            'order_number' => $order->get_order_number(),
+            'products' => $products_info,
+        );
+        $info->setAdditionalInfoText($this->prepareAdditionalInfoText($additional_info));
+      }
+      $shipment->setShipmentInfo($info);
+
       try {
         $this->client->createTrackingCode($shipment, $language);
       } catch ( \Exception $e ) {
@@ -961,6 +976,53 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       }
 
       return $this->client->getResponse();
+    }
+
+    private function prepareAdditionalInfoText( $values = array() ) {
+        if ( ! is_array($values) ) {
+            return 'ERROR';
+        }
+
+        $keys = array(
+            'order_number' => '{ORDER_NUMBER}',
+            'products' => array(),
+            'products_names' => '{PRODUCTS_NAMES}',
+            'products_sku' => '{PRODUCTS_SKU}',
+        );
+        foreach ($keys as $key_id => $key) {
+            $values[$key_id] = (isset($values[$key_id])) ? $values[$key_id] : $key;
+        }
+        
+        $additional_info = '';
+
+        if ( ! empty($this->settings['label_additional_info']) ) {
+            $additional_info = $this->settings['label_additional_info'];
+            $additional_info = str_replace('\n', "\n", $additional_info);
+            
+            $additional_info = str_replace('{ORDER_NUMBER}', $values['order_number'], $additional_info);
+            
+            $products_names_text = '';
+            $products_sku_text = '';
+            if ( is_array($values['products']) && ! empty($values['products']) ) {
+                foreach ($values['products'] as $prod) {
+                    if ( ! empty($products_names_text) ) {
+                        $products_names_text .= ', ';
+                    }
+                    if ( ! empty($products_sku_text) ) {
+                        $products_sku_text .= ', ';
+                    }
+                    $products_names_text .= $prod['name'];
+                    $products_sku_text .= (! empty($prod['sku'])) ? $prod['sku'] : '-';
+                }
+            } else {
+                $products_names_text = $values['products_names'];
+                $products_sku_text = $values['products_sku'];
+            }
+            $additional_info = str_replace('{PRODUCTS_NAMES}', $products_names_text, $additional_info);
+            $additional_info = str_replace('{PRODUCTS_SKU}', $products_sku_text, $additional_info);
+        }
+
+        return $additional_info;
     }
 
     public static function check_selected_product( $prod_id, $selected_products ) {

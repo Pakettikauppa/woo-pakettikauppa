@@ -1024,7 +1024,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
     private function get_pickup_points_for_method( $method_code, $postcode, $address = null, $country = null, $custom_address = null ) {
       $pickup_points = array();
       try {
-        if ( $custom_address && $this->core->shipping_method_instance->get_option('show_pickup_point_override_query') === 'yes' ) {
+        $settings = $this->shipment->get_settings();
+        if ( $custom_address && $settings['show_pickup_point_override_query'] === 'yes' ) {
           $pickup_points = $this->shipment->get_pickup_points_by_free_input($custom_address, $method_code);
         } elseif ( ! empty($postcode) ) {
           $pickup_points = $this->shipment->get_pickup_points($postcode, $address, $country, $method_code);
