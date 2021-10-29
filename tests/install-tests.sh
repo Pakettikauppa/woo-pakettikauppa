@@ -55,7 +55,7 @@ case "$WP_VERSION" in
 esac
 
 # Install exactly the PHP version we want to use
-curl -sS "https://phar.phpunit.de/phpunit-$PHPUNIT_VERSION.phar" -o /tmp/phpunit
+curl -k -sS "https://phar.phpunit.de/phpunit-$PHPUNIT_VERSION.phar" -o /tmp/phpunit
 chmod +x /tmp/phpunit
 
 if [ -z "$SNIFF" ]
