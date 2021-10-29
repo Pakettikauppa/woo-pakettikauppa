@@ -64,3 +64,4 @@ $instance = new Wc_Pakettikauppa(
     // 'pakettikauppa_api_comment' => 'From WooCommerce', // Overrides default
   )
 );
+
