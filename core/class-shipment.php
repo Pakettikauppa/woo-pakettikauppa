@@ -959,12 +959,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       $info = new Info();
       $info->setReference($order->get_order_number());
       $info->setCurrency(get_woocommerce_currency());
-      if (!empty($this->settings['label_additional_info'])) {
+      if ( ! empty($this->settings['label_additional_info']) ) {
         $additional_info = array(
-            'order_number' => $order->get_order_number(),
-            'products' => $products_info,
+          'order_number' => $order->get_order_number(),
+          'products' => $products_info,
         );
-        $info->setAdditionalInfoText($this->prepareAdditionalInfoText($additional_info));
+        $info->setAdditionalInfoText($this->prepare_additional_info_text($additional_info));
       }
       $shipment->setShipmentInfo($info);
 
@@ -978,33 +978,33 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       return $this->client->getResponse();
     }
 
-    private function prepareAdditionalInfoText( $values = array() ) {
+    private function prepare_additional_info_text( $values = array() ) {
         if ( ! is_array($values) ) {
             return 'ERROR';
         }
 
         $keys = array(
-            'order_number' => '{ORDER_NUMBER}',
-            'products' => array(),
-            'products_names' => '{PRODUCTS_NAMES}',
-            'products_sku' => '{PRODUCTS_SKU}',
+          'order_number' => '{ORDER_NUMBER}',
+          'products' => array(),
+          'products_names' => '{PRODUCTS_NAMES}',
+          'products_sku' => '{PRODUCTS_SKU}',
         );
-        foreach ($keys as $key_id => $key) {
+        foreach ( $keys as $key_id => $key ) {
             $values[$key_id] = (isset($values[$key_id])) ? $values[$key_id] : $key;
         }
-        
+
         $additional_info = '';
 
         if ( ! empty($this->settings['label_additional_info']) ) {
             $additional_info = $this->settings['label_additional_info'];
             $additional_info = str_replace('\n', "\n", $additional_info);
-            
+
             $additional_info = str_replace('{ORDER_NUMBER}', $values['order_number'], $additional_info);
-            
+
             $products_names_text = '';
             $products_sku_text = '';
             if ( is_array($values['products']) && ! empty($values['products']) ) {
-                foreach ($values['products'] as $prod) {
+                foreach ( $values['products'] as $prod ) {
                     if ( ! empty($products_names_text) ) {
                         $products_names_text .= ', ';
                     }

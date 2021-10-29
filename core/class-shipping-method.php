@@ -375,14 +375,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           <fieldset>
             <legend class="screen-reader-text"><span><?php echo esc_html($value['title']); ?></span></legend>
             <textarea rows="3" cols="20" class="input-text wide-input " type="textarea" name="<?php echo $field_key; ?>" id="<?php echo $field_key; ?>" style="" placeholder=""><?php echo esc_html($field_value); ?></textarea>
-            <?php if (!empty($value['available_params']) && is_array($value['available_params'])) : ?>
-                <?php foreach ($value['available_params'] as $param_key => $param_desc) : ?>
+            <?php if ( ! empty($value['available_params']) && is_array($value['available_params']) ) : ?>
+                <?php foreach ( $value['available_params'] as $param_key => $param_desc ) : ?>
                   <p class="description enchtext noselect">
                     <code class="enchtext-code" data-param="<?php echo esc_html($param_key); ?>" onclick="click_enchancedtextarea_code('<?php echo $field_key; ?>', '<?php echo esc_html($param_key); ?>');">{<?php echo esc_html($param_key); ?>}</code> - <?php echo esc_html($param_desc); ?>
                   </p>
                 <?php endforeach; ?>
             <?php endif; ?>
-            <?php if (!empty($value['description'])) : ?>
+            <?php if ( ! empty($value['description']) ) : ?>
               <p class="description"><?php echo $value['description']; ?></p>
             <?php endif; ?>
           </fieldset>
