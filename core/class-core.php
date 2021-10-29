@@ -160,10 +160,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       );
       */
       //always load shipping method if not already loaded
-      if (!$this->shipping_method_instance){
+      if ( ! $this->shipping_method_instance ) {
         $this->shipping_method_instance = $this->load_shipping_method_class();
       }
-        
+
       if ( is_admin() ) {
         $this->admin = $this->load_admin_class();
         $this->setup_wizard = $this->maybe_load_setup_wizard();
@@ -192,7 +192,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
         dirname($this->basename) . '/core/languages/'
       );
     }
-    
+
     public function load_shipping_method() {
       add_action(
         'woocommerce_shipping_init',

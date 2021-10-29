@@ -530,7 +530,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
 
       if ( ! empty($pickup_points) ) {
         foreach ( $pickup_points as $key => $value ) {
-          if ( ! isset($value->provider) ) continue;
+          if ( ! isset($value->provider) ) {
+            continue;
+          }
           $pickup_point_key = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ')';
           $pickup_point_value = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
 
