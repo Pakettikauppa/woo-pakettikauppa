@@ -104,6 +104,7 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 == Changelog ==
 = 3.2.0 =
 * Add support for additional info to shipping labels
+* Various bug fixes
 
 = 3.1.2 =
 * Backwards compatibility for bulk actions
