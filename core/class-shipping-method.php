@@ -90,9 +90,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
         $token = get_transient($transient_name);
         if ( empty($token) ) {
           $token = $this->client->getToken();
-          set_transient($transient_name, $token, $token->expires_in - 100);
+          if ( isset($token->expires_in) ) {
+            set_transient($transient_name, $token, $token->expires_in - 100);
+          }
         }
-        $this->client->setAccessToken($token->access_token);
+        if ( isset($token->access_token) ) {
+          $this->client->setAccessToken($token->access_token);
+        }
       }
 
       $this->is_loaded = true;
@@ -356,6 +360,41 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       return $html;
     }
 
+    public function generate_enchancedtextarea_html( $key, $value ) {
+      $field_key = $this->get_field_key($key);
+      $field_value = $this->get_option($key);
+
+      ob_start();
+      ?>
+
+      <tr valign="top" class="pakettikauppa-setting">
+        <th scope="row" class="titledesc">
+          <label for="<?php echo $field_key; ?>"><?php echo esc_html($value['title']); ?></label>
+        </th>
+        <td class="forminp">
+          <fieldset>
+            <legend class="screen-reader-text"><span><?php echo esc_html($value['title']); ?></span></legend>
+            <textarea rows="3" cols="20" class="input-text wide-input " type="textarea" name="<?php echo $field_key; ?>" id="<?php echo $field_key; ?>" style="" placeholder=""><?php echo esc_html($field_value); ?></textarea>
+            <?php if ( ! empty($value['available_params']) && is_array($value['available_params']) ) : ?>
+                <?php foreach ( $value['available_params'] as $param_key => $param_desc ) : ?>
+                  <p class="description enchtext noselect">
+                    <code class="enchtext-code" data-param="<?php echo esc_html($param_key); ?>" onclick="click_enchancedtextarea_code('<?php echo $field_key; ?>', '<?php echo esc_html($param_key); ?>');">{<?php echo esc_html($param_key); ?>}</code> - <?php echo esc_html($param_desc); ?>
+                  </p>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            <?php if ( ! empty($value['description']) ) : ?>
+              <p class="description"><?php echo $value['description']; ?></p>
+            <?php endif; ?>
+          </fieldset>
+        </td>
+      </tr>
+
+      <?php
+      $html = ob_get_contents();
+      ob_end_clean();
+      return $html;
+    }
+
     protected function get_form_field_mode() {
       return array(
         'title'   => $this->get_core()->text->mode(),
@@ -565,6 +604,16 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           'options' => array(
             'no'  => __('No'),
             'yes'  => __('Yes'),
+          ),
+        ),
+        'label_additional_info' => array(
+          'title'   => $this->get_core()->text->additional_info_param_title(),
+          'type'    => 'enchancedtextarea',
+          'description' => '',
+          'available_params' => array(
+            'ORDER_NUMBER' => $this->get_core()->text->additional_info_param_order_number(),
+            'PRODUCTS_NAMES' => $this->get_core()->text->additional_info_param_products_names(),
+            'PRODUCTS_SKU' => $this->get_core()->text->additional_info_param_products_sku(),
           ),
         ),
       );

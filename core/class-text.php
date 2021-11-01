@@ -448,5 +448,21 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
     public function confirm_private_pickup_selection() {
       return __('The pickup point you\'ve chosen is not available for public access. Are you sure that you can retrieve the package?', 'woo-pakettikauppa');
     }
+
+    public function additional_info_param_title() {
+      return __('Add additional text on labels', 'woo-pakettikauppa');
+    }
+
+    public function additional_info_param_order_number() {
+      return __('Order number', 'woo-pakettikauppa');
+    }
+
+    public function additional_info_param_products_names() {
+      return __('Names of the goods in the shipment', 'woo-pakettikauppa');
+    }
+
+    public function additional_info_param_products_sku() {
+      return __('SKU codes of the goods in the shipment', 'woo-pakettikauppa');
+    }
   }
 }

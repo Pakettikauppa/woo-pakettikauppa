@@ -58,7 +58,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       $this->dir = plugin_dir_path($config['root']);
       $this->dir_url = plugin_dir_url($config['root']);
 
-      $this->shippingmethod = $config['shipping_method_name'] ?? str_replace('wc_', '', $this->core->prefix) . '_shipping_method';
+      $this->shippingmethod = $config['shipping_method_name'] ?? str_replace('wc_', '', $this->prefix) . '_shipping_method';
 
       $this->vendor_name = $config['vendor_name'] ?? 'Pakettikauppa';
       $this->vendor_fullname = $config['vendor_fullname'] ?? 'Woocommerce Pakettikauppa';
@@ -78,12 +78,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       self::$instance = $this;
 
       add_action(
-        'plugins_loaded',
+        'wp_loaded',
         function() {
           $this->load();
           $this->load_textdomain();
         }
       );
+      $this->load_shipping_method();
+      $this->add_shipping_method();
     }
 
     /**
@@ -144,8 +146,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
        * If the shipping method is added too early, errors will ensue.
        * If the shipping method is added too late, errors will ensue.
        */
+      /*
       add_action(
-        'wp_loaded',
+        'woocommerce_shipping_init',
         function() {
           // Instance is only used for hacking classes together.
           // It's not used by WooCommerce. WooCommerce creates it's own instances, otherwise the legacy
@@ -155,6 +158,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
           $this->add_shipping_method();
         }
       );
+      */
+      //always load shipping method if not already loaded
+      if ( ! $this->shipping_method_instance ) {
+        $this->shipping_method_instance = $this->load_shipping_method_class();
+      }
 
       if ( is_admin() ) {
         $this->admin = $this->load_admin_class();
@@ -182,6 +190,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
         'woo-pakettikauppa',
         false,
         dirname($this->basename) . '/core/languages/'
+      );
+    }
+
+    public function load_shipping_method() {
+      add_action(
+        'woocommerce_shipping_init',
+        function() {
+          $this->shipping_method_instance = $this->load_shipping_method_class();
+        }
       );
     }
 
