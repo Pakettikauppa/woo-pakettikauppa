@@ -160,11 +160,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
         }
       );
       /*
-      */
       //always load shipping method if not already loaded
       if ( ! $this->shipping_method_instance ) {
         //$this->shipping_method_instance = $this->load_shipping_method_class(); // this seems to break stuff
       }
+      */
 
       if ( is_admin() ) {
         $this->admin = $this->load_admin_class();
