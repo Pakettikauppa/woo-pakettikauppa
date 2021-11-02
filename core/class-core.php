@@ -78,7 +78,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       self::$instance = $this;
 
       add_action(
-        'wp_loaded',
+        'plugins_loaded', //'wp_loaded',
         function() {
           $this->load();
           $this->load_textdomain();
@@ -146,23 +146,25 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
        * If the shipping method is added too early, errors will ensue.
        * If the shipping method is added too late, errors will ensue.
        */
-      /*
       add_action(
-        'woocommerce_shipping_init',
+        'wp_loaded', //woocommerce_shipping_init',
         function() {
           // Instance is only used for hacking classes together.
           // It's not used by WooCommerce. WooCommerce creates it's own instances, otherwise the legacy
           // shipping method breaks. If this class doesn't contain the shipping method class instance
           // things like setup wizard break.
-          $this->shipping_method_instance = $this->load_shipping_method_class();
+          if ( ! $this->shipping_method_instance ) {
+            $this->shipping_method_instance = $this->load_shipping_method_class();
+          }
           $this->add_shipping_method();
         }
       );
-      */
+      /*
       //always load shipping method if not already loaded
       if ( ! $this->shipping_method_instance ) {
-        $this->shipping_method_instance = $this->load_shipping_method_class();
+        //$this->shipping_method_instance = $this->load_shipping_method_class(); // this seems to break stuff
       }
+      */
 
       if ( is_admin() ) {
         $this->admin = $this->load_admin_class();
@@ -197,7 +199,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       add_action(
         'woocommerce_shipping_init',
         function() {
-          $this->shipping_method_instance = $this->load_shipping_method_class();
+          if ( ! $this->shipping_method_instance ) {
+            $this->shipping_method_instance = $this->load_shipping_method_class();
+          }
         }
       );
     }
