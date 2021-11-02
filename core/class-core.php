@@ -78,7 +78,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       self::$instance = $this;
 
       add_action(
-        'plugins_load', //'wp_loaded',
+        'plugins_loaded', //'wp_loaded',
         function() {
           $this->load();
           $this->load_textdomain();
@@ -146,7 +146,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
        * If the shipping method is added too early, errors will ensue.
        * If the shipping method is added too late, errors will ensue.
        */
-      /*
       add_action(
         'wp_loaded', //woocommerce_shipping_init',
         function() {
@@ -160,10 +159,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
           $this->add_shipping_method();
         }
       );
+      /*
       */
       //always load shipping method if not already loaded
       if ( ! $this->shipping_method_instance ) {
-        $this->shipping_method_instance = $this->load_shipping_method_class();
+        //$this->shipping_method_instance = $this->load_shipping_method_class(); // this seems to break stuff
       }
 
       if ( is_admin() ) {
