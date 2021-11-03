@@ -668,11 +668,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
           $provider = explode(':', $pickup_point, 2);
 
+          $service_id = null;
           if ( ! empty($provider) ) {
               $methods = array_flip($this->core->shipment->get_pickup_point_methods());
-              $service_id = $methods[$provider[0]];
-          } else {
-              $service_id = null;
+              if ( isset($provider[0]) && isset($methods[$provider[0]]) ) {
+                $service_id = $methods[$provider[0]];
+              }
           }
       }
       return $service_id;
