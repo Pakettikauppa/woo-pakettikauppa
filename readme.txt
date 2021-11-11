@@ -102,6 +102,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
+= 3.2.2 =
+* Minor bugfix
+
 = 3.2.1 =
 * Fix timing issue preventing working from most installations
 
