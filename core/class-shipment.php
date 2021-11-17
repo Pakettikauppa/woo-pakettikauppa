@@ -171,6 +171,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
               $status['api_good'] = false;
               $status['msg'] = $token->error . ': ' . $token->message;
             } else {
+              $this->client->setAccessToken($token->access_token);
               $checker = $this->client->listShippingMethods();
               if ( empty($checker) ) {
                 $status['api_good'] = false;
