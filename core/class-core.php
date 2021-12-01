@@ -255,16 +255,16 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
 
       return $admin;
     }
-    
+
     /**
-     * Override this method to load a custom Admin class
+     * Override this method to load a custom Check Tool class
      */
     protected function load_check_tool_class() {
       require_once 'class-check-tool.php';
 
-      $checkTool = new Check_Tool($this);
+      $check_tool = new Check_Tool($this);
 
-      return $checkTool;
+      return $check_tool;
     }
 
     /**
