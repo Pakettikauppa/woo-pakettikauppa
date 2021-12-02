@@ -529,12 +529,29 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       $options_array = array( '' => array( 'text' => '- ' . __('Select a pickup point', 'woo-pakettikauppa') . ' -' ) );
 
       if ( ! empty($pickup_points) ) {
+        $show_provider = false;
+        $provider = '';
+        foreach ( $pickup_points as $key => $value ) {
+          if ( ! isset($value->provider) ) {
+            $show_provider = true;
+            break;
+          }
+          if ( ! empty($provider) && $provider !== $value->provider ) {
+            $show_provider = true;
+            break;
+          }
+          $provider = $value->provider;
+        }
         foreach ( $pickup_points as $key => $value ) {
           if ( ! isset($value->provider) ) {
             continue;
           }
           $pickup_point_key = $value->provider . ': ' . $value->name . ' (#' . $value->pickup_point_id . ')';
-          $pickup_point_value = $value->provider . ': ' . $value->name . ' (' . $value->street_address . ')';
+          $pickup_point_value = $value->name . ' (' . $value->street_address . ')';
+
+          if ( $show_provider ) {
+            $pickup_point_value = $value->provider . ': ' . $pickup_point_value;
+          }
 
           // $options_array[ $pickup_point_key ] = $pickup_point_value;
           $options_array[$pickup_point_key] = array(
