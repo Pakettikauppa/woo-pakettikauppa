@@ -21,6 +21,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Check_Tool') ) {
          */
         private $shipment = null;
         private $vendor_type = 'pakettikauppa';
+        private $page_title = '';
         private $check_urls = array(
           'pakettikauppa' => array(
             'http://api.pakettikauppa.fi',
@@ -42,6 +43,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Check_Tool') ) {
 
             if ( strtolower($this->core->vendor_name) != $this->vendor_type ) {
                 $this->vendor_type = strtolower($this->core->vendor_name);
+                $this->page_title = __('Posti Shipping diagnostic tool', 'woo-pakettikauppa');
+            } else {
+                $this->page_title = __('Pakettikauppa diagnostic tool', 'woo-pakettikauppa');
             }
 
             if ( current_user_can('manage_woocommerce') ) {
@@ -51,9 +55,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Check_Tool') ) {
         }
 
         public function admin_page() {
-            /* translators: %s: vendor_name */
-            $title = sprintf(__('WC %s check tool', 'woo-pakettikauppa'), $this->core->vendor_name);
-            add_submenu_page('tools.php', $title, $title, 'manage_woocommerce', $this->core->prefix . '_check', array( $this, 'render_check_tool' ), 10);
+            add_submenu_page('tools.php', $this->page_title, $this->page_title, 'manage_woocommerce', $this->core->prefix . '_check', array( $this, 'render_check_tool' ), 10);
         }
 
         public function enqueue_scripts() {
@@ -65,8 +67,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Check_Tool') ) {
             <div class = "pakettikauppa-check-tool-header">
                 <h1>
                 <?php
-                /* translators: %s: vendor_name */
-                printf(__('WooCommerce %s check tool', 'woo-pakettikauppa'), $this->core->vendor_name);
+                echo $this->page_title;
                 ?>
                 </h1>
             </div>
