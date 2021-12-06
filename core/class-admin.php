@@ -80,7 +80,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           add_action('admin_notices', array( $this, 'new_install_notice_content' ));
         }
       } elseif ( $is_in_wc_settings ) {
-        add_action('admin_notices', array( $this, 'settings_page_setup_notice' ));
+        if ( get_option($this->core->prefix . '_wizard_done') == 1 ) {
+          add_action('admin_notices', array( $this, 'settings_page_setup_notice_small' ));  
+        } else {
+          add_action('admin_notices', array( $this, 'settings_page_setup_notice' ));
+        }
       }
     }
 
@@ -136,6 +140,22 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       <?php
     }
 
+    public function settings_page_setup_notice_small() {
+      ?>
+      <div class="notice notice-info  is-dismissible">
+        <p>
+          <?php
+          /* translators: %s: Vendor full name */
+          printf(esc_html__('You can always restart %s setup wizard by pressing the button.', 'woo-pakettikauppa'), $this->core->vendor_fullname);
+          ?>
+          <br/>
+          <a class="button button-primary" href="<?php echo esc_url(admin_url('admin.php?page=' . $this->core->setup_page)); ?>">
+            <?php echo $this->core->text->setup_button_text(); ?>
+          </a>
+        </p>
+      </div>
+      <?php
+    }
 
     public function create_shipment_for_order_automatically( $order_id ) {
       $order = new \WC_Order($order_id);
