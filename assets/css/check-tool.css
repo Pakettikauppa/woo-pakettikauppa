@@ -1,0 +1,34 @@
+.tools_page_pakettikauppa-check #wpcontent {
+    padding-left: 0;
+}
+.pakettikauppa-check-tool-header {
+    text-align: center;
+    padding: 50px 0;
+    background-color: #FFFFFF;
+    margin-bottom: 20px;
+}
+.pakettikauppa-check-tool-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+.pakettikauppa-check-tool-line {
+    background-color: #FFFFFF;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.pakettikauppa-check-tool-line .success {
+    color: #2ECC40;
+}
+
+.pakettikauppa-check-tool-line .error {
+    color: #FF4136;
+}
+
+.pakettikauppa-check-tool-line .warning {
+    color: #FF851B;
+}
+.pakettikauppa-check-tool-line b {
+    padding-right: 10px;
+}

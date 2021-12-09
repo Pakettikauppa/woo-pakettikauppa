@@ -11,7 +11,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-10-19 12:45+0000\n"
+"POT-Creation-Date: 2021-12-03 09:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: Loco https://localise.biz/\n"
 "X-Domain: woo-pakettikauppa\n"
@@ -73,7 +73,7 @@ msgstr ""
 msgid "After which amount shipping is free."
 msgstr ""
 
-#: core/class-shipment.php:189
+#: core/class-shipment.php:190
 msgid "An error occurred while checking API credentials"
 msgstr ""
 
@@ -86,9 +86,8 @@ msgid "An error occurred. Please try again later."
 msgstr ""
 
 #. %s: Error message
-#: core/class-shipment.php:257 core/class-admin.php:460
-#: core/class-admin.php:1249 core/class-admin.php:1285
-#: core/class-admin.php:1319
+#: core/class-admin.php:460 core/class-admin.php:1249 core/class-admin.php:1285
+#: core/class-admin.php:1319 core/class-shipment.php:258
 #, php-format
 msgid "An error occurred: %s"
 msgstr ""
@@ -109,6 +108,10 @@ msgstr ""
 #: core/class-text.php:251
 #, php-format
 msgid "API key provided by %1$s"
+msgstr ""
+
+#: core/class-check-tool.php:103
+msgid "API login information"
 msgstr ""
 
 #: core/class-text.php:257
@@ -159,6 +162,10 @@ msgstr ""
 msgid "Cash on Delivery (COD) Settings"
 msgstr ""
 
+#: core/class-check-tool.php:98
+msgid "Checking URL "
+msgstr ""
+
 #: core/class-frontend.php:420
 msgid "Choose one of pickup points close to the address you entered:"
 msgstr ""
@@ -202,13 +209,21 @@ msgid "Create shipping labels automatically"
 msgstr ""
 
 #. 1: Shipping service title 2: Shipment tracking code 3: Shipping label URL 4: Shipment tracking URL
-#: core/class-shipment.php:358
+#: core/class-shipment.php:359
 #, php-format
 msgid "Created %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s"
 msgstr ""
 
 #: core/class-text.php:206
 msgid "Credentials"
+msgstr ""
+
+#: core/class-check-tool.php:79
+msgid "Curl extension"
+msgstr ""
+
+#: core/class-check-tool.php:165
+msgid "Curl not installed"
 msgstr ""
 
 #: core/class-text.php:433
@@ -271,7 +286,7 @@ msgstr ""
 msgid "Empty postcode. Please check your address information."
 msgstr ""
 
-#: core/class-shipment.php:780
+#: core/class-shipment.php:782
 msgid "error"
 msgstr ""
 
@@ -283,7 +298,7 @@ msgstr ""
 msgid "Exit"
 msgstr ""
 
-#: core/class-shipment.php:177 core/class-shipment.php:184
+#: core/class-shipment.php:178 core/class-shipment.php:185
 msgid "Failed to check API credentials or them are bad"
 msgstr ""
 
@@ -292,12 +307,12 @@ msgid "Failed to connect with server"
 msgstr ""
 
 #. %s: Error message
-#: core/class-shipment.php:266 core/class-shipment.php:271
+#: core/class-shipment.php:267 core/class-shipment.php:272
 msgid "Failed to create shipment."
 msgstr ""
 
 #. %s: Error message
-#: core/class-shipment.php:252
+#: core/class-shipment.php:253
 #, php-format
 msgid "Failed to create shipment. Errors: %s"
 msgstr ""
@@ -349,6 +364,10 @@ msgstr ""
 msgid "Informed consignee of arrival"
 msgstr ""
 
+#: core/class-check-tool.php:112
+msgid "Installed"
+msgstr ""
+
 #. %s: Postcode
 #: core/class-frontend.php:383
 #, php-format
@@ -396,7 +415,7 @@ msgstr ""
 msgid "Label code"
 msgstr ""
 
-#: core/class-shipment.php:375
+#: core/class-shipment.php:376
 msgid "Label posted to URL successfully."
 msgstr ""
 
@@ -450,12 +469,20 @@ msgstr ""
 msgid "No pickup points were found. Check the address."
 msgstr ""
 
-#: core/class-text.php:51 core/class-admin.php:910
+#: core/class-admin.php:910 core/class-text.php:51
 msgid "No shipping"
 msgstr ""
 
 #: core/class-text.php:114
 msgid "No shipping class cost (vat included)"
+msgstr ""
+
+#: core/class-check-tool.php:178
+msgid "Not found"
+msgstr ""
+
+#: core/class-check-tool.php:114 core/class-check-tool.php:134
+msgid "Not installed"
 msgstr ""
 
 #: core/class-text.php:128
@@ -464,6 +491,10 @@ msgstr ""
 
 #: core/class-text.php:226
 msgid "Note"
+msgstr ""
+
+#: core/class-check-tool.php:180
+msgid "OK"
 msgstr ""
 
 #. Vendor name, not translatable
@@ -487,7 +518,7 @@ msgstr ""
 msgid "Original shipping..."
 msgstr ""
 
-#: core/class-frontend.php:547
+#: core/class-frontend.php:567
 msgid "Other"
 msgstr ""
 
@@ -497,6 +528,10 @@ msgstr ""
 
 #. Author of the plugin
 msgid "Pakettikauppa"
+msgstr ""
+
+#: core/class-check-tool.php:48
+msgid "Pakettikauppa diagnostic tool"
 msgstr ""
 
 #. Description of the plugin
@@ -513,6 +548,10 @@ msgstr ""
 msgid "Phone"
 msgstr ""
 
+#: core/class-check-tool.php:76
+msgid "PHP version"
+msgstr ""
+
 #: core/class-text.php:437
 msgid "Pickup address"
 msgstr ""
@@ -521,7 +560,7 @@ msgstr ""
 #: core/class-admin.php:635 core/class-admin.php:1426 core/class-admin.php:1428
 #: core/class-admin.php:1437 core/class-admin.php:1439
 #: core/class-frontend.php:365 core/class-frontend.php:366
-#: core/class-frontend.php:565
+#: core/class-frontend.php:585
 msgid "Pickup point"
 msgstr ""
 
@@ -529,7 +568,7 @@ msgstr ""
 msgid "Pickup point search limit"
 msgstr ""
 
-#: core/class-shipping-method.php:340
+#: core/class-shipping-method.php:369
 msgid "Pickup points"
 msgstr ""
 
@@ -537,7 +576,7 @@ msgstr ""
 msgid "Please add shipping info to the order to manage shipments."
 msgstr ""
 
-#: core/class-frontend.php:589
+#: core/class-frontend.php:609
 msgid "Please choose a pickup point."
 msgstr ""
 
@@ -569,7 +608,11 @@ msgstr ""
 msgid "Post shipping label to URL"
 msgstr ""
 
-#: core/class-shipment.php:371
+#: core/class-check-tool.php:46
+msgid "Posti Shipping diagnostic tool"
+msgstr ""
+
+#: core/class-shipment.php:372
 msgid "Posting label to URL failed!"
 msgstr ""
 
@@ -585,7 +628,7 @@ msgstr ""
 msgid "Print"
 msgstr ""
 
-#: core/class-shipment.php:350
+#: core/class-shipment.php:351
 msgid "Print document"
 msgstr ""
 
@@ -800,20 +843,20 @@ msgid ""
 "sure that you can retrieve the package?"
 msgstr ""
 
-#: core/class-shipment.php:223
+#: core/class-shipment.php:224
 msgid ""
 "The shipping label was not created because the order does not contain valid "
 "shipping details."
 msgstr ""
 
-#: core/class-shipment.php:211
+#: core/class-shipment.php:212
 msgid ""
 "The shipping label was not created because the order does not contain valid "
 "shipping method."
 msgstr ""
 
-#: core/class-shipment.php:351 core/class-admin.php:668
-#: core/class-admin.php:696
+#: core/class-admin.php:668 core/class-admin.php:696
+#: core/class-shipment.php:352
 msgid "Track"
 msgstr ""
 
@@ -822,7 +865,7 @@ msgid "Tracking"
 msgstr ""
 
 #. %s: Error message
-#: core/class-shipment.php:975
+#: core/class-shipment.php:977
 #, php-format
 msgid "Tracking code creation failed: %s"
 msgstr ""
@@ -831,7 +874,7 @@ msgstr ""
 msgid "Unable to create return label for this shipment type."
 msgstr ""
 
-#: core/class-shipment.php:779
+#: core/class-shipment.php:781
 msgid "Unknown error"
 msgstr ""
 
@@ -857,8 +900,22 @@ msgstr ""
 msgid "When order status is \"%s\""
 msgstr ""
 
+#. %s: vendor_name
+#: core/class-check-tool.php:91
+#, php-format
+msgid "WooCommerce %s version"
+msgstr ""
+
 #. Name of the plugin
 msgid "WooCommerce Pakettikauppa"
+msgstr ""
+
+#: core/class-check-tool.php:85
+msgid "WooCommerce version"
+msgstr ""
+
+#: core/class-check-tool.php:82
+msgid "Wordpress version"
 msgstr ""
 
 #. 1: Shipment tracking URL 2: Shipment tracking code

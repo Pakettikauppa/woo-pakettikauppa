@@ -174,6 +174,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
           $this->admin->add_error($shipment_exception);
           $this->admin->add_error_notice($shipment_exception);
         }
+        //load check tool class
+        $this->load_check_tool_class();
       }
 
       // Always load frontend so admin_ajax can work from there
@@ -252,6 +254,17 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       $admin->load();
 
       return $admin;
+    }
+
+    /**
+     * Override this method to load a custom Check Tool class
+     */
+    protected function load_check_tool_class() {
+      require_once 'class-check-tool.php';
+
+      $check_tool = new Check_Tool($this);
+
+      return $check_tool;
     }
 
     /**

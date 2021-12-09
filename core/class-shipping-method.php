@@ -217,6 +217,17 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       ob_start();
     ?>
       <script>
+        function pkSetInputs(parent, disabled) {
+            var inputs = parent.querySelectorAll('input');
+            for(var j=0; j<inputs.length; ++j) {
+                if (disabled){
+                    inputs[j].setAttribute('disabled', disabled);
+                } else {
+                    inputs[j].removeAttribute('disabled');
+                }
+            }
+        }
+        
         function pkChangeOptions(elem, methodId) {
 
             var strUser = elem.options[elem.selectedIndex].value;
@@ -228,15 +239,33 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
 
             for(var i=0; i<elements.length; ++i) {
                 elements[i].style.display = "none";
+                pkSetInputs(elements[i], true);
             }
-
+            
+            
+            
             if (strUser == '__PICKUPPOINTS__') {
-              if (pickuppointsElement) pickuppointsElement.style.display = "block";
-              if (servicesElement) servicesElement.style.display = "none";
+              if (pickuppointsElement) { 
+                  pickuppointsElement.style.display = "block";
+                  pkSetInputs(pickuppointsElement, false);
+              }
+              if (servicesElement) {
+                  servicesElement.style.display = "none";
+                  pkSetInputs(servicesElement, true);
+              }
             } else {
-              if (pickuppointsElement) pickuppointsElement.style.display = "none";
-              if (servicesElement) servicesElement.style.display = "block";
-              if (elem.options[elem.selectedIndex].getAttribute('data-haspp') == 'true') servicePickuppointsElement.style.display = "block";
+              if (pickuppointsElement) {
+                  pickuppointsElement.style.display = "none";
+                  pkSetInputs(pickuppointsElement, true);
+              }
+              if (servicesElement) {
+                  servicesElement.style.display = "block";
+                  pkSetInputs(servicesElement, false);
+              }
+              if (elem.options[elem.selectedIndex].getAttribute('data-haspp') == 'true') {
+                  servicePickuppointsElement.style.display = "block";
+                  pkSetInputs(servicePickuppointsElement, false);
+              }
             }
         }
       </script>
@@ -270,7 +299,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
               <th><?php echo $shipping_method->title; ?></th>
               <td style="vertical-align: top;">
                 <select id="<?php echo $method_id; ?>-select" name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][service]'; ?>" onchange="pkChangeOptions(this, '<?php echo $method_id; ?>');">
-                  <option value="__NULL__"><?php echo $this->get_core()->text->no_shipping(); ?></option>  //Issue: #171, was no echo
+                  <option value="__NULL__"><?php echo $this->get_core()->text->no_shipping(); ?></option>
                   <?php if ( ! empty($methods) ) : ?>
                     <option value="__PICKUPPOINTS__" <?php echo ($selected_service === '__PICKUPPOINTS__' ? 'selected' : ''); ?>>Noutopisteet</option>
                   <?php endif; ?>
