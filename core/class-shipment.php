@@ -39,7 +39,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
     /**
      * @var Client
      */
-    private $client = null;
+    public $client = null;
     protected $settings = null;
 
     private $errors = array();
