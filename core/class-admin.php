@@ -80,7 +80,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           add_action('admin_notices', array( $this, 'new_install_notice_content' ));
         }
       } elseif ( $is_in_wc_settings ) {
-        add_action('admin_notices', array( $this, 'settings_page_setup_notice' ));
+        if ( get_option($this->core->prefix . '_wizard_done') !== '1' ) {
+          add_action('admin_notices', array( $this, 'settings_page_setup_notice' ));
+        }
       }
     }
 
@@ -135,7 +137,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       </div>
       <?php
     }
-
 
     public function create_shipment_for_order_automatically( $order_id ) {
       $order = new \WC_Order($order_id);

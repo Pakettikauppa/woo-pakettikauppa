@@ -424,6 +424,28 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       return $html;
     }
 
+    public function generate_button_html( $key, $value ) {
+      $field_key = $this->get_field_key($key);
+      ob_start();
+      ?>
+      <tr valign="top" class="pakettikauppa-setting">
+        <th scope="row" class="titledesc">
+          <label for="<?php echo $field_key; ?>"><?php echo esc_html($value['title']); ?></label>
+        </th>
+        <td class="forminp">
+          <fieldset>
+            <a class="button button-primary" href="<?php echo $value['url']; ?>">
+              <?php echo $value['text']; ?>
+            </a>
+          </fieldset>
+        </td>
+      </tr>
+      <?php
+      $html = ob_get_contents();
+      ob_end_clean();
+      return $html;
+    }
+
     protected function get_form_field_mode() {
       return array(
         'title'   => $this->get_core()->text->mode(),
@@ -439,7 +461,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
     private function my_global_form_fields() {
       $wc_countries = new WC_Countries();
 
-      return array(
+      $fields = array(
         'notices'    => array(
           'type'     => 'notices',
         ),
@@ -646,11 +668,20 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           ),
         ),
       );
+      if ( get_option($this->get_core()->prefix . '_wizard_done') == 1 ) {
+        $fields['setup_wizard'] = array(
+          'title'   => $this->get_core()->text->setup_wizard(),
+          'type'    => 'button',
+          'url'     => esc_url(admin_url('admin.php?page=' . $this->get_core()->setup_page)),
+          'text'    => $this->get_core()->text->restart_setup_wizard(),
+        );
+      }
+      return $fields;
     }
 
     public function process_admin_options() {
       delete_transient($this->get_core()->prefix . '_shipping_methods');
-
+      update_option($this->get_core()->prefix . '_wizard_done', 1);
       return parent::process_admin_options();
     }
   }

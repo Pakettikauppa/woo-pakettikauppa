@@ -408,6 +408,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
       return __('Advanced settings', 'woo-pakettikauppa');
     }
 
+    public function setup_wizard() {
+      return __('Setup wizard', 'woo-pakettikauppa');
+    }
+
     public function show_shipping_method() {
       return __('Show shipping method', 'woo-pakettikauppa');
     }
@@ -443,6 +447,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
 
     public function show_pickup_point_override_query() {
       return __('Show pickup point override in checkout', 'woo-pakettikauppa');
+    }
+
+    public function restart_setup_wizard() {
+      return __('Restart setup wzard', 'woo-pakettikauppa');
     }
 
     public function confirm_private_pickup_selection() {

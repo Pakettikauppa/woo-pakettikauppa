@@ -289,6 +289,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Setup_Wizard') ) {
     }
 
     public function setup_ready() {
+      update_option($this->core->prefix . '_wizard_done', 1);
       ?>
       <p class="wcpk-setup-info">
         <?php echo $this->core->text->setup_ready_info(); ?>
