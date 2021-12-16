@@ -88,9 +88,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       if ( $configs[$mode]['use_posti_auth'] ) {
         $transient_name = $this->get_core()->prefix . '_access_token';
         $token = get_transient($transient_name);
-        if ( empty($token) || empty($token->access_token) ) {
+        if ( empty($token) || empty($token->access_token) || (isset($token->timestamp) && ($token->timestamp + $token->expires_in - 100) < time()) ) {
           $token = $this->client->getToken();
           if ( isset($token->expires_in) ) {
+            $token->timestamp = time();
             set_transient($transient_name, $token, $token->expires_in - 100);
           }
         }

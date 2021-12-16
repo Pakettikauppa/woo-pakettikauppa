@@ -770,7 +770,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
          * getToken() requests to the authentication server. So this needs to be eather distributedly locked or
          * moved to a background process and run from the cron
          */
-        if ( empty($token) ) {
+        // check if we hame timestamp saved and check if token is not expired
+        if ( empty($token) || (isset($token->timestamp) && ($token->timestamp + $token->expires_in - 100) < time()) ) {
           $token = $this->client->getToken();
 
           if ( isset($token->error) ) {
@@ -786,6 +787,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
             return;
           }
+          // add timestamp to token for validating expiration
+          $token->timestamp = time();
 
           // let's remove 100 seconds from expires_in time so in case of a network lag, requests will still be valid on server side
           set_transient($transient_name, $token, $token->expires_in - 100);
