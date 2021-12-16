@@ -102,7 +102,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Check_Tool') ) {
                 <div class = "pakettikauppa-check-tool-line">
                     <b><?php _e('API login information', 'woo-pakettikauppa'); ?></b> <?php echo $this->check_api_login(); ?>
                 </div>
-                <?php if ( $this->vendor_type !== "pakettikauppa" ) : ?>
+                <?php if ( $this->vendor_type !== 'pakettikauppa' ) : ?>
                 <div class = "pakettikauppa-check-tool-line">
                     <b><?php _e('Cached token', 'woo-pakettikauppa'); ?></b> <?php echo $this->check_cached_token(); ?>
                 </div>
@@ -151,8 +151,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Check_Tool') ) {
             if ( file_exists($this->core->dir . 'wc-pakettikauppa.php2') ) {
                 return $this->render_error(__('Could not load plugin\'s file', 'woo-pakettikauppa'));
             }
-            $plugin_data = get_plugin_data( $this->core->dir . 'wc-pakettikauppa.php', false );
-            if ( !is_array($plugin_data) || !isset($plugin_data['Version']) ) {
+            $plugin_data = get_plugin_data($this->core->dir . 'wc-pakettikauppa.php', false);
+            if ( ! is_array($plugin_data) || ! isset($plugin_data['Version']) ) {
                 return $this->render_error(__('Could not read version', 'woo-pakettikauppa'));
             }
             $plugin_version = $plugin_data['Version'];
@@ -204,17 +204,17 @@ if ( ! class_exists(__NAMESPACE__ . '\Check_Tool') ) {
                 return $this->render_error($api_check['msg']);
             }
         }
-        
+
         private function check_cached_token() {
             $transient_name = $this->core->prefix . '_access_token';
             $token = get_transient($transient_name);
-            if (!$token){
+            if ( ! $token ) {
                 return $this->render_error(__('Not found', 'woo-pakettikauppa'));
             } else {
                 $this->shipment->client->setAccessToken($token);
                 $result = $this->shipment->client->listShippingMethods();
-                if ($result === null) {
-                    delete_transient( $transient_name );
+                if ( $result === null ) {
+                    delete_transient($transient_name);
                     return $this->render_error(__('Found, but does not work. Deleted.', 'woo-pakettikauppa'));
                 }
                 return $this->render_success(__('Found and works.', 'woo-pakettikauppa'));
