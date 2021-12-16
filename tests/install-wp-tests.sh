@@ -90,6 +90,18 @@ install_woo() {
   rm "$WP_CORE_DIR/wp-content/plugins/woocommerce.zip"
 }
 
+install_polyfills() {
+	if [ -d $WP_TESTS_DIR/yoast-polyfills ]; then
+		return;
+	fi
+
+	POLYFILLS_URL="https://codeload.github.com/Yoast/PHPUnit-Polyfills/zip/refs/heads/main"
+
+	download "$POLYFILLS_URL" "$WP_TESTS_DIR/yoast-polyfills.zip"
+  unzip -q "$WP_TESTS_DIR/yoast-polyfills.zip" -d "$WP_TESTS_DIR"
+  rm "$WP_TESTS_DIR/yoast-polyfills.zip"
+}
+
 install_test_suite() {
 	# portable in-place argument for both GNU sed and Mac OSX sed
 	if [[ $(uname -s) == 'Darwin' ]]; then
@@ -158,4 +170,5 @@ install_db() {
 install_wp
 install_woo
 install_test_suite
+install_polyfills
 install_db
