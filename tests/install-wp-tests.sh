@@ -169,6 +169,6 @@ install_db() {
 
 install_wp
 install_woo
-install_polyfills
 install_test_suite
+install_polyfills
 install_db
