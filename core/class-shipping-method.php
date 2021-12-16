@@ -423,8 +423,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       ob_end_clean();
       return $html;
     }
-    
-    public function generate_button_html($key, $value){
+
+    public function generate_button_html( $key, $value ) {
       $field_key = $this->get_field_key($key);
       ob_start();
       ?>
@@ -668,12 +668,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           ),
         ),
       );
-      if (get_option($this->get_core()->prefix . '_wizard_done') == 1 ){
+      if ( get_option($this->get_core()->prefix . '_wizard_done') == 1 ) {
         $fields['setup_wizard'] = array(
           'title'   => $this->get_core()->text->setup_wizard(),
           'type'    => 'button',
           'url'     => esc_url(admin_url('admin.php?page=' . $this->get_core()->setup_page)),
-          'text'    => $this->get_core()->text->restart_setup_wizard()
+          'text'    => $this->get_core()->text->restart_setup_wizard(),
         );
       }
       return $fields;
@@ -681,7 +681,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
 
     public function process_admin_options() {
       delete_transient($this->get_core()->prefix . '_shipping_methods');
-
+      update_option($this->get_core()->prefix . '_wizard_done', 1);
       return parent::process_admin_options();
     }
   }

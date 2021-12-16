@@ -407,7 +407,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
     public function advanced_settings() {
       return __('Advanced settings', 'woo-pakettikauppa');
     }
-    
+
     public function setup_wizard() {
       return __('Setup wizard', 'woo-pakettikauppa');
     }
