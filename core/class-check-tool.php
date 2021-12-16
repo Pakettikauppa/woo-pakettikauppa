@@ -148,10 +148,18 @@ if ( ! class_exists(__NAMESPACE__ . '\Check_Tool') ) {
         }
 
         private function check_current_version() {
-            if ( file_exists($this->core->dir . 'wc-pakettikauppa.php2') ) {
-                return $this->render_error(__('Could not load plugin\'s file', 'woo-pakettikauppa'));
+            $plugin_data = false;
+            if ( $this->vendor_type === 'pakettikauppa' ) {
+                if ( ! file_exists($this->core->dir . 'wc-pakettikauppa.php') ) {
+                    return $this->render_error(__('Could not load plugin\'s file', 'woo-pakettikauppa'));
+                }
+                $plugin_data = get_plugin_data($this->core->dir . 'wc-pakettikauppa.php', false);
+            } elseif ( $this->vendor_type === 'posti' ) {
+                if ( ! file_exists($this->core->dir . 'posti-shipping.php') ) {
+                    return $this->render_error(__('Could not load plugin\'s file', 'woo-pakettikauppa'));
+                }
+                $plugin_data = get_plugin_data($this->core->dir . 'posti-shipping.php', false);
             }
-            $plugin_data = get_plugin_data($this->core->dir . 'wc-pakettikauppa.php', false);
             if ( ! is_array($plugin_data) || ! isset($plugin_data['Version']) ) {
                 return $this->render_error(__('Could not read version', 'woo-pakettikauppa'));
             }
