@@ -686,8 +686,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       delete_transient($this->get_core()->prefix . '_shipping_methods');
       update_option($this->get_core()->prefix . '_wizard_done', 1);
       //delete token on update, in case settings changed
-      $transient_name = $this->get_core()->prefix . '_access_token';
-      delete_transient($transient_name);
+      delete_transient($this->get_core()->prefix . '_access_token');
       return parent::process_admin_options();
     }
   }
