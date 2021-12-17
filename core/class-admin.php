@@ -992,6 +992,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                   </div>
                 <?php endif; ?>
               <?php endforeach; ?>
+              <?php $settings = $this->shipment->get_settings(); ?>
+              <div>
+                <h4><?php echo $this->core->text->additional_info_param_title(); ?></h4>
+                <textarea class="pakettikauppa-additional-info" rows="2"><?php echo $settings['label_additional_info'] ?? ''; ?></textarea>
+              </div>
             </fieldset>
           </div>
           <?php $this->tpl_products_selector($order); ?>
@@ -1134,7 +1139,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             }
           }
 
-          $tracking_code = $this->shipment->create_shipment($order, $service_id, $additional_services, $_REQUEST['for_products']);
+          // additional text for custom shipment
+          $extra_params = array();
+          if ( isset($_REQUEST['additional_text']) ) {
+            $extra_params['additional_text'] = sanitize_textarea_field($_REQUEST['additional_text']);
+          }
+
+          $tracking_code = $this->shipment->create_shipment($order, $service_id, $additional_services, $_REQUEST['for_products'], $extra_params);
 
           return $tracking_code;
           break;

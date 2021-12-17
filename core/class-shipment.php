@@ -200,7 +200,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      *
      * @return string|null
      */
-    public function create_shipment( \WC_Order $order, $service_id = null, $additional_services = null, $selected_products = array() ) {
+    public function create_shipment( \WC_Order $order, $service_id = null, $additional_services = null, $selected_products = array(), $extra_params = array() ) {
       do_action(str_replace('wc_', '', $this->core->prefix) . '_prepare_create_shipment', $order, $service_id, $additional_services);
 
       if ( $service_id === null ) {
@@ -244,7 +244,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       }
 
       try {
-        $shipment = $this->create_shipment_from_order($order, $service_id, $additional_services, $selected_products);
+        $shipment = $this->create_shipment_from_order($order, $service_id, $additional_services, $selected_products, $extra_params);
         $tracking_code = $shipment->{'response.trackingcode'}->__toString();
       } catch ( \Exception $e ) {
         $this->add_error($e->getMessage());
@@ -823,7 +823,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      * @return SimpleXMLElement
      * @throws Exception
      */
-    public function create_shipment_from_order( $order, $service_id = null, $additional_services = array(), $selected_products = array() ) {
+    public function create_shipment_from_order( $order, $service_id = null, $additional_services = array(), $selected_products = array(), $extra_params = array() ) {
       $shipment = new PK_Shipment();
       $language = (function_exists('get_user_locale')) ? ((function_exists('determine_locale')) ? determine_locale() : get_user_locale()) : get_locale();
 
@@ -961,13 +961,19 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       $info = new Info();
       $info->setReference($order->get_order_number());
       $info->setCurrency(get_woocommerce_currency());
-      if ( ! empty($this->settings['label_additional_info']) ) {
+      $additional_text = $this->settings['label_additional_info'];
+      if ( isset($extra_params['additional_text']) ) {
+          $additional_text = $extra_params['additional_text'];
+      }
+
+      if ( ! empty($additional_text) ) {
         $additional_info = array(
           'order_number' => $order->get_order_number(),
           'products' => $products_info,
         );
-        $info->setAdditionalInfoText($this->prepare_additional_info_text($additional_info));
+        $info->setAdditionalInfoText($this->prepare_additional_info_text($additional_info, $additional_text));
       }
+
       $shipment->setShipmentInfo($info);
 
       try {
@@ -980,7 +986,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       return $this->client->getResponse();
     }
 
-    private function prepare_additional_info_text( $values = array() ) {
+    private function prepare_additional_info_text( $values = array(), $custom_text = false ) {
         if ( ! is_array($values) ) {
             return 'ERROR';
         }
@@ -997,11 +1003,16 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
         $additional_info = '';
 
-        if ( ! empty($this->settings['label_additional_info']) ) {
-            $additional_info = $this->settings['label_additional_info'];
+        $label_additional_info = $this->settings['label_additional_info'];
+        if ( $custom_text !== false && ! empty($custom_text) ) {
+            $label_additional_info = $custom_text;
+        }
+
+        if ( ! empty($label_additional_info) ) {
+            $additional_info = $label_additional_info;
             $additional_info = str_replace('\n', "\n", $additional_info);
 
-            $additional_info = str_replace('{ORDER_NUMBER}', $values['order_number'], $additional_info);
+            $additional_info = str_ireplace('{ORDER_NUMBER}', $values['order_number'], $additional_info);
 
             $products_names_text = '';
             $products_sku_text = '';
@@ -1020,8 +1031,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
                 $products_names_text = $values['products_names'];
                 $products_sku_text = $values['products_sku'];
             }
-            $additional_info = str_replace('{PRODUCTS_NAMES}', $products_names_text, $additional_info);
-            $additional_info = str_replace('{PRODUCTS_SKU}', $products_sku_text, $additional_info);
+            $additional_info = str_ireplace('{PRODUCTS_NAMES}', $products_names_text, $additional_info);
+            $additional_info = str_ireplace('{PRODUCTS_SKU}', $products_sku_text, $additional_info);
         }
 
         return $additional_info;
