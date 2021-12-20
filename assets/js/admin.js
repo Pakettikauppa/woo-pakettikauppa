@@ -32,7 +32,8 @@ jQuery(function( $ ) {
       data['additional_services'] = [];
       data['custom_method'] = 1;
       data['custom_pickup'] = null;
-
+      data['additional_text'] = $('textarea.pakettikauppa-additional-info').val();
+      
       if ($("#pickup-changer-" + shipping_method).length) {
         data['custom_pickup'] = $("#pickup-changer-" + shipping_method + " .pakettikauppa-pickup-select").find(':selected').data('id');
       }

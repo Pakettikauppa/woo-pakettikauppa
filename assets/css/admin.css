@@ -299,6 +299,10 @@ table .pakettikauppa-notice p {
   background: rgba(0,0,0,.17);
 }
 
+textarea.pakettikauppa-additional-info {
+    width: 100%;
+}
+
 /* Responsive */
 @media (min-width: 1200px) {
   .pakettikauppa-notice--setup {
