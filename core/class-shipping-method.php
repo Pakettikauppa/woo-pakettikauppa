@@ -72,6 +72,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       // Save settings in admin if you have any defined
       add_action('woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ));
 
+      // seems that this part is no longer used
+      /*
       $settings = $this->get_core()->shipment->get_settings();
       $mode = $settings['mode'];
       $configs = $this->get_core()->api_config;
@@ -99,7 +101,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           $this->client->setAccessToken($token->access_token);
         }
       }
-
+      */
       $this->is_loaded = true;
     }
 
@@ -683,6 +685,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
     public function process_admin_options() {
       delete_transient($this->get_core()->prefix . '_shipping_methods');
       update_option($this->get_core()->prefix . '_wizard_done', 1);
+      //delete token on update, in case settings changed
+      delete_transient($this->get_core()->prefix . '_access_token');
       return parent::process_admin_options();
     }
   }
