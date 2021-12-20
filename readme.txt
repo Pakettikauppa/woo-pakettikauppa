@@ -102,6 +102,15 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
+= 3.4.0 =
+* New feature: Updated diagnostic tool to check versions and cached tokens
+* New feature: Additional info to shipping labels in custom shipment
+* New feature: Instuction if no configured shipping method
+* Fine tuning: Wizard fixes in settings
+* Fine tuning: Double check that cached token is really expired after TTL
+* Bug fix: Automated test fixes
+* Bug fix: Refactoring, small bug fixes
+
 = 3.3.0 =
 * New feature: Diagnostic tool to check everything is working correctly
 * New feature: If using only one provider in pickup point searches, don't show the provider name
