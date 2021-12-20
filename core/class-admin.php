@@ -832,9 +832,21 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $order_postcode = $order->get_shipping_postcode();
       $order_address  = $order->get_shipping_address_1() . ' ' . $order->get_shipping_city();
       $order_country  = $order->get_shipping_country();
+
       $is_cod = $order->get_payment_method() === 'cod';
+      $show_section = 'main';
+      if ( empty($service_id) ) {
+        $show_section = 'custom';
+      }
       ?>
       <div>
+        <?php if ( $show_section === 'custom' ) : ?>
+          <div class="pakettikauppa-notice notice-error">
+            <p>
+              <?php _e('No shipping method configured! Configure shipping method from settings.', 'woo-pakettikauppa'); ?>
+            </p>
+          </div>
+        <?php endif; ?>
         <input type="hidden" name="pakettikauppa_nonce" value="<?php echo wp_create_nonce(str_replace('wc_', '', $this->core->prefix) . '-meta-box'); ?>" id="pakettikauppa_metabox_nonce" />
         <?php
         if ( empty($service_id) ) {
@@ -857,10 +869,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             $this->tpl_return_label_global_buttons();
           }
           $this->tpl_section_end();
-        }
-        $show_section = 'main';
-        if ( empty($service_id) ) {
-          $show_section = 'custom';
         }
         ?>
           <div class="pakettikauppa-services">
