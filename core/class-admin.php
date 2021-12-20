@@ -843,7 +843,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         <?php if ( $show_section === 'custom' ) : ?>
           <div class="pakettikauppa-notice notice-error">
             <p>
-              <?php _e('Please select shipping service', 'woo-pakettikauppa'); ?>
+              <?php _e('No shipping method configured! Configure shipping method from settings.', 'woo-pakettikauppa'); ?>
             </p>
           </div>
         <?php endif; ?>
