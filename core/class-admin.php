@@ -832,6 +832,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $order_postcode = $order->get_shipping_postcode();
       $order_address  = $order->get_shipping_address_1() . ' ' . $order->get_shipping_city();
       $order_country  = $order->get_shipping_country();
+      $is_cod = $order->get_payment_method() === 'cod';
       ?>
       <div>
         <input type="hidden" name="pakettikauppa_nonce" value="<?php echo wp_create_nonce(str_replace('wc_', '', $this->core->prefix) . '-meta-box'); ?>" id="pakettikauppa_metabox_nonce" />
@@ -938,7 +939,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                                 type="checkbox"
                                 class="pakettikauppa_metabox_array_values"
                                 name="wc_pakettikauppa_additional_services"
-                                value="<?php echo $additional_service->service_code; ?>"> <?php echo $additional_service->name; ?>
+                                value="<?php echo $additional_service->service_code; ?>"
+                                <?php echo ($additional_service->service_code === '3101' && $is_cod ? 'checked': ''); ?>
+                                > <?php echo $additional_service->name; ?>
                       </li>
                     <?php elseif ( $additional_service->service_code === '3102' ) : ?>
                       <?php $show_3102 = true; ?>
@@ -998,6 +1001,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                 <textarea class="pakettikauppa-additional-info" rows="2"><?php echo $settings['label_additional_info'] ?? ''; ?></textarea>
               </div>
             </fieldset>
+              <fieldset id = "default_shipment_additional_services">
+                  <ol style="list-style: circle;">
+                  </ol>
+              </fieldset>
           </div>
           <?php $this->tpl_products_selector($order); ?>
           <p class="pakettikauppa-metabox-footer">
