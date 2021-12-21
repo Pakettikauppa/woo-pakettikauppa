@@ -812,7 +812,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $return_shipments = get_post_meta($post->ID, '_' . $this->core->prefix . '_return_shipment');
 
       $all_shipment_services = $this->shipment->services();
-
+      
       $all_additional_services = $this->shipment->get_additional_services();
 
       if ( empty($all_additional_services) ) {
@@ -948,7 +948,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                                 class="pakettikauppa_metabox_array_values"
                                 name="wc_pakettikauppa_additional_services"
                                 value="<?php echo $additional_service->service_code; ?>"
-                                <?php echo ($additional_service->service_code === '3101' && $is_cod ? 'checked': ''); ?>
+                                <?php echo ($additional_service->service_code === '3101' && $is_cod || in_array($additional_service->service_code, $default_additional_services) ? 'checked': ''); ?>
                                 > <?php echo $additional_service->name; ?>
                       </li>
                     <?php elseif ( $additional_service->service_code === '3102' ) : ?>
