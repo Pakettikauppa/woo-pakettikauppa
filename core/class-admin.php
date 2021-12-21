@@ -812,7 +812,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $return_shipments = get_post_meta($post->ID, '_' . $this->core->prefix . '_return_shipment');
 
       $all_shipment_services = $this->shipment->services();
-      
+
       $all_additional_services = $this->shipment->get_additional_services();
 
       if ( empty($all_additional_services) ) {
