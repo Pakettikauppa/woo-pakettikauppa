@@ -80,11 +80,9 @@ jQuery(function( $ ) {
       $("#wc_pakettikauppa_shipping_method").slideUp("slow");
       $("#wc_pakettikauppa_custom_shipping_method").slideDown("slow");
       btn_txt = $("#pakettikauppa_metabtn_change").data("txt2");
-      update_selected_additional_services(false);
     } else {
       $("#wc_pakettikauppa_custom_shipping_method").slideUp("slow");
       $("#wc_pakettikauppa_shipping_method").slideDown("slow");
-      update_selected_additional_services(true);
     }
     $("#pakettikauppa_metabtn_change").html(btn_txt);
 
@@ -216,24 +214,6 @@ function init_prod_select() {
       update_prod_select(list, quantity, txt)
     } );
   } );
-  
-  update_selected_additional_services();
-}
-
-function update_selected_additional_services(is_default = null){
-    var $ = jQuery;
-    if ( is_default === null && $('#wc_pakettikauppa_shipping_method').is(':visible') || is_default === true ) {
-        var service_id = $('#pakettikauppa-service').val();
-        $('#pk-admin-additional-services-' + service_id + ' li').each( function(index, el) {
-            if ( $(el).find('input[type=checkbox]:checked').length ) {
-                var li = $(el).clone();
-                li.find('input').remove();
-                $('#default_shipment_additional_services ol').append(li);
-            }
-        });
-    } else {
-        $('#default_shipment_additional_services ol').html('');
-    }
 }
 
 function update_prod_select(list, quantity, txt) {
