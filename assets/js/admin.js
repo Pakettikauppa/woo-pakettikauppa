@@ -227,7 +227,7 @@ function update_selected_additional_services(is_default = null){
         $('#pk-admin-additional-services-' + service_id + ' li').each( function(index, el) {
             if ( $(el).find('input[type=checkbox]:checked').length ) {
                 var li = $(el).clone();
-                li.find('input').prop('disabled', true);
+                li.find('input').remove();
                 $('#default_shipment_additional_services ol').append(li);
             }
         });
