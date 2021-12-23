@@ -875,10 +875,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             <?php $show_main = ($show_section == 'main') ? '' : 'display:none;'; ?>
             <fieldset class="pakettikauppa-metabox-fieldset" id="wc_pakettikauppa_shipping_method" style="<?php echo $show_main; ?>">
               <h4><?php echo esc_html($this->shipment->service_title($default_service_id)); ?></h4>
-              <?php if ( ! empty($additional_services) ) : ?>
+              <?php if ( ! empty($default_additional_services) ) : ?>
                 <h4><?php echo esc_attr__('Additional services', 'woo-pakettikauppa'); ?>:</h4>
                 <ol style="list-style: circle;">
-                  <?php foreach ( $additional_services as $i => $additional_service ) : ?>
+                  <?php foreach ( $default_additional_services as $i => $additional_service ) : ?>
                     <?php if ( ! in_array($additional_service, array( '3102' ), true) ) : ?>
                       <li>
                         <?php if ( isset($additional_service_names[ $additional_service ]) ) : ?>
@@ -889,7 +889,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                       </li>
                     <?php endif; ?>
                   <?php endforeach; ?>
-                  <?php if ( in_array('3102', $additional_services, true) ) : ?>
+                  <?php if ( in_array('3102', $default_additional_services, true) ) : ?>
                     <li>
                       <?php echo esc_html__('Parcel count', 'woo-pakettikauppa'); ?>:
                       <input type="number" name="wc_pakettikauppa_mps_count" value="1" style="width: 3em;" min="1" step="1" max="15">
