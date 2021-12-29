@@ -69,7 +69,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       if ( ! isset($_SESSION['pakettikauppa_notices']) ) {
         $_SESSION['pakettikauppa_notices'] = array();
       }
-      $_SESSION['pakettikauppa_notices'][] = array('msg' => $msg, 'type' => $type);
+      $_SESSION['pakettikauppa_notices'][] = array(
+        'msg' => $msg,
+        'type' => $type,
+      );
     }
 
     public function show_admin_notices() {
