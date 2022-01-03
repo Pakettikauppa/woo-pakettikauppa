@@ -40,6 +40,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       add_filter('plugin_row_meta', array( $this, 'plugin_row_meta_wrapper' ), 10, 2);
       add_filter('bulk_actions-edit-shop_order', array( $this, 'register_multi_create_orders' ));
       add_action('woocommerce_admin_order_actions_end', array( $this, 'register_quick_create_order' ), 10, 2); //to add print option at the end of each orders in orders page
+      add_action('admin_notices', array( $this, 'show_admin_notices' ));
       add_action('admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ));
       add_action('add_meta_boxes', array( $this, 'register_meta_boxes' ));
       add_action('admin_post_show_pakettikauppa', array( $this, 'show' ), 10);
@@ -59,6 +60,33 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       add_action('wp_ajax_check_api', array( $this, 'ajax_check_credentials' ));
 
       $this->shipment = $this->core->shipment;
+    }
+
+    public function add_admin_notice( $msg, $type ) {
+      if ( ! session_id() ) {
+        session_start();
+      }
+      if ( ! isset($_SESSION['pakettikauppa_notices']) ) {
+        $_SESSION['pakettikauppa_notices'] = array();
+      }
+      $_SESSION['pakettikauppa_notices'][] = array(
+        'msg' => $msg,
+        'type' => $type,
+      );
+    }
+
+    public function show_admin_notices() {
+      if ( ! session_id() ) {
+        session_start();
+      }
+      if ( array_key_exists('pakettikauppa_notices', $_SESSION) ) {
+        foreach ( $_SESSION['pakettikauppa_notices'] as $notice ) {
+          if ( $notice['type'] === 'error' ) {
+            $this->add_error_notice($notice['msg'], false);
+          }
+        }
+        unset($_SESSION['pakettikauppa_notices']);
+      }
     }
 
     public function maybe_show_notices( $current_screen ) {
@@ -314,7 +342,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
      *
      * @throws Exception
      */
-    public function create_multiple_shipments() {
+    public function create_multiple_shipments( $redirect_to ) {
       if ( ! isset($_REQUEST['post']) ) {
         return;
       }
@@ -354,9 +382,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $contents = $this->fetch_shipping_labels($tracking_codes);
 
       if ( $contents->{'response.file'}->__toString() === '' ) {
-        esc_attr_e('Cannot find shipments with given shipment numbers.', 'woo-pakettikauppa');
+        $this->add_admin_notice(__('Cannot find shipments with given shipment numbers.', 'woo-pakettikauppa'), 'error');
 
-        return;
+        return $redirect_to;
       }
 
       $this->output_shipping_label($contents, 'multiple-shipping-labels');
