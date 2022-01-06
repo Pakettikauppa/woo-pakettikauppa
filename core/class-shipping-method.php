@@ -72,6 +72,19 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       $this->title                = $this->get_option('title');
     }
 
+    public function is_pakettikauppa_shipping($shipping_method_id) {
+      $settings = $this->get_core()->shipment->get_settings();
+      $pickup_points = json_decode(isset($settings['pickup_points']) ? $settings['pickup_points'] : '[]', true);
+
+      if ( ($pickup_points[$shipping_method_id]) ) {
+        if ( ! empty($pickup_points[$shipping_method_id]['service']) && $pickup_points[$shipping_method_id]['service'] !== '__NULL__' ) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
     public function validate_pickuppoints_field( $key, $value ) {
       $values = wp_json_encode($value);
       return $values;
@@ -460,11 +473,20 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
         array(
           'title'       => $this->get_core()->text->shipping_settings_title(),
           'type'        => 'title',
-          /* translators: %s: url to documentation */
           'description' => $this->get_core()->text->shipping_settings_desc(),
         ),
 
-        'add_tracking_to_email'      => array(
+        'weight_limit' => array(
+          'title'       => $this->get_core()->text->all_weight_limit(),
+          'type'        => 'number',
+          'default'     => 100,
+          'min'         => 0,
+          'description' => $this->get_core()->text->all_weight_limit_desc(),
+          'desc_tip'    => true,
+          'class'       => 'mode_react',
+        ),
+
+        'add_tracking_to_email' => array(
           'title'   => $this->get_core()->text->add_tracking_link_to_email(),
           'type'    => 'checkbox',
           'default' => 'yes',

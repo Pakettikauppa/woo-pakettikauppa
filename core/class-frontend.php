@@ -50,6 +50,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
 
       add_filter('woocommerce_checkout_fields', array( $this, 'add_checkout_fields' ));
       add_filter('woocommerce_admin_order_data_after_shipping_address', array( $this, 'render_checkout_fields' ));
+      add_filter('woocommerce_package_rates', array( $this, 'remove_rates_by_weight' ), 10, 2);
 
       $this->shipment = $this->core->shipment;
     }
@@ -142,6 +143,30 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       );
 
       // Rest is handled in Frontend\fetch_pickup_point_options
+    }
+
+    public function remove_rates_by_weight( $rates, $package ) {
+      $settings = $this->shipment->get_settings();
+      $weight_limit = (!empty($settings['weight_limit'])) ? $settings['weight_limit'] : 100;
+      $weight_limit = wc_get_weight($weight_limit, 'kg');
+      $cart_weight = 0;
+
+      foreach ( $package['contents'] as $item_id => $values ) {
+        $product = $values['data'];
+        if ( $product->get_weight() ) {
+          $cart_weight = $cart_weight + $product->get_weight() * $values['quantity'];
+        }
+      }
+
+      foreach ($rates as $rate_key => $rate) {
+        if ( $this->core->shipping_method_instance->is_pakettikauppa_shipping($rate->get_instance_id()) ) {
+          if ( $cart_weight > $weight_limit ) {
+            unset($rates[$rate_key]);
+          }
+        }
+      }
+
+      return $rates;
     }
 
     public function create_shipment_for_order_automatically( $order_id ) {
