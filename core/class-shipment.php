@@ -633,7 +633,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
       if ( empty($service_id) ) {
         $shipping_methods = $order->get_shipping_methods();
-
         $chosen_shipping_method = array_pop($shipping_methods);
 
         if ( ! empty($chosen_shipping_method) ) {
@@ -644,13 +643,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           }
 
           $instance_id = $chosen_shipping_method->get_instance_id();
-
           $settings = $this->get_settings();
-
           $pickup_points = json_decode($settings['pickup_points'], true);
 
           if ( ! empty($pickup_points[ $instance_id ]['service']) ) {
             $service_id = $pickup_points[ $instance_id ]['service'];
+          }
+
+          if ( ! isset($pickup_points[ $instance_id ]) ) {
+            return null;
           }
         }
       }
@@ -677,6 +678,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
               }
           }
       }
+
       return $service_id;
     }
 
