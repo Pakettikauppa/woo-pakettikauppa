@@ -477,7 +477,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
         ),
 
         'weight_limit' => array(
-          'title'       => $this->get_core()->text->all_weight_limit(),
+          'title'       => $this->get_core()->text->all_weight_limit() . ' (kg)',
           'type'        => 'number',
           'default'     => 100,
           'min'         => 0,
