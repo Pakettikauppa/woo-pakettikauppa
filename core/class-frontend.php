@@ -147,7 +147,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
 
     public function remove_rates_by_weight( $rates, $package ) {
       $settings = $this->shipment->get_settings();
-      $weight_limit = (!empty($settings['weight_limit'])) ? $settings['weight_limit'] : 100;
+      $weight_limit = (! empty($settings['weight_limit'])) ? $settings['weight_limit'] : 100;
       $weight_limit = wc_get_weight($weight_limit, 'kg');
       $cart_weight = 0;
 
@@ -158,7 +158,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
         }
       }
 
-      foreach ($rates as $rate_key => $rate) {
+      foreach ( $rates as $rate_key => $rate ) {
         if ( $this->core->shipping_method_instance->is_pakettikauppa_shipping($rate->get_instance_id()) ) {
           if ( $cart_weight > $weight_limit ) {
             unset($rates[$rate_key]);

@@ -72,7 +72,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       $this->title                = $this->get_option('title');
     }
 
-    public function is_pakettikauppa_shipping($shipping_method_id) {
+    public function is_pakettikauppa_shipping( $shipping_method_id ) {
       $settings = $this->get_core()->shipment->get_settings();
       $pickup_points = json_decode(isset($settings['pickup_points']) ? $settings['pickup_points'] : '[]', true);
 
