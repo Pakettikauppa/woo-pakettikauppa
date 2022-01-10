@@ -253,7 +253,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                 if ( ! empty($values[ $method_id ]['service']) ) {
                   $selected_service = $values[ $method_id ]['service'];
                 }
-                if ( empty($selected_service) && ! empty($methods) ) {
+                if ( empty($selected_service) && ! empty($methods) && isset($values[$method_id]) ) {
                   $selected_service = '__PICKUPPOINTS__';
                 }
                 ?>
