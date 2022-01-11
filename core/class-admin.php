@@ -579,27 +579,36 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       if ( empty($service_id) && empty($default_service_id) ) {
         return;
       }
-      /* translators: %s: Vendor name */
-      echo '<div style="clear: both;"></div><h4>' . sprintf(esc_attr__('%s Shipping', 'woo-pakettikauppa'), $this->core->vendor_name) . '</h4>';
-      echo sprintf('<p class="form-field pakettikauppa-field"><strong>%s:</strong><br>', esc_attr__('Requested pickup point', 'woo-pakettikauppa'));
-      if ( $order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point') ) {
-        echo esc_attr($order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point'));
-      } else {
-        echo esc_attr__('None');
-      }
-      echo '</p>';
-
-      echo '<div class="edit_address pakettikauppa">';
-      echo '<p class="form-field _shipping_phone">';
-      echo '<label for="_shipping_phone">' . esc_attr__('Phone', 'woo-pakettikauppa') . '</label>';
-      echo '<input type="text" class="short" name="_shipping_phone" id="_shipping_phone" value="' . esc_attr($order->get_meta('_shipping_phone')) . '">';
-      echo '</p>';
-      echo '<p class="form-field _shipping_email">';
-      echo '<label for="_shipping_email">' . esc_attr__('Email', 'woo-pakettikauppa') . '</label>';
-      echo '<input type="email" class="short" name="_shipping_email" id="_shipping_email" value="' . esc_attr($order->get_meta('_shipping_email')) . '">';
-      echo '</p>';
-      echo '</div>';
-      echo '<div class="clear"></div>';
+      ?>
+      <div style="clear: both;"></div>
+      <h4>
+        <?php
+        /* translators: %s: Vendor name */
+        printf(esc_attr__('%s Shipping', 'woo-pakettikauppa'), $this->core->vendor_name);
+        ?>
+      </h4>
+      <p class="form-field pakettikauppa-field">
+        <strong><?php esc_attr_e('Requested pickup point', 'woo-pakettikauppa'); ?></strong><br>
+        <?php
+        if ( $order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point') ) {
+          echo esc_attr($order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point'));
+        } else {
+          echo esc_attr__('None');
+        }
+        ?>
+      </p>
+      <div class="edit_address pakettikauppa">
+        <p class="form-field _shipping_phone">
+          <label for="_shipping_phone"><?php esc_attr_e('Phone', 'woo-pakettikauppa'); ?></label>
+          <input type="text" class="short" name="_shipping_phone" id="_shipping_phone" value="<?php echo esc_attr($order->get_meta('_shipping_phone')); ?>">
+        </p>
+        <p class="form-field _shipping_email">
+          <label for="_shipping_email"><?php esc_attr_e('Email', 'woo-pakettikauppa'); ?></label>
+          <input type="email" class="short" name="_shipping_email" id="_shipping_email" value="<?php echo esc_attr($order->get_meta('_shipping_email')); ?>">
+        </p>
+      </div>
+      <div class="clear"></div>
+      <?php
     }
 
     /**
