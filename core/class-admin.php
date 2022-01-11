@@ -40,6 +40,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       add_filter('plugin_row_meta', array( $this, 'plugin_row_meta_wrapper' ), 10, 2);
       add_filter('bulk_actions-edit-shop_order', array( $this, 'register_multi_create_orders' ));
       add_action('woocommerce_admin_order_actions_end', array( $this, 'register_quick_create_order' ), 10, 2); //to add print option at the end of each orders in orders page
+      add_action('admin_notices', array( $this, 'show_admin_notices' ));
       add_action('admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ));
       add_action('add_meta_boxes', array( $this, 'register_meta_boxes' ));
       add_action('admin_post_show_pakettikauppa', array( $this, 'show' ), 10);
@@ -61,6 +62,33 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $this->shipment = $this->core->shipment;
     }
 
+    public function add_admin_notice( $msg, $type ) {
+      if ( ! session_id() ) {
+        session_start();
+      }
+      if ( ! isset($_SESSION['pakettikauppa_notices']) ) {
+        $_SESSION['pakettikauppa_notices'] = array();
+      }
+      $_SESSION['pakettikauppa_notices'][] = array(
+        'msg' => $msg,
+        'type' => $type,
+      );
+    }
+
+    public function show_admin_notices() {
+      if ( ! session_id() ) {
+        session_start();
+      }
+      if ( array_key_exists('pakettikauppa_notices', $_SESSION) ) {
+        foreach ( $_SESSION['pakettikauppa_notices'] as $notice ) {
+          if ( $notice['type'] === 'error' ) {
+            $this->add_error_notice($notice['msg'], false);
+          }
+        }
+        unset($_SESSION['pakettikauppa_notices']);
+      }
+    }
+
     public function maybe_show_notices( $current_screen ) {
       // Don't show the setup notice in every screen because that would be excessive.
       $show_notice_in_screens = array( 'plugins', 'dashboard' );
@@ -80,7 +108,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           add_action('admin_notices', array( $this, 'new_install_notice_content' ));
         }
       } elseif ( $is_in_wc_settings ) {
-        add_action('admin_notices', array( $this, 'settings_page_setup_notice' ));
+        if ( get_option($this->core->prefix . '_wizard_done') !== '1' ) {
+          add_action('admin_notices', array( $this, 'settings_page_setup_notice' ));
+        }
       }
     }
 
@@ -135,7 +165,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       </div>
       <?php
     }
-
 
     public function create_shipment_for_order_automatically( $order_id ) {
       $order = new \WC_Order($order_id);
@@ -313,7 +342,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
      *
      * @throws Exception
      */
-    public function create_multiple_shipments() {
+    public function create_multiple_shipments( $redirect_to ) {
       if ( ! isset($_REQUEST['post']) ) {
         return;
       }
@@ -353,9 +382,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $contents = $this->fetch_shipping_labels($tracking_codes);
 
       if ( $contents->{'response.file'}->__toString() === '' ) {
-        esc_attr_e('Cannot find shipments with given shipment numbers.', 'woo-pakettikauppa');
+        $this->add_admin_notice(__('Cannot find shipments with given shipment numbers.', 'woo-pakettikauppa'), 'error');
 
-        return;
+        return $redirect_to;
       }
 
       $this->output_shipping_label($contents, 'multiple-shipping-labels');
@@ -831,8 +860,21 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $order_postcode = $order->get_shipping_postcode();
       $order_address  = $order->get_shipping_address_1() . ' ' . $order->get_shipping_city();
       $order_country  = $order->get_shipping_country();
+
+      $is_cod = $order->get_payment_method() === 'cod';
+      $show_section = 'main';
+      if ( empty($service_id) ) {
+        $show_section = 'custom';
+      }
       ?>
       <div>
+        <?php if ( $show_section === 'custom' ) : ?>
+          <div class="pakettikauppa-notice notice-error">
+            <p>
+              <?php _e('No shipping method configured! Configure shipping method from settings.', 'woo-pakettikauppa'); ?>
+            </p>
+          </div>
+        <?php endif; ?>
         <input type="hidden" name="pakettikauppa_nonce" value="<?php echo wp_create_nonce(str_replace('wc_', '', $this->core->prefix) . '-meta-box'); ?>" id="pakettikauppa_metabox_nonce" />
         <?php
         if ( empty($service_id) ) {
@@ -856,19 +898,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           }
           $this->tpl_section_end();
         }
-        $show_section = 'main';
-        if ( empty($service_id) ) {
-          $show_section = 'custom';
-        }
         ?>
           <div class="pakettikauppa-services">
             <?php $show_main = ($show_section == 'main') ? '' : 'display:none;'; ?>
             <fieldset class="pakettikauppa-metabox-fieldset" id="wc_pakettikauppa_shipping_method" style="<?php echo $show_main; ?>">
               <h4><?php echo esc_html($this->shipment->service_title($default_service_id)); ?></h4>
-              <?php if ( ! empty($additional_services) ) : ?>
+              <?php if ( ! empty($default_additional_services) ) : ?>
                 <h4><?php echo esc_attr__('Additional services', 'woo-pakettikauppa'); ?>:</h4>
                 <ol style="list-style: circle;">
-                  <?php foreach ( $additional_services as $i => $additional_service ) : ?>
+                  <?php foreach ( $default_additional_services as $i => $additional_service ) : ?>
                     <?php if ( ! in_array($additional_service, array( '3102' ), true) ) : ?>
                       <li>
                         <?php if ( isset($additional_service_names[ $additional_service ]) ) : ?>
@@ -879,7 +917,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                       </li>
                     <?php endif; ?>
                   <?php endforeach; ?>
-                  <?php if ( in_array('3102', $additional_services, true) ) : ?>
+                  <?php if ( in_array('3102', $default_additional_services, true) ) : ?>
                     <li>
                       <?php echo esc_html__('Parcel count', 'woo-pakettikauppa'); ?>:
                       <input type="number" name="wc_pakettikauppa_mps_count" value="1" style="width: 3em;" min="1" step="1" max="15">
@@ -937,7 +975,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                                 type="checkbox"
                                 class="pakettikauppa_metabox_array_values"
                                 name="wc_pakettikauppa_additional_services"
-                                value="<?php echo $additional_service->service_code; ?>"> <?php echo $additional_service->name; ?>
+                                value="<?php echo $additional_service->service_code; ?>"
+                                <?php echo ($additional_service->service_code === '3101' && $is_cod || in_array($additional_service->service_code, $default_additional_services) ? 'checked': ''); ?>
+                                > <?php echo $additional_service->name; ?>
                       </li>
                     <?php elseif ( $additional_service->service_code === '3102' ) : ?>
                       <?php $show_3102 = true; ?>
@@ -991,7 +1031,16 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                   </div>
                 <?php endif; ?>
               <?php endforeach; ?>
+              <?php $settings = $this->shipment->get_settings(); ?>
+              <div>
+                <h4><?php echo $this->core->text->additional_info_param_title(); ?></h4>
+                <textarea class="pakettikauppa-additional-info" rows="2"><?php echo $settings['label_additional_info'] ?? ''; ?></textarea>
+              </div>
             </fieldset>
+              <fieldset id = "default_shipment_additional_services">
+                  <ol style="list-style: circle;">
+                  </ol>
+              </fieldset>
           </div>
           <?php $this->tpl_products_selector($order); ?>
           <p class="pakettikauppa-metabox-footer">
@@ -1133,7 +1182,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             }
           }
 
-          $tracking_code = $this->shipment->create_shipment($order, $service_id, $additional_services, $_REQUEST['for_products']);
+          // additional text for custom shipment
+          $extra_params = array();
+          if ( isset($_REQUEST['additional_text']) ) {
+            $extra_params['additional_text'] = sanitize_textarea_field($_REQUEST['additional_text']);
+          }
+
+          $tracking_code = $this->shipment->create_shipment($order, $service_id, $additional_services, $_REQUEST['for_products'], $extra_params);
 
           return $tracking_code;
           break;

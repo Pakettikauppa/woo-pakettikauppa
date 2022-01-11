@@ -10,6 +10,8 @@ if ( ! $_tests_dir ) {
   $_tests_dir = '/tmp/wordpress-tests-lib';
 }
 
+define('WP_TESTS_PHPUNIT_POLYFILLS_PATH', $_tests_dir . '/PHPUnit-Polyfills-main/phpunitpolyfills-autoload.php');
+
 // Set custom error handler that fails on PHP warnings and notices
 // set_error_handler(
 //   function( $errno, $errstr, $errfile, $errline ) {

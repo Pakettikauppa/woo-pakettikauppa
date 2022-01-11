@@ -39,7 +39,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
     /**
      * @var Client
      */
-    private $client = null;
+    public $client = null;
     protected $settings = null;
 
     private $errors = array();
@@ -200,7 +200,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      *
      * @return string|null
      */
-    public function create_shipment( \WC_Order $order, $service_id = null, $additional_services = null, $selected_products = array() ) {
+    public function create_shipment( \WC_Order $order, $service_id = null, $additional_services = null, $selected_products = array(), $extra_params = array() ) {
       do_action(str_replace('wc_', '', $this->core->prefix) . '_prepare_create_shipment', $order, $service_id, $additional_services);
 
       if ( $service_id === null ) {
@@ -244,7 +244,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       }
 
       try {
-        $shipment = $this->create_shipment_from_order($order, $service_id, $additional_services, $selected_products);
+        $shipment = $this->create_shipment_from_order($order, $service_id, $additional_services, $selected_products, $extra_params);
         $tracking_code = $shipment->{'response.trackingcode'}->__toString();
       } catch ( \Exception $e ) {
         $this->add_error($e->getMessage());
@@ -633,7 +633,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
       if ( empty($service_id) ) {
         $shipping_methods = $order->get_shipping_methods();
-
         $chosen_shipping_method = array_pop($shipping_methods);
 
         if ( ! empty($chosen_shipping_method) ) {
@@ -644,13 +643,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           }
 
           $instance_id = $chosen_shipping_method->get_instance_id();
-
           $settings = $this->get_settings();
-
           $pickup_points = json_decode($settings['pickup_points'], true);
 
           if ( ! empty($pickup_points[ $instance_id ]['service']) ) {
             $service_id = $pickup_points[ $instance_id ]['service'];
+          }
+
+          if ( ! isset($pickup_points[ $instance_id ]) ) {
+            return null;
           }
         }
       }
@@ -677,6 +678,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
               }
           }
       }
+
       return $service_id;
     }
 
@@ -770,10 +772,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
          * getToken() requests to the authentication server. So this needs to be eather distributedly locked or
          * moved to a background process and run from the cron
          */
-        if ( empty($token) ) {
+        // check if we hame timestamp saved and check if token is not expired
+        if ( empty($token) || (isset($token->timestamp) && ($token->timestamp + $token->expires_in - 100) < time()) ) {
           $token = $this->client->getToken();
 
-          if ( isset($token->error) ) {
+          if ( empty($token) || ! isset($token->timestamp) || ! isset($token->expires_in) || isset($token->error) ) {
             add_action(
               'admin_notices',
               function() use ( $token ) {
@@ -786,6 +789,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
             return;
           }
+          // add timestamp to token for validating expiration
+          $token->timestamp = time();
 
           // let's remove 100 seconds from expires_in time so in case of a network lag, requests will still be valid on server side
           set_transient($transient_name, $token, $token->expires_in - 100);
@@ -823,7 +828,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      * @return SimpleXMLElement
      * @throws Exception
      */
-    public function create_shipment_from_order( $order, $service_id = null, $additional_services = array(), $selected_products = array() ) {
+    public function create_shipment_from_order( $order, $service_id = null, $additional_services = array(), $selected_products = array(), $extra_params = array() ) {
       $shipment = new PK_Shipment();
       $language = (function_exists('get_user_locale')) ? ((function_exists('determine_locale')) ? determine_locale() : get_user_locale()) : get_locale();
 
@@ -961,13 +966,19 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       $info = new Info();
       $info->setReference($order->get_order_number());
       $info->setCurrency(get_woocommerce_currency());
-      if ( ! empty($this->settings['label_additional_info']) ) {
+      $additional_text = $this->settings['label_additional_info'];
+      if ( isset($extra_params['additional_text']) ) {
+          $additional_text = $extra_params['additional_text'];
+      }
+
+      if ( ! empty($additional_text) ) {
         $additional_info = array(
           'order_number' => $order->get_order_number(),
           'products' => $products_info,
         );
-        $info->setAdditionalInfoText($this->prepare_additional_info_text($additional_info));
+        $info->setAdditionalInfoText($this->prepare_additional_info_text($additional_info, $additional_text));
       }
+
       $shipment->setShipmentInfo($info);
 
       try {
@@ -980,7 +991,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       return $this->client->getResponse();
     }
 
-    private function prepare_additional_info_text( $values = array() ) {
+    private function prepare_additional_info_text( $values = array(), $custom_text = false ) {
         if ( ! is_array($values) ) {
             return 'ERROR';
         }
@@ -997,11 +1008,16 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
         $additional_info = '';
 
-        if ( ! empty($this->settings['label_additional_info']) ) {
-            $additional_info = $this->settings['label_additional_info'];
+        $label_additional_info = $this->settings['label_additional_info'];
+        if ( $custom_text !== false && ! empty($custom_text) ) {
+            $label_additional_info = $custom_text;
+        }
+
+        if ( ! empty($label_additional_info) ) {
+            $additional_info = $label_additional_info;
             $additional_info = str_replace('\n', "\n", $additional_info);
 
-            $additional_info = str_replace('{ORDER_NUMBER}', $values['order_number'], $additional_info);
+            $additional_info = str_ireplace('{ORDER_NUMBER}', $values['order_number'], $additional_info);
 
             $products_names_text = '';
             $products_sku_text = '';
@@ -1020,8 +1036,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
                 $products_names_text = $values['products_names'];
                 $products_sku_text = $values['products_sku'];
             }
-            $additional_info = str_replace('{PRODUCTS_NAMES}', $products_names_text, $additional_info);
-            $additional_info = str_replace('{PRODUCTS_SKU}', $products_sku_text, $additional_info);
+            $additional_info = str_ireplace('{PRODUCTS_NAMES}', $products_names_text, $additional_info);
+            $additional_info = str_ireplace('{PRODUCTS_SKU}', $products_sku_text, $additional_info);
         }
 
         return $additional_info;

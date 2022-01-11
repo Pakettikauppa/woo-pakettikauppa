@@ -39,17 +39,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       $this->load();
     }
 
-    /**
-     * Inject plugin core class to have access to other classes such as Text.
-     * Better solution than making the core class a singleton and calling it with a hardcoded name.
-     * Kept for "historical value".
-     */
-    /*public function injectCore( Core $plugin ) {
-      $this->core = $plugin;
-
-      return $this;
-    } */
-
     public function get_core() {
       return \Wc_Pakettikauppa::get_instance();
     }
@@ -71,33 +60,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
 
       // Save settings in admin if you have any defined
       add_action('woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ));
-
-      $settings = $this->get_core()->shipment->get_settings();
-      $mode = $settings['mode'];
-      $configs = $this->get_core()->api_config;
-      $configs[$mode] = array_merge(
-        array(
-          'api_key'   => $settings['account_number'],
-          'secret'    => $settings['secret_key'],
-          'use_posti_auth' => false,
-        ),
-        $this->get_core()->api_config[$mode]
-      );
-      $this->client = new \Pakettikauppa\Client($configs, $mode);
-      $this->client->setComment($this->get_core()->api_comment);
-      if ( $configs[$mode]['use_posti_auth'] ) {
-        $transient_name = $this->get_core()->prefix . '_access_token';
-        $token = get_transient($transient_name);
-        if ( empty($token) || empty($token->access_token) ) {
-          $token = $this->client->getToken();
-          if ( isset($token->expires_in) ) {
-            set_transient($transient_name, $token, $token->expires_in - 100);
-          }
-        }
-        if ( ! empty($token->access_token) ) {
-          $this->client->setAccessToken($token->access_token);
-        }
-      }
 
       $this->is_loaded = true;
     }
@@ -291,7 +253,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                 if ( ! empty($values[ $method_id ]['service']) ) {
                   $selected_service = $values[ $method_id ]['service'];
                 }
-                if ( empty($selected_service) && ! empty($methods) ) {
+                if ( empty($selected_service) && ! empty($methods) && isset($values[$method_id]) ) {
                   $selected_service = '__PICKUPPOINTS__';
                 }
                 ?>
@@ -424,6 +386,28 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       return $html;
     }
 
+    public function generate_button_html( $key, $value ) {
+      $field_key = $this->get_field_key($key);
+      ob_start();
+      ?>
+      <tr valign="top" class="pakettikauppa-setting">
+        <th scope="row" class="titledesc">
+          <label for="<?php echo $field_key; ?>"><?php echo esc_html($value['title']); ?></label>
+        </th>
+        <td class="forminp">
+          <fieldset>
+            <a class="button button-primary" href="<?php echo $value['url']; ?>">
+              <?php echo $value['text']; ?>
+            </a>
+          </fieldset>
+        </td>
+      </tr>
+      <?php
+      $html = ob_get_contents();
+      ob_end_clean();
+      return $html;
+    }
+
     protected function get_form_field_mode() {
       return array(
         'title'   => $this->get_core()->text->mode(),
@@ -439,7 +423,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
     private function my_global_form_fields() {
       $wc_countries = new WC_Countries();
 
-      return array(
+      $fields = array(
         'notices'    => array(
           'type'     => 'notices',
         ),
@@ -646,11 +630,22 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           ),
         ),
       );
+      if ( get_option($this->get_core()->prefix . '_wizard_done') == 1 ) {
+        $fields['setup_wizard'] = array(
+          'title'   => $this->get_core()->text->setup_wizard(),
+          'type'    => 'button',
+          'url'     => esc_url(admin_url('admin.php?page=' . $this->get_core()->setup_page)),
+          'text'    => $this->get_core()->text->restart_setup_wizard(),
+        );
+      }
+      return $fields;
     }
 
     public function process_admin_options() {
       delete_transient($this->get_core()->prefix . '_shipping_methods');
-
+      update_option($this->get_core()->prefix . '_wizard_done', 1);
+      //delete token on update, in case settings changed
+      delete_transient($this->get_core()->prefix . '_access_token');
       return parent::process_admin_options();
     }
   }
