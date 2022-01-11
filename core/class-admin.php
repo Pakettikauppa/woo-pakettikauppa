@@ -581,10 +581,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       }
       ?>
       <div style="clear: both;"></div>
-      <h4><?php
-      /* translators: %s: Vendor name */
-      printf(esc_attr__('%s Shipping', 'woo-pakettikauppa'), $this->core->vendor_name);
-      ?></h4>
+      <h4>
+        <?php
+        /* translators: %s: Vendor name */
+        printf(esc_attr__('%s Shipping', 'woo-pakettikauppa'), $this->core->vendor_name);
+        ?>
+      </h4>
       <p class="form-field pakettikauppa-field">
         <strong><?php esc_attr_e('Requested pickup point', 'woo-pakettikauppa'); ?></strong><br>
         <?php
