@@ -582,8 +582,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       $pickup_point = $order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point');
 
       if ( ! empty($pickup_point) ) {
-        wc_get_template( 'order-view.php',
-          array('pickup_point' => esc_attr($pickup_point)), '', $this->core->templates_dir );
+        wc_get_template( 'order-view.php', array( 'pickup_point' => esc_attr($pickup_point) ), '', $this->core->templates_dir );
       }
     }
 
