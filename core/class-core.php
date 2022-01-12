@@ -14,6 +14,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
     public $basename;
     public $dir;
     public $dir_url;
+    public $templates_dir;
     public $prefix = 'wc_pakettikauppa';
     // public $prefix = 'woocommerce_pakettikauppa';
 
@@ -57,6 +58,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       $this->basename = plugin_basename($config['root']);
       $this->dir = plugin_dir_path($config['root']);
       $this->dir_url = plugin_dir_url($config['root']);
+      $this->templates_dir = plugin_dir_path($config['root']) . 'templates/';
 
       $this->shippingmethod = $config['shipping_method_name'] ?? str_replace('wc_', '', $this->prefix) . '_shipping_method';
 
