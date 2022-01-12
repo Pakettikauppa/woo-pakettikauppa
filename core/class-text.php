@@ -287,14 +287,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
       );
     }
 
-    public function all_weight_limit() {
-      return __('Limit by order weight', 'woo-pakettikauppa');
-    }
-
-    public function all_weight_limit_desc() {
-      return __('Show delivery methods only when the weight of the products in the cart is less than specified', 'woo-pakettikauppa');
-    }
-
     public function add_tracking_link_to_email() {
       return __('Add tracking link to the order completed email', 'woo-pakettikauppa');
     }

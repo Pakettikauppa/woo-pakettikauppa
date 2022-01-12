@@ -476,16 +476,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           'description' => $this->get_core()->text->shipping_settings_desc(),
         ),
 
-        'weight_limit' => array(
-          'title'       => $this->get_core()->text->all_weight_limit() . ' (kg)',
-          'type'        => 'number',
-          'default'     => 100,
-          'min'         => 0,
-          'description' => $this->get_core()->text->all_weight_limit_desc(),
-          'desc_tip'    => true,
-          'class'       => 'mode_react',
-        ),
-
         'add_tracking_to_email' => array(
           'title'   => $this->get_core()->text->add_tracking_link_to_email(),
           'type'    => 'checkbox',
