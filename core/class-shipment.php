@@ -776,7 +776,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         if ( empty($token) || (isset($token->timestamp) && ($token->timestamp + $token->expires_in - 100) < time()) ) {
           $token = $this->client->getToken();
 
-          if ( empty($token) || ! isset($token->timestamp) || ! isset($token->expires_in) || isset($token->error) ) {
+          if ( empty($token) || ! isset($token->expires_in) || isset($token->error) ) {
             add_action(
               'admin_notices',
               function() use ( $token ) {

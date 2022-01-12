@@ -102,6 +102,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
+= 3.4.1 =
+* Bug fix related to token caching
+
 = 3.4.0 =
 * New feature: Updated diagnostic tool to check versions and cached tokens
 * New feature: Additional info to shipping labels in custom shipment
