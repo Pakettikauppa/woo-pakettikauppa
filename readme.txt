@@ -104,7 +104,6 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 == Changelog ==
 = 3.4.1 =
 * Bug fix related to token caching
-* Coding style change in one function
 
 = 3.4.0 =
 * New feature: Updated diagnostic tool to check versions and cached tokens
