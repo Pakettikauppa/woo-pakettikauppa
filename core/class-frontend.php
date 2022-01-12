@@ -158,10 +158,17 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
         }
       }
 
+      $pickup_points = json_decode(isset($settings['pickup_points']) ? $settings['pickup_points'] : '[]', true);
+
       foreach ( $rates as $rate_key => $rate ) {
-        if ( $this->core->shipping_method_instance->is_pakettikauppa_shipping($rate->get_instance_id()) ) {
-          if ( $cart_weight > $weight_limit ) {
-            unset($rates[$rate_key]);
+        $instance_id = $rate->get_instance_id();
+        if ( isset($pickup_points[$instance_id]) ) {
+          if ( ! empty($pickup_points[$instance_id]['service']) && $pickup_points[$instance_id]['service'] !== '__NULL__' ) {
+            if ( isset($this->core->max_weight[$pickup_points[$instance_id]['service']]) ) {
+              if ( $cart_weight > $this->core->max_weight[$pickup_points[$instance_id]['service']] ) {
+                unset($rates[$rate_key]);
+              }
+            }
           }
         }
       }

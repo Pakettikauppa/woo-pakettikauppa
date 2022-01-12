@@ -62,6 +62,9 @@ $instance = new Wc_Pakettikauppa(
     ),
     'tracking_base_url' => 'https://www.pakettikauppa.fi/seuranta/?',
     // 'pakettikauppa_api_comment' => 'From WooCommerce', // Overrides default
+    'max_weight' => array( //kg
+      '80010' => 20,
+    ),
   )
 );
 

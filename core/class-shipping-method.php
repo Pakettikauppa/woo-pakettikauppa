@@ -76,7 +76,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
       $settings = $this->get_core()->shipment->get_settings();
       $pickup_points = json_decode(isset($settings['pickup_points']) ? $settings['pickup_points'] : '[]', true);
 
-      if ( ($pickup_points[$shipping_method_id]) ) {
+      if ( isset($pickup_points[$shipping_method_id]) ) {
         if ( ! empty($pickup_points[$shipping_method_id]['service']) && $pickup_points[$shipping_method_id]['service'] !== '__NULL__' ) {
           return true;
         }

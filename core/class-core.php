@@ -30,6 +30,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
     public $shipment;
     public $shipping_method_instance; // Added as an afterthought to fix a bug, merge with $shippingmethod in the future.
     public $setup_wizard;
+    public $max_weight;
 
     public $api_config; // Used by Pakettikauppa\Client
     public $api_comment; // Used by ^
@@ -69,6 +70,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
 
       $this->setup_background = $this->dir_url . ($config['setup_background'] ?? 'assets/img/pakettikauppa-background.jpg');
       $this->setup_page = $config['setup_page'] ?? 'wcpk-setup';
+
+      $this->max_weight = $config['max_weight'] ?? array();
 
       $this->text = $this->load_text_class();
 
