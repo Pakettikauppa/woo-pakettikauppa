@@ -316,8 +316,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     * listings, when we want to have only one single pickup point per order.
     */
     public function pickup_point_field_html() {
-      //if ( ! is_ajax() ) {
-      if ( ! wp_doing_ajax() ) {
+      if ( ! is_ajax() ) {
         return;
       }
 
