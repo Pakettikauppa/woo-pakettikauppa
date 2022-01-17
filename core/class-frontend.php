@@ -147,8 +147,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
 
     public function remove_rates_by_weight( $rates, $package ) {
       $settings = $this->shipment->get_settings();
-      /*$weight_limit = (! empty($settings['weight_limit'])) ? $settings['weight_limit'] : 100;
-      $weight_limit = wc_get_weight($weight_limit, 'kg');*/
       $cart_weight = 0;
 
       foreach ( $package['contents'] as $item_id => $values ) {
