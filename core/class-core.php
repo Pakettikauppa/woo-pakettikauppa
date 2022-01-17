@@ -61,8 +61,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       $this->dir_url = plugin_dir_url($config['root']);
       $this->templates_dir = $config['templates_dir'] ?? plugin_dir_path($config['root']) . 'templates/';
       $this->templates = (object) ($config['templates'] ?? array(
-        'checkout_pickup' => 'checkout-pickup.php',
-        'account_order' => 'myaccount-order.php',
+        'checkout_pickup' => 'pakettikauppa/checkout-pickup.php',
+        'account_order' => 'pakettikauppa/myaccount-order.php',
       ));
 
       $this->shippingmethod = $config['shipping_method_name'] ?? str_replace('wc_', '', $this->prefix) . '_shipping_method';
