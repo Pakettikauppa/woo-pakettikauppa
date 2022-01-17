@@ -155,3 +155,7 @@ The `Woo_Pakettikauppa_Core\Core` class is responsible for loading all component
 The subclasses are responsible for doing the actual heavy lifting. `Admin` handles operations in wp-admin, `Frontend` handles frontend, `Shipment` is used for creating shipment labels, etc.
 
 `Text` is bit of a special case, it's only real purpose is to serve as a key-value store for strings that require translation. Currently the plugin has `__` and `_e` calls scattered all over it – in the future, all of them should live in `Text`. The advantage of doing so is being able to replace any text in the whitelabel forks.
+
+### Templates
+
+The plugin have some template files, which is displaying via `wc_get_template` function, so they can be overrided in the theme. To do that, need copy files from Pakettikauppa plugin directory (`/wp-content/plugins/woo-pakettikauppa/templates/pakettikauppa`) to Wordpress theme directory (`/wp-content/themes/<theme_name>/woocommerce/pakettikauppa`).
