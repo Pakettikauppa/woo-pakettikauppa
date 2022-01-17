@@ -446,7 +446,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
               'required' => true,
               'default' => $selected_point,
             ),
-            'value' => null
+            'value' => null,
           );
         }
         // Moved this section below select, issue #163
@@ -467,7 +467,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
                 'onchange' => 'pakettikauppa_custom_pickup_point_change(this)',
               ),
             ),
-            'value' => $session['custom_address']
+            'value' => $session['custom_address'],
           );
 
           $custom_field_desc = ($is_klarna) ? $this->core->text->fill_pickup_address_above() : $this->core->text->custom_pickup_point_desc();
