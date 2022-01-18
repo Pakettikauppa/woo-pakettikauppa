@@ -10,9 +10,10 @@
  * Domain Path: /core/languages
  * License: GPL v3 or later
  *
- * Tested up to: 5.8.2
+ * Requires at least: 4.7.0
+ * Tested up to: 5.8.3
  * WC requires at least: 3.4
- * WC tested up to: 6.0.0
+ * WC tested up to: 6.1.0
  *
  * Copyright: © 2017-2020 Seravo Oy, 2020-2021 Posti Oy
  * License: GNU General Public License v3.0
