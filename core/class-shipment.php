@@ -865,7 +865,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       $receiver->setAddr2($order->get_shipping_address_2());
       $receiver->setPostcode($order->get_shipping_postcode());
       $receiver->setCity($order->get_shipping_city());
-      $receiver->setCountry(($order->get_shipping_country() === null ? 'FI' : $order->get_shipping_country()));
+      $receiver_country = empty($order->get_shipping_country()) ? $sender->getCountry() : $order->get_shipping_country();
+      $receiver->setCountry(empty($receiver_country) ? 'FI' : $receiver_country);
       $receiver->setEmail(! empty($shipping_email) ? $shipping_email : $order->get_billing_email());
       $receiver->setPhone(! empty($shipping_phone) ? $shipping_phone : $order->get_billing_phone());
       $shipment->setReceiver($receiver);
