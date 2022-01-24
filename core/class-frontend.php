@@ -316,9 +316,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     * listings, when we want to have only one single pickup point per order.
     */
     public function pickup_point_field_html() {
-      if ( ! is_ajax() ) {
+      if ( ! wp_doing_ajax() ) {
         return;
       }
+
+      $error_msg = '';
+      $select_field = null;
+      $custom_field = null;
+      $custom_field_title = '';
+      $custom_field_desc = '';
 
       $shipping_method_providers = $this->shipping_needs_pickup_points();
 
@@ -361,32 +367,16 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
         $shipping_country = 'FI';
       }
 
-      echo '<tr class="shipping-pickup-point">';
-      echo '<th>' . esc_attr__('Pickup point', 'woo-pakettikauppa') . '</th>';
-      echo '<td data-title="' . esc_attr__('Pickup point', 'woo-pakettikauppa') . '">';
-
-      ?>
-        <input type="hidden" name="pakettikauppa_nonce"
-               value="<?php echo wp_create_nonce(str_replace('wc_', '', $this->core->prefix) . '-pickup_point_update'); ?>"
-               id="pakettikauppa_pickup_point_update_nonce"/>
-      <?php
-
       // Return if the customer has not yet chosen a postcode
       if ( empty($shipping_postcode) ) {
-        echo '<p class="error-pickup">';
-        esc_attr_e('Empty postcode. Please check your address information.', 'woo-pakettikauppa');
-        echo '</p>';
+        $error_msg = esc_attr__('Empty postcode. Please check your address information.', 'woo-pakettikauppa');
       } else if ( ! is_numeric($shipping_postcode) ) {
-        echo '<p class="error-pickup">';
-        printf(
+        $error_msg = sprintf(
         /* translators: %s: Postcode */
           esc_attr__('Invalid postcode "%1$s". Please check your address information.', 'woo-pakettikauppa'),
           esc_attr($shipping_postcode)
         );
-        echo '</p>';
       } else {
-        $error = null;
-
         try {
           $options_array = $this->fetch_pickup_point_options($shipping_postcode, $shipping_address, $shipping_country, implode(',', $shipping_method_providers));
         } catch ( \Exception $e ) {
@@ -403,22 +393,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
 
           // This works though. It prevents the pickup point input from rendering,
           // and if there's no pickup point selected, the order will error in woocommerce_checkout_process.
-          $error = $e->getMessage();
+          $error_msg = $e->getMessage();
         }
 
         $selected_point = false;
-        if ( $error ) {
-          $name = esc_attr(str_replace('wc_', '', $this->core->prefix) . '_pickup_point');
-
-          echo '<p>';
-          echo $error;
-          echo '</p>';
-
-          // Ensure that there's something to check against in $this->validate_checkout
-          echo "<input type='hidden' name='$name' value='__NULL__'>";
-        } else {
-          echo esc_html__('Choose one of pickup points close to the address you entered:', 'woo-pakettikauppa');
-
+        if ( ! $error_msg ) {
           $list_type = 'select';
 
           if ( isset($settings['pickup_point_list_type']) && $settings['pickup_point_list_type'] === 'list' ) {
@@ -453,9 +432,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
             $selected_point = array_keys($all_points)[0];
           }
 
-          woocommerce_form_field(
-            str_replace('wc_', '', $this->core->prefix) . '_pickup_point',
-            array(
+          $select_field = array(
+            'name' => str_replace('wc_', '', $this->core->prefix) . '_pickup_point',
+            'data' => array(
               'clear' => true,
               'type' => $list_type,
               'custom_attributes' => array(
@@ -467,7 +446,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
               'required' => true,
               'default' => $selected_point,
             ),
-            null
+            'value' => null,
           );
         }
         // Moved this section below select, issue #163
@@ -478,34 +457,45 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
         // and selecting a pickup point is not possible
         // Also added condition that pickup point must be 'Other' to show this section - issue #163
         if ( $show_pickup_point_override_query === 'yes' && ($selected_point === 'other' || $is_klarna || ! $options_array) ) {
-          $title = $is_klarna ? $this->core->text->pickup_point_title() : $this->core->text->custom_pickup_point_title();
+          $custom_field_title = $is_klarna ? $this->core->text->pickup_point_title() : $this->core->text->custom_pickup_point_title();
 
-          echo '<tr class="shipping-custom-pickup-point">';
-          echo '<th>' . $title . '</th>';
-          echo '<td data-title="' . $title . '">';
-
-          woocommerce_form_field(
-            'pakettikauppacustom_pickup_point',
-            array(
+          $custom_field = array(
+            'name' => 'pakettikauppacustom_pickup_point',
+            'data' => array(
               'type' => 'textarea',
               'custom_attributes' => array(
                 'onchange' => 'pakettikauppa_custom_pickup_point_change(this)',
               ),
             ),
-            $session['custom_address']
+            'value' => $session['custom_address'],
           );
 
-          echo '<button type="button" onclick="pakettikauppa_custom_pickup_point_change(pakettikauppacustom_pickup_point)" class="btn" id="pakettikauppacustom_pickup_point_btn"><i class="fa fa-search"></i> ';
-          echo esc_html__('Search', 'woo-pakettikauppa');
-          echo '</button>';
-          echo '<p>';
-          echo $is_klarna ? $this->core->text->fill_pickup_address_above() : $this->core->text->custom_pickup_point_desc();
-          echo '</p>';
-
-          echo '</td></tr>';
+          $custom_field_desc = ($is_klarna) ? $this->core->text->fill_pickup_address_above() : $this->core->text->custom_pickup_point_desc();
         }
       }
-      echo '</td></tr>';
+
+      wc_get_template(
+        $this->core->templates->checkout_pickup,
+        array(
+          'nonce' => wp_create_nonce(str_replace('wc_', '', $this->core->prefix) . '-pickup_point_update'),
+          'error' => array(
+            'msg' => $error_msg,
+            'name' => esc_attr(str_replace('wc_', '', $this->core->prefix) . '_pickup_point'),
+          ),
+          'pickup' => array(
+            'show' => ($select_field) ? true : false,
+            'field' => $select_field,
+          ),
+          'custom' => array(
+            'show' => ($custom_field) ? true : false,
+            'title' => $custom_field_title,
+            'field' => $custom_field,
+            'desc' => $custom_field_desc,
+          ),
+        ),
+        '',
+        $this->core->templates_dir
+      );
     }
 
     private function fetch_pickup_point_options( $shipping_postcode, $shipping_address, $shipping_country, $shipping_method_provider ) {
@@ -582,8 +572,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       $pickup_point = $order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point');
 
       if ( ! empty($pickup_point) ) {
-        echo '<h2>' . esc_attr__('Pickup point', 'woo-pakettikauppa') . '</h2>';
-        echo '<p>' . esc_attr($pickup_point) . '</p>';
+        wc_get_template($this->core->templates->account_order, array( 'pickup_point' => esc_attr($pickup_point) ), '', $this->core->templates_dir);
       }
     }
 
