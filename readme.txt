@@ -17,7 +17,7 @@ This plugin enables WooCommerce orders to ship using pretty much any shipping me
 
 > *Note!* If you already have shipping contracts with Posti, Matkahuolto, DB Schenker, Asendia or GLS with reduced prices, you can contact the customer support of Pakettikauppa to get those contracts via Pakettikauppa so you can use the WooCommerce Pakettikauppa plugin with your current shipping contracts. No need to use logistics services own integrations (e.g. Posti SmartShip / Prinetti )
 
-This plugin requires at least WooCommerce version 3.4.
+This plugin requires at least WooCommerce version 4.7.0.
 
 == Register and start shipping ==
 
@@ -102,6 +102,10 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
+= 3.5.0 =
+* Customer facing templates (checkout & view order) can now be replaced in own theme dir
+* Minumum woocommerce version is now 4.7.0 and tested against woocommerce 6.1.0
+
 = 3.4.1 =
 * Bug fix related to token caching
 
