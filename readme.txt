@@ -102,6 +102,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
+= 3.5.1 =
+* Bug fix
+
 = 3.5.0 =
 * Customer facing templates (checkout & view order) can now be replaced in own theme dir
 * Minumum woocommerce version is now 4.7.0 and tested against woocommerce 6.1.0
