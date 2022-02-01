@@ -180,11 +180,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $error_count = count($this->get_errors());
 
       if ( ! is_numeric($_POST['post_id']) ) {
+        $this->add_admin_notice(__('Received Post ID is not a number', 'woo-pakettikauppa'), 'error');
         wp_die('', '', 501);
       }
       $this->save_ajax_metabox((int) $_POST['post_id']);
 
       if ( count($this->get_errors()) !== $error_count ) {
+        foreach ( $this->get_errors() as $error ) {
+          $this->add_admin_notice($error, 'error');
+        }
         wp_die('', '', 501);
       }
 
