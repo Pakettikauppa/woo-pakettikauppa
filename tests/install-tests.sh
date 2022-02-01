@@ -48,6 +48,10 @@ case "$PHP_VERSION" in
     # If PHP 8.x install phpunit 9.x
     set_variable PHPUNIT_VERSION 9.5.13
     ;;
+  nightly)
+    # If PHP nightly install phpunit 9.x
+    set_variable PHPUNIT_VERSION 9.5.13
+    ;;
 esac
 
 case "$WP_VERSION" in
