@@ -60,6 +60,8 @@ case "$PHP_VERSION" in
     set_variable PHPUNIT_VERSION 9.5.13
     ;;
 esac
+echo "PHP version $PHP_VERSION"
+echo "PHPUNIT version $PHPUNIT_VERSION"
 
 # Install exactly the PHP version we want to use
 curl -k -sS "https://phar.phpunit.de/phpunit-$PHPUNIT_VERSION.phar" -o /tmp/phpunit
