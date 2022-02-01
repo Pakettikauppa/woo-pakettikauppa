@@ -183,6 +183,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
         }
         //load check tool class
         $this->load_check_tool_class();
+        
+        //load manifest class
+        $this->load_manifest_class();
       }
 
       // Always load frontend so admin_ajax can work from there
@@ -270,6 +273,17 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       require_once 'class-check-tool.php';
 
       $check_tool = new Check_Tool($this);
+
+      return $check_tool;
+    }
+    
+    /**
+     * Override this method to load a custom Manifest class
+     */
+    protected function load_manifest_class() {
+      require_once 'class-manifest.php';
+
+      $check_tool = new Manifest($this);
 
       return $check_tool;
     }
