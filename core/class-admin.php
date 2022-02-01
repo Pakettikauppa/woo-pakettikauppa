@@ -186,7 +186,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $this->save_ajax_metabox((int) $_POST['post_id']);
 
       if ( count($this->get_errors()) !== $error_count ) {
-        foreach ($this->get_errors() as $error) {
+        foreach ( $this->get_errors() as $error ) {
           $this->add_admin_notice($error, 'error');
         }
         wp_die('', '', 501);
