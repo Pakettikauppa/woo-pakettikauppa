@@ -11,7 +11,7 @@ jobs:
       - python3 ./gnitpick.py
     # Test the legacy 4.9 series and an older PHP version
     - php: '7.1'
-      env: WP_VERSION=4.9.12
+      env: WP_VERSION=5.6
     # Arbitrary PHP version to run the PHPCS sniffs against
     - php: '7.2'
       env: SNIFF=1
