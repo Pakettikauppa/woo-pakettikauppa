@@ -280,7 +280,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $tracking_codes = $this->create_shipments($order_ids);
 
       $contents = $this->fetch_shipping_labels($tracking_codes);
-      if ( ! $contents ) return;
+      if ( ! $contents ) {
+        return;
+      }
 
       $pdf = base64_decode($contents->{'response.file'});
     }
@@ -381,7 +383,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $tracking_codes = $this->create_shipments($order_ids);
 
       $contents = $this->fetch_shipping_labels($tracking_codes);
-      if ( ! $contents ) return $redirect_to;
+      if ( ! $contents ) {
+        return;
+      }
 
       if ( $contents->{'response.file'}->__toString() === '' ) {
         $this->add_admin_notice(__('Cannot find shipments with given shipment numbers.', 'woo-pakettikauppa'), 'error');
@@ -394,11 +398,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
     private function fetch_shipping_labels( $tracking_codes ) {
       $shipping_labels = false;
-      
+
       try {
         $shipping_labels = $this->shipment->fetch_shipping_labels($tracking_codes);
       } catch ( \Exception $e ) {
-        $this->add_admin_notice( $e->getMessage(), 'error' );
+        $this->add_admin_notice($e->getMessage(), 'error');
       }
 
       return $shipping_labels;
