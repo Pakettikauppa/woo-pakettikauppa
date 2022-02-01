@@ -54,6 +54,13 @@ case "$WP_VERSION" in
     ;;
 esac
 
+case "$PHP_VERSION" in
+  8.*)
+    # If PHP 8.x install phpunit 9.x
+    set_variable PHPUNIT_VERSION 9.5.13
+    ;;
+esac
+
 # Install exactly the PHP version we want to use
 curl -k -sS "https://phar.phpunit.de/phpunit-$PHPUNIT_VERSION.phar" -o /tmp/phpunit
 chmod +x /tmp/phpunit
