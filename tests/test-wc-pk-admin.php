@@ -50,14 +50,14 @@ class Test_Admin extends WP_UnitTestCase {
     $this->assertEquals(array(), $admin->get_errors());
   }
 
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     // Set result of is_admin() to true
     set_current_screen('wcpk-setup');
   }
 
-  public function tearDown() {
+  public function tearDown(): void {
     parent::tearDown();
   }
 }
