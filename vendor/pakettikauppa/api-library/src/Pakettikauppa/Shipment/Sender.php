@@ -55,6 +55,11 @@ class Sender
     public $email;
 
     /**
+     * @var string
+     */
+    public $contractId;
+
+    /**
      * @return string
      */
     public function getName1()
@@ -67,7 +72,7 @@ class Sender
      */
     public function setName1($name1)
     {
-        $this->name1 = $name1;
+        $this->name1 = trim($name1);
     }
 
     /**
@@ -83,7 +88,7 @@ class Sender
      */
     public function setName2($name2)
     {
-        $this->name2 = $name2;
+        $this->name2 = trim($name2);
     }
 
     /**
@@ -99,7 +104,7 @@ class Sender
      */
     public function setAddr1($addr1)
     {
-        $this->addr1 = $addr1;
+        $this->addr1 = trim($addr1);
     }
 
     /**
@@ -115,7 +120,7 @@ class Sender
      */
     public function setAddr2($addr2)
     {
-        $this->addr2 = $addr2;
+        $this->addr2 = trim($addr2);
     }
 
     /**
@@ -131,7 +136,7 @@ class Sender
      */
     public function setAddr3($addr3)
     {
-        $this->addr3 = $addr3;
+        $this->addr3 = trim($addr3);
     }
 
     /**
@@ -147,7 +152,7 @@ class Sender
      */
     public function setPostcode($postcode)
     {
-        $this->postcode = $postcode;
+        $this->postcode = trim($postcode);
     }
 
     /**
@@ -163,7 +168,7 @@ class Sender
      */
     public function setCity($city)
     {
-        $this->city = $city;
+        $this->city = trim($city);
     }
 
     /**
@@ -179,7 +184,7 @@ class Sender
      */
     public function setCountry($country)
     {
-        $this->country = $country;
+        $this->country = trim($country);
     }
 
     /**
@@ -195,7 +200,7 @@ class Sender
      */
     public function setPhone($phone)
     {
-        $this->phone = $phone;
+        $this->phone = trim($phone);
     }
 
     /**
@@ -211,7 +216,7 @@ class Sender
      */
     public function setVatcode($vatcode)
     {
-        $this->vatcode = $vatcode;
+        $this->vatcode = trim($vatcode);
     }
 
     /**
@@ -219,7 +224,7 @@ class Sender
      */
     public function setEmail($email)
     {
-        $this->email = $email;
+        $this->email = trim($email);
     }
 
     /**
@@ -230,5 +235,19 @@ class Sender
         return $this->email;
     }
 
+    /**
+     * @return string
+     */
+    public function getContractId()
+    {
+        return $this->contractId;
+    }
 
+    /**
+     * @param string $contractId
+     */
+    public function setContractId($contractId)
+    {
+        $this->contractId = $contractId;
+    }
 }

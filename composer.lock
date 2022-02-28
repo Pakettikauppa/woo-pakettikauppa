@@ -1,9 +1,14 @@
 {
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "4f64d5892c1aa11059be425db3035717",
     "packages": [
         {
             "name": "pakettikauppa/api-library",
             "version": "2.0.5",
-            "version_normalized": "2.0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Pakettikauppa/api-library.git",
@@ -20,9 +25,7 @@
                 "ext-json": "*",
                 "ext-simplexml": "*"
             },
-            "time": "2022-02-01T12:58:16+00:00",
             "type": "library",
-            "installation-source": "source",
             "autoload": {
                 "psr-4": {
                     "Pakettikauppa\\": "src/Pakettikauppa"
@@ -58,9 +61,16 @@
                 "issues": "https://github.com/Pakettikauppa/api-library/issues",
                 "source": "https://github.com/Pakettikauppa/api-library/tree/2.0.5"
             },
-            "install-path": "../pakettikauppa/api-library"
+            "time": "2022-02-01T12:58:16+00:00"
         }
     ],
-    "dev": true,
-    "dev-package-names": []
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.2.0"
 }

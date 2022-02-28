@@ -7,6 +7,10 @@
     "license": "MIT",
     "authors": [
         {
+            "name": "Joose Vettenranta",
+            "email": "joose.vettenranta@kompassi.fi"
+        },
+        {
             "name": "Matti Särkikoski",
             "email": "matti@pakettikauppa.fi"
         }
