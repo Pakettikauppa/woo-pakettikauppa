@@ -40,5 +40,10 @@
   "require": {
     "pakettikauppa/api-library": "2.0.*"
   },
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true
+    }
+  }
 }

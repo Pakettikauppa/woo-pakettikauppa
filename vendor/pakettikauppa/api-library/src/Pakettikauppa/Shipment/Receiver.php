@@ -66,7 +66,7 @@ class Receiver
      */
     public function setName1($name1)
     {
-        $this->name1 = $name1;
+        $this->name1 = trim($name1);
     }
 
     /**
@@ -82,7 +82,7 @@ class Receiver
      */
     public function setName2($name2)
     {
-        $this->name2 = $name2;
+        $this->name2 = trim($name2);
     }
 
     /**
@@ -98,7 +98,7 @@ class Receiver
      */
     public function setAddr1($addr1)
     {
-        $this->addr1 = $addr1;
+        $this->addr1 = trim($addr1);
     }
 
     /**
@@ -114,7 +114,7 @@ class Receiver
      */
     public function setAddr2($addr2)
     {
-        $this->addr2 = $addr2;
+        $this->addr2 = trim($addr2);
     }
 
     /**
@@ -130,7 +130,7 @@ class Receiver
      */
     public function setAddr3($addr3)
     {
-        $this->addr3 = $addr3;
+        $this->addr3 = trim($addr3);
     }
 
     /**
@@ -146,7 +146,7 @@ class Receiver
      */
     public function setPostcode($postcode)
     {
-        $this->postcode = $postcode;
+        $this->postcode = trim($postcode);
     }
 
     /**
@@ -162,7 +162,7 @@ class Receiver
      */
     public function setCity($city)
     {
-        $this->city = $city;
+        $this->city = trim($city);
     }
 
     /**
@@ -178,7 +178,7 @@ class Receiver
      */
     public function setCountry($country)
     {
-        $this->country = $country;
+        $this->country = trim($country);
     }
 
     /**
@@ -194,7 +194,7 @@ class Receiver
      */
     public function setPhone($phone)
     {
-        $this->phone = $phone;
+        $this->phone = trim($phone);
     }
 
     /**
@@ -210,7 +210,7 @@ class Receiver
      */
     public function setVatcode($vatcode)
     {
-        $this->vatcode = $vatcode;
+        $this->vatcode = trim($vatcode);
     }
 
     /**
@@ -226,7 +226,7 @@ class Receiver
      */
     public function setEmail($email)
     {
-        $this->email = $email;
+        $this->email = trim($email);
     }
 
 
