@@ -3,7 +3,7 @@ Contributors: joosev, ottok, leotoikka, serter, k1sul1
 Donate link: https://pakettikauppa.fi/
 Tags: woocommerce, shipping, toimitustavat, smartship, pakettikauppa, posti, smartpost, prinetti, matkahuolto, schenker, seravo, gls
 Requires at least: 5.0
-Tested up to: 5.8.2
+Tested up to: 5.9.2
 Requires PHP: 7.1
 Stable tag: trunk
 License: GPLv3 or later
@@ -102,6 +102,13 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
+= 3.5.2 =
+* Diagnostic tool bug fix when using Posti Shipping version
+* Add error message if mass action operation fails
+* Update automated tests and PHP 8.x tests
+* Convert API secret as password field for added security
+* Update Pakettikauppa API library to latest version
+
 = 3.5.1 =
 * Bug fix
 
