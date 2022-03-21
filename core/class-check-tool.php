@@ -219,7 +219,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Check_Tool') ) {
             if ( ! $token ) {
                 return $this->render_error(__('Not found', 'woo-pakettikauppa'));
             } else {
-                $this->shipment->client->setAccessToken($token);
+                $this->shipment->client->setAccessToken($token->access_token);
                 $result = $this->shipment->client->listShippingMethods();
                 if ( $result === null ) {
                     delete_transient($transient_name);

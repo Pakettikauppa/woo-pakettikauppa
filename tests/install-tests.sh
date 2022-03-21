@@ -43,6 +43,17 @@ else
   set_variable PHP_VERSION 7.4
 fi
 
+case "$PHP_VERSION" in
+  8.*)
+    # If PHP 8.x install phpunit 9.x
+    set_variable PHPUNIT_VERSION 9.5.13
+    ;;
+  nightly)
+    # If PHP nightly install phpunit 9.x
+    set_variable PHPUNIT_VERSION 9.5.13
+    ;;
+esac
+
 case "$WP_VERSION" in
   4.*)
     # Install phpunit 5.x for older WordPress 4.x series
@@ -53,6 +64,7 @@ case "$WP_VERSION" in
     set_variable PHPUNIT_VERSION 7.5.20
     ;;
 esac
+
 
 # Install exactly the PHP version we want to use
 curl -k -sS "https://phar.phpunit.de/phpunit-$PHPUNIT_VERSION.phar" -o /tmp/phpunit
