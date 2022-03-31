@@ -1418,7 +1418,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
       $tracking_code = sanitize_text_field($_REQUEST['tracking_code']); // @codingStandardsIgnoreLine
 
-      $contents = $this->shipment->fetch_shipping_label($tracking_code);
+      try {
+        $contents = $this->shipment->fetch_shipping_label($tracking_code);
+      } catch ( \Exception $e ) {
+        esc_attr_e('Failed to get shipment label.', 'woo-pakettikauppa');
+        echo '</br>' . esc_attr__('Error', 'woo-pakettikauppa') . ': ' . $e->getMessage();
+
+        return;
+      }
 
       if ( $contents->{'response.file'}->__toString() === '' ) {
         esc_attr_e('Cannot find shipment with given shipment number.', 'woo-pakettikauppa');
