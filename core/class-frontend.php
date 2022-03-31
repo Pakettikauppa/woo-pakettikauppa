@@ -338,8 +338,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       $is_klarna = $selected_payment_method === 'kco';
 
       $shipping_postcode = WC()->customer->get_shipping_postcode();
+      $billing_postcode = WC()->customer->get_billing_postcode();
       $shipping_address = WC()->customer->get_shipping_address();
       $shipping_country = WC()->customer->get_shipping_country();
+
+      if ( empty($shipping_postcode) && !empty($billing_postcode) ) {
+        $shipping_postcode = $billing_postcode;
+        $shipping_address = WC()->customer->get_billing_address();
+        $shipping_country = WC()->customer->get_billing_country();
+      }
 
       $session = $this->get_pickup_point_session_data();
       $stale_items = array_filter(
