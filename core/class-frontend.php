@@ -342,7 +342,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       $shipping_address = WC()->customer->get_shipping_address();
       $shipping_country = WC()->customer->get_shipping_country();
 
-      if ( empty($shipping_postcode) && !empty($billing_postcode) ) {
+      if ( empty($shipping_postcode) && ! empty($billing_postcode) ) {
         $shipping_postcode = $billing_postcode;
         $shipping_address = WC()->customer->get_billing_address();
         $shipping_country = WC()->customer->get_billing_country();
