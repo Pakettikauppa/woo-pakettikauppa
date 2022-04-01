@@ -1077,6 +1077,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                 <?php echo $button_text; ?>
               </button>
             <?php endif; ?>
+            <input type="hidden" id="pakettikauppa_microtime" name="pakettikauppa_microtime" value="<?php echo round(microtime(true) * 1000); ?>"/>
             <button type="button" value="create" id="pakettikauppa_metabtn_create" name="wc_pakettikauppa[create]" class="button pakettikauppa_meta_box button-primary" onclick="pakettikauppa_meta_box_submit(this);">
               <?php echo __('Create', 'woo-pakettikauppa'); ?>
             </button>
@@ -1149,6 +1150,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       }
 
       $order = new \WC_Order($post_id);
+
+      $old_request_id = $order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_request_id');
+      if ( ! empty($_REQUEST['request_id']) && $old_request_id == $_REQUEST['request_id'] ) {
+        return;
+      } else {
+        update_post_meta($order->get_id(), '_' . str_replace('wc_', '', $this->core->prefix) . '_request_id', $_REQUEST['request_id']);
+      }
 
       $command = sanitize_key(key($_POST['wc_pakettikauppa']));
 

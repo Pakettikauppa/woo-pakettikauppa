@@ -13,7 +13,8 @@ jQuery(function( $ ) {
     var data = {
       action: 'pakettikauppa_meta_box',
       post_id: woocommerce_admin_meta_boxes.post_id,
-      security: $('#pakettikauppa_metabox_nonce').val()
+      security: $('#pakettikauppa_metabox_nonce').val(),
+      request_id: $('#pakettikauppa_microtime').val()
     };
 
     if ($("#wc_pakettikauppa_shipping_method").is(':visible')) {
