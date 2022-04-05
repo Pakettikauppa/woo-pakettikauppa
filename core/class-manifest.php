@@ -279,19 +279,19 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
             $manifest = get_post($post_id);
             switch ( $column ) {
                 case 'orders':
-                    $current_orders = get_post_meta($post_id, $this->core->prefix . '_manifest_orders', true);
-                    if ( ! empty($current_orders) ) {
-                        echo implode(', ', $current_orders);
-                    } else {
-                        echo '-';
-                    }
+                  $current_orders = get_post_meta($post_id, $this->core->prefix . '_manifest_orders', true);
+                  if ( ! empty($current_orders) ) {
+                      echo implode(', ', $current_orders);
+                  } else {
+                      echo '-';
+                  }
                   break;
                 case 'actions':
-                    if ( $manifest->post_status == 'open' ) {
-                        echo '<input type = "button" class = "button manifest_action" data-action = "print_and_close" value = "' . __('Print and close', 'woo-pakettikauppa') . '"/>';
-                    } else if ( $manifest->post_status == 'closed' ) {
-                        echo '<input type = "button" class = "button manifest_action" data-action = "print" value = "' . __('Print', 'woo-pakettikauppa') . '"/>';
-                    }
+                  if ( $manifest->post_status == 'open' ) {
+                      echo '<input type = "button" class = "button manifest_action" data-action = "print_and_close" value = "' . __('Print and close', 'woo-pakettikauppa') . '"/>';
+                  } else if ( $manifest->post_status == 'closed' ) {
+                      echo '<input type = "button" class = "button manifest_action" data-action = "print" value = "' . __('Print', 'woo-pakettikauppa') . '"/>';
+                  }
                   break;
             }
         }
