@@ -496,7 +496,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($print_error));
       }
     }
-    
+
     /**
      * Add an admin success notice to wp-admin.
      */

@@ -183,7 +183,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
         }
         //load check tool class
         $this->load_check_tool_class();
-        
+
         //load manifest class
         $this->load_manifest_class();
       }
@@ -276,7 +276,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
 
       return $check_tool;
     }
-    
+
     /**
      * Override this method to load a custom Manifest class
      */
