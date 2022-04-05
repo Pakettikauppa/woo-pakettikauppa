@@ -32,7 +32,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
                 add_filter('bulk_actions-edit-shop_order', array( $this, 'register_multi_manifest_orders' ), 99);
                 add_action('handle_bulk_actions-edit-shop_order', array( $this, 'add_manifest_orders' ), 3, 10);
                 add_action('handle_bulk_actions-edit-pk_manifest', array( $this, 'manifest_actions' ), 3, 10);
-                add_action('admin_menu', array( $this, 'default_open_manifests' ));
                 add_filter('manage_pk_manifest_posts_columns', array( $this, 'set_pk_manifest_columns' ));
                 add_action('manage_pk_manifest_posts_custom_column', array( $this, 'render_pk_manifest_columns' ), 10, 2);
                 add_action('woocommerce_order_actions', array( $this, 'add_manifest_order_action' ));
@@ -105,16 +104,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
                 }
             }
             return $views;
-        }
-
-        public function default_open_manifests() {
-            global $submenu;
-
-            foreach ( $submenu['edit.php?post_type=pk_manifest'] as $key => $value ) {
-                if ( in_array('edit.php?post_type=pk_manifest', $value) ) {
-                    $submenu['edit.php?post_type=pk_manifest'][$key][2] = 'edit.php?post_status=open&post_type=pk_manifest';
-                }
-            }
         }
 
         /**
@@ -270,6 +259,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
         public function set_pk_manifest_columns( $columns ) {
             unset($columns['date']);
             $columns['orders'] = __('Orders', 'woo-pakettikauppa');
+            $columns['status'] = __('Status', 'woo-pakettikauppa');
             $columns['actions'] = __('Actions', 'woo-pakettikauppa');
 
             return $columns;
@@ -292,6 +282,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
                 } else if ( $manifest->post_status == 'closed' ) {
                   echo '<input type = "button" class = "button manifest_action" data-action = "print" value = "' . __('Print', 'woo-pakettikauppa') . '"/>';
                 }
+                break;
+              case 'status':
+                echo get_post_status_object(get_post_status($manifest))->label;
                 break;
             }
         }
