@@ -102,6 +102,10 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
+= 3.5.3 =
+* New feature: If shipping postcode is missing, use billing address
+* Bug fixes
+
 = 3.5.2 =
 * Diagnostic tool bug fix when using Posti Shipping version
 * Add error message if mass action operation fails
