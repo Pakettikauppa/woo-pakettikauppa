@@ -119,6 +119,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
       }
     }
 
+    /**
+     * Get product meta values added from product tabs
+     *
+     * @param integer $product_id - Post (product) ID
+     */
     public function get_tabs_fields_values( $product_id ) {
       $fields_values = array();
 
