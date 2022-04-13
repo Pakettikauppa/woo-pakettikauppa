@@ -1319,6 +1319,19 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       $chosen_shipping_method = array_pop($shipping_methods);
 
       $add_cod_to_additional_services = 'cod' === $order->get_payment_method();
+      $add_dangerous_good_to_additional_services = false;
+      
+      $dangerous_goods = array(
+        'weight' => 0,
+        'count' => 0,
+      );
+      foreach ( $order->get_items() as $item ) {
+        $item_tabs_data = $this->core->product->get_tabs_fields_values($item->get_product_id());
+        if ( ! empty($item_tabs_data['pk_dangerous_lqweight']) ) {
+          $dangerous_goods['weight'] += ($item_tabs_data['pk_dangerous_lqweight'] * $item->get_quantity());
+          $dangerous_goods['count'] += $item->get_quantity();
+        }
+      }
 
       if ( ! empty($chosen_shipping_method) ) {
         $method_id = $chosen_shipping_method->get_method_id();
@@ -1342,10 +1355,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
           if ( ! empty($services) ) {
             foreach ( $services as $service_code => $service ) {
-              if ( $service === 'yes' && $service_code !== '3101' ) {
+              if ( $service === 'yes' && $service_code != '3101' ) {
                 $additional_services[] = array( $service_code => null );
-              } elseif ( $service === 'yes' && $service_code === '3101' ) {
+              } elseif ( $service === 'yes' && $service_code == '3101' ) {
                 $add_cod_to_additional_services = true;
+              } elseif ( $dangerous_goods['count'] > 0 && $service_code == '3143' ) {
+                $add_dangerous_good_to_additional_services = true;
               }
             }
           }
@@ -1359,6 +1374,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             'account' => $settings['cod_iban'],
             'codbic' => $settings['cod_bic'],
             'reference' => $this->calculate_reference($order->get_id()),
+          ),
+        );
+      }
+
+      if ( $add_dangerous_good_to_additional_services ) {
+        $additional_services[] = array(
+          '3143' => array(
+            'lqweight' => $dangerous_goods['weight'],
+            'lqcount' => $dangerous_goods['count'],
           ),
         );
       }

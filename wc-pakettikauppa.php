@@ -11,9 +11,9 @@
  * License: GPL v3 or later
  *
  * Requires at least: 4.7.0
- * Tested up to: 5.9.2
+ * Tested up to: 5.9.3
  * WC requires at least: 3.4
- * WC tested up to: 6.3.1
+ * WC tested up to: 6.4.0
  *
  * Copyright: © 2017-2020 Seravo Oy, 2020-2022 Posti Oy
  * License: GNU General Public License v3.0

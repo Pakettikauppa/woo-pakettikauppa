@@ -32,6 +32,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
     public $shipment;
     public $shipping_method_instance; // Added as an afterthought to fix a bug, merge with $shippingmethod in the future.
     public $setup_wizard;
+    public $product;
 
     public $api_config; // Used by Pakettikauppa\Client
     public $api_comment; // Used by ^
@@ -176,6 +177,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       if ( is_admin() ) {
         $this->admin = $this->load_admin_class();
         $this->setup_wizard = $this->maybe_load_setup_wizard();
+        $this->product = $this->load_product_class();
 
         if ( $shipment_exception ) {
           $this->admin->add_error($shipment_exception);
@@ -321,6 +323,18 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       // $method->load();
 
       return $method;
+    }
+
+    /**
+     * Override this method to load a custom Product class
+     */
+    protected function load_product_class() {
+      require_once 'class-product.php';
+
+      $product = new Product($this);
+      $product->load();
+
+      return $product;
     }
   }
 }

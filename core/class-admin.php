@@ -597,6 +597,21 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       if ( empty($service_id) && empty($default_service_id) ) {
         return;
       }
+
+      $services_data = array(
+        'lqweight' => array(
+          'title' => esc_attr__('Total weight of dangerous goods', 'woo-pakettikauppa'),
+          'value' => 0,
+          'unit' => 'kg',
+        ),
+      );
+      $order_items = $order->get_items();
+      foreach ( $order_items as $item ) {
+        $item_tabs_data = $this->core->product->get_tabs_fields_values($item->get_product_id());
+        if ( ! empty($item_tabs_data['pk_dangerous_lqweight']) ) {
+          $services_data['lqweight']['value'] += ($item_tabs_data['pk_dangerous_lqweight'] * $item->get_quantity());
+        }
+      }
       ?>
       <div style="clear: both;"></div>
       <h4>
@@ -614,6 +629,20 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           echo esc_attr__('None');
         }
         ?>
+        <br>
+        <?php foreach ( $services_data as $service_key => $service_params ) : ?>
+          <?php if ( ! empty($service_params['value']) ) : ?>
+            <strong><?php echo $service_params['title']; ?></strong><br>
+            <?php
+            $value_text = $service_params['value'];
+            if ( $service_params['unit'] == 'kg' ) {
+              $value_text = number_format($service_params['value'], 3) . ' kg';
+            }
+            echo $value_text;
+            ?>
+            <br>
+          <?php endif; ?>
+        <?php endforeach; ?>
       </p>
       <div class="edit_address pakettikauppa">
         <p class="form-field _shipping_phone">
