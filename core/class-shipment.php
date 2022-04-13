@@ -1320,7 +1320,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
       $add_cod_to_additional_services = 'cod' === $order->get_payment_method();
       $add_dangerous_good_to_additional_services = false;
-      
+
       $dangerous_goods = array(
         'weight' => 0,
         'count' => 0,

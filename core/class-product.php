@@ -78,7 +78,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
      * Tabs content
      */
     public function tabs_content() {
-      foreach ( $this->tabs as $tab_id => $tab_params ) : ?>
+      foreach ( $this->tabs as $tab_id => $tab_params ) :
+        ?>
         <div id="<?php echo $tab_id; ?>" class="panel woocommerce_options_panel">
           <?php foreach ( $tab_params['fields'] as $fields_group ) : ?>
             <div class='options_group'>
@@ -88,7 +89,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
             </div>
           <?php endforeach; ?>
         </div>
-      <?php endforeach;
+        <?php
+      endforeach;
     }
 
     /**
