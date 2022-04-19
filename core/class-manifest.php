@@ -36,7 +36,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
                 add_action('manage_pk_manifest_posts_custom_column', array( $this, 'render_pk_manifest_columns' ), 10, 2);
                 add_action('woocommerce_order_actions', array( $this, 'add_manifest_order_action' ));
                 add_action('woocommerce_order_action_' . $this->core->prefix . '_add_to_manifest', array( $this, 'add_order_to_manifest' ));
+                add_action('admin_menu', array( $this, 'add_submenu' ));
             }
+        }
+
+        public function add_submenu() {
+            add_submenu_page('woocommerce', 'Manifests', 'Manifests', 'manage_woocommerce', 'edit.php?post_type=pk_manifest');
         }
 
         public function manifest_post_type() {
@@ -53,9 +58,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
                 'labels' => $labels,
                 'public' => false,
                 'has_archive' => false,
-                'show_in_menu' => true,
+                'show_in_menu' => false,
                 'show_ui' => true,
                 'supports' => false,
+                'capability_type' => 'post',
+                'capabilities' => array(
+                  'create_posts' => false,
+                ),
+                'map_meta_cap' => false,
               )
             );
         }
