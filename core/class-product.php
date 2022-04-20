@@ -41,9 +41,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
         if ( $this->is_new_tab($tab_id) ) {
           continue;
         }
-        add_action('woocommerce_product_options_' . $tab_id, function() use ($tab_id) {
-          $this->get_group_content( $tab_id );
-        });
+        add_action(
+          'woocommerce_product_options_' . $tab_id,
+          function() use ($tab_id) {
+            $this->get_group_content( $tab_id );
+          }
+        );
       }
     }
 
@@ -89,10 +92,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
      */
     public function tabs_content() {
       foreach ( $this->tabs as $tab_id => $tab_params ) :
-        if ( ! $this->is_new_tab($tab_id) ) continue;
+        if ( ! $this->is_new_tab($tab_id) ) {
+          continue;
+        }
         ?>
         <div id="<?php echo $tab_id; ?>" class="panel woocommerce_options_panel">
-          <?php $this->get_group_content( $tab_id ); ?>
+          <?php $this->get_group_content($tab_id); ?>
         </div>
         <?php
       endforeach;
@@ -175,7 +180,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
 
     /**
      * Check if tab is creating or trying use something from existing
-     * 
+     *
      * @param string $tab_id - Tab ID from get_tabs() function
      */
     private function is_new_tab( $tab_id ) {
@@ -208,7 +213,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
               'id' => $this->core->params_prefix . 'country_of_origin',
               'label' => __('Country of origin', 'woo-pakettikauppa'),
               'type' => 'select',
-              'options' => array('' => '— ' . __('Unknown', 'woo-pakettikauppa') . ' —') + $all_countries,
+              'options' => array( '' => '— ' . __('Unknown', 'woo-pakettikauppa') . ' —' ) + $all_countries,
               'desc_tip' => true,
               'description' => __('The country where the goods originated, e.g. were produced/manufactured or assembled.', 'woo-pakettikauppa'),
             ),
