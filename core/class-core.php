@@ -16,12 +16,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
     public $dir_url;
     public $templates_dir;
     public $templates;
-    public $prefix = 'wc_pakettikauppa';
-    // public $prefix = 'woocommerce_pakettikauppa';
+    public $prefix;
+    public $params_prefix;
 
     public $shippingmethod; // Name of the shipping method. Not to be confused with $shipping_method_instance!
-    public $vendor_name = 'Pakettikauppa';
-    public $vendor_url = 'https://www.pakettikauppa.fi';
+    public $vendor_name;
+    public $vendor_url;
     public $vendor_logo;
     public $setup_background;
     public $setup_page;
@@ -66,6 +66,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
         'account_order' => 'pakettikauppa/myaccount-order.php',
       ));
 
+      $this->prefix = $config['prefix'] ?? 'wc_pakettikauppa';
+      $this->params_prefix = ($config['params_prefix'] ?? 'pakettikauppa') . '_';
       $this->shippingmethod = $config['shipping_method_name'] ?? str_replace('wc_', '', $this->prefix) . '_shipping_method';
 
       $this->vendor_name = $config['vendor_name'] ?? 'Pakettikauppa';

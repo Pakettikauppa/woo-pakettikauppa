@@ -36,6 +36,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
       add_action('admin_head', array( $this, 'tabs_styles' ));
       add_action('woocommerce_process_product_meta_simple', array( $this, 'save_tabs_fields' ));
       add_action('woocommerce_process_product_meta_variable', array( $this, 'save_tabs_fields' ));
+
+      foreach ( $this->tabs as $tab_id => $tab_params ) {
+        if ( $this->is_new_tab($tab_id) ) continue;
+        add_action('woocommerce_product_options_' . $tab_id, function() use ($tab_id) { $this->get_group_content( $tab_id ); });
+      }
     }
 
     /**
@@ -49,11 +54,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
         'target'  => $this->core->prefix . '_options',
         'class'   => array( 'show_if_simple', 'show_if_variable' ),
       );*/
-      $tabs['pk_dangerous'] = array(
-        'label'   => __('Dangerous goods', 'woo-pakettikauppa'),
-        'target'  => 'pk_dangerous',
-        'class'   => array( 'show_if_simple', 'show_if_variable' ),
-      );
 
       return $tabs;
     }
@@ -65,6 +65,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
       ?>
       <style>
         <?php foreach ( $this->tabs as $tab_id => $tab_params ) : ?>
+          <?php if ( ! $this->is_new_tab($tab_id) ) continue; ?>
+          <?php if ( empty($tab_params['icon']) ) continue; ?>
+          
           #woocommerce-product-data ul.wc-tabs li.<?php echo $tab_id; ?>_options a:before {
             font-family: WooCommerce;
             content: "<?php echo $tab_params['icon']; ?>";
@@ -75,22 +78,42 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
     }
 
     /**
-     * Tabs content
+     * New tabs content
      */
     public function tabs_content() {
       foreach ( $this->tabs as $tab_id => $tab_params ) :
+        if ( ! $this->is_new_tab($tab_id) ) continue;
         ?>
         <div id="<?php echo $tab_id; ?>" class="panel woocommerce_options_panel">
-          <?php foreach ( $tab_params['fields'] as $fields_group ) : ?>
-            <div class='options_group'>
-              <?php foreach ( $fields_group as $field ) : ?>
-                <?php woocommerce_wp_text_input($field); ?>
-              <?php endforeach; ?>
-            </div>
-          <?php endforeach; ?>
+          <?php $this->get_group_content( $tab_id ); ?>
         </div>
         <?php
       endforeach;
+    }
+
+    /**
+     * Get all fields html for specific group
+     *
+     * @param string $tab_id - Tab (group) ID from get_tabs() function
+     */
+    public function get_group_content( $tab_id ) {
+      foreach ( $this->tabs[$tab_id]['fields'] as $fields_group ) {
+        ob_start();
+        foreach ( $fields_group as $field ) {
+          if ( $field['type'] == 'select' ) {
+            woocommerce_wp_select($field);
+          } else {
+            woocommerce_wp_text_input($field);
+          }
+        }
+        $all_fields_html = ob_get_clean();
+
+        if ( $this->is_new_tab($tab_id) ) {
+          echo '<div class="options_group">' . $all_fields_html . '</div>';
+        } else {
+          echo $all_fields_html;
+        }
+      }
     }
 
     /**
@@ -111,6 +134,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
                 break;
               case 'number':
                 $value = isset($_POST[$field['id']]) ? abs($_POST[$field['id']]) : '';
+                break;
+              case 'select':
+                $value = isset($_POST[$field['id']]) ? $_POST[$field['id']] : '';
                 break;
               default:
                 $value = '';
@@ -141,19 +167,47 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
     }
 
     /**
+     * Check if tab is creating or trying use something from existing
+     * 
+     * @param string $tab_id - Tab ID from get_tabs() function
+     */
+    private function is_new_tab( $tab_id ) {
+      $new_tabs = $this->add_product_tabs(array());
+
+      return (isset($new_tabs[$tab_id])) ? true : false;
+    }
+
+    /**
      * Prepare tabs data
      */
     private function get_tabs() {
       $tabs = array();
 
-      // Tab: Options
-      $tabs['pk_dangerous'] = array(
-        'icon' => '\e016',
+      $wc_countries = new \WC_Countries();
+      $all_countries = $wc_countries->get_countries();
+
+      //Tab: Shipping
+      $tabs['shipping'] = array(
         'fields' => array(
           array(
             array(
-              'id' => 'pk_dangerous_lqweight',
-              'label' => __('Weight (kg)', 'woo-pakettikauppa'),
+              'id' => $this->core->params_prefix . 'tariff_codes',
+              'label' => __('HS tariff number', 'woo-pakettikauppa'),
+              'type' => 'text',
+              'desc_tip' => true,
+              'description' => __('The HS tariff number must be based on the Harmonized Commodity Description and Coding System developed by the World Customs Organization.', 'woo-pakettikauppa'),
+            ),
+            array(
+              'id' => $this->core->params_prefix . 'country_of_origin',
+              'label' => __('Country of origin', 'woo-pakettikauppa'),
+              'type' => 'select',
+              'options' => array('' => '— ' . __('Unknown', 'woo-pakettikauppa') . ' —') + $all_countries,
+              'desc_tip' => true,
+              'description' => __('The country where the goods originated, e.g. were produced/manufactured or assembled.', 'woo-pakettikauppa'),
+            ),
+            array(
+              'id' => $this->core->params_prefix . 'dangerous_lqweight',
+              'label' => __('DG weight (kg)', 'woo-pakettikauppa'),
               'type' => 'number',
               'custom_attributes' => array(
                 'min' => '0',
@@ -161,7 +215,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
                 'step'  => '0.001',
               ),
               'desc_tip' => true,
-              'description' => __('Content of hazardous substances in the product', 'woo-pakettikauppa'),
+              'description' => __('Dangerous goods. Content of hazardous substances in the product.', 'woo-pakettikauppa'),
             ),
           ),
         ),

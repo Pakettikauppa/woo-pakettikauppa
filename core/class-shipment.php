@@ -514,6 +514,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      * @param array $save_values Values for want to save. A 'tracking_code' is required for saving to occur.
      */
     public function save_label( $post_id, $save_values = array() ) {
+      if (version_compare(get_bloginfo('version'), '5.3.0', '>=')) {
+        $current_time = strtotime(wp_date("Y-m-d H:i:s"));
+      } else {
+        $current_time = current_time('timestamp');
+      }
+
       $label_values = array_replace(
         array(
           'service_id' => '',
@@ -525,9 +531,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           'shipment_status' => '',
           'products' => array(),
           'additional_services' => array(),
+          'timestamp' => $current_time,
         ),
         $save_values
       );
+
       if ( ! empty($label_values['tracking_code']) ) {
         $all_labels = $this->get_labels($post_id);
         $insert = true;
@@ -938,8 +946,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             continue;
           }
 
-          $tariff_code       = $product->get_meta(str_replace('wc_', '', $this->core->prefix) . '_tariff_codes', true);
-          $country_of_origin = $product->get_meta(str_replace('wc_', '', $this->core->prefix) . '_country_of_origin', true);
+          $tariff_code       = $product->get_meta($this->core->params_prefix . 'tariff_codes', true);
+          $country_of_origin = $product->get_meta($this->core->params_prefix . 'country_of_origin', true);
           $quantity = ($selected_product !== false) ? $selected_product['qty'] : $item->get_quantity();
 
           $products_info[] = array(
@@ -1327,8 +1335,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       );
       foreach ( $order->get_items() as $item ) {
         $item_tabs_data = $this->core->product->get_tabs_fields_values($item->get_product_id());
-        if ( ! empty($item_tabs_data['pk_dangerous_lqweight']) ) {
-          $dangerous_goods['weight'] += ($item_tabs_data['pk_dangerous_lqweight'] * $item->get_quantity());
+        if ( ! empty($item_tabs_data[$this->core->params_prefix . 'dangerous_lqweight']) ) {
+          $dangerous_goods['weight'] += ($item_tabs_data[$this->core->params_prefix . 'dangerous_lqweight'] * $item->get_quantity());
           $dangerous_goods['count'] += $item->get_quantity();
         }
       }
