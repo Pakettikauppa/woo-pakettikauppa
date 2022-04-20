@@ -43,8 +43,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
         }
         add_action(
           'woocommerce_product_options_' . $tab_id,
-          function() use ($tab_id) {
-            $this->get_group_content( $tab_id );
+          function() use ( $tab_id ) {
+            $this->get_group_content($tab_id);
           }
         );
       }
