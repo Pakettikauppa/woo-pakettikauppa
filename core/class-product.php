@@ -38,8 +38,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
       add_action('woocommerce_process_product_meta_variable', array( $this, 'save_tabs_fields' ));
 
       foreach ( $this->tabs as $tab_id => $tab_params ) {
-        if ( $this->is_new_tab($tab_id) ) continue;
-        add_action('woocommerce_product_options_' . $tab_id, function() use ($tab_id) { $this->get_group_content( $tab_id ); });
+        if ( $this->is_new_tab($tab_id) ) {
+          continue;
+        }
+        add_action('woocommerce_product_options_' . $tab_id, function() use ($tab_id) {
+          $this->get_group_content( $tab_id );
+        });
       }
     }
 
@@ -65,8 +69,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
       ?>
       <style>
         <?php foreach ( $this->tabs as $tab_id => $tab_params ) : ?>
-          <?php if ( ! $this->is_new_tab($tab_id) ) continue; ?>
-          <?php if ( empty($tab_params['icon']) ) continue; ?>
+          <?php
+          if ( ! $this->is_new_tab($tab_id) || empty($tab_params['icon']) ) {
+            continue;
+          }
+          ?>
           
           #woocommerce-product-data ul.wc-tabs li.<?php echo $tab_id; ?>_options a:before {
             font-family: WooCommerce;

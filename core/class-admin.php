@@ -668,7 +668,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             <div class="corner-triangle"></div>
           </div>
           <p>
-            <span class="label_time"><?php echo (isset($label['timestamp'])) ? esc_attr(date("Y-m-d H:i:s", $label['timestamp'])) : '';?></span>
+            <span class="label_time"><?php echo (isset($label['timestamp'])) ? esc_attr(gmdate('Y-m-d H:i:s', $label['timestamp'])) : ''; ?></span>
             <strong><?php echo esc_attr($label['tracking_code']); ?></strong><br />
             <span><?php echo esc_attr($this->shipment->service_title($label['service_id'])); ?></span><br />
             <br />
@@ -732,7 +732,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           <div class="corner-triangle"></div>
         </div>
         <p>
-          <span class="label_time"><?php echo (isset($label['timestamp'])) ? esc_attr(date("Y-m-d H:i:s", $label['timestamp'])) : '';?></span>
+          <span class="label_time"><?php echo (isset($label['timestamp'])) ? esc_attr(gmdate('Y-m-d H:i:s', $label['timestamp'])) : ''; ?></span>
           <strong><?php echo esc_attr($label['tracking_code']); ?></strong><br />
           <span><?php echo esc_attr($this->shipment->service_title($label['service_id'])); ?></span><br />
           <br />
@@ -1287,8 +1287,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           $tracking_url  = (string) $shipment->{'response.trackingcode'}['tracking_url'];
           $label_code    = (string) $shipment->{'response.trackingcode'}['labelcode'];
 
-          if (version_compare(get_bloginfo('version'), '5.3.0', '>=')) {
-            $current_time = strtotime(wp_date("Y-m-d H:i:s"));
+          if ( version_compare(get_bloginfo('version'), '5.3.0', '>=') ) {
+            $current_time = strtotime(wp_date('Y-m-d H:i:s'));
           } else {
             $current_time = current_time('timestamp');
           }

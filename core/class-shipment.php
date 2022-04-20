@@ -514,8 +514,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      * @param array $save_values Values for want to save. A 'tracking_code' is required for saving to occur.
      */
     public function save_label( $post_id, $save_values = array() ) {
-      if (version_compare(get_bloginfo('version'), '5.3.0', '>=')) {
-        $current_time = strtotime(wp_date("Y-m-d H:i:s"));
+      if ( version_compare(get_bloginfo('version'), '5.3.0', '>=') ) {
+        $current_time = strtotime(wp_date('Y-m-d H:i:s'));
       } else {
         $current_time = current_time('timestamp');
       }
