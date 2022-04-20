@@ -49,21 +49,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       add_action('wp_ajax_nopriv_pakettikauppa_use_custom_address_for_pickup_point', array( $this, 'use_custom_address_for_pickup_point' ), 10);
 
       add_filter('woocommerce_checkout_fields', array( $this, 'add_checkout_fields' ));
-      add_filter('woocommerce_admin_order_data_after_shipping_address', array( $this, 'render_checkout_fields' ));
 
       $this->shipment = $this->core->shipment;
-    }
-
-    public function render_checkout_fields( $order ) { ?>
-        <div style="clear: both;">
-            <p>
-              <?php echo __('Phone', 'woocommerce'); ?>
-                : <?php echo get_post_meta($order->get_id(), '_shipping_phone', true); ?>
-                <br>
-              <?php echo __('Email', 'woocommerce'); ?>
-                : <?php echo get_post_meta($order->get_id(), '_shipping_email', true); ?>
-        </div>
-      <?php
     }
 
     public function add_checkout_fields( $fields ) {

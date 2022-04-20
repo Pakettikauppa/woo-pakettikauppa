@@ -579,38 +579,56 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         printf(esc_attr__('%s Shipping', 'woo-pakettikauppa'), $this->core->vendor_name);
         ?>
       </h4>
-      <p class="form-field pakettikauppa-field">
-        <strong><?php esc_attr_e('Requested pickup point', 'woo-pakettikauppa'); ?></strong><br>
-        <?php
-        if ( $order->get_meta('_' . $this->core->params_prefix . 'pickup_point') ) {
-          echo esc_attr($order->get_meta('_' . $this->core->params_prefix . 'pickup_point'));
-        } else {
-          echo esc_attr__('None');
-        }
-        ?>
-        <br>
-        <?php foreach ( $services_data as $service_key => $service_params ) : ?>
-          <?php if ( ! empty($service_params['value']) || $service_params['show_always'] === true ) : ?>
-            <strong><?php echo $service_params['title']; ?></strong><br>
-            <?php
-            $value_text = $service_params['value'];
-            if ( $service_params['unit'] == 'kg' ) {
-              $value_text = number_format($service_params['value'], 3) . ' kg';
-            }
-            echo $value_text;
-            ?>
-            <br>
-          <?php endif; ?>
-        <?php endforeach; ?>
-      </p>
-      <div class="edit_address pakettikauppa">
-        <p class="form-field _shipping_phone">
-          <label for="_shipping_phone"><?php esc_attr_e('Phone', 'woo-pakettikauppa'); ?></label>
-          <input type="text" class="short" name="_shipping_phone" id="_shipping_phone" value="<?php echo esc_attr($order->get_meta('_shipping_phone')); ?>">
+      <div class="address pakettikauppa">
+        <p class="form-field pakettikauppa-field">
+          <strong><?php esc_attr_e('Requested pickup point', 'woo-pakettikauppa'); ?></strong>
+          <?php
+          if ( $order->get_meta('_' . $this->core->params_prefix . 'pickup_point') ) {
+            echo esc_attr($order->get_meta('_' . $this->core->params_prefix . 'pickup_point'));
+          } else {
+            echo esc_attr__('None');
+          }
+          ?>
+          <br>
+          <?php foreach ( $services_data as $service_key => $service_params ) : ?>
+            <?php if ( ! empty($service_params['value']) || $service_params['show_always'] === true ) : ?>
+              <strong><?php echo $service_params['title']; ?></strong>
+              <?php
+              $value_text = $service_params['value'];
+              if ( $service_params['unit'] == 'kg' ) {
+                $value_text = number_format($service_params['value'], 3) . ' kg';
+              }
+              echo $value_text;
+              ?>
+              <br>
+            <?php endif; ?>
+          <?php endforeach; ?>
+          <br>
+          <?php echo __('Phone', 'woocommerce') . ': ' . get_post_meta($order->get_id(), '_shipping_phone', true); ?>
+          <br>
+          <?php echo __('Email', 'woocommerce') . ': ' . get_post_meta($order->get_id(), '_shipping_email', true); ?>
         </p>
-        <p class="form-field _shipping_email">
-          <label for="_shipping_email"><?php esc_attr_e('Email', 'woo-pakettikauppa'); ?></label>
-          <input type="email" class="short" name="_shipping_email" id="_shipping_email" value="<?php echo esc_attr($order->get_meta('_shipping_email')); ?>">
+      </div>
+      <div class="edit_address pakettikauppa">
+        <p class="form-field pakettikauppa-field">
+          <strong><?php esc_attr_e('Requested pickup point', 'woo-pakettikauppa'); ?></strong>
+          <?php
+          if ( $order->get_meta('_' . $this->core->params_prefix . 'pickup_point') ) {
+            echo esc_attr($order->get_meta('_' . $this->core->params_prefix . 'pickup_point'));
+          } else {
+            echo esc_attr__('None');
+          }
+          ?>
+        </p>
+        <?php $field_key = $this->core->params_prefix . 'shipping_phone'; ?>
+        <p class="form-field <?php echo $field_key; ?>">
+          <label for="<?php echo $field_key; ?>"><?php esc_attr_e('Phone', 'woo-pakettikauppa'); ?></label>
+          <input type="text" class="short" name="<?php echo $field_key; ?>" id="<?php echo $field_key; ?>" value="<?php echo esc_attr(get_post_meta($order->get_id(), '_shipping_phone', true)); ?>">
+        </p>
+        <?php $field_key = $this->core->params_prefix . 'shipping_email'; ?>
+        <p class="form-field last <?php echo $field_key; ?>">
+          <label for="<?php echo $field_key; ?>"><?php esc_attr_e('Email', 'woo-pakettikauppa'); ?></label>
+          <input type="email" class="short" name="<?php echo $field_key; ?>" id="<?php echo $field_key; ?>" value="<?php echo esc_attr($order->get_meta('_shipping_email')); ?>">
         </p>
       </div>
       <div class="clear"></div>
@@ -625,11 +643,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       if ( 'shop_order' != $post_type ) {
         return $post_id;
       }
-      if ( isset($_POST['_shipping_phone']) ) {
-        update_post_meta($post_id, '_shipping_phone', wc_clean($_POST['_shipping_phone']));
+      if ( isset($_POST[$this->core->params_prefix . 'shipping_phone']) ) {
+        update_post_meta($post_id, '_shipping_phone', wc_clean($_POST[$this->core->params_prefix . 'shipping_phone']));
       }
-      if ( isset($_POST['_shipping_email']) ) {
-        update_post_meta($post_id, '_shipping_email', wc_clean($_POST['_shipping_email']));
+      if ( isset($_POST[$this->core->params_prefix . 'shipping_email']) ) {
+        update_post_meta($post_id, '_shipping_email', wc_clean($_POST[$this->core->params_prefix . 'shipping_email']));
       }
     }
 
