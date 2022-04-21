@@ -1189,24 +1189,39 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           } else {
             $additional_services = array();
 
+            $dangerous_goods = array(
+              'weight' => 0,
+              'count' => 0,
+            );
+            foreach ( $_REQUEST['for_products'] as $product ) {
+              $item_tabs_data = $this->core->product->get_tabs_fields_values($product['prod']);
+              if ( ! empty($item_tabs_data[$this->core->params_prefix . 'dangerous_lqweight']) ) {
+                $dangerous_goods['weight'] += ($item_tabs_data[$this->core->params_prefix . 'dangerous_lqweight'] * $product['qty']);
+                $dangerous_goods['count'] += $product['qty'];
+              }
+            }
+
+            $settings = $this->shipment->get_settings();
+            $additional_services_with_params = array(
+              '3101' => array(
+                'amount' => $order->get_total(),
+                'account' => $settings['cod_iban'],
+                'codbic' => $settings['cod_bic'],
+                'reference' => $this->shipment->calculate_reference($order->get_id()),
+              ),
+              '3143' => array(
+                'lqweight' => $dangerous_goods['weight'],
+                'lqcount' => $dangerous_goods['count'],
+              ),
+            );
+
             if ( ! empty($_REQUEST['additional_services']) ) {
               foreach ( $_REQUEST['additional_services'] as $_additional_service_code ) {
-                $_additional_service_code = intval($_additional_service_code);
-                if ( $_additional_service_code !== 3101 ) {
-                  $additional_services[] = array( (string) $_additional_service_code => null );
-                } else {
-                  $settings = $this->shipment->get_settings();
-
-                  $additional_services[] = array(
-                    '3101' => array(
-                      'amount' => $order->get_total(),
-                      'account' => $settings['cod_iban'],
-                      'codbic' => $settings['cod_bic'],
-                      'reference' => $this->shipment->calculate_reference($order->get_id()),
-                    ),
-                  );
-
+                $additional_service_params = null;
+                if ( isset($additional_services_with_params[$_additional_service_code]) ) {
+                  $additional_service_params = $additional_services_with_params[$_additional_service_code];
                 }
+                $additional_services[] = array( (string) $_additional_service_code => $additional_service_params );
               }
             }
 
