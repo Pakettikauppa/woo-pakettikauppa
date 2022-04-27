@@ -560,7 +560,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $services_data = array(
         'lqweight' => array(
           'title' => esc_attr__('Total weight of dangerous goods', 'woo-pakettikauppa'),
-          'value' => (!empty($dangerous_goods['weight'])) ? $dangerous_goods['weight'] : 0,
+          'value' => (! empty($dangerous_goods['weight'])) ? $dangerous_goods['weight'] : 0,
           'unit' => 'kg',
           'show_always' => false,
         ),
@@ -625,11 +625,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           }
           ?>
         </p>
-        <?php /* $field_key = $this->core->params_prefix . 'shipping_phone'; ?>
+        <?php
+        /* $field_key = $this->core->params_prefix . 'shipping_phone'; ?>
         <p class="form-field <?php echo $field_key; ?>">
           <label for="<?php echo $field_key; ?>"><?php esc_attr_e('Phone', 'woo-pakettikauppa'); ?></label>
           <input type="text" class="short" name="<?php echo $field_key; ?>" id="<?php echo $field_key; ?>" value="<?php echo esc_attr(get_post_meta($order->get_id(), '_shipping_phone', true)); ?>">
-        </p> */?>
+        </p> */
+        ?>
         <?php $field_key = $this->core->params_prefix . 'shipping_email'; ?>
         <p class="form-field <?php echo $field_key; ?>">
           <label for="<?php echo $field_key; ?>"><?php esc_attr_e('Email', 'woo-pakettikauppa'); ?></label>
