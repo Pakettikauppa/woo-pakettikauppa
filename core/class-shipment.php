@@ -1329,17 +1329,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       $add_cod_to_additional_services = 'cod' === $order->get_payment_method();
       $add_dangerous_good_to_additional_services = false;
 
-      $dangerous_goods = array(
-        'weight' => 0,
-        'count' => 0,
-      );
-      foreach ( $order->get_items() as $item ) {
-        $item_tabs_data = $this->core->product->get_tabs_fields_values($item->get_product_id());
-        if ( ! empty($item_tabs_data[$this->core->params_prefix . 'dangerous_lqweight']) ) {
-          $dangerous_goods['weight'] += ($item_tabs_data[$this->core->params_prefix . 'dangerous_lqweight'] * $item->get_quantity());
-          $dangerous_goods['count'] += $item->get_quantity();
-        }
-      }
+      $dangerous_goods = $this->core->product->calc_order_dangerous_goods($order, 'kg');
 
       if ( ! empty($chosen_shipping_method) ) {
         $method_id = $chosen_shipping_method->get_method_id();

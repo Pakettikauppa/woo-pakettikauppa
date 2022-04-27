@@ -178,6 +178,47 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
       return $fields_values;
     }
 
+    public function calc_order_dangerous_goods( $order, $weight_unit = 'g' ) {
+      $dangerous_goods = array(
+        'weight' => 0,
+        'count' => 0,
+      );
+
+      foreach ( $order->get_items() as $item ) {
+        $item_tabs_data = $this->get_tabs_fields_values($item->get_product_id());
+        $item_data_key = $this->core->params_prefix . 'dangerous_lqweight';
+        if ( ! empty($item_tabs_data[$item_data_key]) ) {
+          $dangerous_goods['weight'] += $item_tabs_data[$item_data_key] * $item->get_quantity();
+          $dangerous_goods['count'] += $item->get_quantity();
+        }
+      }
+
+      $dangerous_goods['weight'] = $this->change_number_unit($dangerous_goods['weight'], 'g', $weight_unit);
+
+      return $dangerous_goods;
+    }
+
+    public function change_number_unit( $value, $current_unit, $new_unit ) {
+      $to_kg = array(
+        'mg' => 0.000001,
+        'g' => 0.001,
+        'kg' => 1,
+        't' => 1000,
+        'gr' => 0.0000648,
+        'k' => 0.0002,
+        'oz' => 0.02835,
+        'lb' => 0.45359,
+        'cnt' => 100,
+      );
+
+      if ( isset($to_kg[$current_unit]) && isset($to_kg[$new_unit]) ) {
+        $current_kg = $value * $to_kg[$current_unit];
+        return $current_kg / $to_kg[$new_unit];
+      }
+
+      return $value;
+    }
+
     /**
      * Check if tab is creating or trying use something from existing
      *
@@ -219,12 +260,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
             ),
             array(
               'id' => $this->core->params_prefix . 'dangerous_lqweight',
-              'label' => __('DG weight (kg)', 'woo-pakettikauppa'),
+              'label' => __('DG weight (g)', 'woo-pakettikauppa'),
               'type' => 'number',
               'custom_attributes' => array(
                 'min' => '0',
                 'max' => '',
-                'step'  => '0.001',
+                'step'  => '1',
               ),
               'desc_tip' => true,
               'description' => __('Dangerous goods. Content of hazardous substances in the product.', 'woo-pakettikauppa'),

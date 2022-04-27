@@ -555,22 +555,16 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         return;
       }
 
+      $dangerous_goods = $this->core->product->calc_order_dangerous_goods($order, 'kg');
+
       $services_data = array(
         'lqweight' => array(
           'title' => esc_attr__('Total weight of dangerous goods', 'woo-pakettikauppa'),
-          'value' => 0,
+          'value' => (!empty($dangerous_goods['weight'])) ? $dangerous_goods['weight'] : 0,
           'unit' => 'kg',
-          'show_always' => true,
+          'show_always' => false,
         ),
       );
-
-      $order_items = $order->get_items();
-      foreach ( $order_items as $item ) {
-        $item_tabs_data = $this->core->product->get_tabs_fields_values($item->get_product_id());
-        if ( ! empty($item_tabs_data[$this->core->params_prefix . 'dangerous_lqweight']) ) {
-          $services_data['lqweight']['value'] += ($item_tabs_data[$this->core->params_prefix . 'dangerous_lqweight'] * $item->get_quantity());
-        }
-      }
       ?>
       <div style="clear: both;"></div>
       <h4>
@@ -594,9 +588,20 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             <?php if ( ! empty($service_params['value']) || $service_params['show_always'] === true ) : ?>
               <strong><?php echo $service_params['title']; ?></strong>
               <?php
-              $value_text = $service_params['value'];
-              if ( $service_params['unit'] == 'kg' ) {
-                $value_text = number_format($service_params['value'], 3) . ' kg';
+              if ( empty($service_params['unit']) ) {
+                $service_params['unit'] = '';
+              }
+              $nr_dec = '.'; //Number decimals char
+              $nr_tsd = ' '; //Number thousands char
+              switch ( $service_params['unit'] ) {
+                case 'kg':
+                  $value_text = number_format($service_params['value'], 3, $nr_dec, $nr_tsd) . ' kg';
+                  break;
+                case 'g':
+                  $value_text = number_format($service_params['value'], false, $nr_dec, $nr_tsd) . ' g';
+                  break;
+                default:
+                  $value_text = $service_params['value'];
               }
               echo $value_text;
               ?>
@@ -620,13 +625,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           }
           ?>
         </p>
-        <?php $field_key = $this->core->params_prefix . 'shipping_phone'; ?>
+        <?php /* $field_key = $this->core->params_prefix . 'shipping_phone'; ?>
         <p class="form-field <?php echo $field_key; ?>">
           <label for="<?php echo $field_key; ?>"><?php esc_attr_e('Phone', 'woo-pakettikauppa'); ?></label>
           <input type="text" class="short" name="<?php echo $field_key; ?>" id="<?php echo $field_key; ?>" value="<?php echo esc_attr(get_post_meta($order->get_id(), '_shipping_phone', true)); ?>">
-        </p>
+        </p> */?>
         <?php $field_key = $this->core->params_prefix . 'shipping_email'; ?>
-        <p class="form-field last <?php echo $field_key; ?>">
+        <p class="form-field <?php echo $field_key; ?>">
           <label for="<?php echo $field_key; ?>"><?php esc_attr_e('Email', 'woo-pakettikauppa'); ?></label>
           <input type="email" class="short" name="<?php echo $field_key; ?>" id="<?php echo $field_key; ?>" value="<?php echo esc_attr($order->get_meta('_shipping_email')); ?>">
         </p>
@@ -896,6 +901,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $order_address  = $order->get_shipping_address_1() . ' ' . $order->get_shipping_city();
       $order_country  = $order->get_shipping_country();
 
+      $weight_unit = 'kg';
+      $dangerous_goods = $this->core->product->calc_order_dangerous_goods($order, $weight_unit);
+
       $is_cod = $order->get_payment_method() === 'cod';
       $show_section = 'main';
       if ( empty($service_id) ) {
@@ -948,6 +956,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                           <?php echo $additional_service_names[ $additional_service ]; ?>
                         <?php else : ?>
                           <?php echo $additional_service; ?>
+                        <?php endif; ?>
+                        <?php if ( $additional_service == '3143' ) : ?>
+                          (<?php echo $dangerous_goods['weight'] . ' ' . $weight_unit; ?>)
                         <?php endif; ?>
                       </li>
                     <?php endif; ?>
@@ -1196,10 +1207,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             foreach ( $_REQUEST['for_products'] as $product ) {
               $item_tabs_data = $this->core->product->get_tabs_fields_values($product['prod']);
               if ( ! empty($item_tabs_data[$this->core->params_prefix . 'dangerous_lqweight']) ) {
-                $dangerous_goods['weight'] += ($item_tabs_data[$this->core->params_prefix . 'dangerous_lqweight'] * $product['qty']);
+                $dangerous_goods['weight'] += $item_tabs_data[$this->core->params_prefix . 'dangerous_lqweight'] * $product['qty'];
                 $dangerous_goods['count'] += $product['qty'];
               }
             }
+            $dangerous_goods['weight'] = $this->core->product->change_number_unit($dangerous_goods['weight'], 'g', 'kg');
 
             $settings = $this->shipment->get_settings();
             $additional_services_with_params = array(
