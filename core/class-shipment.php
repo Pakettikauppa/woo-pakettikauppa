@@ -1478,6 +1478,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             'mode' => 'test',
             'account_number' => '00000000-0000-0000-0000-000000000000',
             'secret_key' => '1234567890ABCDEF',
+            'pickup_points' => '',
+            'sender_name' => get_bloginfo('name'),
+            'sender_address' => get_option('woocommerce_store_address'),
+            'sender_city' => get_option('woocommerce_store_city'),
+            'sender_phone' => '',
+            'sender_postal_code' => get_option('woocommerce_store_postcode'),
+            'show_pickup_point_override_query' => '',
+            'label_additional_info' => '',
+            'download_type_of_labels' => '',
           );
         }
       }
