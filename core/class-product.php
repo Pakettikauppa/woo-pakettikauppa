@@ -296,7 +296,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
                 'step'  => '1',
               ),
               'desc_tip' => true,
-              'description' => __('Dangerous goods. Content of hazardous substances in the product.', 'woo-pakettikauppa'),
+              'description' => __('Amount of hazardous subtances in the product as grams.', 'woo-pakettikauppa'),
             ),
           ),
         ),
