@@ -43,6 +43,11 @@ select.pakettikauppa_metabox_values {
   width: 100%;
 }
 
+.pakettikauppa-metabox-fieldset .service_info {
+  color: #999;
+  font-style: italic;
+}
+
 .pakettikauppa-notice {
   background: #fff;
   border: 1px solid #ccd0d4;
@@ -161,6 +166,14 @@ table .pakettikauppa-notice p {
 }
 .pakettikauppa-global-labels-buttons button {
   width: 100%;
+}
+.pakettikauppa-shiplabel .label_time,
+.pakettikauppa-returnlabel .label_time {
+  position: absolute;
+  bottom: 0;
+  right: 3px;
+  font-size: 80%;
+  opacity: 0.6;
 }
 
 /* Labels folded-corner design */

@@ -229,6 +229,22 @@ function update_prod_select(list, quantity, txt) {
     txt.value = '-'
     resize_textarea(txt);
   }
+
+  update_lqweight_span(list, quantity);
+}
+
+function update_lqweight_span(list, quantity) {
+  var total_weight = 0;
+  for ( var i = 0; i < list.length; i++ ) {
+    if ( list[ i ].checked ) {
+      total_weight += list[ i ].getAttribute('data-lqweight') * quantity[ i ].value;
+    }
+  }
+
+  var all_spans = document.querySelectorAll( '.pakettikauppa-services .changeable_lqweight' );
+  for ( var i = 0; i < all_spans.length; i++ ) {
+    all_spans[i].innerHTML = total_weight;
+  }
 }
 
 function resize_textarea(element) {
