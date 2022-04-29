@@ -1572,8 +1572,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
               echo sprintf("%1\$s: %2\$s.\n", __('Pickup point', 'woo-pakettikauppa'), '—');
             }
           }
-          /* translators: Shipment tracking url */
-          echo sprintf(__("You can track your order at %1\$s.\n\n", 'woo-pakettikauppa'), esc_url($code['url']));
+          /* translators: Shipment tracking URL */
+          echo sprintf(__('You can track your order at %1$s.', 'woo-pakettikauppa'), esc_url($code['url'])) . "\n\n";
         } else {
           echo '<p>';
           if ( $add_pickup_point_to_email === 'yes' ) {
@@ -1583,8 +1583,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
               echo '<b>' . esc_attr__('Pickup point', 'woo-pakettikauppa') . ':</b> —<br/>';
             }
           }
-          /* translators: 1: Shipment tracking URL 2: Shipment tracking code */
-          echo sprintf(__('You can <a href="%1$s">track your order</a> with tracking code <b>%2$s</b>.', 'woo-pakettikauppa'), esc_url($code['url']), esc_attr($code['code'])) . '</p>';
+          /* translators: 1: Shipment tracking link with text "track your order" 2: Shipment tracking code */
+          echo sprintf(__('You can %1$s with tracking code %2$s.', 'woo-pakettikauppa'), '<a href="' . esc_url($code['url']) . '">' . __('track your order', 'woo-pakettikauppa') . '</a>', '<b>' . esc_attr($code['code']) . '</b>') . '</p>';
         }
       }
     }
