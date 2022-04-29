@@ -102,7 +102,8 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
-= 3.5.3 =
+= 3.6.0 =
+* New feature: LQ-shipments
 * New feature: If shipping postcode is missing, use billing address
 * Bug fixes
 
