@@ -43,6 +43,11 @@ select.pakettikauppa_metabox_values {
   width: 100%;
 }
 
+.pakettikauppa-metabox-fieldset .service_info {
+  color: #999;
+  font-style: italic;
+}
+
 .pakettikauppa-notice {
   background: #fff;
   border: 1px solid #ccd0d4;

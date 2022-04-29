@@ -185,10 +185,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
       );
 
       foreach ( $order->get_items() as $item ) {
-        $item_tabs_data = $this->get_tabs_fields_values($item->get_product_id());
-        $item_data_key = $this->core->params_prefix . 'dangerous_lqweight';
-        if ( ! empty($item_tabs_data[$item_data_key]) ) {
-          $dangerous_goods['weight'] += $item_tabs_data[$item_data_key] * $item->get_quantity();
+        $dg_weight = $this->get_product_dg_weight($item->get_product_id());
+        if ( $dg_weight > 0 ) {
+          $dangerous_goods['weight'] += $dg_weight * $item->get_quantity();
           $dangerous_goods['count'] += $item->get_quantity();
         }
       }
@@ -196,6 +195,35 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
       $dangerous_goods['weight'] = $this->change_number_unit($dangerous_goods['weight'], 'g', $weight_unit);
 
       return $dangerous_goods;
+    }
+
+    public function calc_selected_dangerous_goods( $selected_products, $weight_unit = 'g' ) {
+      $dangerous_goods = array(
+        'weight' => 0,
+        'count' => 0,
+      );
+
+      foreach ( $selected_products as $product ) {
+        $item_tabs_data = $this->get_tabs_fields_values($product['prod']);
+        if ( ! empty($item_tabs_data[$this->core->params_prefix . 'dangerous_lqweight']) ) {
+          $dangerous_goods['weight'] += $item_tabs_data[$this->core->params_prefix . 'dangerous_lqweight'] * $product['qty'];
+          $dangerous_goods['count'] += $product['qty'];
+        }
+      }
+      
+      $dangerous_goods['weight'] = $this->change_number_unit($dangerous_goods['weight'], 'g', $weight_unit);
+
+      return $dangerous_goods;
+    }
+
+    public function get_product_dg_weight( $product_id, $weight_unit = 'g' ) {
+      $item_tabs_data = $this->get_tabs_fields_values($product_id);
+      $item_data_key = $this->core->params_prefix . 'dangerous_lqweight';
+      if ( ! empty($item_tabs_data[$item_data_key]) ) {
+        return $this->change_number_unit($item_tabs_data[$item_data_key], 'g', $weight_unit);
+      }
+
+      return 0;
     }
 
     public function change_number_unit( $value, $current_unit, $new_unit ) {

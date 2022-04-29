@@ -801,6 +801,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
               'id' => $item_data['product_id'],
               'name' => $item_data['name'],
               'max' => $item_data['quantity'],
+              'lqweight' => $this->core->product->get_product_dg_weight($item_data['product_id'], 'kg'),
             )
           );
         }
@@ -812,7 +813,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             <?php foreach ( $order_items as $item ) : ?>
               <div class="list list_item">
                 <label for="prod_<?php echo $item['id']; ?>" class="list item_label">
-                  <input type="checkbox" id="prod_<?php echo $item['id']; ?>" class="list item_cb" value="<?php echo $item['id']; ?>" data-name="<?php echo $item['name']; ?>" />
+                  <input type="checkbox" id="prod_<?php echo $item['id']; ?>" class="list item_cb" value="<?php echo $item['id']; ?>" data-name="<?php echo $item['name']; ?>" data-lqweight="<?php echo $item['lqweight']; ?>" />
                   <span><?php echo $item['name']; ?> </span>
                   <input type="hidden" class="list quantity" min="1" max="<?php echo $item['max']; ?>" value="<?php echo $item['max']; ?>" />
                 </label>
@@ -960,7 +961,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                           <?php echo $additional_service; ?>
                         <?php endif; ?>
                         <?php if ( $additional_service == '3143' ) : ?>
-                          (<?php echo $dangerous_goods['weight'] . ' ' . $weight_unit; ?>)
+                          <span class="service_info">(<span class="changeable_lqweight"><?php echo $dangerous_goods['weight']; ?></span> <?php echo $weight_unit; ?>)</span>
                         <?php endif; ?>
                       </li>
                     <?php endif; ?>
@@ -1018,23 +1019,33 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                   <?php $show_3102 = false; ?>
                   <?php foreach ( $_additional_services as $additional_service ) : ?>
                     <?php if ( empty($additional_service->specifiers) || $additional_service->service_code === '3101' ) : ?>
-                      <li>
+                      <?php $elem_id = 'pk_custom_service_' . $method_code . '_' . $additional_service->service_code; ?>
+                      <?php $info_text = ''; ?>
+                      <?php if ( $additional_service->service_code === '3143' ) : ?>
+                        <?php $info_text = '<span class="changeable_lqweight">' . $dangerous_goods['weight'] . '</span> kg'; ?>
+                      <?php endif; ?>
+                      <li class="service-<?php echo $additional_service->service_code; ?>">
                         <input
                                 type="checkbox"
+                                id="<?php echo $elem_id; ?>"
                                 class="pakettikauppa_metabox_array_values"
                                 name="wc_pakettikauppa_additional_services"
                                 value="<?php echo $additional_service->service_code; ?>"
                                 <?php echo ($additional_service->service_code === '3101' && $is_cod || in_array($additional_service->service_code, $default_additional_services) ? 'checked': ''); ?>
-                                > <?php echo $additional_service->name; ?>
+                                />
+                        <label for="<?php echo $elem_id; ?>"><?php echo $additional_service->name; ?></label>
+                        <?php if ( ! empty($info_text) ) : ?>
+                          <span class="service_info">(<?php echo $info_text; ?>)</span>
+                        <?php endif; ?>
                       </li>
                     <?php elseif ( $additional_service->service_code === '3102' ) : ?>
                       <?php $show_3102 = true; ?>
                     <?php endif; ?>
                   <?php endforeach; ?>
                   <?php if ( $show_3102 ) : ?>
-                    <li>
+                    <li class="service-3102">
                       <?php echo esc_html__('Parcel count', 'woo-pakettikauppa'); ?>:
-                      <input class="pakettikauppa_metabox_values" type="number" name="wc_pakettikauppa_mps_count" value="1" style="width: 3em;" min="1" step="1" max="15">
+                      <input class="pakettikauppa_metabox_values" type="number" name="wc_pakettikauppa_mps_count" value="1" style="width: 4em;" min="1" step="1" max="15">
                     </li>
                   <?php endif; ?>
                 </ol>
@@ -1190,6 +1201,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           }
 
           $pickup_point_id = $order->get_meta('_' . $this->core->params_prefix . 'pickup_point_id');
+          $selected_products = (! empty($_REQUEST['for_products']) ) ? $_REQUEST['for_products'] : array();
 
           if ( empty($_REQUEST['custom_method']) ) {
             $additional_services = null;
@@ -1202,19 +1214,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           } else {
             $additional_services = array();
 
-            $dangerous_goods = array(
-              'weight' => 0,
-              'count' => 0,
-            );
-            foreach ( $_REQUEST['for_products'] as $product ) {
-              $item_tabs_data = $this->core->product->get_tabs_fields_values($product['prod']);
-              if ( ! empty($item_tabs_data[$this->core->params_prefix . 'dangerous_lqweight']) ) {
-                $dangerous_goods['weight'] += $item_tabs_data[$this->core->params_prefix . 'dangerous_lqweight'] * $product['qty'];
-                $dangerous_goods['count'] += $product['qty'];
-              }
-            }
-            $dangerous_goods['weight'] = $this->core->product->change_number_unit($dangerous_goods['weight'], 'g', 'kg');
-
             $settings = $this->shipment->get_settings();
             $additional_services_with_params = array(
               '3101' => array(
@@ -1223,11 +1222,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                 'codbic' => $settings['cod_bic'],
                 'reference' => $this->shipment->calculate_reference($order->get_id()),
               ),
-              '3143' => array(
+            );
+
+            $dangerous_goods = $this->core->product->calc_selected_dangerous_goods($selected_products, 'kg');
+            if ( ! empty($dangerous_goods['weight']) ) {
+              $additional_services_with_params['3143'] = array(
                 'lqweight' => $dangerous_goods['weight'],
                 'lqcount' => $dangerous_goods['count'],
-              ),
-            );
+              );
+            }
 
             if ( ! empty($_REQUEST['additional_services']) ) {
               foreach ( $_REQUEST['additional_services'] as $_additional_service_code ) {
@@ -1260,7 +1263,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             $extra_params['additional_text'] = sanitize_textarea_field($_REQUEST['additional_text']);
           }
 
-          $tracking_code = $this->shipment->create_shipment($order, $service_id, $additional_services, $_REQUEST['for_products'], $extra_params);
+          $tracking_code = $this->shipment->create_shipment($order, $service_id, $additional_services, $selected_products, $extra_params);
 
           return $tracking_code;
           break;
