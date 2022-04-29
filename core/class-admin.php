@@ -1201,7 +1201,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           }
 
           $pickup_point_id = $order->get_meta('_' . $this->core->params_prefix . 'pickup_point_id');
-          $selected_products = (! empty($_REQUEST['for_products']) ) ? $_REQUEST['for_products'] : array();
+          $selected_products = (! empty($_REQUEST['for_products'])) ? $_REQUEST['for_products'] : array();
 
           if ( empty($_REQUEST['custom_method']) ) {
             $additional_services = null;

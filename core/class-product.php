@@ -210,7 +210,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Product') ) {
           $dangerous_goods['count'] += $product['qty'];
         }
       }
-      
+
       $dangerous_goods['weight'] = $this->change_number_unit($dangerous_goods['weight'], 'g', $weight_unit);
 
       return $dangerous_goods;

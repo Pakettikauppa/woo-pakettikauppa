@@ -242,8 +242,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           );
         }
 
-        $dangerous_goods = $this->core->product->calc_selected_dangerous_goods( $selected_products, 'kg' );
-        for ( $i = 0; $i < count($additional_services); $i++ ) {
+        $dangerous_goods = $this->core->product->calc_selected_dangerous_goods($selected_products, 'kg');
+        $count_services = count($additional_services);
+        for ( $i = 0; $i < $count_services; $i++ ) {
           if ( isset($additional_services[$i]['3143']) && $additional_services[$i]['3143']['lqweight'] != $dangerous_goods['weight'] ) {
             $additional_services[$i]['3143']['lqweight'] = $dangerous_goods['weight'];
             $additional_services[$i]['3143']['lqcount'] = $dangerous_goods['count'];
