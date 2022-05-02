@@ -242,7 +242,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           );
         }
 
-        $dangerous_goods = $this->core->product->calc_selected_dangerous_goods($selected_products, 'kg');
+        if ( ! empty($selected_products) ) {
+          $dangerous_goods = $this->core->product->calc_selected_dangerous_goods($selected_products, 'kg');
+        } else {
+          $dangerous_goods = $this->core->product->calc_order_dangerous_goods($order, 'kg');
+        }
         $count_services = count($additional_services);
         for ( $i = 0; $i < $count_services; $i++ ) {
           if ( isset($additional_services[$i]['3143']) && $additional_services[$i]['3143']['lqweight'] != $dangerous_goods['weight'] ) {
@@ -1364,12 +1368,18 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           }
 
           if ( ! empty($services) ) {
+            $check_separately = array( '3101', '3143' );
             foreach ( $services as $service_code => $service ) {
-              if ( $service === 'yes' && $service_code != '3101' ) {
+              if ( $service !== 'yes' ) {
+                continue;
+              }
+              if ( ! in_array($service_code, $check_separately) ) {
                 $additional_services[] = array( $service_code => null );
-              } elseif ( $service === 'yes' && $service_code == '3101' ) {
+              }
+              if ( $service_code == '3101' ) {
                 $add_cod_to_additional_services = true;
-              } elseif ( $dangerous_goods['count'] > 0 && $service_code == '3143' ) {
+              }
+              if ( $dangerous_goods['count'] > 0 && $service_code == '3143' ) {
                 $add_dangerous_good_to_additional_services = true;
               }
             }
