@@ -24,7 +24,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
 
     public function setup_title() {
       /* translators: %s: Vendor full name */
-      return sprintf(esc_html__('%s&rsaquo; Setup Wizard', 'woo-pakettikauppa'), $this->core->vendor_fullname);
+      return sprintf(esc_html__('%s Setup Wizard', 'woo-pakettikauppa'), $this->core->vendor_fullname);
     }
 
     public function setup_button_text() {
@@ -277,13 +277,16 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
     }
 
     public function shipping_settings_desc() {
+      $url =  'https://docs.woocommerce.com/document/setting-up-shipping-zones/';
       return sprintf(
         /*
          * translators:
-         * %1$s: WooCommerce URL, not translatable
+         * %1$s: Steps to Shipping zones page
+         * %2$s: WooCommerce URL, not translatable
          */
-        __('You can activate new shipping method to checkout in <b>WooCommerce > Settings > Shipping > Shipping zones</b>. For more information, see <a target="_blank" href="%1$s">%1$s</a>', 'woo-pakettikauppa'),
-        'https://docs.woocommerce.com/document/setting-up-shipping-zones/'
+        __('You can activate new shipping method to checkout in %1$s. For more information, see %2$s', 'woo-pakettikauppa'),
+        '<b>' . __('WooCommerce > Settings > Shipping > Shipping zones', 'woo-pakettikauppa') . '</b>',
+        '<a target="_blank" href="' . $url . '">' . $url . '</a>'
       );
     }
 
