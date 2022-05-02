@@ -242,7 +242,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           );
         }
 
-        $dangerous_goods = $this->core->product->calc_selected_dangerous_goods($selected_products, 'kg');
+        if ( ! empty($selected_products) ) {
+          $dangerous_goods = $this->core->product->calc_selected_dangerous_goods($selected_products, 'kg');
+        } else {
+          $dangerous_goods = $this->core->product->calc_order_dangerous_goods($order, 'kg');
+        }
         $count_services = count($additional_services);
         for ( $i = 0; $i < $count_services; $i++ ) {
           if ( isset($additional_services[$i]['3143']) && $additional_services[$i]['3143']['lqweight'] != $dangerous_goods['weight'] ) {
