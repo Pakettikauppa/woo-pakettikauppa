@@ -1368,7 +1368,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           }
 
           if ( ! empty($services) ) {
-            $check_separately = array('3101', '3143');
+            $check_separately = array( '3101', '3143' );
             foreach ( $services as $service_code => $service ) {
               if ( $service !== 'yes' ) {
                 continue;
