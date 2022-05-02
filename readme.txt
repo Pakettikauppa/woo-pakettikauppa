@@ -105,7 +105,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 = 3.6.0 =
 * New feature: LQ-shipments
 * New feature: If shipping postcode is missing, use billing address
-* Bug fixes
+* New feature: LT translation
+* Tested against woocommerce 4.6.1 and wordpress 5.9.2
+* Various bug fixes
 
 = 3.5.2 =
 * Diagnostic tool bug fix when using Posti Shipping version
