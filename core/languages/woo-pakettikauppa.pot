@@ -11,61 +11,55 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-12-20 07:43+0000\n"
+"POT-Creation-Date: 2022-05-02 12:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: Loco https://localise.biz/\n"
 "X-Domain: woo-pakettikauppa\n"
 "Language: \n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;"
 
-#: core/class-admin.php:200
-msgid ""
-"\"Country of origin\" means the country where the goods originated, e.g. "
-"were produced/manufactured or assembled."
-msgstr ""
-
 #. %s: Vendor full name
-#: core/class-admin.php:423
+#: core/class-admin.php:426
 #, php-format
 msgid ""
 "%s has been installed/updated but no shipping methods are currently active!"
 msgstr ""
 
 #. %s: Vendor full name
-#: core/class-text.php:421
+#: core/class-text.php:424
 #, php-format
 msgid "%s requires WooCommerce to be installed and activated!"
-msgstr ""
-
-#. %s: Vendor name
-#: core/class-admin.php:555
-#, php-format
-msgid "%s Shipping"
 msgstr ""
 
 #. %s: Vendor full name
 #: core/class-text.php:27
 #, php-format
-msgid "%s&rsaquo; Setup Wizard"
+msgid "%s Setup Wizard"
 msgstr ""
 
-#: core/class-text.php:461
+#. %s: Vendor name
+#: core/class-admin.php:573
+#, php-format
+msgid "%s Shipping"
+msgstr ""
+
+#: core/class-text.php:464
 msgid "Add additional text on labels"
 msgstr ""
 
-#: core/class-text.php:295
+#: core/class-text.php:298
 msgid "Add selected pickup point information to the order completed email"
 msgstr ""
 
-#: core/class-text.php:291
+#: core/class-text.php:294
 msgid "Add tracking link to the order completed email"
 msgstr ""
 
-#: core/class-admin.php:879
+#: core/class-admin.php:953
 msgid "Additional services"
 msgstr ""
 
-#: core/class-text.php:408
+#: core/class-text.php:411
 msgid "Advanced settings"
 msgstr ""
 
@@ -73,26 +67,31 @@ msgstr ""
 msgid "After which amount shipping is free."
 msgstr ""
 
+#: core/class-product.php:299
+msgid "Amount of hazardous subtances in the product as grams."
+msgstr ""
+
 #: core/class-shipment.php:190
 msgid "An error occurred while checking API credentials"
 msgstr ""
 
-#: core/class-text.php:429
+#: core/class-text.php:432
 msgid "An error occurred while searching for pickup points."
 msgstr ""
 
-#: core/class-frontend.php:171
+#: core/class-frontend.php:158
 msgid "An error occurred. Please try again later."
 msgstr ""
 
 #. %s: Error message
-#: core/class-admin.php:461 core/class-admin.php:1276 core/class-admin.php:1312
-#: core/class-admin.php:1346 core/class-shipment.php:258
+#: core/class-shipment.php:274 core/class-admin.php:464
+#: core/class-admin.php:1386 core/class-admin.php:1422
+#: core/class-admin.php:1456
 #, php-format
 msgid "An error occurred: %s"
 msgstr ""
 
-#: core/class-shipping-method.php:190
+#: core/class-shipping-method.php:151
 msgid "API error!"
 msgstr ""
 
@@ -128,15 +127,15 @@ msgstr ""
 msgid "Bad API key or API secret"
 msgstr ""
 
-#: core/class-text.php:400
+#: core/class-text.php:403
 msgid "Bank account number for Cash on Delivery (IBAN)"
 msgstr ""
 
-#: core/class-text.php:404
+#: core/class-text.php:407
 msgid "BIC code for Cash on Delivery"
 msgstr ""
 
-#: core/class-text.php:324
+#: core/class-text.php:327
 msgid "Browser"
 msgstr ""
 
@@ -154,15 +153,15 @@ msgid ""
 "and firewall settings."
 msgstr ""
 
-#: core/class-admin.php:1369
+#: core/class-admin.php:1486
 msgid "Cannot find shipment with given shipment number."
 msgstr ""
 
-#: core/class-admin.php:357
+#: core/class-admin.php:352
 msgid "Cannot find shipments with given shipment numbers."
 msgstr ""
 
-#: core/class-text.php:396
+#: core/class-text.php:399
 msgid "Cash on Delivery (COD) Settings"
 msgstr ""
 
@@ -170,7 +169,7 @@ msgstr ""
 msgid "Checking URL "
 msgstr ""
 
-#: core/class-frontend.php:420
+#: templates/pakettikauppa/checkout-pickup.php:22
 msgid "Choose one of pickup points close to the address you entered:"
 msgstr ""
 
@@ -192,36 +191,36 @@ msgstr ""
 msgid "Could not read version"
 msgstr ""
 
-#: core/class-admin.php:198
+#: core/class-product.php:283
 msgid "Country of origin"
 msgstr ""
 
-#: core/class-admin.php:1026
+#: core/class-admin.php:1114
 msgid "Create"
 msgstr ""
 
-#: core/class-admin.php:269 core/class-admin.php:272
+#: core/class-admin.php:261 core/class-admin.php:264
 msgid "Create and fetch shipping labels"
 msgstr ""
 
-#: core/class-admin.php:738
+#: core/class-admin.php:809
 msgid "Create for products"
 msgstr ""
 
-#: core/class-admin.php:710
+#: core/class-admin.php:780
 msgid "Create Return Label"
 msgstr ""
 
-#: core/class-admin.php:304
+#: core/class-admin.php:296
 msgid "Create shipping label"
 msgstr ""
 
-#: core/class-text.php:307
+#: core/class-text.php:310
 msgid "Create shipping labels automatically"
 msgstr ""
 
 #. 1: Shipping service title 2: Shipment tracking code 3: Shipping label URL 4: Shipment tracking URL
-#: core/class-shipment.php:359
+#: core/class-shipment.php:375
 #, php-format
 msgid "Created %1$s shipment.<br>%2$s<br>%1$s - %3$s<br>%4$s"
 msgstr ""
@@ -238,11 +237,11 @@ msgstr ""
 msgid "Curl not installed"
 msgstr ""
 
-#: core/class-text.php:437
+#: core/class-text.php:440
 msgid "Custom pickup address"
 msgstr ""
 
-#: core/class-admin.php:1020
+#: core/class-admin.php:1107
 msgid "Custom shipping..."
 msgstr ""
 
@@ -254,35 +253,39 @@ msgstr ""
 msgid "Default shipping class cost"
 msgstr ""
 
-#: core/class-admin.php:672 core/class-admin.php:698
+#: core/class-admin.php:741 core/class-admin.php:768
 msgid "Delete"
 msgstr ""
 
 #. %%s: tracking code
-#: core/class-admin.php:1302
+#: core/class-admin.php:1412
 #, php-format
 msgid "Deleted %1$s return label %2$s."
 msgstr ""
 
 #. %1$s: Vendor name, %2$s: tracking code
-#: core/class-admin.php:1269
+#: core/class-admin.php:1379
 #, php-format
 msgid "Deleted %1$s shipping label %2$s."
 msgstr ""
 
 #. %1$s: Vendor name, %2$s: Error message
-#: core/class-admin.php:1319
+#: core/class-admin.php:1429
 #, php-format
 msgid "Deleting %1$s return label failed! Errors: %2$s"
 msgstr ""
 
 #. %1$s: Vendor name, %2$s: Error message
-#: core/class-admin.php:1283
+#: core/class-admin.php:1393
 #, php-format
 msgid "Deleting %1$s shipment failed! Errors: %2$s"
 msgstr ""
 
-#: core/class-text.php:328
+#: core/class-product.php:291
+msgid "DG weight (g)"
+msgstr ""
+
+#: core/class-text.php:331
 msgid "Download"
 msgstr ""
 
@@ -290,15 +293,19 @@ msgstr ""
 msgid "Edit to select shipping company and shipping prices."
 msgstr ""
 
-#: core/class-admin.php:570
+#: core/class-admin.php:637
 msgid "Email"
 msgstr ""
 
-#: core/class-frontend.php:377
+#: core/class-frontend.php:366
 msgid "Empty postcode. Please check your address information."
 msgstr ""
 
-#: core/class-shipment.php:783
+#: core/class-admin.php:1480
+msgid "Error"
+msgstr ""
+
+#: core/class-shipment.php:809
 msgid "error"
 msgstr ""
 
@@ -319,14 +326,18 @@ msgid "Failed to connect with server"
 msgstr ""
 
 #. %s: Error message
-#: core/class-shipment.php:267 core/class-shipment.php:272
+#: core/class-shipment.php:283 core/class-shipment.php:288
 msgid "Failed to create shipment."
 msgstr ""
 
 #. %s: Error message
-#: core/class-shipment.php:253
+#: core/class-shipment.php:269
 #, php-format
 msgid "Failed to create shipment. Errors: %s"
+msgstr ""
+
+#: core/class-admin.php:1479
+msgid "Failed to get shipment label."
 msgstr ""
 
 #: core/class-check-tool.php:228
@@ -341,7 +352,7 @@ msgstr ""
 msgid "Free shipping tier"
 msgstr ""
 
-#: core/class-admin.php:190
+#: core/class-product.php:276
 msgid "HS tariff number"
 msgstr ""
 
@@ -353,7 +364,7 @@ msgstr ""
 msgid "https://pakettikauppa.fi/"
 msgstr ""
 
-#: core/class-text.php:433
+#: core/class-text.php:436
 msgid ""
 "If none of your preferred pickup points are listed, fill in a custom address "
 "above and select another pickup point."
@@ -376,7 +387,7 @@ msgstr ""
 msgid "includes pickup points"
 msgstr ""
 
-#: core/class-text.php:392
+#: core/class-text.php:395
 msgid "Info-code for shipments"
 msgstr ""
 
@@ -389,12 +400,12 @@ msgid "Installed"
 msgstr ""
 
 #. %s: Postcode
-#: core/class-frontend.php:383
+#: core/class-frontend.php:370
 #, php-format
 msgid "Invalid postcode \"%1$s\". Please check your address information."
 msgstr ""
 
-#: core/class-admin.php:1195
+#: core/class-admin.php:1298
 msgid ""
 "It is not allowed to create a return label when shipping labels not exists"
 msgstr ""
@@ -431,11 +442,11 @@ msgstr ""
 msgid "Item not delivered – delivery attempt made"
 msgstr ""
 
-#: core/class-admin.php:633 core/class-admin.php:694
+#: core/class-admin.php:702 core/class-admin.php:764
 msgid "Label code"
 msgstr ""
 
-#: core/class-shipment.php:376
+#: core/class-shipment.php:392
 msgid "Label posted to URL successfully."
 msgstr ""
 
@@ -443,7 +454,7 @@ msgstr ""
 msgid "Let's start!"
 msgstr ""
 
-#: core/class-text.php:344
+#: core/class-text.php:347
 msgid "Limit the amount of nearest pickup points shown."
 msgstr ""
 
@@ -453,11 +464,11 @@ msgstr ""
 msgid "Link to %s website"
 msgstr ""
 
-#: core/class-text.php:356
+#: core/class-text.php:359
 msgid "List"
 msgstr ""
 
-#: core/class-text.php:352
+#: core/class-text.php:355
 msgid "Menu"
 msgstr ""
 
@@ -469,27 +480,27 @@ msgstr ""
 msgid "Mode"
 msgstr ""
 
-#: core/class-text.php:469
+#: core/class-text.php:472
 msgid "Names of the goods in the shipment"
 msgstr ""
 
-#: core/class-text.php:311
+#: core/class-text.php:314
 msgid "No automatic creation of shipping labels"
 msgstr ""
 
-#: core/class-text.php:303
+#: core/class-text.php:306
 msgid "No order status change"
 msgstr ""
 
-#: core/class-admin.php:984
+#: core/class-admin.php:1071
 msgid "No pickup points were found"
 msgstr ""
 
-#: core/class-text.php:425
+#: core/class-text.php:428
 msgid "No pickup points were found. Check the address."
 msgstr ""
 
-#: core/class-admin.php:920 core/class-text.php:51
+#: core/class-text.php:51 core/class-admin.php:997
 msgid "No shipping"
 msgstr ""
 
@@ -497,7 +508,7 @@ msgstr ""
 msgid "No shipping class cost (vat included)"
 msgstr ""
 
-#: core/class-admin.php:846
+#: core/class-admin.php:920
 msgid "No shipping method configured! Configure shipping method from settings."
 msgstr ""
 
@@ -530,7 +541,7 @@ msgid ""
 "plugin."
 msgstr ""
 
-#: core/class-text.php:465
+#: core/class-text.php:468
 msgid "Order number"
 msgstr ""
 
@@ -538,11 +549,11 @@ msgstr ""
 msgid "Order Processing"
 msgstr ""
 
-#: core/class-admin.php:1021
+#: core/class-admin.php:1108
 msgid "Original shipping..."
 msgstr ""
 
-#: core/class-frontend.php:567
+#: core/class-frontend.php:551
 msgid "Other"
 msgstr ""
 
@@ -564,43 +575,40 @@ msgid ""
 "Matkahuolto, DB Schenker and others."
 msgstr ""
 
-#: core/class-admin.php:894 core/class-admin.php:960
+#: core/class-admin.php:971 core/class-admin.php:1047
 msgid "Parcel count"
-msgstr ""
-
-#: core/class-admin.php:566
-msgid "Phone"
 msgstr ""
 
 #: core/class-check-tool.php:76
 msgid "PHP version"
 msgstr ""
 
-#: core/class-text.php:441
+#: core/class-text.php:444
 msgid "Pickup address"
 msgstr ""
 
 #. 1: Name 2: Shipment tracking code
-#: core/class-admin.php:636 core/class-admin.php:1453 core/class-admin.php:1455
-#: core/class-admin.php:1464 core/class-admin.php:1466
-#: core/class-frontend.php:365 core/class-frontend.php:366
-#: core/class-frontend.php:585
+#: core/class-admin.php:705 core/class-admin.php:1570 core/class-admin.php:1572
+#: core/class-admin.php:1581 core/class-admin.php:1583
+#: templates/pakettikauppa/myaccount-order.php:10
+#: templates/pakettikauppa/checkout-pickup.php:14
+#: templates/pakettikauppa/checkout-pickup.php:15
 msgid "Pickup point"
 msgstr ""
 
-#: core/class-text.php:340
+#: core/class-text.php:343
 msgid "Pickup point search limit"
 msgstr ""
 
-#: core/class-shipping-method.php:370
+#: core/class-shipping-method.php:331
 msgid "Pickup points"
 msgstr ""
 
-#: core/class-admin.php:779
+#: core/class-admin.php:850
 msgid "Please add shipping info to the order to manage shipments."
 msgstr ""
 
-#: core/class-frontend.php:609
+#: core/class-frontend.php:592
 msgid "Please choose a pickup point."
 msgstr ""
 
@@ -622,13 +630,13 @@ msgid ""
 "will be used as the sender in shipping labels."
 msgstr ""
 
-#: core/class-text.php:336
+#: core/class-text.php:339
 msgid ""
 "Plugin can upload shipping label to an URL when creating shipping label. "
 "Define URL if you want to upload PDF."
 msgstr ""
 
-#: core/class-text.php:332
+#: core/class-text.php:335
 msgid "Post shipping label to URL"
 msgstr ""
 
@@ -636,7 +644,7 @@ msgstr ""
 msgid "Posti Shipping diagnostic tool"
 msgstr ""
 
-#: core/class-shipment.php:372
+#: core/class-shipment.php:388
 msgid "Posting label to URL failed!"
 msgstr ""
 
@@ -648,15 +656,15 @@ msgstr ""
 msgid "Price (vat included)"
 msgstr ""
 
-#: core/class-admin.php:667 core/class-admin.php:696
+#: core/class-admin.php:736 core/class-admin.php:766
 msgid "Print"
 msgstr ""
 
-#: core/class-shipment.php:351
+#: core/class-shipment.php:367
 msgid "Print document"
 msgstr ""
 
-#: core/class-text.php:320
+#: core/class-text.php:323
 msgid "Print labels"
 msgstr ""
 
@@ -664,7 +672,7 @@ msgstr ""
 msgid "Production environment"
 msgstr ""
 
-#: core/class-admin.php:664
+#: core/class-admin.php:733
 msgid "Products"
 msgstr ""
 
@@ -672,39 +680,43 @@ msgstr ""
 msgid "Ready!"
 msgstr ""
 
-#: core/class-admin.php:671
+#: core/class-admin.php:181
+msgid "Received Post ID is not a number"
+msgstr ""
+
+#: core/class-admin.php:740
 msgid "Refresh"
 msgstr ""
 
-#: core/class-admin.php:556 core/class-admin.php:907
+#: core/class-admin.php:578 core/class-admin.php:619 core/class-admin.php:984
 msgid "Requested pickup point"
 msgstr ""
 
-#: core/class-text.php:453
+#: core/class-text.php:456
 msgid "Restart setup wzard"
 msgstr ""
 
-#: core/class-admin.php:862
+#: core/class-admin.php:936
 msgid "Return labels"
 msgstr ""
 
-#: core/class-admin.php:983 core/class-frontend.php:499
+#: core/class-admin.php:1070 templates/pakettikauppa/checkout-pickup.php:32
 msgid "Search"
 msgstr ""
 
-#: core/class-admin.php:980
+#: core/class-admin.php:1067
 msgid "Search pickup points"
 msgstr ""
 
-#: core/class-text.php:445
+#: core/class-text.php:448
 msgid "Search pickup points near you by typing your address above."
 msgstr ""
 
-#: core/class-admin.php:971
+#: core/class-admin.php:1058
 msgid "Select"
 msgstr ""
 
-#: core/class-frontend.php:529
+#: core/class-frontend.php:513
 msgid "Select a pickup point"
 msgstr ""
 
@@ -712,7 +724,7 @@ msgstr ""
 msgid "Select one shipping method"
 msgstr ""
 
-#: core/class-admin.php:987
+#: core/class-admin.php:1074
 msgid "Select pickup point"
 msgstr ""
 
@@ -722,54 +734,54 @@ msgstr ""
 msgid "Selected shipping method: %s"
 msgstr ""
 
-#: core/class-admin.php:853
+#: core/class-admin.php:927
 msgid "Send order"
 msgstr ""
 
-#: core/class-text.php:368
+#: core/class-text.php:371
 msgid "Sender address"
 msgstr ""
 
-#: core/class-text.php:376
+#: core/class-text.php:379
 msgid "Sender city"
 msgstr ""
 
-#: core/class-text.php:380
+#: core/class-text.php:383
 msgid "Sender country"
 msgstr ""
 
-#: core/class-text.php:388
+#: core/class-text.php:391
 msgid "Sender email"
 msgstr ""
 
-#: core/class-text.php:364
+#: core/class-text.php:367
 msgid "Sender name"
 msgstr ""
 
-#: core/class-text.php:384
+#: core/class-text.php:387
 msgid "Sender phone"
 msgstr ""
 
-#: core/class-text.php:372
+#: core/class-text.php:375
 msgid "Sender postal code"
 msgstr ""
 
 #. %s: Settings page url
-#: core/class-admin.php:935
+#: core/class-admin.php:1012
 #, php-format
 msgid "Service not working. Please check <a href=\"%s\">settings</a>."
 msgstr ""
 
-#: core/class-admin.php:652
+#: core/class-admin.php:721
 msgid "Services"
 msgstr ""
 
-#: core/class-text.php:412
+#: core/class-text.php:415
 msgid "Setup wizard"
 msgstr ""
 
 #. @codingStandardsIgnoreLine
-#: core/class-admin.php:1359
+#: core/class-admin.php:1469
 msgid "Shipment tracking code is not defined."
 msgstr ""
 
@@ -785,7 +797,7 @@ msgstr ""
 msgid "Shipping cost  (vat included)"
 msgstr ""
 
-#: core/class-admin.php:856
+#: core/class-admin.php:930
 msgid "Shipping labels"
 msgstr ""
 
@@ -805,20 +817,20 @@ msgstr ""
 msgid "Shipping settings"
 msgstr ""
 
-#: core/class-text.php:449
+#: core/class-text.php:452
 msgid "Show pickup point override in checkout"
 msgstr ""
 
-#: core/class-text.php:348
+#: core/class-text.php:351
 msgid "Show pickup points as"
 msgstr ""
 
-#: core/class-text.php:416
+#: core/class-text.php:419
 msgid "Show shipping method"
 msgstr ""
 
 #. %s: Vendor name
-#: core/class-admin.php:489
+#: core/class-admin.php:492
 #, php-format
 msgid "Show site %s"
 msgstr ""
@@ -827,7 +839,7 @@ msgstr ""
 msgid "Skip this step"
 msgstr ""
 
-#: core/class-text.php:473
+#: core/class-text.php:476
 msgid "SKU codes of the goods in the shipment"
 msgstr ""
 
@@ -835,11 +847,11 @@ msgstr ""
 msgid "Start the setup wizard"
 msgstr ""
 
-#: core/class-admin.php:631
+#: core/class-admin.php:700
 msgid "Status"
 msgstr ""
 
-#: core/class-text.php:360
+#: core/class-text.php:363
 msgid "Store owner information"
 msgstr ""
 
@@ -856,20 +868,26 @@ msgid ""
 msgstr ""
 
 #. %s: Vendor full name
-#: core/class-admin.php:100 core/class-admin.php:126
+#: core/class-admin.php:126 core/class-admin.php:152
 #, php-format
 msgid ""
 "Thank you for installing %s! To get started smoothly, please open our setup "
 "wizard."
 msgstr ""
 
-#: core/class-admin.php:192
+#: core/class-product.php:287
+msgid ""
+"The country where the goods originated, e.g. were produced/manufactured or "
+"assembled."
+msgstr ""
+
+#: core/class-product.php:279
 msgid ""
 "The HS tariff number must be based on the Harmonized Commodity Description "
 "and Coding System developed by the World Customs Organization."
 msgstr ""
 
-#: core/class-text.php:457
+#: core/class-text.php:460
 msgid ""
 "The pickup point you've chosen is not available for public access. Are you "
 "sure that you can retrieve the package?"
@@ -887,30 +905,42 @@ msgid ""
 "shipping method."
 msgstr ""
 
-#: core/class-admin.php:669 core/class-admin.php:697
-#: core/class-shipment.php:352
+#: core/class-admin.php:562
+msgid "Total weight of dangerous goods"
+msgstr ""
+
+#: core/class-shipment.php:368 core/class-admin.php:738
+#: core/class-admin.php:767
 msgid "Track"
 msgstr ""
 
-#: core/class-admin.php:1444 core/class-admin.php:1446
+#: core/class-admin.php:1587
+msgid "track your order"
+msgstr ""
+
+#: core/class-admin.php:1561 core/class-admin.php:1563
 msgid "Tracking"
 msgstr ""
 
 #. %s: Error message
-#: core/class-shipment.php:986
+#: core/class-shipment.php:1014
 #, php-format
 msgid "Tracking code creation failed: %s"
 msgstr ""
 
-#: core/class-admin.php:1222
+#: core/class-admin.php:1325
 msgid "Unable to create return label for this shipment type."
 msgstr ""
 
-#: core/class-shipment.php:782
+#: core/class-product.php:285
+msgid "Unknown"
+msgstr ""
+
+#: core/class-shipment.php:808
 msgid "Unknown error"
 msgstr ""
 
-#: core/class-admin.php:660
+#: core/class-admin.php:729
 msgid "Unknown product"
 msgstr ""
 
@@ -918,16 +948,16 @@ msgstr ""
 msgid "Unknown status"
 msgstr ""
 
-#: core/class-admin.php:487
+#: core/class-admin.php:490
 msgid "Visit Website"
 msgstr ""
 
-#: core/class-text.php:299
+#: core/class-text.php:302
 msgid "When creating shipping label change order status to"
 msgstr ""
 
 #. order status, pretranslated
-#: core/class-text.php:316
+#: core/class-text.php:319
 #, php-format
 msgid "When order status is \"%s\""
 msgstr ""
@@ -936,6 +966,10 @@ msgstr ""
 #: core/class-check-tool.php:91
 #, php-format
 msgid "WooCommerce %s version"
+msgstr ""
+
+#: core/class-text.php:288
+msgid "WooCommerce > Settings > Shipping > Shipping zones"
 msgstr ""
 
 #. Name of the plugin
@@ -950,26 +984,23 @@ msgstr ""
 msgid "Wordpress version"
 msgstr ""
 
-#. 1: Shipment tracking URL 2: Shipment tracking code
-#: core/class-admin.php:1470
+#. 1: Shipment tracking link with text "track your order" 2: Shipment tracking code
+#: core/class-admin.php:1587
 #, php-format
-msgid ""
-"You can <a href=\"%1$s\">track your order</a> with tracking code <b>%2$s</b>."
+msgid "You can %1$s with tracking code %2$s."
 msgstr ""
 
-#. %1$s: WooCommerce URL, not translatable
-#: core/class-text.php:285
+#. %1$s: Steps to Shipping zones page
+#. %2$s: WooCommerce URL, not translatable
+#: core/class-text.php:287
 #, php-format
 msgid ""
-"You can activate new shipping method to checkout in <b>WooCommerce > "
-"Settings > Shipping > Shipping zones</b>. For more information, see <a "
-"target=\"_blank\" href=\"%1$s\">%1$s</a>"
+"You can activate new shipping method to checkout in %1$s. For more "
+"information, see %2$s"
 msgstr ""
 
-#. Shipment tracking url
-#: core/class-admin.php:1459
+#. Shipment tracking URL
+#: core/class-admin.php:1576
 #, php-format
-msgid ""
-"You can track your order at %1$s.\n"
-"\n"
+msgid "You can track your order at %1$s."
 msgstr ""

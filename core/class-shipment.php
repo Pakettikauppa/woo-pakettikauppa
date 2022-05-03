@@ -241,6 +241,22 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             ),
           );
         }
+
+        if ( ! empty($selected_products) ) {
+          $dangerous_goods = $this->core->product->calc_selected_dangerous_goods($selected_products, 'kg');
+        } else {
+          $dangerous_goods = $this->core->product->calc_order_dangerous_goods($order, 'kg');
+        }
+        $count_services = count($additional_services);
+        for ( $i = 0; $i < $count_services; $i++ ) {
+          if ( isset($additional_services[$i]['3143']) && $additional_services[$i]['3143']['lqweight'] != $dangerous_goods['weight'] ) {
+            $additional_services[$i]['3143']['lqweight'] = $dangerous_goods['weight'];
+            $additional_services[$i]['3143']['lqcount'] = $dangerous_goods['count'];
+          }
+          if ( empty($additional_services[$i]['3143']['lqweight']) ) {
+            unset($additional_services[$i]['3143']);
+          }
+        }
       }
 
       try {
@@ -514,6 +530,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      * @param array $save_values Values for want to save. A 'tracking_code' is required for saving to occur.
      */
     public function save_label( $post_id, $save_values = array() ) {
+      if ( version_compare(get_bloginfo('version'), '5.3.0', '>=') ) {
+        $current_time = strtotime(wp_date('Y-m-d H:i:s'));
+      } else {
+        $current_time = current_time('timestamp');
+      }
+
       $label_values = array_replace(
         array(
           'service_id' => '',
@@ -525,9 +547,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           'shipment_status' => '',
           'products' => array(),
           'additional_services' => array(),
+          'timestamp' => $current_time,
         ),
         $save_values
       );
+
       if ( ! empty($label_values['tracking_code']) ) {
         $all_labels = $this->get_labels($post_id);
         $insert = true;
@@ -938,8 +962,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             continue;
           }
 
-          $tariff_code       = $product->get_meta(str_replace('wc_', '', $this->core->prefix) . '_tariff_codes', true);
-          $country_of_origin = $product->get_meta(str_replace('wc_', '', $this->core->prefix) . '_country_of_origin', true);
+          $tariff_code       = $product->get_meta($this->core->params_prefix . 'tariff_codes', true);
+          $country_of_origin = $product->get_meta($this->core->params_prefix . 'country_of_origin', true);
           $quantity = ($selected_product !== false) ? $selected_product['qty'] : $item->get_quantity();
 
           $products_info[] = array(
@@ -1319,6 +1343,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       $chosen_shipping_method = array_pop($shipping_methods);
 
       $add_cod_to_additional_services = 'cod' === $order->get_payment_method();
+      $add_dangerous_good_to_additional_services = false;
+
+      $dangerous_goods = $this->core->product->calc_order_dangerous_goods($order, 'kg');
 
       if ( ! empty($chosen_shipping_method) ) {
         $method_id = $chosen_shipping_method->get_method_id();
@@ -1341,11 +1368,19 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           }
 
           if ( ! empty($services) ) {
+            $check_separately = array( '3101', '3143' );
             foreach ( $services as $service_code => $service ) {
-              if ( $service === 'yes' && $service_code !== '3101' ) {
+              if ( $service !== 'yes' ) {
+                continue;
+              }
+              if ( ! in_array($service_code, $check_separately) ) {
                 $additional_services[] = array( $service_code => null );
-              } elseif ( $service === 'yes' && $service_code === '3101' ) {
+              }
+              if ( $service_code == '3101' ) {
                 $add_cod_to_additional_services = true;
+              }
+              if ( $dangerous_goods['count'] > 0 && $service_code == '3143' ) {
+                $add_dangerous_good_to_additional_services = true;
               }
             }
           }
@@ -1359,6 +1394,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             'account' => $settings['cod_iban'],
             'codbic' => $settings['cod_bic'],
             'reference' => $this->calculate_reference($order->get_id()),
+          ),
+        );
+      }
+
+      if ( $add_dangerous_good_to_additional_services ) {
+        $additional_services[] = array(
+          '3143' => array(
+            'lqweight' => $dangerous_goods['weight'],
+            'lqcount' => $dangerous_goods['count'],
           ),
         );
       }
@@ -1478,6 +1522,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             'mode' => 'test',
             'account_number' => '00000000-0000-0000-0000-000000000000',
             'secret_key' => '1234567890ABCDEF',
+            'pickup_points' => '',
+            'sender_name' => get_bloginfo('name'),
+            'sender_address' => get_option('woocommerce_store_address'),
+            'sender_city' => get_option('woocommerce_store_city'),
+            'sender_phone' => '',
+            'sender_postal_code' => get_option('woocommerce_store_postcode'),
+            'show_pickup_point_override_query' => '',
+            'label_additional_info' => '',
+            'download_type_of_labels' => '',
           );
         }
       }
