@@ -319,6 +319,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
       return sprintf(__('When order status is "%s"', 'woo-pakettikauppa'), $status);
     }
 
+    public function labels_size_title() {
+      return __('Shipping label size', 'woo-pakettikauppa');
+    }
+
     public function download_type_of_labels_title() {
       return __('Print labels', 'woo-pakettikauppa');
     }

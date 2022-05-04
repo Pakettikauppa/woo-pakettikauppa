@@ -1220,8 +1220,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      * @return SimpleXMLElement
      * @throws Exception
      */
-    public function fetch_shipping_labels( $tracking_codes ) {
-      return $this->client->fetchShippingLabels($tracking_codes);
+    public function fetch_shipping_labels( $tracking_codes, $labels_size = null ) {
+      return $this->client->fetchShippingLabels($tracking_codes/*, $labels_size*/);
     }
 
     /**
@@ -1230,8 +1230,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      * @return SimpleXMLElement
      * @throws Exception
      */
-    public function fetch_shipping_label( $tracking_code ) {
-      return $this->fetch_shipping_labels(array( $tracking_code ));
+    public function fetch_shipping_label( $tracking_code, $labels_size = null ) {
+      return $this->fetch_shipping_labels(array( $tracking_code ), $labels_size);
     }
 
     /**
