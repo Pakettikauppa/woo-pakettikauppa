@@ -1221,7 +1221,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      * @throws Exception
      */
     public function fetch_shipping_labels( $tracking_codes, $labels_size = null ) {
-      return $this->client->fetchShippingLabels($tracking_codes/*, $labels_size*/);
+      return $this->client->fetchShippingLabels($tracking_codes, $labels_size);
     }
 
     /**
