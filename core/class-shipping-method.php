@@ -504,6 +504,17 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           'class'   => 'mode_react',
         ),
 
+        'labels_size'     => array(
+          'title'   => $this->get_core()->text->labels_size_title(),
+          'type'    => 'select',
+          'default' => 'menu',
+          'options' => array(
+            'A5'  => 'A5',
+            '107x225'  => '107x225',
+          ),
+          'class'   => 'mode_react',
+        ),
+
         'download_type_of_labels'     => array(
           'title'   => $this->get_core()->text->download_type_of_labels_title(),
           'type'    => 'select',
