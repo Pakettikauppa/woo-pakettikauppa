@@ -359,9 +359,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
     private function fetch_shipping_labels( $tracking_codes ) {
       $shipping_labels = false;
+      $settings = $this->shipment->get_settings();
+      $labels_size = (isset($settings['labels_size'])) ? $settings['labels_size'] : null;
 
       try {
-        $shipping_labels = $this->shipment->fetch_shipping_labels($tracking_codes);
+        $shipping_labels = $this->shipment->fetch_shipping_labels($tracking_codes, $labels_size);
       } catch ( \Exception $e ) {
         $this->add_admin_notice($e->getMessage(), 'error');
       }
