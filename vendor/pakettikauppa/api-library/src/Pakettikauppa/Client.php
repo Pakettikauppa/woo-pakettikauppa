@@ -52,6 +52,11 @@ class Client
     public $http_response;
     public $http_request;
 
+    /** @var \Closure null */
+    private $logClosure = null;
+    const LOG_LEVEL_ERROR = 1;
+    const LOG_LEVEL_DEBUG = 10;
+
     /**
      * Client constructor.
      *
@@ -181,6 +186,10 @@ class Client
      */
     private function createShipment(Shipment &$shipment, $draft = false, $language = "fi")
     {
+        if($draft) {
+            throw new \Exception("Creating draft shipment is deprecated");
+        }
+        
         $id             = str_replace('.', '', microtime(true));
         $shipment_xml   = $shipment->asSimpleXml();
 
@@ -204,12 +213,8 @@ class Client
             $shipment_xml->{"ROUTING"}->{"Routing.Comment"} = $this->comment;
         }
 
-        if (!$draft) {
-            $response = $this->doPost("/prinetti/create-shipment?lang={$language}", null, $shipment_xml->asXML());
-        } else {
-            $response = $this->doPost('/prinetti/create-shipment-draft', null, $shipment_xml->asXML());
-        }
-
+        $response = $this->doPost("/prinetti/create-shipment?lang={$language}", null, $shipment_xml->asXML());
+        
         $response_xml = simplexml_load_string($response);
 
         if(!$response_xml) {
@@ -248,9 +253,9 @@ class Client
      * @return string
      * @throws \Exception
      */
-    public function fetchShippingLabel(Shipment &$shipment)
+    public function fetchShippingLabel(Shipment &$shipment, $size = null, $labels_count = null, $cn23_count = null)
     {
-        $response_xml = $this->fetchShippingLabels(array($shipment->getTrackingCode()));
+        $response_xml = $this->fetchShippingLabels(array($shipment->getTrackingCode()), $size , $labels_count, $cn23_count);
 
         $shipment->setPdf($response_xml->{'response.file'});
 
@@ -265,7 +270,7 @@ class Client
      * @return xml
      * @throws \Exception
      */
-    public function fetchShippingLabels($trackingCodes)
+    public function fetchShippingLabels($trackingCodes, $size = null, $labels_count = null, $cn23_count = null)
     {
         $id     = str_replace('.', '', microtime(true));
         $xml    = new \SimpleXMLElement('<eChannel/>');
@@ -288,6 +293,21 @@ class Client
 
         $label = $xml->addChild('PrintLabel');
         $label['responseFormat'] = 'File';
+        
+        if ($size && in_array($size, ['A5', '107x225'])) {
+            $label['size'] = $size;
+        }
+        
+        $rules = array();
+        if ($labels_count !== null) {
+            $rules[] = "label:{$labels_count}";
+        }
+        if ($cn23_count !== null) {
+            $rules[] = "cn23:{$cn23_count}";
+        }
+        if (!empty($rules)) {
+            $label['rules'] = implode('%', $rules);
+        }
 
         if (!is_array($trackingCodes)) {
             $trackingCodes = [$trackingCodes];
@@ -410,9 +430,10 @@ class Client
      * @param string $country
      * @param string $service_provider Limits results for to certain providers possible values are packet service codes (like 2103 for Postipaketti. Use listShippingMethods to get service codes).
      * @param int $limit 1 - 15
+     * @param string $type PRIVATE_LOCKER, PICKUP_POINT, PARCEL_LOCKER, OUTDOOR_LOCKER, AGENCY
      * @return array
      */
-    public function searchPickupPoints($postcode = null, $street_address = null, $country = null, $service_provider = null, $limit = 5)
+    public function searchPickupPoints($postcode = null, $street_address = null, $country = null, $service_provider = null, $limit = 5, $type = null)
     {
         if ( ($postcode == null && $street_address == null) || (trim($postcode) == '' && trim($street_address) == '') ) {
             return array();
@@ -425,7 +446,11 @@ class Client
             'service_provider'  => (string) $service_provider,
             'limit'             => (int) $limit
         );
-
+        
+        if ( $type !== null ) {
+            $post_params['type'] = (string) trim($type);
+        }
+        
         return json_decode($this->doPost('/pickup-points/search', $post_params));
     }
 
@@ -435,9 +460,10 @@ class Client
      * @param $query_text Text containing the full address, for example: "Keskustori 1, 33100 Tampere"
      * @param string $service_provider $service_provider Limits results for to certain providers possible values: Posti, Matkahuolto, Db Schenker.
      * @param int $limit 1 - 15
+     * @param string $type PRIVATE_LOCKER, PICKUP_POINT, PARCEL_LOCKER, OUTDOOR_LOCKER, AGENCY
      * @return array
      */
-    public function searchPickupPointsByText($query_text, $service_provider = null, $limit = 5)
+    public function searchPickupPointsByText($query_text, $service_provider = null, $limit = 5, $type = null)
     {
         if ( $query_text == null || trim($query_text) == '' ) {
             return array();
@@ -448,6 +474,10 @@ class Client
             'service_provider'  => (string) $service_provider,
             'limit'             => (int) $limit
         );
+        
+        if ( $type !== null ) {
+            $post_params['type'] = (string) trim($type);
+        }
 
         return json_decode($this->doPost('/pickup-points/search', $post_params));
     }
@@ -503,59 +533,6 @@ class Client
     }
 
     /**
-     * Creates draft shipment that can be created as real shipment later.
-     *
-     * @param Shipment $shipment
-     *
-     * @return string uuid
-     * @throws \Exception
-     */
-    public function createShipmentDraft(Shipment &$shipment) {
-        $this->createShipment($shipment, true);
-
-        return $this->response->{'response.reference'}['uuid']->__toString();
-    }
-
-    /**
-     * Creates real shipment from the draft shipment.
-     *
-     * @param $uuid
-     *
-     * @return string tracking code
-     * @throws \Exception
-     */
-    public function confirmShipmentDraft($uuid)
-    {
-        $id     = str_replace('.', '', microtime(true));
-        $xml    = new \SimpleXMLElement('<eChannel/>');
-
-        $routing = $xml->addChild('ROUTING');
-        $routing->addChild('Routing.Account', $this->api_key);
-        $routing->addChild('Routing.Id', $id);
-        $routing->addChild('Routing.Key', md5("{$this->api_key}{$id}{$this->secret}"));
-
-        $label = $xml->addChild('ConfirmLabel');
-        $label->addChild('Reference');
-        $label->Reference['uuid'] = $uuid;
-
-        $response = $this->doPost('/prinetti/confirm-shipment-draft', null, $xml->asXML());
-
-        $response_xml = @simplexml_load_string($response);
-
-        if(!$response_xml) {
-            throw new \Exception("Failed to load response xml");
-        }
-
-        $this->response = $response_xml;
-
-        if($response_xml->{'response.status'} != 0) {
-            throw new \Exception("Error: {$response_xml->{'response.status'}}, {$response_xml->{'response.message'}}");
-        }
-
-        return $response_xml->{'response.trackingcode'}->__toString();
-    }
-
-    /**
      * @param $url_action
      * @param null $post_params
      * @param null $body
@@ -563,6 +540,8 @@ class Client
      */
     private function doPost($url_action, $post_params = null, $body = null)
     {
+        $requestId = $this->randomId();
+
         $headers = array();
 
         if(is_array($post_params))
@@ -610,6 +589,13 @@ class Client
                 CURLOPT_POSTFIELDS      =>  $post_data
         );
 
+        $this->log(sprintf("Request: %s\nPOST %s\nHeaders\n%s\nData\n%s\n",
+          $requestId,
+          $this->base_uri.$url_action,
+          json_encode($headers),
+          json_encode($post_data)
+        ));
+        
         $ch = curl_init();
         curl_setopt_array($ch, $options);
         $response = curl_exec($ch);
@@ -618,6 +604,11 @@ class Client
         $this->http_response_code   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $this->http_error           = curl_errno($ch);
         $this->http_response        = $response;
+
+        $this->log(sprintf("Response: %s\nData\n%s\n",
+          $requestId,
+          json_encode($response)
+        ));
 
         return $response;
     }
@@ -631,6 +622,7 @@ class Client
      */
     private function getPostiToken($url, $user, $secret)
     {
+        $requestId = $this->randomId();
         $headers = array();
 
         $headers[] = 'Accept: application/json';
@@ -654,10 +646,78 @@ class Client
         $ch = curl_init();
         curl_setopt_array($ch, $options);
 
+
+        $this->log(sprintf("Request: %s\nPOST %s\nHeaders\n%s\n",
+          $requestId,
+          $url,
+          json_encode($headers)
+        ));
+
         $response                   = curl_exec($ch);
+
+        $this->log(sprintf("Response: %s\nData\n%s\n",
+          $requestId,
+          json_encode($response)
+        ));
 
         curl_close($ch);
 
         return $response;
     }
+
+  /**
+   * @return ?\Closure
+   */
+  public function getLogClosure()
+  {
+    return $this->logClosure;
+  }
+
+  /**
+   * @param ?\Closure $logClosure
+   * @return static
+   * @throws \ReflectionException
+   */
+  public function setLogClosure($logClosure)
+  {
+    if (!(($logClosure instanceof \Closure) || $logClosure === null))
+    {
+      throw new \Exception('logClosure must be function or null');
+    }
+
+    $reflection = new \ReflectionFunction($logClosure);
+    if ($reflection->getNumberOfParameters() !== 2)
+    {
+      throw new \Exception('Function should have two parameters: message and level.');
+    }
+
+    $this->logClosure = $logClosure;
+    return $this;
+  }
+
+  public function log($message, $level = self::LOG_LEVEL_DEBUG)
+  {
+    if ($this->getLogClosure() instanceof \Closure)
+    {
+      call_user_func($this->getLogClosure(), $message, $level);
+    }
+    return $this;
+  }
+
+  public function logError($message)
+  {
+    return $this->log($message, self::LOG_LEVEL_ERROR);
+  }
+
+  public function randomId()
+  {
+    if (function_exists('openssl_random_pseudo_bytes'))
+    {
+      $data = openssl_random_pseudo_bytes(16);
+      $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+      $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+      return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+    }
+    return uniqid('ID-');
+  }
 }
