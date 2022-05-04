@@ -30,7 +30,7 @@ Register through [www.pakettikauppa.fi](https://www.pakettikauppa.fi/). Process 
 * Supports WooCommerce shipping zones and classes (though Pakettikauppa is currently only available in Finland)
 * Customers can choose to ship products to an address or to any pickup point available from the Pakettikauppa shipping methods
 * Store owners can add pickup points to any shipping zones shipping method
-* Store owners can specify themselves any fixed rate for a shipping or have free shipping if the order value is above a certain limit
+* Store owners can use whatever shipping pricing plugin
 * Store owners can generate the shipping label in one click
 * Store owners can generate shipping labels as mass action from orders view
 * Store owners and customers get tracking code links and status information
