@@ -277,7 +277,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
     }
 
     public function shipping_settings_desc() {
-      $url =  'https://docs.woocommerce.com/document/setting-up-shipping-zones/';
+      $url = 'https://docs.woocommerce.com/document/setting-up-shipping-zones/';
       return sprintf(
         /*
          * translators:
