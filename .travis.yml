@@ -10,13 +10,6 @@ jobs:
       script:
       - python3 ./gnitpick.py
     # Test the legacy 4.9 series and an older PHP version
-    - php: '7.1'
-      env: WP_VERSION=5.6
-    # Arbitrary PHP version to run the PHPCS sniffs against
-    - php: '7.2'
-      env: SNIFF=1
-    # Test PHP 7.3
-    - php: '7.3'
     # Test PHP 7.4
     - php: '7.4'
     # Test the PHP development version
@@ -25,10 +18,12 @@ jobs:
 #    - php: '7.4'
 #      env: WP_VERSION=nightly
     # Test the WooCommerce development version
-    - php: '7.4'
-      env: WOO_VERSION=nightly
     # Test the all development versions
     - php: '8.0'
+      env: SNIFF=1
+    - php: '8.0'
+      env: WOO_VERSION=nightly
+    - php: '8.1'
     - php: 'nightly'
       env: WP_VERSION=nightly WOO_VERSION=nightly
   allow_failures:
@@ -37,8 +32,7 @@ jobs:
     #   PHP Fatal error:  Uncaught RuntimeException: Array and string offset
     #   access syntax with curly braces is deprecated on line 757 in file
     #   /tmp/wordpress/wp-includes/script-loader.php
-    - php: 7.1
-    - php: 8.0
+    - php: 7.4
     - php: nightly
 
 # Common for all jobs
