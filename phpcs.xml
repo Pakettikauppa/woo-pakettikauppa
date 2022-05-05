@@ -16,6 +16,7 @@
 
   <!-- Don't check composer dependencies and extras -->
   <exclude-pattern>/vendor/</exclude-pattern>
+  <exclude-pattern>/tests/</exclude-pattern>
 
   <!-- Extend the exclude patterns to match your .gitignore -->
 
