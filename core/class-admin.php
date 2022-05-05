@@ -1474,9 +1474,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       }
 
       $tracking_code = sanitize_text_field($_REQUEST['tracking_code']); // @codingStandardsIgnoreLine
+      $settings = $this->shipment->get_settings();
+      $labels_size = (isset($settings['labels_size'])) ? $settings['labels_size'] : null;
 
       try {
-        $contents = $this->shipment->fetch_shipping_label($tracking_code);
+        $contents = $this->shipment->fetch_shipping_label($tracking_code, $labels_size);
       } catch ( \Exception $e ) {
         esc_attr_e('Failed to get shipment label.', 'woo-pakettikauppa');
         echo '</br>' . esc_attr__('Error', 'woo-pakettikauppa') . ': ' . $e->getMessage();
