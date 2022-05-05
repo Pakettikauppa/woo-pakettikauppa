@@ -534,6 +534,21 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           'class'   => 'mode_react',
         ),
 
+        array(
+          'title' => $this->get_core()->text->checkout_settings(),
+          'type'  => 'title',
+        ),
+
+        'field_phone_required' => array(
+          'title'   => $this->get_core()->text->field_phone_required(),
+          'type'    => 'select',
+          'default' => 'no',
+          'options' => array(
+            'no'  => __('No'),
+            'yes'  => __('Yes'),
+          ),
+        ),
+
         'pickup_points_search_limit' => array(
           'title'       => $this->get_core()->text->pickup_points_search_limit_title(),
           'type'        => 'number',
@@ -542,6 +557,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           'desc_tip'    => true,
           'class'   => 'mode_react',
         ),
+
         'pickup_point_list_type'     => array(
           'title'   => $this->get_core()->text->pickup_point_list_type_title(),
           'type'    => 'select',
@@ -552,6 +568,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           ),
           'class'   => 'mode_react',
         ),
+
         array(
           'title' => $this->get_core()->text->store_owner_information(),
           'type'  => 'title',
