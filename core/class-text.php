@@ -343,6 +343,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
       return __('Plugin can upload shipping label to an URL when creating shipping label. Define URL if you want to upload PDF.', 'woo-pakettikauppa');
     }
 
+    public function checkout_settings() {
+      return __('Checkout options', 'woo-pakettikauppa');
+    }
+
+    public function field_phone_required() {
+      return __('Make shipping phone number mandatory', 'woo-pakettikauppa');
+    }
+
     public function pickup_points_search_limit_title() {
       return __('Pickup point search limit', 'woo-pakettikauppa');
     }

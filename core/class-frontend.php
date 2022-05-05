@@ -54,10 +54,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
     }
 
     public function add_checkout_fields( $fields ) {
+      $settings = $this->shipment->get_settings();
+      $required_phone = (! empty($settings['field_phone_required'])) ? $settings['field_phone_required'] : 'no';
+
       // Add shipping phone is billing phone exists
       if ( isset($fields['billing']['billing_phone']) ) {
         $fields['shipping']['shipping_phone'] = $fields['billing']['billing_phone'];
-        $fields['shipping']['shipping_phone']['required'] = 0;
+        $fields['shipping']['shipping_phone']['required'] = ($required_phone == 'yes') ? 1 : 0;
       }
 
       // Add shipping email if billing email exists
