@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2022-05-02 11:14+0000\n"
-"PO-Revision-Date: 2022-05-02 12:40+0000\n"
+"PO-Revision-Date: 2022-05-04 12:51+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "X-Domain: woo-pakettikauppa\n"
 "Language: lt_LT\n"
@@ -842,7 +842,7 @@ msgstr "Siuntimo būdai"
 
 #: core/class-text.php:272
 msgid "Shipping methods mapping"
-msgstr "Siuntimo būdų kartografavimas"
+msgstr "Siuntimo būdų priskyrimas"
 
 #: core/class-text.php:276
 msgid "Shipping settings"
