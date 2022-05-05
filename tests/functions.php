@@ -46,6 +46,7 @@ function get_instance() {
 
   if ( ! $plugin ) {
     // phpcs:disable
+    // phpcs:ignore
     require get_plugin_directory() . '/' . get_plugin_main_filename(); // @codingStandardsIgnoreLine
     // phpcs:enable
 
