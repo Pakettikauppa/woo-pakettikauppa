@@ -568,7 +568,18 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           ),
           'class'   => 'mode_react',
         ),
-
+        'show_pickup_point_override_query' => array(
+          'title'   => $this->get_core()->text->show_pickup_point_override_query(),
+          'type'    => 'select',
+          'default' => 'yes',
+          'options' => array(
+            'no'  => __('No'),
+            'yes'  => __('Yes'),
+          ),
+          'description' => $this->get_core()->text->pickup_points_override_query_desc(),
+          'desc_tip'    => true,
+        ),
+ 
         array(
           'title' => $this->get_core()->text->store_owner_information(),
           'type'  => 'title',
@@ -638,16 +649,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           'title' => $this->get_core()->text->advanced_settings(),
           'type'  => 'title',
         ),
-        'show_pickup_point_override_query' => array(
-          'title'   => $this->get_core()->text->show_pickup_point_override_query(),
-          'type'    => 'select',
-          'default' => 'yes',
-          'options' => array(
-            'no'  => __('No'),
-            'yes'  => __('Yes'),
-          ),
-        ),
-        'label_additional_info' => array(
+       'label_additional_info' => array(
           'title'   => $this->get_core()->text->additional_info_param_title(),
           'type'    => 'enchancedtextarea',
           'description' => '',
