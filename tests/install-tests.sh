@@ -46,11 +46,11 @@ fi
 case "$PHP_VERSION" in
   8.*)
     # If PHP 8.x install phpunit 9.x
-    set_variable PHPUNIT_VERSION 9.5.13
+    set_variable PHPUNIT_VERSION 9.5.20
     ;;
   nightly)
     # If PHP nightly install phpunit 9.x
-    set_variable PHPUNIT_VERSION 9.5.13
+    set_variable PHPUNIT_VERSION 9.5.20
     ;;
 esac
 
