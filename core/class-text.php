@@ -371,6 +371,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
       return __('List', 'woo-pakettikauppa');
     }
 
+    public function pickup_points_override_query_desc() {
+      return __('Allow user to use custom address for pickup point search.', 'woo-pakettikauppa');
+    }
+
+
     public function store_owner_information() {
       return __('Store owner information', 'woo-pakettikauppa');
     }
