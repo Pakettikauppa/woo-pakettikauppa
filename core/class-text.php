@@ -165,11 +165,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
          * %2$s: Vendor url, not translateable
          */
         __(
-          'If you have already registered with %1$s, please choose "Production mode" and enter the credentials you received from %1$s. If you have not yet registered, please register at <a target="_blank" rel="noopener noreferrer" href="%2$s">%2$s</a>. If you wish to test the plugin before making a contract with %1$s, please choose "Test mode" and leave the API secret/key fields empty.',
+          'If you have already registered with %1$s, please choose "Production mode" and enter the credentials you received from %1$s. If you have not yet registered, please register at %2$s. If you wish to test the plugin before making a contract with %1$s, please choose "Test mode" and leave the API secret/key fields empty.',
           'woo-pakettikauppa'
         ),
         $vendor_name,
-        $vendor_url
+        '<a target="_blank" rel="noopener noreferrer" href="' . $vendor_url . '">' . $vendor_url . '</a>'
       );
     }
 
@@ -181,16 +181,18 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
     }
 
     public function setup_shipping_info() {
+      $docs_url = esc_attr('https://docs.woocommerce.com/document/setting-up-shipping-zones/');
       return sprintf(
         /*
          * translators:
-         * %1$s: link to WooCommerce shipping zone setting page
-         * %2$s: link to external WooCommerce documentation
+         * %1$s: vendor name
+         * %2$s: link to WooCommerce shipping zone setting page
+         * %3$s: link to external WooCommerce documentation
          */
-        __('Please configure the shipping methods of the currently active shipping zones to use %1$s shipping. Note that this plugin requires WooCommerce shipping zones and methods to be preconfigured in <a href="%2$s">WooCommerce > Settings > Shipping > Shipping zones</a>. For more information, visit <a target="_blank" href="%2$s">%3$s</a>.', 'woo-pakettikauppa'),
+        __('Please configure the shipping methods of the currently active shipping zones to use %1$s shipping. Note that this plugin requires WooCommerce shipping zones and methods to be preconfigured in %2$s. For more information, visit %3$s.', 'woo-pakettikauppa'),
         $this->core->vendor_name,
-        esc_url(admin_url('admin.php?page=wc-settings&tab=shipping')),
-        esc_attr('https://docs.woocommerce.com/document/setting-up-shipping-zones/')
+        '<a href="' . esc_url(admin_url('admin.php?page=wc-settings&tab=shipping')) . '">' . __('WooCommerce > Settings > Shipping > Shipping zones', 'woo-pakettikauppa') . '</a>',
+        '<a target="_blank" href="' . $docs_url . '">' . $docs_url . '</a>'
       );
     }
 
