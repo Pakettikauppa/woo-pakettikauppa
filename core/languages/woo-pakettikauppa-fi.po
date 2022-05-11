@@ -6,7 +6,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-"
 "pakettikauppa\n"
 "POT-Creation-Date: 2020-09-29 13:55+0000\n"
-"PO-Revision-Date: 2022-05-09 14:07+0000\n"
+"PO-Revision-Date: 2022-05-11 14:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: Finnish\n"
 "Language: fi\n"
@@ -71,6 +71,8 @@ msgstr "Summa minkä jälkeen toimitus on ilmainen."
 #: core/class-text.php:377
 msgid "Allow user to use custom address for pickup point search."
 msgstr ""
+"Antaa asiakkaan valita noutopisteen erillisellä osoitehaulla automaattisen "
+"maksu/toimitusosoitteen perusteella tehtävän haun sijaan."
 
 #: core/class-product.php:299
 msgid "Amount of hazardous subtances in the product as grams."
@@ -850,7 +852,7 @@ msgstr "Toimituksen hinta (ALV sisältyy hintaan)"
 
 #: core/class-text.php:325
 msgid "Shipping label size"
-msgstr ""
+msgstr "Pakettikortin koko"
 
 #: core/class-admin.php:933
 msgid "Shipping labels"
@@ -874,7 +876,7 @@ msgstr "Toimitustapojen asetukset"
 
 #: core/class-text.php:471
 msgid "Show pickup point override in checkout"
-msgstr "Näytä noutopisteen yliajo kassalla"
+msgstr "Salli vapaa noutopistehaku"
 
 #: core/class-text.php:365
 msgid "Show pickup points as"
