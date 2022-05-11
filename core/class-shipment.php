@@ -187,7 +187,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         }
       }
 
-      $shipment = $this->create_shipment_from_order($order, $service_id, $additional_services, $selected_products, array('return_shipment' => true));
+      $shipment = $this->create_shipment_from_order($order, $service_id, $additional_services, $selected_products, array( 'return_shipment' => true ));
       $estimated = $this->client->estimateShippingCost($shipment);
 
       if ( isset($estimated->total_price) ) {

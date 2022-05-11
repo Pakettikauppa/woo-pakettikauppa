@@ -1112,7 +1112,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                 <span class="title">
                   <?php echo esc_html__('Estimated shipping price', 'woo-pakettikauppa'); ?>:
                 </span>
-                <span id="estimated-shipping-price" class="value" data-service="<?php echo esc_html($service_id);?>">
+                <span id="estimated-shipping-price" class="value" data-service="<?php echo esc_html($service_id); ?>">
                   <?php $estimated_price = $this->core->shipment->get_estimated_shipping_price($order, $service_id); ?>
                   <?php echo ($estimated_price) ? wc_price($estimated_price / 100) : str_replace('0', '-', wc_price(0)); ?>
                 </span>
@@ -1176,7 +1176,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         wp_die();
       }
 
-      $selected_point = "";
+      $selected_point = '';
       if ( ! empty($_POST['point']) ) {
         preg_match('~\(#(.*?)\)~', $_POST['point'], $selected_point_id);
         if ( ! empty(intval($selected_point_id[1])) ) {
@@ -1212,19 +1212,19 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           if ( $service['key'] == 'wc_pakettikauppa_mps_count' && intval($service['param']) > 1 ) {
             $service['key'] = '3102';
             $service_values = array(
-              'count' => (string) intval($service['param'])
+              'count' => (string) intval($service['param']),
             );
           }
           if ( $service['key'] == '2106' ) {
             $service_values = array(
-              'pickup_point_id' => $selected_point
+              'pickup_point_id' => $selected_point,
             );
           }
-          $additional_services[] = array($service['key'] => $service_values);
+          $additional_services[] = array( $service['key'] => $service_values );
         }
       }
 
-      $estimated_price = $this->shipment->get_estimated_shipping_price( $order, $method_code, $additional_services, $selected_products );
+      $estimated_price = $this->shipment->get_estimated_shipping_price($order, $method_code, $additional_services, $selected_products);
 
       echo ($estimated_price) ? wc_price($estimated_price / 100) : str_replace('0', '-', wc_price(0));
       wp_die();
