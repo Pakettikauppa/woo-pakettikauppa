@@ -279,7 +279,7 @@ function update_estimated_price(list, quantity) {
 
   var selected_method = estimated_block.dataset.service;
   var additional_services = [];
-  if ( ! $("#wc_pakettikauppa_shipping_method").is(':visible') ) {
+  if ( ! jQuery("#wc_pakettikauppa_shipping_method").is(':visible') ) {
     selected_method = document.getElementById("pakettikauppa-service").value;
     
     var all_services = document.getElementById("pk-admin-additional-services-" + selected_method).getElementsByTagName("input");
@@ -307,7 +307,7 @@ function update_estimated_price(list, quantity) {
 
   var data = {
     action: 'update_estimated_shipping_price',
-    security: $("#pakettikauppa_metabox_nonce").val(),
+    security: jQuery("#pakettikauppa_metabox_nonce").val(),
     order_id: document.getElementById("pakettikauppa_metabox_order_id").value,
     method: selected_method,
     selected: selected_products,
