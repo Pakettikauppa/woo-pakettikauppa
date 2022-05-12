@@ -7,10 +7,14 @@ msgstr ""
 "pakettikauppa\n"
 "POT-Creation-Date: 2020-09-29 13:55+0000\n"
 <<<<<<< HEAD
+<<<<<<< HEAD
 "PO-Revision-Date: 2022-05-11 14:37+0000\n"
 =======
 "PO-Revision-Date: 2022-05-12 07:18+0000\n"
 >>>>>>> Fix JS error and add translation
+=======
+"PO-Revision-Date: 2022-05-12 07:18+0000\n"
+>>>>>>> 2c4b8a9c52ec646ff9fc0e11daabec6fb5b25b58
 "Last-Translator: \n"
 "Language-Team: Finnish\n"
 "Language: fi\n"
@@ -334,10 +338,14 @@ msgstr "virhe"
 #: core/class-admin.php:997
 msgid "Estimated shipping price"
 <<<<<<< HEAD
+<<<<<<< HEAD
 msgstr ""
 =======
 msgstr "Arvioitu kustannus"
 >>>>>>> Fix JS error and add translation
+=======
+msgstr "Arvioitu kustannus"
+>>>>>>> 2c4b8a9c52ec646ff9fc0e11daabec6fb5b25b58
 
 #: core/class-shipment.php:95
 msgid "Exception"
