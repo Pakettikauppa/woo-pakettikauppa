@@ -6,17 +6,11 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woo-"
 "pakettikauppa\n"
 "POT-Creation-Date: 2020-09-29 13:55+0000\n"
-"PO-Revision-Date: 2022-05-11 14:37+0000\n"
-"Last-Translator: \n"
-"Language-Team: Finnish\n"
 "Language: fi\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Loco https://localise.biz/\n"
-"X-Domain: woo-pakettikauppa\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Loco-Version: 2.6.1; wp-5.9.3"
+"Language-Team: Finnish\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"PO-Revision-Date: 2022-05-12 12:44+0000\n"
+"X-Generator: Loco https://localise.biz/"
 
 #. %s: Vendor full name
 #: core/class-admin.php:428
@@ -329,7 +323,7 @@ msgstr "virhe"
 
 #: core/class-admin.php:997
 msgid "Estimated shipping price"
-msgstr ""
+msgstr "Arvioitu kustannus"
 
 #: core/class-shipment.php:95
 msgid "Exception"
@@ -1041,7 +1035,7 @@ msgstr "WooCommercen %s versio"
 
 #: core/class-text.php:194 core/class-text.php:290
 msgid "WooCommerce > Settings > Shipping > Shipping zones"
-msgstr ""
+msgstr "WooCommerce > Asetukset > Toimitus > Toimitusvyöhykkeet"
 
 #. Name of the plugin
 msgid "WooCommerce Pakettikauppa"

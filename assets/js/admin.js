@@ -102,6 +102,9 @@ jQuery(function( $ ) {
     $("#pk-admin-additional-services-" + selectedService).show();
     $("#pickup-changer-" + selectedService).show();
     pakettikauppa_trigger_pickup_list(selectedService);
+
+    var element = document.querySelector('.prod_select_dropdown .content .quantity');
+    element.dispatchEvent(new Event('input', {bubbles:true}));
   };
 
   window.pakettikauppa_pickup_points_by_custom_address = function(values) {
@@ -172,6 +175,11 @@ jQuery(function( $ ) {
       $(select_field).data("selected",null);
     }
   };
+
+  $(document).on("change", "ol.pk-admin-additional-services input", function() {
+    var element = document.querySelector('.prod_select_dropdown .content .quantity');
+    element.dispatchEvent(new Event('input', {bubbles:true}));
+  });
 });
 
 /* Multiple tracking codes */
@@ -201,6 +209,9 @@ function init_prod_select() {
       update_prod_select(list, quantity, txt);
     } );
     item.click();
+    item.addEventListener( 'click', function() {
+      update_estimated_price(list, quantity);
+    } );
   } );
 
   quantity.forEach( function( item ) {
@@ -212,7 +223,8 @@ function init_prod_select() {
       if (parseInt(this.value) > max) {
         this.value = max;
       }
-      update_prod_select(list, quantity, txt)
+      update_prod_select(list, quantity, txt);
+      update_estimated_price(list, quantity);
     } );
   } );
 }
@@ -245,6 +257,67 @@ function update_lqweight_span(list, quantity) {
   for ( var i = 0; i < all_spans.length; i++ ) {
     all_spans[i].innerHTML = total_weight;
   }
+}
+
+function update_estimated_price(list, quantity) {
+  var estimated_block = document.getElementById("estimated-shipping-price");
+  if ( typeof(estimated_block) == 'undefined' || estimated_block == null ) {
+    return;
+  }
+
+  var selected_products = [];
+  for ( var i = 0; i < list.length; i++ ) {
+    var qty = quantity[i].value;
+    if ( ! list[i].checked ) {
+      qty = 0;
+    }
+    selected_products.push({
+      prod: list[i].value,
+      qty: qty
+    });
+  }
+
+  var selected_method = estimated_block.dataset.service;
+  var additional_services = [];
+  if ( ! jQuery("#wc_pakettikauppa_shipping_method").is(':visible') ) {
+    selected_method = document.getElementById("pakettikauppa-service").value;
+    
+    var all_services = document.getElementById("pk-admin-additional-services-" + selected_method).getElementsByTagName("input");
+    for ( var i = 0; i < all_services.length; i++ ) {
+      if ( all_services[i].checked ) {
+        additional_services.push({
+          key: all_services[i].value,
+          param: ""
+        });
+      }
+      if ( all_services[i].type == 'number' ) {
+        additional_services.push({
+          key: all_services[i].name,
+          param: all_services[i].value
+        });
+      }
+    }
+  }
+
+  var selected_point = "";
+  var select_field = document.querySelector("#pickup-changer-" + selected_method + " .pakettikauppa-pickup-select");
+  if ( select_field !== null && select_field.value != '__NULL__' ) {
+    selected_point = select_field.value;
+  }
+
+  var data = {
+    action: 'update_estimated_shipping_price',
+    security: jQuery("#pakettikauppa_metabox_nonce").val(),
+    order_id: document.getElementById("pakettikauppa_metabox_order_id").value,
+    method: selected_method,
+    selected: selected_products,
+    services: additional_services,
+    point: selected_point
+  }
+
+  jQuery.post(ajaxurl, data, function(response) {
+    estimated_block.innerHTML = response;
+  });
 }
 
 function resize_textarea(element) {

@@ -176,6 +176,13 @@ table .pakettikauppa-notice p {
   opacity: 0.6;
 }
 
+.pakettikauppa-estimated-price {
+  margin-bottom: 10px;
+}
+.pakettikauppa-estimated-price .title {
+  font-weight: 600;
+}
+
 /* Labels folded-corner design */
 .pakettikauppa-design-foldedcorner {
   padding: 1em;
