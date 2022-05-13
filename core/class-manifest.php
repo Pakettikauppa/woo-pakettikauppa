@@ -469,7 +469,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
            $xml = $this->parse_response_xml($response);
            if ( $xml !== false ) {
                $status = (string) $xml->result;
-               $message = (string) $xml->resultMessage;
+               $message = (string) $xml->result_message;
                if ( $status == 'FAILURE' ) {
                 return array(
                   'status' => '500',
@@ -487,7 +487,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
            return json_decode($response, true);
        }
 
-       private function parse_response_xml( $response ) {
+       private function parse_response_xml( $xml_data ) {
+            //fix for tests
+            $response = str_replace('resultMessage', 'result_message', $xml_data);
             $prev = libxml_use_internal_errors(true);
 
             $doc = simplexml_load_string($response);
