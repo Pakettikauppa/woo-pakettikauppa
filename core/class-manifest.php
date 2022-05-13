@@ -2,8 +2,6 @@
 
 namespace Woo_Pakettikauppa_Core;
 
-use Pakettikauppa\SimpleXMLElement;
-
 // Prevent direct access to this script
 if ( ! defined('ABSPATH') ) {
     exit();
@@ -356,7 +354,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
                         } else {
                             echo json_encode(array( 'error' => $response['message'] ));
                         }
-                        //var_dump($response);
                     }
                 } else {
                     echo json_encode(array( 'error' => __('Manifest not found or incorrect status', 'woo-pakettikauppa') ));
@@ -370,7 +367,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
         private function make_call( $date, $time_from, $time_to, $manifest, $order_ids ) {
             $settings = $this->core->shipment->get_settings();
 
-            $xml = new SimpleXMLElement('<Postra/>');
+            $xml = new \SimpleXMLElement('<Postra/>');
             $xml->addAttribute('xmlns', 'http://api.posti.fi/xml/POSTRA/1');
 
             $header = $xml->addChild('Header');
@@ -434,7 +431,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
             }
             $transient_name = $this->core->prefix . '_access_token';
             $token = get_transient($transient_name);
-
             if ( ! $token ) {
                 throw new \Exception(__('Token not found. Please check credentials', 'woo-pakettikauppa'));
             }
