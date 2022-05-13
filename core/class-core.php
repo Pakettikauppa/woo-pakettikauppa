@@ -36,6 +36,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
     public $api_config; // Used by Pakettikauppa\Client
     public $api_comment; // Used by ^
 
+    public $order_pickup;
+    public $order_pickup_url;
+
     public static $instance; // The class is a singleton.
 
     /**
@@ -81,6 +84,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
 
       $this->api_config = $config['pakettikauppa_api_config'] ?? array();
       $this->api_comment = $config['pakettikauppa_api_comment'] ?? 'From WooCommerce';
+
+      $this->order_pickup = $config['order_pickup'] ?? false;
+      $this->order_pickup_url = $config['order_pickup_callback_url'] ?? false;
 
       self::$instance = $this;
 
@@ -184,8 +190,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
         //load check tool class
         $this->load_check_tool_class();
 
-        //load manifest class
-        $this->load_manifest_class();
+        if ( $this->order_pickup ) {
+          //load manifest class
+          $this->load_manifest_class();
+        }
       }
 
       // Always load frontend so admin_ajax can work from there

@@ -2,6 +2,8 @@
 
 namespace Woo_Pakettikauppa_Core;
 
+use Pakettikauppa\SimpleXMLElement;
+
 // Prevent direct access to this script
 if ( ! defined('ABSPATH') ) {
     exit();
@@ -31,12 +33,23 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
                 add_filter('views_edit-pk_manifest', array( $this, 'manifest_post_view' ));
                 add_filter('bulk_actions-edit-shop_order', array( $this, 'register_multi_manifest_orders' ), 99);
                 add_action('handle_bulk_actions-edit-shop_order', array( $this, 'add_manifest_orders' ), 3, 10);
-                add_action('handle_bulk_actions-edit-pk_manifest', array( $this, 'manifest_actions' ), 3, 10);
                 add_filter('manage_pk_manifest_posts_columns', array( $this, 'set_pk_manifest_columns' ));
                 add_action('manage_pk_manifest_posts_custom_column', array( $this, 'render_pk_manifest_columns' ), 10, 2);
                 add_action('woocommerce_order_actions', array( $this, 'add_manifest_order_action' ));
                 add_action('woocommerce_order_action_' . $this->core->prefix . '_add_to_manifest', array( $this, 'add_order_to_manifest' ));
                 add_action('admin_menu', array( $this, 'add_submenu' ));
+                add_action('admin_enqueue_scripts', array( $this, 'manifest_enqueue_scripts' ));
+                add_action('wp_ajax_pk_manifest_call_courier', array( $this, 'pk_manifest_call_courier' ));
+            }
+        }
+
+        public function manifest_enqueue_scripts( $hook ) {
+            global $pagenow, $typenow;
+            if ( $pagenow == 'edit.php' && $typenow == 'pk_manifest' ) {
+                wp_enqueue_script($this->core->prefix . '_datetimepicker_js', $this->core->dir_url . 'assets/js/jquery.datetimepicker.full.min.js', array( 'jquery' ), $this->core->version, true);
+                wp_enqueue_style($this->core->prefix . '_datetimepicker', $this->core->dir_url . 'assets/css/jquery.datetimepicker.min.css', array(), $this->core->version);
+                wp_enqueue_script($this->core->prefix . '_manifest_js', $this->core->dir_url . 'assets/js/manifest.js', array( 'jquery' ), $this->core->version, true);
+                wp_enqueue_style($this->core->prefix . '_manifest', $this->core->dir_url . 'assets/css/manifest.css', array(), $this->core->version);
             }
         }
 
@@ -169,37 +182,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
             $this->add_orders_to_manifest($manifest, array( $order->id ));
         }
 
-        /**
-         * This function exits on success, returns on error
-         *
-         * @throws Exception
-         */
-        public function manifest_actions( $redirect_to, $action, $manifest_ids ) {
-
-            if ( $action === 'print_and_close' ) {
-                foreach ( $manifest_ids as $manifest_id ) {
-                    wp_update_post(
-                      array(
-                        'ID' => $manifest_id,
-                        'post_status' => 'closed',
-                      )
-                    );
-                    //make orders complete
-                    $current_orders = get_post_meta($manifest_id, $this->core->prefix . '_manifest_orders', true);
-                    foreach ( $current_orders as $order_id ) {
-                        $_order = new \WC_Order($order_id);
-                        $_order->update_status('completed');
-                    }
-                }
-                //TODO: do print
-            }
-            //if ( $action === 'print' ) {
-                //TODO: do print
-            //}
-            wp_redirect(site_url($redirect_to));
-            exit;
-        }
-
         private function get_current_manifest() {
             $manifests = get_posts(
               array(
@@ -270,6 +252,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
             unset($columns['date']);
             $columns['orders'] = __('Orders', 'woo-pakettikauppa');
             $columns['status'] = __('Status', 'woo-pakettikauppa');
+            $columns['pickup_time'] = __('Pickup time', 'woo-pakettikauppa');
             $columns['actions'] = __('Actions', 'woo-pakettikauppa');
 
             return $columns;
@@ -288,17 +271,237 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
                 break;
               case 'actions':
                 if ( $manifest->post_status == 'open' ) {
-                  echo '<input type = "button" class = "button manifest_action" data-action = "print_and_close" value = "' . __('Print and close', 'woo-pakettikauppa') . '"/>';
+                  $current_orders = get_post_meta($post_id, $this->core->prefix . '_manifest_orders', true);
+                  if ( ! empty($current_orders) ) {
+                    ?>
+                    <?php add_thickbox(); ?>
+                    <div id="manifest-id-<?php echo $manifest->ID; ?>" style="display:none;">
+                        <p>
+                            <?php _e('Select date and time between courier should pickup order', 'woo-pakettikauppa'); ?>
+                        <table class = "call-courier-table">
+                            <tr>
+                                <th><?php _e('Date', 'woo-pakettikauppa'); ?></th>
+                                <th><?php _e('Earliest time', 'woo-pakettikauppa'); ?></th>
+                                <th><?php _e('Latest time', 'woo-pakettikauppa'); ?></th>
+                                <th></th>
+                            </tr>
+                            <tr>
+                                <td><input type = "text" value = "" class = "manifest-date"/></td>
+                                <td><input type = "text" value = "" class = "manifest-time-from"/></td>
+                                <td><input type = "text" value = "" class = "manifest-time-to"/></td>
+                                <td><input type = "button" class = "button manifest_action" data-id = "<?php echo $manifest->ID; ?>" value = "<?php _e('Call', 'woo-pakettikauppa'); ?>"/></td>
+                            </tr>
+                        </table>
+                        </p>
+                    </div>
+
+                    <a href="#TB_inline?&width=400&height=200&inlineId=manifest-id-<?php echo $manifest->ID; ?>" class = "button thickbox"><?php echo __('Call for pickup', 'woo-pakettikauppa'); ?></a>
+                    <?php
+
+                  } else {
+                      echo __('No orders assigned', 'woo-pakettikauppa');
+                  }
                 } else if ( $manifest->post_status == 'closed' ) {
-                  echo '<input type = "button" class = "button manifest_action" data-action = "print" value = "' . __('Print', 'woo-pakettikauppa') . '"/>';
+                  echo __('Already called for pickup', 'woo-pakettikauppa');
                 }
                 break;
               case 'status':
                 echo get_post_status_object(get_post_status($manifest))->label;
                 break;
+              case 'pickup_time':
+                $pickup_time = get_post_meta($post_id, $this->core->prefix . '_manifest_pickup_time', true);
+                if ( $pickup_time ) {
+                    echo $pickup_time;
+                } else {
+                    echo '-';
+                }
+                break;
             }
         }
 
-    }
+        public function pk_manifest_call_courier() {
+            try {
+                $date = sanitize_text_field($_POST['date']);
+                $time_from = sanitize_text_field($_POST['time_from']);
+                $time_to = sanitize_text_field($_POST['time_to']);
+                $id = sanitize_text_field($_POST['id']);
+                $manifest = get_post($id);
+                if ( ! $date || ! $time_from || ! $time_to || ! $id ) {
+                    echo json_encode(array( 'error' => __('Wrong data requested, please try again', 'woo-pakettikauppa') ));
+                    wp_die();
+                }
+                if ( $manifest && $manifest->post_status == 'open' && $manifest->post_type == 'pk_manifest' ) {
+                    $order_ids = get_post_meta($manifest->ID, $this->core->prefix . '_manifest_orders', true);
+                    if ( empty($order_ids) ) {
+                        echo json_encode(array( 'error' => __('Manifest has no orders assigned', 'woo-pakettikauppa') ));
+                    } else {
+                        $response = $this->make_call($date, $time_from, $time_to, $manifest, $order_ids);
+                        if ( ! isset($response['status']) ) {
+                            throw new \Exception(__('Wrong response.', 'woo-pakettikauppa'));
+                        }
+                        if ( $response['status'] == 200 ) {
+                            wp_update_post(
+                              array(
+                                'ID' => $id,
+                                'post_status' => 'closed',
+                              )
+                            );
+                              //make orders complete
+                              $current_orders = get_post_meta($id, $this->core->prefix . '_manifest_orders', true);
+                              foreach ( $current_orders as $order_id ) {
+                                  $_order = new \WC_Order($order_id);
+                                  $_order->update_status('completed');
+                              }
+                            echo json_encode('ok');
+                        } else {
+                            echo json_encode(array( 'error' => $response['message'] ));
+                        }
+                        //var_dump($response);
+                    }
+                } else {
+                    echo json_encode(array( 'error' => __('Manifest not found or incorrect status', 'woo-pakettikauppa') ));
+                }
+            } catch ( \Exception $e ) {
+                echo json_encode(array( 'error' => $e->getMessage() ));
+            }
+            wp_die();
+        }
 
+        private function make_call( $date, $time_from, $time_to, $manifest, $order_ids ) {
+            $settings = $this->core->shipment->get_settings();
+
+            $xml = new SimpleXMLElement('<Postra/>');
+            $xml->addAttribute('xmlns', 'http://api.posti.fi/xml/POSTRA/1');
+
+            $header = $xml->addChild('Header');
+            $header->addChild('SenderId', $settings['order_pickup_sender_id']);
+            $header->addChild('ReceiverId', '003715318644');
+            $header->addChild('DocumentDateTime', gmdate('c'));
+            $header->addChild('Sequence', floor(microtime(true) * 1000));
+            $header->addChild('MessageCode', 'POSTRA');
+            $header->addChild('MessageVersion', 1);
+            $header->addChild('MessageRelease', 2);
+            $header->addChild('MessageAction', 'PICKUP_ORDER');
+
+            $shipments = $xml->addChild('Shipments');
+            foreach ( $order_ids as $order_id ) {
+                $data = get_post_meta($order_id, '_wc_pakettikauppa_labels', true);
+                if ( empty($data) ) {
+                    continue;
+                }
+                foreach ( $data as $_data ) {
+                    $shipment = $shipments->addChild('Shipment');
+                    $shipment->addChild('MessageFunctionCode', 'ORIGINAL');
+                    $shipment->addChild('PickupOrderType', 'PICKUP');
+                    $shipment->addChild('ShipmentNumber', $_data['tracking_code']);
+                    $shipment->addChild('ShipmentDateTime', gmdate('c'));
+                    $pickup = $shipment->addChild('PickupDate', $date);
+                    $pickup->addAttribute('timeEarliest', gmdate('H:i:sP', strtotime($date . ' ' . $time_from)));
+                    $pickup->addAttribute('timeLatest', gmdate('H:i:sP', strtotime($date . ' ' . $time_to)));
+
+                    $parties = $shipment->addChild('Parties');
+
+                    $consignor = $parties->addChild('Party');
+                    $consignor->addAttribute('role', 'CONSIGNOR');
+                    $consignor->addChild('Name1', $settings['sender_name']);
+                    $consignor_location = $consignor->addChild('Location');
+                    $consignor_location->addChild('Street1', $settings['sender_address']);
+                    $consignor_location->addChild('Postcode', $settings['sender_postal_code']);
+                    $consignor_location->addChild('City', $settings['sender_city']);
+                    $consignor_location->addChild('Country', $settings['sender_country']);
+
+                    $payer = $parties->addChild('Party');
+                    $payer->addAttribute('role', 'PAYER');
+                    $account1 = $payer->addChild('Account', $settings['order_pickup_customer_id']);
+                    $account1->addAttribute('type', 'SAP_CUSTOMER');
+                    $account2 = $payer->addChild('Account', $settings['order_pickup_invoice_id']);
+                    $account2->addAttribute('type', 'SAP_INVOICE');
+                    $payer->addChild('Name1', $settings['sender_name']);
+
+                    $items = $shipment->addChild('GoodsItems');
+                    foreach ( $_data['products'] as $_product ) {
+                        $item = $items->addChild('GoodsItem');
+                        $qty = $item->addChild('PackageQuantity', $_product['qty']);
+                        $qty->addAttribute('type', 'CW');
+                    }
+                }
+            }
+
+            $xml_data = $xml->asXML();
+            $url = $this->core->order_pickup_url;
+            if ( ! $url ) {
+                throw new \Exception(__('Order pickup URL not set.', 'woo-pakettikauppa'));
+            }
+            $transient_name = $this->core->prefix . '_access_token';
+            $token = get_transient($transient_name);
+
+            if ( ! $token ) {
+                throw new \Exception(__('Token not found. Please check credentials', 'woo-pakettikauppa'));
+            }
+            return $this->do_post($url, $xml_data, $token);
+        }
+
+        /**
+        * @param string $url
+        * @param string $body
+        * @return bool|string
+        */
+       private function do_post( $url, $body, $token ) {
+           $headers = array();
+           $headers[] = 'Content-type: text/xml; charset=utf-8';
+           $headers[] = 'Authorization: Bearer ' . $token;
+           $post_data = $body;
+
+           $options = array(
+             CURLOPT_POST            => 1,
+             CURLOPT_HEADER          => 0,
+             CURLOPT_URL             => $url,
+             CURLOPT_FRESH_CONNECT   => 1,
+             CURLOPT_RETURNTRANSFER  => 1,
+             CURLOPT_FORBID_REUSE    => 1,
+             CURLOPT_USERAGENT       => 'pk-client-lib/2.0',
+             CURLOPT_TIMEOUT         => 30,
+             CURLOPT_HTTPHEADER      => $headers,
+             CURLOPT_POSTFIELDS      => $post_data,
+           );
+
+           $ch = curl_init();
+           curl_setopt_array($ch, $options);
+           $this->http_response_code   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+           $this->http_error           = curl_errno($ch);
+           $response = curl_exec($ch);
+           $xml = $this->parse_response_xml($response);
+           if ( $xml !== false ) {
+               $status = (string) $xml->result;
+               $message = (string) $xml->resultMessage;
+               if ( $status == 'FAILURE' ) {
+                return array(
+                  'status' => '500',
+                  'message' => $status . ' - ' . $message,
+                );
+               } else if ( $status == 'SUCCESS' ) {
+                 return array( 'status' => '200' );
+               } else {
+                  return array(
+                    'status' => '500',
+                    'message' => 'Unknown response status - ' . $status,
+                  );
+               }
+           }
+           return json_decode($response, true);
+       }
+
+       private function parse_response_xml( $response ) {
+            $prev = libxml_use_internal_errors(true);
+
+            $doc = simplexml_load_string($response);
+            $errors = libxml_get_errors();
+
+            libxml_clear_errors();
+            libxml_use_internal_errors($prev);
+
+            return false !== $doc && empty($errors) ? $doc : false;
+
+       }
+    }
 }

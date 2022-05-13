@@ -272,6 +272,22 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
       return __('Shipping methods mapping', 'woo-pakettikauppa');
     }
 
+    public function order_pickup_title() {
+      return __('Order pickup', 'woo-pakettikauppa');
+    }
+
+    public function customer_id_title() {
+      return __('Customer ID', 'woo-pakettikauppa');
+    }
+
+    public function invoice_id_title() {
+      return __('Invoice ID', 'woo-pakettikauppa');
+    }
+
+    public function sender_id_title() {
+      return __('Sender ID', 'woo-pakettikauppa');
+    }
+
     public function shipping_settings_title() {
       return __('Shipping settings', 'woo-pakettikauppa');
     }

@@ -171,13 +171,6 @@ jQuery(function( $ ) {
       $(select_field).data("selected",null);
     }
   };
-  
-  /* Manifest actions */
-  $('.manifest_action').on('click', function() {
-    $(this).closest('tr').find('input[type="checkbox"]').prop('checked', true);
-    $(this).closest('form').append('<input type = "hidden" name = "action" value = "' + $(this).attr('data-action') + '"/>');
-    $(this).closest('form').submit();
-  });
 });
 
 /* Multiple tracking codes */
