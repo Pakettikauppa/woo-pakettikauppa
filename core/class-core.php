@@ -179,7 +179,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       if ( is_admin() ) {
         $this->admin = $this->load_admin_class();
         $this->setup_wizard = $this->maybe_load_setup_wizard();
-        $this->product = $this->load_product_class();
 
         if ( $shipment_exception ) {
           $this->admin->add_error($shipment_exception);
@@ -189,8 +188,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
         $this->load_check_tool_class();
       }
 
-      // Always load frontend so admin_ajax can work from there
+      // Always load classes
       $this->frontend = $this->load_frontend_class();
+      $this->product = $this->load_product_class();
 
       if ( $shipment_exception ) {
         $this->frontend->add_error($shipment_exception);
