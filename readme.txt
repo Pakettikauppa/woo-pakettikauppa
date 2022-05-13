@@ -105,6 +105,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 = 3.7.0 =
 * Support for different label sizes
 
+= 3.6.2 =
+* Bug fix: load product class when not in admin view
+
 = 3.6.1 =
 * Bug fix
 
