@@ -38,6 +38,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
                 add_action('admin_menu', array( $this, 'add_submenu' ));
                 add_action('admin_enqueue_scripts', array( $this, 'manifest_enqueue_scripts' ));
                 add_action('wp_ajax_pk_manifest_call_courier', array( $this, 'pk_manifest_call_courier' ));
+                add_action('add_meta_boxes', array( $this, 'register_meta_boxe' ));
             }
         }
 
@@ -382,7 +383,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
 
             $shipments = $xml->addChild('Shipments');
             foreach ( $order_ids as $order_id ) {
-                $data = get_post_meta($order_id, '_wc_pakettikauppa_labels', true);
+                $data = get_post_meta($order_id, '_' . $this->core->prefix . '_labels', true);
                 if ( empty($data) ) {
                     continue;
                 }
@@ -442,52 +443,52 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
         * @param string $body
         * @return bool|string
         */
-       private function do_post( $url, $body, $token ) {
-           $headers = array();
-           $headers[] = 'Content-type: text/xml; charset=utf-8';
-           $headers[] = 'Authorization: Bearer ' . $token;
-           $post_data = $body;
+        private function do_post( $url, $body, $token ) {
+            $headers = array();
+            $headers[] = 'Content-type: text/xml; charset=utf-8';
+            $headers[] = 'Authorization: Bearer ' . $token;
+            $post_data = $body;
 
-           $options = array(
-             CURLOPT_POST            => 1,
-             CURLOPT_HEADER          => 0,
-             CURLOPT_URL             => $url,
-             CURLOPT_FRESH_CONNECT   => 1,
-             CURLOPT_RETURNTRANSFER  => 1,
-             CURLOPT_FORBID_REUSE    => 1,
-             CURLOPT_USERAGENT       => 'pk-client-lib/2.0',
-             CURLOPT_TIMEOUT         => 30,
-             CURLOPT_HTTPHEADER      => $headers,
-             CURLOPT_POSTFIELDS      => $post_data,
-           );
+            $options = array(
+              CURLOPT_POST            => 1,
+              CURLOPT_HEADER          => 0,
+              CURLOPT_URL             => $url,
+              CURLOPT_FRESH_CONNECT   => 1,
+              CURLOPT_RETURNTRANSFER  => 1,
+              CURLOPT_FORBID_REUSE    => 1,
+              CURLOPT_USERAGENT       => 'pk-client-lib/2.0',
+              CURLOPT_TIMEOUT         => 30,
+              CURLOPT_HTTPHEADER      => $headers,
+              CURLOPT_POSTFIELDS      => $post_data,
+            );
 
-           $ch = curl_init();
-           curl_setopt_array($ch, $options);
-           $this->http_response_code   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-           $this->http_error           = curl_errno($ch);
-           $response = curl_exec($ch);
-           $xml = $this->parse_response_xml($response);
-           if ( $xml !== false ) {
-               $status = (string) $xml->result;
-               $message = (string) $xml->result_message;
-               if ( $status == 'FAILURE' ) {
-                return array(
-                  'status' => '500',
-                  'message' => $status . ' - ' . $message,
-                );
-               } else if ( $status == 'SUCCESS' ) {
-                 return array( 'status' => '200' );
-               } else {
-                  return array(
-                    'status' => '500',
-                    'message' => 'Unknown response status - ' . $status,
-                  );
-               }
-           }
-           return json_decode($response, true);
-       }
+            $ch = curl_init();
+            curl_setopt_array($ch, $options);
+            $this->http_response_code   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $this->http_error           = curl_errno($ch);
+            $response = curl_exec($ch);
+            $xml = $this->parse_response_xml($response);
+            if ( $xml !== false ) {
+                $status = (string) $xml->result;
+                $message = (string) $xml->result_message;
+                if ( $status == 'FAILURE' ) {
+                 return array(
+                   'status' => '500',
+                   'message' => $status . ' - ' . $message,
+                 );
+                } else if ( $status == 'SUCCESS' ) {
+                  return array( 'status' => '200' );
+                } else {
+                   return array(
+                     'status' => '500',
+                     'message' => 'Unknown response status - ' . $status,
+                   );
+                }
+            }
+            return json_decode($response, true);
+        }
 
-       private function parse_response_xml( $xml_data ) {
+        private function parse_response_xml( $xml_data ) {
             //fix for tests
             $response = str_replace('resultMessage', 'result_message', $xml_data);
             $prev = libxml_use_internal_errors(true);
@@ -500,6 +501,70 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
 
             return false !== $doc && empty($errors) ? $doc : false;
 
-       }
+        }
+
+        /**
+        * Register meta box for WooCommerce order page.
+        */
+        public function register_meta_boxe() {
+            add_meta_box(
+              'woo-pakettikauppa-manifest', // Using a variable WILL BREAK JS
+              // $this->core->prefix,
+              __('Manifest', 'woo-pakettikauppa'),
+              array(
+                $this,
+                'order_meta_box',
+              ),
+              null,
+              'side',
+              'default'
+            );
+        }
+
+        public function order_meta_box( $post ) {
+            $order = wc_get_order($post->ID);
+
+            if ( $order === null ) {
+              return;
+            }
+
+            $manifest_id = get_post_meta($post->ID, $this->core->prefix . '_manifest', true);
+            if ( ! $manifest_id ) {
+                echo '<h4>' . esc_attr__('No manifest assigned', 'woo-pakettikauppa') . '</h4>';
+                return;
+            }
+
+            $manifest = get_post($manifest_id);
+            if ( ! $manifest ) {
+                return;
+            }
+            ?>
+            <h4><?php echo esc_attr__('Manifest ID', 'woo-pakettikauppa'); ?>: <?php echo $manifest_id; ?></h4>
+            <h4><?php echo esc_attr__('Manifest status', 'woo-pakettikauppa'); ?>: <?php echo get_post_status($manifest); ?></h4>
+            <hr/>
+            <h4><?php echo esc_attr__('Assigned orders', 'woo-pakettikauppa'); ?>:</h4>
+            <?php
+            $current_orders = get_post_meta($manifest_id, $this->core->prefix . '_manifest_orders', true);
+            ?>
+            <ol style="list-style: circle;">
+            <?php
+            foreach ( $current_orders as $order_id ) {
+                $_order = wc_get_order($order_id);
+                if ( $_order !== null ) {
+                    $data = get_post_meta($order_id, '_' . $this->core->prefix . '_labels', true);
+                    ?>
+                    <li>
+                        <a href = "<?php echo $_order->get_edit_order_url(); ?>" target = "_blank">#<?php echo $_order->get_id(); ?></a>
+                        <?php
+                        echo empty($data) ? __('Shipment not ready', 'woo-pakettikauppa') : __('Shipment ready', 'woo-pakettikauppa');
+                        ?>
+                    </li>
+                    <?php
+                }
+            }
+            ?>
+            </ol>
+            <?php
+        }
     }
 }
