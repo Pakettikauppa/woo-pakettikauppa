@@ -103,7 +103,11 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 = 3.7.0 =
-* Support for different label sizes
+* New feature: Support for different label sizes
+* New feature: Shipping phone number optional / mandatory settings
+* New feature: Show estimated price of the shipment in the admin view
+* New feature: LV translations
+* Refactoring: Arranging settings regrading checkout settings
 
 = 3.6.2 =
 * Bug fix: load product class when not in admin view
