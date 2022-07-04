@@ -504,6 +504,17 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           'class'   => 'mode_react',
         ),
 
+        'labels_size'     => array(
+          'title'   => $this->get_core()->text->labels_size_title(),
+          'type'    => 'select',
+          'default' => 'menu',
+          'options' => array(
+            'A5'  => 'A5',
+            '107x225'  => '107x225',
+          ),
+          'class'   => 'mode_react',
+        ),
+
         'download_type_of_labels'     => array(
           'title'   => $this->get_core()->text->download_type_of_labels_title(),
           'type'    => 'select',
@@ -523,6 +534,21 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           'class'   => 'mode_react',
         ),
 
+        array(
+          'title' => $this->get_core()->text->checkout_settings(),
+          'type'  => 'title',
+        ),
+
+        'field_phone_required' => array(
+          'title'   => $this->get_core()->text->field_phone_required(),
+          'type'    => 'select',
+          'default' => 'no',
+          'options' => array(
+            'no'  => __('No'),
+            'yes'  => __('Yes'),
+          ),
+        ),
+
         'pickup_points_search_limit' => array(
           'title'       => $this->get_core()->text->pickup_points_search_limit_title(),
           'type'        => 'number',
@@ -531,6 +557,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           'desc_tip'    => true,
           'class'   => 'mode_react',
         ),
+
         'pickup_point_list_type'     => array(
           'title'   => $this->get_core()->text->pickup_point_list_type_title(),
           'type'    => 'select',
@@ -541,6 +568,18 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           ),
           'class'   => 'mode_react',
         ),
+        'show_pickup_point_override_query' => array(
+          'title'   => $this->get_core()->text->show_pickup_point_override_query(),
+          'type'    => 'select',
+          'default' => 'yes',
+          'options' => array(
+            'no'  => __('No'),
+            'yes'  => __('Yes'),
+          ),
+          'description' => $this->get_core()->text->pickup_points_override_query_desc(),
+          'desc_tip'    => true,
+        ),
+
         array(
           'title' => $this->get_core()->text->store_owner_information(),
           'type'  => 'title',
@@ -609,15 +648,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
         array(
           'title' => $this->get_core()->text->advanced_settings(),
           'type'  => 'title',
-        ),
-        'show_pickup_point_override_query' => array(
-          'title'   => $this->get_core()->text->show_pickup_point_override_query(),
-          'type'    => 'select',
-          'default' => 'yes',
-          'options' => array(
-            'no'  => __('No'),
-            'yes'  => __('Yes'),
-          ),
         ),
         'label_additional_info' => array(
           'title'   => $this->get_core()->text->additional_info_param_title(),

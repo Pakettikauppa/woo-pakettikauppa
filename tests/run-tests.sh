@@ -31,6 +31,7 @@ then
   echo "Running $PHPCS_BIN:"
   $PHPCS_BIN -i
   $PHPCS_BIN --extensions=php -n --standard=phpcs.xml
+  exit
 else
   echo "Skipping PHPCS as SNIFF is not set."
 fi

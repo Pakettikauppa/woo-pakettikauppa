@@ -9,7 +9,9 @@ jobs:
       - curl -O https://raw.githubusercontent.com/Seravo/gnitpick/master/gnitpick.py
       script:
       - python3 ./gnitpick.py
-    # Test the legacy 4.9 series and an older PHP version
+    # Sniff with some PHP version
+    - php: '7.2'
+      env: SNIFF=1
     # Test PHP 7.4
     - php: '7.4'
     # Test the PHP development version
@@ -19,8 +21,6 @@ jobs:
 #      env: WP_VERSION=nightly
     # Test the WooCommerce development version
     # Test the all development versions
-    - php: '8.0'
-      env: SNIFF=1
     - php: '8.0'
       env: WOO_VERSION=nightly
     - php: '8.1'

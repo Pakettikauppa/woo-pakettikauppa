@@ -150,6 +150,53 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       return $methods;
     }
 
+    public function get_estimated_shipping_price( \WC_Order $order, $service_id = null, $additional_services = null, $selected_products = array() ) {
+      $estimated_price = 0;
+
+      if ( ! self::validate_order_shipping_receiver($order) ) {
+        return $estimated_price;
+      }
+
+      if ( $additional_services === null ) {
+        $additional_services = $this->get_additional_services_from_order($order);
+
+        $pickup_point_id = $order->get_meta('_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point_id');
+
+        if ( ! empty($pickup_point_id) ) {
+          $additional_services[] = array(
+            '2106' => array(
+              'pickup_point_id' => $pickup_point_id,
+            ),
+          );
+        }
+
+        if ( ! empty($selected_products) ) {
+          $dangerous_goods = $this->core->product->calc_selected_dangerous_goods($selected_products, 'kg');
+        } else {
+          $dangerous_goods = $this->core->product->calc_order_dangerous_goods($order, 'kg');
+        }
+        $count_services = count($additional_services);
+        for ( $i = 0; $i < $count_services; $i++ ) {
+          if ( isset($additional_services[$i]['3143']) && $additional_services[$i]['3143']['lqweight'] != $dangerous_goods['weight'] ) {
+            $additional_services[$i]['3143']['lqweight'] = $dangerous_goods['weight'];
+            $additional_services[$i]['3143']['lqcount'] = $dangerous_goods['count'];
+          }
+          if ( empty($additional_services[$i]['3143']['lqweight']) ) {
+            unset($additional_services[$i]['3143']);
+          }
+        }
+      }
+
+      $shipment = $this->create_shipment_from_order($order, $service_id, $additional_services, $selected_products, array( 'return_shipment' => true ));
+      $estimated = $this->client->estimateShippingCost($shipment);
+
+      if ( isset($estimated->total_price) ) {
+        $estimated_price = $estimated->total_price;
+      }
+
+      return $estimated_price;
+    }
+
     public function check_api_credentials( $account_number, $secret_key ) {
       $api_good = true;
       $status = array(
@@ -1007,6 +1054,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
       $shipment->setShipmentInfo($info);
 
+      if ( ! empty($extra_params['return_shipment']) ) {
+        return $shipment;
+      }
+
       try {
         $this->client->createTrackingCode($shipment, $language);
       } catch ( \Exception $e ) {
@@ -1220,8 +1271,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      * @return SimpleXMLElement
      * @throws Exception
      */
-    public function fetch_shipping_labels( $tracking_codes ) {
-      return $this->client->fetchShippingLabels($tracking_codes);
+    public function fetch_shipping_labels( $tracking_codes, $labels_size = null ) {
+      return $this->client->fetchShippingLabels($tracking_codes, $labels_size);
     }
 
     /**
@@ -1230,8 +1281,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      * @return SimpleXMLElement
      * @throws Exception
      */
-    public function fetch_shipping_label( $tracking_code ) {
-      return $this->fetch_shipping_labels(array( $tracking_code ));
+    public function fetch_shipping_label( $tracking_code, $labels_size = null ) {
+      return $this->fetch_shipping_labels(array( $tracking_code ), $labels_size);
     }
 
     /**

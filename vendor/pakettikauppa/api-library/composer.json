@@ -21,12 +21,16 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "Pakettikauppa\\": "src/Pakettikauppa"
+            "Pakettikauppa\\": "src/Pakettikauppa",
+            "Tests\\Pakettikauppa\\": "src/Tests/Pakettikauppa"
         }
     },
     "require": {
         "ext-curl": "*",
         "ext-json": "*",
         "ext-simplexml": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9"
     }
 }

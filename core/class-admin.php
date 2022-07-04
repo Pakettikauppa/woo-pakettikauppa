@@ -55,6 +55,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       add_action('wp_ajax_pakettikauppa_meta_box', array( $this, 'ajax_meta_box' ));
       add_action('woocommerce_order_status_changed', array( $this, 'create_shipment_for_order_automatically' ));
       add_action('wp_ajax_get_pickup_point_by_custom_address', array( $this, 'get_pickup_point_by_custom_address' ));
+      add_action('wp_ajax_update_estimated_shipping_price', array( $this, 'update_estimated_shipping_price' ));
       add_action('wp_ajax_check_api', array( $this, 'ajax_check_credentials' ));
 
       $this->shipment = $this->core->shipment;
@@ -359,9 +360,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
     private function fetch_shipping_labels( $tracking_codes ) {
       $shipping_labels = false;
+      $settings = $this->shipment->get_settings();
+      $labels_size = (isset($settings['labels_size'])) ? $settings['labels_size'] : null;
 
       try {
-        $shipping_labels = $this->shipment->fetch_shipping_labels($tracking_codes);
+        $shipping_labels = $this->shipment->fetch_shipping_labels($tracking_codes, $labels_size);
       } catch ( \Exception $e ) {
         $this->add_admin_notice($e->getMessage(), 'error');
       }
@@ -853,7 +856,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       }
 
       $labels = $this->shipment->get_labels($post->ID);
-      $service_id = '';
+      $service_id = null;
 
       foreach ( $labels as $key => $label ) {
         if ( empty($label['tracking_url']) ) {
@@ -922,6 +925,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           </div>
         <?php endif; ?>
         <input type="hidden" name="pakettikauppa_nonce" value="<?php echo wp_create_nonce(str_replace('wc_', '', $this->core->prefix) . '-meta-box'); ?>" id="pakettikauppa_metabox_nonce" />
+        <input type="hidden" name="pakettikauppa_order_id" value="<?php echo esc_html($post->ID); ?>" id="pakettikauppa_metabox_order_id" />
         <?php
         if ( empty($service_id) ) {
           $this->tpl_section_title(__('Send order', 'woo-pakettikauppa'));
@@ -1101,7 +1105,20 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                   </ol>
               </fieldset>
           </div>
-          <?php $this->tpl_products_selector($order); ?>
+          <div class="pakettikauppa-general">
+            <?php $this->tpl_products_selector($order); ?>
+            <?php if ( $this->core->shippingmethod == 'pakettikauppa_shipping_method' ) : ?>
+              <div class="pakettikauppa-estimated-price">
+                <span class="title">
+                  <?php echo esc_html__('Estimated shipping price', 'woo-pakettikauppa'); ?>:
+                </span>
+                <span id="estimated-shipping-price" class="value" data-service="<?php echo esc_html($service_id); ?>">
+                  <?php $estimated_price = $this->core->shipment->get_estimated_shipping_price($order, $service_id); ?>
+                  <?php echo ($estimated_price) ? wc_price($estimated_price / 100) : str_replace('0', '-', wc_price(0)); ?>
+                </span>
+              </div>
+            <?php endif; ?>
+          </div>
           <p class="pakettikauppa-metabox-footer">
             <?php if ( ! empty($service_id) ) : ?>
               <?php $button_text = __('Custom shipping...', 'woo-pakettikauppa'); ?>
@@ -1143,6 +1160,74 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         $pickup_points = 'error-zip';
       }
       return $pickup_points;
+    }
+
+    public function update_estimated_shipping_price() {
+      $method_code = $_POST['method'];
+      $order_id = $_POST['order_id'];
+
+      if ( empty($order_id) ) {
+        wp_die();
+      }
+
+      $order = new \WC_Order((int) $order_id);
+
+      if ( ! Shipment::validate_order_shipping_receiver($order) ) {
+        wp_die();
+      }
+
+      $selected_point = '';
+      if ( ! empty($_POST['point']) ) {
+        preg_match('~\(#(.*?)\)~', $_POST['point'], $selected_point_id);
+        if ( ! empty(intval($selected_point_id[1])) ) {
+          $selected_point = intval($selected_point_id[1]);
+        }
+      }
+
+      $selected_products = (isset($_POST['selected']) && is_array($_POST['selected'])) ? $_POST['selected'] : array();
+
+      $additional_services = null;
+      $selected_additional_services = (isset($_POST['services']) && is_array($_POST['services'])) ? $_POST['services'] : array();
+
+      if ( ! empty($selected_point) ) {
+        $selected_additional_services[] = array(
+          'key' => '2106',
+          'param' => $selected_point,
+        );
+      }
+
+      if ( ! empty($selected_additional_services) ) {
+        $additional_services = array();
+        foreach ( $selected_additional_services as $service ) {
+          $service_values = '';
+          if ( $service['key'] == '3143' ) {
+            $dangerous_goods = $this->core->product->calc_selected_dangerous_goods($selected_products, 'kg');
+            if ( ! empty($dangerous_goods['weight']) ) {
+              $service_values = array(
+                'lqweight' => $dangerous_goods['weight'],
+                'lqcount' => $dangerous_goods['count'],
+              );
+            }
+          }
+          if ( $service['key'] == 'wc_pakettikauppa_mps_count' && intval($service['param']) > 1 ) {
+            $service['key'] = '3102';
+            $service_values = array(
+              'count' => (string) intval($service['param']),
+            );
+          }
+          if ( $service['key'] == '2106' ) {
+            $service_values = array(
+              'pickup_point_id' => $selected_point,
+            );
+          }
+          $additional_services[] = array( $service['key'] => $service_values );
+        }
+      }
+
+      $estimated_price = $this->shipment->get_estimated_shipping_price($order, $method_code, $additional_services, $selected_products);
+
+      echo ($estimated_price) ? wc_price($estimated_price / 100) : str_replace('0', '-', wc_price(0));
+      wp_die();
     }
 
     public function ajax_check_credentials() {
@@ -1472,9 +1557,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       }
 
       $tracking_code = sanitize_text_field($_REQUEST['tracking_code']); // @codingStandardsIgnoreLine
+      $settings = $this->shipment->get_settings();
+      $labels_size = (isset($settings['labels_size'])) ? $settings['labels_size'] : null;
 
       try {
-        $contents = $this->shipment->fetch_shipping_label($tracking_code);
+        $contents = $this->shipment->fetch_shipping_label($tracking_code, $labels_size);
       } catch ( \Exception $e ) {
         esc_attr_e('Failed to get shipment label.', 'woo-pakettikauppa');
         echo '</br>' . esc_attr__('Error', 'woo-pakettikauppa') . ': ' . $e->getMessage();
