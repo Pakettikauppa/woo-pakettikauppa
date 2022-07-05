@@ -851,6 +851,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             add_action(
               'admin_notices',
               function() use ( $token ) {
+                if ( ! isset($_GET['page']) || ! isset($_GET['tab']) ) {
+                    return;
+                }
                 if ( $_GET['page'] === 'wc-settings' && $_GET['tab'] === 'shipping' ) {
                   $message = (isset($token->message)) ? $token->message : __('Unknown error', 'woo-pakettikauppa');
                   echo '<div class="notice notice-error"><p><b>' . $this->core->vendor_fullname . ' ' . __('error', 'woo-pakettikauppa') . ':</b> ' . $message . '</p></div>';
