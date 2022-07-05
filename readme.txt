@@ -102,9 +102,6 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
-= 3.8.0 =
-* Various small fixes
-
 = 3.7.0 =
 * New feature: Support for different label sizes
 * New feature: Shipping phone number optional / mandatory settings
