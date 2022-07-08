@@ -655,6 +655,10 @@ class Client
 
         $response                   = curl_exec($ch);
 
+        $this->http_response_code   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $this->http_error           = (curl_errno($ch)) ? curl_error($ch) : '';
+        $this->http_response        = $response;
+
         $this->log(sprintf("Response: %s\nData\n%s\n",
           $requestId,
           json_encode($response)

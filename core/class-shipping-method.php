@@ -111,7 +111,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
               if (status.api_good) {
                 show_api_notice("", false);
               } else {
-                show_api_notice(status.msg, true);
+                var msg = status.msg;
+                if (status.error) {
+                  msg += ".<br/><b><?php _e('Error', 'woo-pakettikauppa'); ?>:</b> " + status.error;
+                }
+                if (status.code) {
+                  msg += " <i>(<?php _e('Code', 'woo-pakettikauppa'); ?> " + status.code + ")</i>";
+                }
+                show_api_notice(msg, true);
               }
             <?php endif; ?>
           });
@@ -136,7 +143,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
         function show_api_notice(text, show = true) {
           if (show) {
             $("#pakettikauppa_notices").show();
-            $("#pakettikauppa_notice_api span").text(text+".");
+            $("#pakettikauppa_notice_api span").html(text+".");
             $("#pakettikauppa_notice_api").show();
           } else {
             $("#pakettikauppa_notices").hide();
