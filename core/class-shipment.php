@@ -217,7 +217,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             if ( empty($token) ) {
               $status['api_good'] = false;
               $status['msg'] = __('Failed to connect with server', 'woo-pakettikauppa');
-              $status['error'] = ( ! empty($this->client->http_error)) ? $this->client->http_error : '';
+              $status['error'] = (! empty($this->client->http_error)) ? $this->client->http_error : '';
             } elseif ( isset($token->error) ) {
               $status['api_good'] = false;
               $status['msg'] = $token->error . ': ' . $token->message;
@@ -227,7 +227,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
               if ( empty($checker) ) {
                 $status['api_good'] = false;
                 $status['msg'] = __('Failed to check API credentials or them are bad', 'woo-pakettikauppa');
-                $status['error'] = ( ! empty($this->client->http_error)) ? $this->client->http_error : '';
+                $status['error'] = (! empty($this->client->http_error)) ? $this->client->http_error : '';
               }
             }
           } else {
@@ -235,7 +235,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             if ( empty($checker) ) {
               $status['api_good'] = false;
               $status['msg'] = __('Failed to check API credentials or them are bad', 'woo-pakettikauppa');
-              $status['error'] = ( ! empty($this->client->http_error)) ? $this->client->http_error : '';
+              $status['error'] = (! empty($this->client->http_error)) ? $this->client->http_error : '';
             }
           }
         } catch ( \Exception $e ) {
