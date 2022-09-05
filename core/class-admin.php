@@ -73,7 +73,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           'msg' => $msg,
           'type' => $type,
         );
-      } catch( \Exception $e ) {
+      } catch ( \Exception $e ) {
         // Do nothing
       }
     }
@@ -91,7 +91,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           }
           unset($_SESSION['pakettikauppa_notices']);
         }
-      } catch( \Exception $e ) {
+      } catch ( \Exception $e ) {
         $this->add_error_notice($e->getMessage());
       }
     }
