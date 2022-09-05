@@ -62,29 +62,37 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
     }
 
     public function add_admin_notice( $msg, $type ) {
-      if ( ! session_id() ) {
-        session_start();
+      try {
+        if ( ! session_id() ) {
+          session_start();
+        }
+        if ( ! isset($_SESSION['pakettikauppa_notices']) ) {
+          $_SESSION['pakettikauppa_notices'] = array();
+        }
+        $_SESSION['pakettikauppa_notices'][] = array(
+          'msg' => $msg,
+          'type' => $type,
+        );
+      } catch( \Exception $e ) {
+        // Do nothing
       }
-      if ( ! isset($_SESSION['pakettikauppa_notices']) ) {
-        $_SESSION['pakettikauppa_notices'] = array();
-      }
-      $_SESSION['pakettikauppa_notices'][] = array(
-        'msg' => $msg,
-        'type' => $type,
-      );
     }
 
     public function show_admin_notices() {
-      if ( ! session_id() ) {
-        session_start();
-      }
-      if ( array_key_exists('pakettikauppa_notices', $_SESSION) ) {
-        foreach ( $_SESSION['pakettikauppa_notices'] as $notice ) {
-          if ( $notice['type'] === 'error' ) {
-            $this->add_error_notice($notice['msg'], false);
-          }
+      try {
+        if ( ! session_id() ) {
+          session_start();
         }
-        unset($_SESSION['pakettikauppa_notices']);
+        if ( array_key_exists('pakettikauppa_notices', $_SESSION) ) {
+          foreach ( $_SESSION['pakettikauppa_notices'] as $notice ) {
+            if ( $notice['type'] === 'error' ) {
+              $this->add_error_notice($notice['msg'], false);
+            }
+          }
+          unset($_SESSION['pakettikauppa_notices']);
+        }
+      } catch( \Exception $e ) {
+        $this->add_error_notice($e->getMessage());
       }
     }
 
