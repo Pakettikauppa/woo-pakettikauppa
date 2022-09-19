@@ -1292,7 +1292,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             $additional_services = null;
 
             if ( empty($pickup_point_id) && ! empty($_REQUEST['wc_pakettikauppa_pickup_point_id']) ) {
-              $pickup_point_id = sanitize_key($_REQUEST['wc_pakettikauppa_pickup_point_id']);
+              $pickup_point_id = strtoupper(sanitize_key($_REQUEST['wc_pakettikauppa_pickup_point_id']));
 
               update_post_meta($order->get_id(), '_' . $this->core->params_prefix . 'pickup_point_id', $pickup_point_id);
             }
@@ -1332,7 +1332,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             }
 
             if ( ! empty($_REQUEST['custom_pickup']) ) {
-              $pickup_point_id = sanitize_key($_REQUEST['custom_pickup']);
+              $pickup_point_id = strtoupper(sanitize_key($_REQUEST['custom_pickup']));
 
               $additional_services[] = array(
                 '2106' => array(
