@@ -196,20 +196,20 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
     }
 
     /**
-     * action -hook to fetch tracking code of the order.
+     * action -hook to fetch tracking codes of the order as array.
      *
      * Call for example:
      *
-     * $tracking_code='';
+     * $tracking_code=array();
      * $args = array( $order_id, &$tracking_code );
      * do_action_ref_array($this->core->params_prefix . 'fetch_tracking_code', $args);"
      *
      * @param $order_id
      * @param $tracking_code
      */
-    public function hook_fetch_tracking_code( $order_id, &$tracking_code ) {
+    public function hook_fetch_tracking_codes( $order_id, &$tracking_codes ) {
       $order = new \WC_Order($order_id);
-      $tracking_code = get_post_meta($order->get_id(), '_' . $this->core->prefix . '_tracking_code', true);
+      $tracking_codes = $this->shipment->get_labels($order->getid());
     }
 
     /**
