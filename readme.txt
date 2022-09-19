@@ -73,11 +73,11 @@ Call for example:
 
 Call for example:
 
-    $tracking_code='';
+    $tracking_codes=array();
     $args = array( $order_id, &$tracking_code );
-    do_action_ref_array('pakettikauppa_fetch_tracking_code', $args);
+    do_action_ref_array('pakettikauppa_fetch_tracking_codes', $args);
 
-* pakettikauppa_fetch_tracking_code
+* pakettikauppa_fetch_tracking_codes
 
 Call for example:
 

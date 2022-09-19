@@ -196,20 +196,20 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
     }
 
     /**
-     * action -hook to fetch tracking code of the order.
+     * action -hook to fetch tracking codes of the order as array.
      *
      * Call for example:
      *
-     * $tracking_code='';
+     * $tracking_code=array();
      * $args = array( $order_id, &$tracking_code );
      * do_action_ref_array($this->core->params_prefix . 'fetch_tracking_code', $args);"
      *
      * @param $order_id
      * @param $tracking_code
      */
-    public function hook_fetch_tracking_code( $order_id, &$tracking_code ) {
+    public function hook_fetch_tracking_codes( $order_id, &$tracking_codes ) {
       $order = new \WC_Order($order_id);
-      $tracking_code = get_post_meta($order->get_id(), '_' . $this->core->prefix . '_tracking_code', true);
+      $tracking_codes = $this->shipment->get_labels($order->getid());
     }
 
     /**
@@ -1292,7 +1292,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             $additional_services = null;
 
             if ( empty($pickup_point_id) && ! empty($_REQUEST['wc_pakettikauppa_pickup_point_id']) ) {
-              $pickup_point_id = sanitize_key($_REQUEST['wc_pakettikauppa_pickup_point_id']);
+              $pickup_point_id = strtoupper(sanitize_key($_REQUEST['wc_pakettikauppa_pickup_point_id']));
 
               update_post_meta($order->get_id(), '_' . $this->core->params_prefix . 'pickup_point_id', $pickup_point_id);
             }
@@ -1332,7 +1332,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             }
 
             if ( ! empty($_REQUEST['custom_pickup']) ) {
-              $pickup_point_id = sanitize_key($_REQUEST['custom_pickup']);
+              $pickup_point_id = strtoupper(sanitize_key($_REQUEST['custom_pickup']));
 
               $additional_services[] = array(
                 '2106' => array(

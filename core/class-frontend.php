@@ -207,7 +207,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       if ( ! empty($pickup_point) ) {
         update_post_meta($order_id, '_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point', sanitize_text_field($pickup_point));
         // Find string like '(#6681)'
-        preg_match('/\(#[0-9]+\)/', $pickup_point, $matches);
+        preg_match('/\(#[.*]+\)/', $pickup_point, $matches);
         // Cut the number out from a string of the form '(#6681)'
         $pakettikauppa_pickup_point_id = (! empty($matches)) ? substr($matches[0], 2, -1) : '';
         update_post_meta($order_id, '_' . str_replace('wc_', '', $this->core->prefix) . '_pickup_point_id', $pakettikauppa_pickup_point_id);
@@ -367,7 +367,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
       // Return if the customer has not yet chosen a postcode
       if ( empty($shipping_postcode) ) {
         $error_msg = esc_attr__('Empty postcode. Please check your address information.', 'woo-pakettikauppa');
-      } else if ( ! is_numeric($shipping_postcode) ) {
+      } else if ( $shipping_country == 'FI' && ! is_numeric($shipping_postcode) ) {
         $error_msg = sprintf(
         /* translators: %s: Postcode */
           esc_attr__('Invalid postcode "%1$s". Please check your address information.', 'woo-pakettikauppa'),
