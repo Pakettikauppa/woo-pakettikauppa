@@ -353,6 +353,38 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
       return __('Make shipping phone number mandatory', 'woo-pakettikauppa');
     }
 
+    public function pickup_points_type_title() {
+      return __('Pickup points type', 'woo-pakettikauppa');
+    }
+
+    public function pickup_points_type_all() {
+      return __('All', 'woo-pakettikauppa');
+    }
+
+    public function pickup_points_type_private_locker() {
+      return __('Private lockers', 'woo-pakettikauppa');
+    }
+
+    public function pickup_points_type_outdoor_locker() {
+      return __('Outdoor lockers', 'woo-pakettikauppa');
+    }
+
+    public function pickup_points_type_parcel_locker() {
+      return __('Parcel lockers', 'woo-pakettikauppa');
+    }
+
+    public function pickup_points_type_pickup_point() {
+      return __('Pickup points', 'woo-pakettikauppa');
+    }
+
+    public function pickup_points_type_agency() {
+      return __('Agencies', 'woo-pakettikauppa');
+    }
+
+    public function pickup_points_type_desc() {
+      return __('Choose which type of pickup points will be displayed in the list of pickup points', 'woo-pakettikauppa');
+    }
+
     public function pickup_points_search_limit_title() {
       return __('Pickup point search limit', 'woo-pakettikauppa');
     }

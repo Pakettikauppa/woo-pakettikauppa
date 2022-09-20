@@ -556,6 +556,22 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           ),
         ),
 
+        'pickup_points_type' => array(
+          'title' => $this->get_core()->text->pickup_points_type_title(),
+          'type' => 'select',
+          'options' => array(
+            'all' => $this->get_core()->text->pickup_points_type_all(),
+            'PRIVATE_LOCKER' => $this->get_core()->text->pickup_points_type_private_locker(),
+            'OUTDOOR_LOCKER' => $this->get_core()->text->pickup_points_type_outdoor_locker(),
+            'PARCEL_LOCKER' => $this->get_core()->text->pickup_points_type_parcel_locker(),
+            'PICKUP_POINT' => $this->get_core()->text->pickup_points_type_pickup_point(),
+            'AGENCY' => $this->get_core()->text->pickup_points_type_agency(),
+          ),
+          'default' => 'all',
+          'description' => $this->get_core()->text->pickup_points_type_desc(),
+          'desc_tip'    => true,
+        ),
+
         'pickup_points_search_limit' => array(
           'title'       => $this->get_core()->text->pickup_points_search_limit_title(),
           'type'        => 'number',
