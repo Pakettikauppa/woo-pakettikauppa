@@ -9,7 +9,7 @@ msgstr ""
 "Language: fi\n"
 "Language-Team: Finnish\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"PO-Revision-Date: 2022-09-20 08:15+0000\n"
+"PO-Revision-Date: 2022-09-20 10:05+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Last-Translator: \n"
 "MIME-Version: 1.0\n"
@@ -636,7 +636,7 @@ msgstr "Pakettien määrä"
 
 #: core/class-text.php:373
 msgid "Parcel lockers"
-msgstr ""
+msgstr "Pakettiautomaatti"
 
 #: core/class-check-tool.php:76
 msgid "PHP version"
@@ -665,7 +665,7 @@ msgstr "Noutopisteet"
 
 #: core/class-text.php:357
 msgid "Pickup points type"
-msgstr ""
+msgstr "Noutopistetyyppi"
 
 #: core/class-admin.php:853
 #| msgid ""
