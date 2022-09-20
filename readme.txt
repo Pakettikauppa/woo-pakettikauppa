@@ -73,11 +73,11 @@ Call for example:
 
 Call for example:
 
-    $tracking_code='';
+    $tracking_codes=array();
     $args = array( $order_id, &$tracking_code );
-    do_action_ref_array('pakettikauppa_fetch_tracking_code', $args);
+    do_action_ref_array('pakettikauppa_fetch_tracking_codes', $args);
 
-* pakettikauppa_fetch_tracking_code
+* pakettikauppa_fetch_tracking_codes
 
 Call for example:
 
@@ -102,6 +102,13 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
+= 3.8.1 =
+* Fix for pickup point searches
+* Fix for pakettikauppa_fetch_tracking_codes -action
+
+= 3.8.0 =
+* Various small fixes
+
 = 3.7.0 =
 * New feature: Support for different label sizes
 * New feature: Shipping phone number optional / mandatory settings

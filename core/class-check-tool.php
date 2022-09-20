@@ -209,7 +209,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Check_Tool') ) {
             if ( $api_check['api_good'] ) {
                 return $this->render_success($api_check['msg']);
             } else {
-                return $this->render_error($api_check['msg']);
+                $msg = $api_check['msg'];
+                if ( ! empty($api_check['error']) ) {
+                    $msg .= '. ' . $api_check['error'];
+                }
+                if ( ! empty($api_check['code']) ) {
+                    $msg .= ' <i>(' . __('Code', 'woo-pakettikauppa') . ' ' . $api_check['code'] . '</i>)';
+                }
+                return $this->render_error($msg);
             }
         }
 

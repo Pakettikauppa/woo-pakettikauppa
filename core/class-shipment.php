@@ -202,7 +202,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       $status = array(
         'api_good' => true,
         'msg' => __('API is good', 'woo-pakettikauppa'),
+        'code' => '',
+        'error' => '',
       );
+
       if ( empty($account_number) || empty($secret_key) ) {
         $status['api_good'] = false;
         $status['msg'] = __('Bad API key or API secret', 'woo-pakettikauppa');
@@ -214,6 +217,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             if ( empty($token) ) {
               $status['api_good'] = false;
               $status['msg'] = __('Failed to connect with server', 'woo-pakettikauppa');
+              $status['error'] = (! empty($this->client->http_error)) ? $this->client->http_error : '';
             } elseif ( isset($token->error) ) {
               $status['api_good'] = false;
               $status['msg'] = $token->error . ': ' . $token->message;
@@ -223,6 +227,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
               if ( empty($checker) ) {
                 $status['api_good'] = false;
                 $status['msg'] = __('Failed to check API credentials or them are bad', 'woo-pakettikauppa');
+                $status['error'] = (! empty($this->client->http_error)) ? $this->client->http_error : '';
               }
             }
           } else {
@@ -230,13 +235,16 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             if ( empty($checker) ) {
               $status['api_good'] = false;
               $status['msg'] = __('Failed to check API credentials or them are bad', 'woo-pakettikauppa');
+              $status['error'] = (! empty($this->client->http_error)) ? $this->client->http_error : '';
             }
           }
         } catch ( \Exception $e ) {
           $status['api_good'] = false;
           $status['msg'] = __('An error occurred while checking API credentials', 'woo-pakettikauppa');
         }
+        $status['code'] = (isset($this->client->http_response_code)) ? $this->client->http_response_code : '';
       }
+
       return $status;
     }
 
@@ -851,6 +859,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             add_action(
               'admin_notices',
               function() use ( $token ) {
+                if ( ! isset($_GET['page']) || ! isset($_GET['tab']) ) {
+                    return;
+                }
                 if ( $_GET['page'] === 'wc-settings' && $_GET['tab'] === 'shipping' ) {
                   $message = (isset($token->message)) ? $token->message : __('Unknown error', 'woo-pakettikauppa');
                   echo '<div class="notice notice-error"><p><b>' . $this->core->vendor_fullname . ' ' . __('error', 'woo-pakettikauppa') . ':</b> ' . $message . '</p></div>';
