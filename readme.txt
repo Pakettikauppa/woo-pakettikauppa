@@ -102,6 +102,9 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
+= 3.7.2 =
+* Fix small pickup point search bug
+
 = 3.7.1 =
 * Fix for pickup point searches
 * Fix for pakettikauppa_fetch_tracking_codes -action
