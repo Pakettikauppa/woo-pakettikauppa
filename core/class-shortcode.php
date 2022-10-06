@@ -29,21 +29,21 @@ if ( ! class_exists(__NAMESPACE__ . '\Shortcode') ) {
      * Load hooks
      */
     public function load() {
-      add_shortcode($this->core->params_prefix . 'tracking', array($this, 'tracking_info'));
+      add_shortcode($this->core->params_prefix . 'tracking', array( $this, 'tracking_info' ));
 
       $this->shipment = $this->core->shipment;
     }
 
     /**
      * Shortcode: Show tracking code or URL
-     * 
+     *
      * @param array $attributes Shortcode attributes
-     * 
+     *
      * @property int $order Order number
      * @property string $separator Separator between elements
      * @property string $show Tracking code/URL output type. Available values: code, url, link.
      * @property boolean $new_tab Open link to new tab
-     * 
+     *
      * @return string Shortcode content
      */
     public function tracking_info( $attributes ) {
