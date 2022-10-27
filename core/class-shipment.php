@@ -1064,6 +1064,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       }
 
       $shipment->setShipmentInfo($info);
+      
+      if(isset($extra_params['wc_pakettikauppa_include_return_label'])){
+        $shipment->includeReturnLabel(true);
+      }
 
       if ( ! empty($extra_params['return_shipment']) ) {
         return $shipment;

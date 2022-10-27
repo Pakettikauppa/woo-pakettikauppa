@@ -39,6 +39,10 @@ jQuery(function( $ ) {
         data['custom_pickup'] = $("#pickup-changer-" + shipping_method + " .pakettikauppa-pickup-select").find(':selected').data('id');
       }
 
+      if($('#pk-include-return-label').prop('checked')){
+        data['wc_pakettikauppa_include_return_label'] = 1;
+      }
+
       $('#pk-admin-additional-services-' + shipping_method + ' .pakettikauppa_metabox_values').each(function (i, obj) {
         var name = $(obj).attr('name');
         data[name] = $(this).val();

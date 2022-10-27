@@ -1102,6 +1102,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             </fieldset>
               <fieldset id = "default_shipment_additional_services">
                   <ol style="list-style: circle;">
+                      <input
+                          type="checkbox"
+                          id="pk-include-return-label"
+                          class="pakettikauppa_metabox_array_values"
+                          name="wc_pakettikauppa_include_return_label"
+                          value="1"
+                          />
+                      <label for="pk-include-return-label"><?php echo __('Also create return label', 'woo-pakettikauppa'); ?></label>
+                    </li>
                   </ol>
               </fieldset>
           </div>
@@ -1346,6 +1355,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           $extra_params = array();
           if ( isset($_REQUEST['additional_text']) ) {
             $extra_params['additional_text'] = sanitize_textarea_field($_REQUEST['additional_text']);
+          }
+
+          if( isset($_REQUEST['wc_pakettikauppa_include_return_label'])){
+            $extra_params['wc_pakettikauppa_include_return_label'] = $_REQUEST['wc_pakettikauppa_include_return_label'];
           }
 
           $tracking_code = $this->shipment->create_shipment($order, $service_id, $additional_services, $selected_products, $extra_params);
