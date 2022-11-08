@@ -33,6 +33,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
     public $shipping_method_instance; // Added as an afterthought to fix a bug, merge with $shippingmethod in the future.
     public $setup_wizard;
     public $product;
+    public $shortcode;
 
     public $api_config; // Used by Pakettikauppa\Client
     public $api_comment; // Used by ^
@@ -191,6 +192,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       // Always load classes
       $this->frontend = $this->load_frontend_class();
       $this->product = $this->load_product_class();
+      $this->shortcode = $this->load_shortcode_class();
 
       if ( $shipment_exception ) {
         $this->frontend->add_error($shipment_exception);
@@ -337,6 +339,18 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       $product->load();
 
       return $product;
+    }
+
+    /**
+     * Override this method to load a custom Product class
+     */
+    protected function load_shortcode_class() {
+      require_once 'class-shortcode.php';
+
+      $shortcode = new Shortcode($this);
+      $shortcode->load();
+
+      return $shortcode;
     }
   }
 }
