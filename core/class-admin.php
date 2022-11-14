@@ -44,11 +44,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       add_action('admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ));
       add_action('add_meta_boxes', array( $this, 'register_meta_boxes' ));
       add_action('admin_post_show_pakettikauppa', array( $this, 'show' ), 10);
-      add_action('admin_post_quick_create_label', array( $this, 'create_multiple_shipments' ), 10);
+      add_action('admin_post_quick_create_label', array( $this, 'create_multiple_shipments' ), 10, 2);
       add_action('woocommerce_email_order_meta', array( $this, 'attach_tracking_to_email' ), 10, 4);
       add_action('woocommerce_admin_order_data_after_shipping_address', array( $this, 'show_pickup_point_in_admin_order_meta' ), 10, 1);
       add_action('save_post', array( $this, 'save_admin_order_meta' ));
-      add_action('handle_bulk_actions-edit-shop_order', array( $this, 'create_multiple_shipments' )); // admin_action_{action name}
+      add_action('handle_bulk_actions-edit-shop_order', array( $this, 'create_multiple_shipments' ), 10, 2); // admin_action_{action name}
       add_action($this->core->params_prefix . 'create_shipments', array( $this, 'hook_create_shipments' ), 10, 2);
       add_action($this->core->params_prefix . 'fetch_shipping_labels', array( $this, 'hook_fetch_shipping_labels' ), 10, 2);
       add_action($this->core->params_prefix . 'fetch_tracking_code', array( $this, 'hook_fetch_tracking_code' ), 10, 2);
@@ -57,6 +57,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       add_action('wp_ajax_get_pickup_point_by_custom_address', array( $this, 'get_pickup_point_by_custom_address' ));
       add_action('wp_ajax_update_estimated_shipping_price', array( $this, 'update_estimated_shipping_price' ));
       add_action('wp_ajax_check_api', array( $this, 'ajax_check_credentials' ));
+      add_action('admin_footer', array($this, 'orders_info_modal'));
 
       $this->shipment = $this->core->shipment;
     }
@@ -260,9 +261,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       if ( version_compare($wp_version, '5.6.0', '>=') ) {
         $bulk_actions[$this->core->vendor_name] = array(
           $this->core->params_prefix . 'create_multiple_shipping_labels' => __('Create and fetch shipping labels', 'woo-pakettikauppa'),
+          $this->core->params_prefix . 'create_custom_shipments' => __('Create custom shipments', 'woo-pakettikauppa'),
         );
       } else {
         $bulk_actions[$this->core->params_prefix . 'create_multiple_shipping_labels'] = $this->core->vendor_name . ': ' . __('Create and fetch shipping labels', 'woo-pakettikauppa');
+        $bulk_actions[$this->core->params_prefix . 'create_custom_shipments'] = $this->core->vendor_name . ': ' . __('Create custom shipments', 'woo-pakettikauppa');
       }
 
       return $bulk_actions;
@@ -328,6 +331,18 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         return;
       }
 
+      $order_ids = array();
+
+      // instead of array_map we use foreach because array_map is not allowed by sniff rules
+      foreach ( $_REQUEST['post'] as $order_id ) {
+          $order_ids[] = sanitize_text_field($order_id);
+      }
+
+      if ($action === $this->core->params_prefix . 'create_custom_shipments') {
+        $redirect_to = add_query_arg('ids', $order_ids, $redirect_to);
+        return $redirect_to;
+      }
+
       if ( ! ($action === $this->core->params_prefix . 'create_multiple_shipping_labels' || $action === 'quick_create_label') ) {
         return;
       }
@@ -336,12 +351,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         return;
       }
 
-      $order_ids = array();
-
-      // instead of array_map we use foreach because array_map is not allowed by sniff rules
-      foreach ( $_REQUEST['post'] as $order_id ) {
-          $order_ids[] = sanitize_text_field($order_id);
-      }
       $tracking_codes = $this->create_shipments($order_ids);
 
       $contents = $this->fetch_shipping_labels($tracking_codes);
@@ -1674,6 +1683,85 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           echo sprintf(__('You can %1$s with tracking code %2$s.', 'woo-pakettikauppa'), '<a href="' . esc_url($code['url']) . '">' . __('track your order', 'woo-pakettikauppa') . '</a>', '<b>' . esc_attr($code['code']) . '</b>') . '</p>';
         }
       }
+    }
+
+    function orders_info_modal()
+    {
+      if (!isset($_REQUEST['ids'])) {
+        return false;
+      }
+
+      $ids = $_REQUEST['ids'];
+
+    ?>
+
+      <div id="my-popup" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 80%;  max-height: 80%; background-color: white; padding: 10px; border: 1px solid black">
+        <div>
+          <h3>
+            INFO HERE
+          </h3>
+          <div>
+            <?php
+
+            foreach ($ids as $id) {
+              $order = wc_get_order($id);
+              if ($order) {
+            ?>
+
+                <div style="padding: 10px; margin: 10px 0; border: 1px solid black">
+                  <h4><?php echo esc_attr__('Order #', 'woo-pakettikauppa') . $id; ?></h4>
+                  <table>
+                    <tr>
+                      <th><?php echo esc_attr__('Billing address', 'woo-pakettikauppa'); ?></th>
+                      <th><?php echo esc_attr__('Shipping address', 'woo-pakettikauppa'); ?></th>
+                      <th><?php echo esc_attr__('Order total', 'woo-pakettikauppa'); ?></th>
+                      <th></th>
+                    </tr>
+                    <tr>
+                      <td><?php echo $order->get_formatted_billing_address(); ?></td>
+                      <td><?php echo $order->get_formatted_shipping_address(); ?></td>
+                      <td><?php echo $order->get_formatted_order_total(); ?></td>
+                      <td><?php $this->meta_box(get_post((int)$id)); ?></td>
+                    </tr>
+                  </table>
+                </div>
+
+            <?php
+              }
+            }
+
+            ?>
+          </div>
+        </div>
+        <button id="my-popup-close-button" style="position: absolute; top: 0; right: 0;">
+          Close
+        </button>
+      </div>
+
+
+      <script>
+        const popup = document.getElementById('my-popup');
+
+        const closeBtn = document.getElementById('my-popup-close-button');
+        if (!!closeBtn) {
+          closeBtn.addEventListener('click', () => {
+            if (!!popup) {
+              popup.style.display = 'none';
+            }
+          })
+        }
+
+        const openBtn = document.getElementById('my-popup-open-button');
+        if (!!openBtn) {
+          openBtn.addEventListener('click', () => {
+            if (!!popup) {
+              popup.style.display = '';
+            }
+          })
+        }
+      </script>
+
+<?php
     }
   }
 }
