@@ -58,6 +58,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       add_action('wp_ajax_update_estimated_shipping_price', array( $this, 'update_estimated_shipping_price' ));
       add_action('wp_ajax_check_api', array( $this, 'ajax_check_credentials' ));
       add_action('admin_footer', array($this, 'orders_info_modal'));
+      add_action('wp_ajax_pakettikauppa_meta_box_bulk', array( $this, 'ajax_meta_box_bulk' ));
 
       $this->shipment = $this->core->shipment;
     }
@@ -194,6 +195,28 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
       $this->meta_box(get_post((int) $_POST['post_id']));
       wp_die();
+    }
+
+    public function ajax_meta_box_bulk() {
+      check_ajax_referer(str_replace('wc_', '', $this->core->prefix) . '-meta-box', 'security');
+
+      $error_count = count($this->get_errors());
+
+      if ( ! is_numeric($_POST['post_id']) ) {
+        $this->add_admin_notice(__('Received Post ID is not a number', 'woo-pakettikauppa'), 'error');
+        wp_die('', '', 501);
+      }
+      $this->save_ajax_metabox((int) $_POST['post_id']);
+
+      if ( count($this->get_errors()) !== $error_count ) {
+        foreach ( $this->get_errors() as $error ) {
+          $this->add_admin_notice($error, 'error');
+        }
+        wp_die('', '', 501);
+      }
+      $this->meta_box_custom_shipments(get_post((int) $_POST['post_id']));
+      wp_die();
+
     }
 
     /**
@@ -1006,7 +1029,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             <?php $show_custom = ($show_section == 'custom') ? '' : 'display:none;'; ?>
             <fieldset class="pakettikauppa-metabox-fieldset" id="wc_pakettikauppa_custom_shipping_method" style="<?php echo $show_custom; ?>">
               <?php if ( ! empty($all_shipment_services) ) : ?>
-              <select name="wc_pakettikauppa_service_id" id="pakettikauppa-service" class="pakettikauppa_metabox_values" onchange="pakettikauppa_change_shipping_method();">
+              <select name="wc_pakettikauppa_service_id" id="pakettikauppa-service" class="pakettikauppa_metabox_values" onchange="pakettikauppa_change_shipping_method(this);">
                 <option value="__NULL__"><?php esc_html_e('No shipping', 'woo-pakettikauppa'); ?></option>
                 <?php foreach ( $all_shipment_services as $_service_code => $_service_title ) : ?>
                   <option
@@ -1356,7 +1379,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           if ( isset($_REQUEST['additional_text']) ) {
             $extra_params['additional_text'] = sanitize_textarea_field($_REQUEST['additional_text']);
           }
-
+          
           $tracking_code = $this->shipment->create_shipment($order, $service_id, $additional_services, $selected_products, $extra_params);
 
           return $tracking_code;
@@ -1695,34 +1718,59 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
     ?>
 
-      <div id="my-popup" style="overflow-y: auto; z-index: 9999; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 80%;  max-height: 80%; background-color: white; padding: 10px; border: 1px solid black">
+      <div id="pakettikauppa-modal" style="overflow-y: auto; z-index: 9999; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 80%;  max-height: 80%; background-color: white; padding: 10px; border: 1px solid black">
         <div>
           <h3><?php echo esc_attr__('Pakettikaupa create custom shipments', 'woo-pakettikauppa');?></h3>
           <div>
             <?php
-
             foreach ($ids as $id) {
               $order = wc_get_order($id);
               if ($order) {
             ?>
-
-                <div style="padding: 10px; margin: 10px 0; border: 1px solid black">
-                  <h4><?php echo esc_attr__('Order #', 'woo-pakettikauppa') . $id; ?></h4>
-                  <table>
-                    <tr>
-                      <th><?php echo esc_attr__('Billing address', 'woo-pakettikauppa'); ?></th>
-                      <th><?php echo esc_attr__('Shipping address', 'woo-pakettikauppa'); ?></th>
-                      <th><?php echo esc_attr__('Order total', 'woo-pakettikauppa'); ?></th>
-                      <th></th>
-                    </tr>
-                    <tr>
-                      <td><?php echo $order->get_formatted_billing_address(); ?></td>
-                      <td><?php echo $order->get_formatted_shipping_address(); ?></td>
-                      <td><?php echo $order->get_formatted_order_total(); ?></td>
-                      <td><?php $this->meta_box_custom_shipments(get_post((int)$id)); ?></td>
-                    </tr>
-                  </table>
-                </div>
+              <div id="woo-pakettikauppa_<?php echo $id; ?>" style="padding: 10px; margin: 10px 0; border: 1px solid black">
+                <h4><?php echo esc_attr__('Order #', 'woo-pakettikauppa') . $id; ?></h4>
+                <table>
+                  <tr>
+                    <th><?php echo esc_attr__('Billing address', 'woo-pakettikauppa'); ?></th>
+                    <th><?php echo esc_attr__('Shipping address', 'woo-pakettikauppa'); ?></th>
+                    <th><?php echo esc_attr__('Order total', 'woo-pakettikauppa'); ?></th>
+                    <th><?php echo esc_attr__('Shipment settings', 'woo-pakettikauppa'); ?></th>
+                  </tr>
+                  <tr>
+                    <td><?php echo $order->get_formatted_billing_address(); ?></td>
+                    <td><?php echo $order->get_formatted_shipping_address(); ?></td>
+                    <td><?php echo $order->get_formatted_order_total(); ?></td>
+                    <td><?php $this->meta_box_custom_shipments(get_post((int)$id)); ?></td>
+                  </tr>
+                  <tr>
+                    <th colspan="4" style="text-align: left;">Products</th>
+                  </tr>
+                  <tr>
+                    <td colspan="4">
+                      <table style="width: 100%; text-align: left;">
+                        <tr>
+                          <th>ID</th>
+                          <th>Name</th>
+                          <th>Qty</th>
+                          <th>Subtotal</th>
+                          <th>Total</th>
+                        </tr>
+                        <?php
+                          foreach ( $order->get_items() as $item_id => $item ) {
+                            echo '<tr>';
+                            echo '<td>' . $item_id . '</td>';
+                            echo '<td>' . $item->get_name() . '</td>';
+                            echo '<td>' . $item->get_quantity() . '</td>';
+                            echo '<td>' . $item->get_subtotal() . '</td>';
+                            echo '<td>' . $item->get_total() . '</td>';
+                            echo '</tr>';
+                        }
+                        ?>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </div>
 
             <?php
               }
@@ -1731,23 +1779,23 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             ?>
           </div>
         </div>
-        <button id="my-popup-close-button" style="position: absolute; top: 10px; right: 10px;">
+        <button id="pakettikauppa-modal-close-button" style="position: absolute; top: 10px; right: 10px;">
           <?php echo esc_attr__('Close', 'woo-pakettikauppa');?>
         </button>
-        <button id="my-popup-create-button">
-          <?php echo esc_attr__('Create', 'woo-pakettikauppa');?>
+        <button type="button" value="create" id="pakettikauppa_metabtn_create_bulk" name="wc_pakettikauppa[create]" class="button pakettikauppa_meta_box button-primary" onclick="pakettikauppa_meta_box_bulk_submit(this);">
+          <?php echo __('Create', 'woo-pakettikauppa'); ?>
         </button>
       </div>
 
 
       <script>
-        const popup = document.getElementById('my-popup');
+        const modal = document.getElementById('pakettikauppa-modal');
 
-        const closeBtn = document.getElementById('my-popup-close-button');
+        const closeBtn = document.getElementById('pakettikauppa-modal-close-button');
         if (!!closeBtn) {
           closeBtn.addEventListener('click', () => {
-            if (!!popup) {
-              popup.style.display = 'none';
+            if (!!modal) {
+              modal.style.display = 'none';
             }
           })
         }
@@ -1773,9 +1821,22 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
         return;
       }
-
       
+      $labels = $this->shipment->get_labels($post->ID);
       $service_id = '';
+
+      foreach ( $labels as $key => $label ) {
+        if ( empty($label['tracking_url']) ) {
+          $labels[$key]['tracking_url'] = Shipment::tracking_url($this->core->tracking_base_url, $label['tracking_code']);
+        }
+        if ( empty($label['service_id']) ) {
+          $labels[$key]['service_id'] = $this->shipment->get_service_id_from_order($order, false);
+        }
+        if ( empty($service_id) ) {
+          $service_id = $labels[$key]['service_id'];
+        }
+        $labels[$key]['document_url'] = admin_url('admin-post.php?post=' . $post->ID . '&action=show_pakettikauppa&tracking_code=' . $label['tracking_code']);
+      }
 
       $default_service_id = $this->shipment->get_service_id_from_order($order, false);
       if ( empty($service_id) ) {
@@ -1810,18 +1871,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       $order_postcode = $order->get_shipping_postcode();
       $order_address  = $order->get_shipping_address_1() . ' ' . $order->get_shipping_city();
       $order_country  = $order->get_shipping_country();
-
-      $weight_unit = 'kg';
-      $dangerous_goods = $this->core->product->calc_order_dangerous_goods($order, $weight_unit);
-
-      $is_cod = $order->get_payment_method() === 'cod';
-      $show_section = 'main';
-      if ( empty($service_id) ) {
-        $show_section = 'custom';
-      }
       ?>
-      <div>
-        <?php if ( $show_section === 'custom' ) : ?>
+      <div class="inside">
+        <?php if ( empty($service_id) ) : ?>
           <div class="pakettikauppa-notice notice-error">
             <p>
               <?php _e('No shipping method configured! Configure shipping method from settings.', 'woo-pakettikauppa'); ?>
@@ -1829,36 +1881,22 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           </div>
         <?php endif; ?>
           <input type="hidden" name="pakettikauppa_nonce" value="<?php echo wp_create_nonce(str_replace('wc_', '', $this->core->prefix) . '-meta-box'); ?>" id="pakettikauppa_metabox_nonce" />
+          <?php
+            if ( empty($service_id) ) {
+              $this->tpl_section_title(__('Send order', 'woo-pakettikauppa'));
+            }
+            if ( ! empty($labels) ) {
+              $this->tpl_section_title(__('Shipping labels', 'woo-pakettikauppa'));
+              foreach ( $labels as $label ) {
+                $this->tpl_shipping_label($label);
+              }
+            }
+          ?>
           <div class="pakettikauppa-services">
-            <?php $show_main = ($show_section == 'main') ? '' : 'display:none;'; ?>
-            <fieldset class="pakettikauppa-metabox-fieldset" id="wc_pakettikauppa_shipping_method" style="<?php echo $show_main; ?>">
-              <h4><?php echo esc_html($this->shipment->service_title($default_service_id)); ?></h4>
-              <?php if ( ! empty($default_additional_services) ) : ?>
-                <h4><?php echo esc_attr__('Additional services', 'woo-pakettikauppa'); ?>:</h4>
-                <ol style="list-style: circle;">
-                  <?php foreach ( $default_additional_services as $i => $additional_service ) : ?>
-                    <?php if ( ! in_array($additional_service, array( '3102' ), true) ) : ?>
-                      <li>
-                        <?php if ( isset($additional_service_names[ $additional_service ]) ) : ?>
-                          <?php echo $additional_service_names[ $additional_service ]; ?>
-                        <?php else : ?>
-                          <?php echo $additional_service; ?>
-                        <?php endif; ?>
-                        <?php if ( $additional_service == '3143' ) : ?>
-                          <span class="service_info">(<span class="changeable_lqweight"><?php echo $dangerous_goods['weight']; ?></span> <?php echo $weight_unit; ?>)</span>
-                        <?php endif; ?>
-                      </li>
-                    <?php endif; ?>
-                  <?php endforeach; ?>
-                  <?php if ( in_array('3102', $default_additional_services, true) ) : ?>
-                    <li>
-                      <?php echo esc_html__('Parcel count', 'woo-pakettikauppa'); ?>:
-                      <input type="number" name="wc_pakettikauppa_mps_count" value="1" style="width: 3em;" min="1" step="1" max="15">
-                    </li>
-                  <?php endif; ?>
-                </ol>
-              <?php endif; ?>
 
+            <fieldset class="pakettikauppa-metabox-fieldset" id="wc_pakettikauppa_shipping_method">
+              <h4><?php echo esc_html($this->shipment->service_title($default_service_id)); ?></h4>
+    
               <?php if ( $pickup_point_id ) : ?>
                 <?php
                 $pickpoint_requested = $order->get_meta('_' . $this->core->params_prefix . 'pickup_point');
@@ -1874,10 +1912,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
               <?php endif; ?>
             </fieldset>
 
-            <?php $show_custom = ($show_section == 'custom') ? '' : 'display:none;'; ?>
-            <fieldset class="pakettikauppa-metabox-fieldset" id="wc_pakettikauppa_custom_shipping_method" style="<?php echo $show_custom; ?>">
+            <fieldset class="pakettikauppa-metabox-fieldset" id="wc_pakettikauppa_custom_shipping_method">
               <?php if ( ! empty($all_shipment_services) ) : ?>
-              <select name="wc_pakettikauppa_service_id" id="pakettikauppa-service" class="pakettikauppa_metabox_values" onchange="pakettikauppa_change_shipping_method();">
+              <select name="wc_pakettikauppa_service_id" id="pakettikauppa-service" class="pakettikauppa_metabox_values" onchange="pakettikauppa_change_shipping_method(this);">
                 <option value="__NULL__"><?php esc_html_e('No shipping', 'woo-pakettikauppa'); ?></option>
                 <?php foreach ( $all_shipment_services as $_service_code => $_service_title ) : ?>
                   <option
@@ -1908,7 +1945,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                   $pickup_points = $this->get_pickup_points_for_method($method_code, $order_postcode, $order_address, $order_country, $custom_address);
                   $select_first_option = '- ' . __('Select', 'woo-pakettikauppa') . ' -';
                   ?>
-                  <div id="pickup-changer-<?php echo $method_code; ?>" class="pakettikauppa-pickup-changer" style="display: none;">
+                  <div id="pickup-changer-<?php echo $method_code; ?>" class="pakettikauppa-pickup-changer" <?php if($service_id != $method_code) : ?>style="display: none;" <?php endif; ?>>
                     <script>
                       var btn_values_<?php echo $method_code; ?> = {
                         container_id : "pickup-changer-<?php echo $method_code; ?>"
@@ -1943,13 +1980,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           </div>
           
           <p class="pakettikauppa-metabox-footer">
-            <?php if ( ! empty($service_id) ) : ?>
-              <?php $button_text = __('Custom shipping...', 'woo-pakettikauppa'); ?>
-              <button type="button" value="change" id="pakettikauppa_metabtn_change" class="button pakettikauppa_meta_box" onclick="pakettikauppa_change_method(this);" data-txt1="<?php echo $button_text; ?>" data-txt2="<?php echo __('Original shipping...', 'woo-pakettikauppa'); ?>">
-                <?php echo $button_text; ?>
-              </button>
-            <?php endif; ?>
-            <input type="hidden" id="pakettikauppa_microtime" name="pakettikauppa_microtime" value="<?php echo round(microtime(true) * 1000); ?>"/>
+            <input type="hidden" name="pakettikauppa_microtime" value="<?php echo round(microtime(true) * 1000); ?>"/>
+            <input type="hidden" name="pakettikauppa_order_id[]" value="<?php echo $order->get_id(); ?>"/>
           </p>
       </div>
       <?php

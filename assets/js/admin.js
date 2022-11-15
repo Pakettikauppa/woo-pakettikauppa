@@ -75,6 +75,53 @@ jQuery(function( $ ) {
     });
   };
 
+  window.pakettikauppa_meta_box_bulk_submit = function(obj) {
+    $('#pakettikauppa-modal').block({
+      message: null,
+      overlayCSS: {
+        background: '#fff',
+        opacity: 0.6
+      }
+    });
+
+    var ids = [];
+    $('#pakettikauppa-modal').find("input[name='pakettikauppa_order_id[]']").each(function() {
+        ids.push($(this).val());
+    });
+
+    if(ids.length > 0)
+    {
+      ids.forEach(function(id)
+      {
+        var data = {
+          action: 'pakettikauppa_meta_box_bulk',
+          post_id: id,
+          security: $('#woo-pakettikauppa_'+id+' #pakettikauppa_metabox_nonce').val(),
+          request_id: $('#woo-pakettikauppa_'+id+' #pakettikauppa_microtime').val(),
+        };
+
+        var shipping_method = $('#woo-pakettikauppa_'+id+' #pakettikauppa-service').val();
+        data['wc_pakettikauppa_service_id'] = shipping_method;
+
+        if ($("#woo-pakettikauppa_"+id+" #pickup-changer-" + shipping_method).length) {
+          data['custom_pickup'] = $("#woo-pakettikauppa_"+id+" #pickup-changer-" + shipping_method + " .pakettikauppa-pickup-select").find(':selected').data('id');
+        }
+
+        data['additional_text'] = $('#woo-pakettikauppa_'+id+' textarea.pakettikauppa-additional-info').val();
+
+        data[$(obj).attr('name')] = $(obj).val();
+
+        $.post(woocommerce_admin_meta_boxes.ajax_url, data, function(response) {
+          $("#woo-pakettikauppa_"+id+" .inside").html(response);
+          $('#pakettikauppa-modal').unblock();
+        }).fail(function(error) {
+          console.log(error);
+        });
+
+      });
+    }
+  };
+
   window.pakettikauppa_change_method = function(obj) {
 
     var btn_txt = $(obj).data("txt1");
@@ -89,20 +136,20 @@ jQuery(function( $ ) {
     }
     $(obj).html(btn_txt);
 
-    pakettikauppa_change_shipping_method();
+    pakettikauppa_change_shipping_method($('#pakettikauppa-service'));
   };
 
-  window.pakettikauppa_change_shipping_method = function() {
-    var selectedService = $('#pakettikauppa-service').val();
+  window.pakettikauppa_change_shipping_method = function(obj) {
+    var selectedService = $(obj).val();
     $(".pk-admin-additional-services").each(function (i, obj) {
       $(this).hide();
     });
-    $(".pakettikauppa-pickup-changer").each(function (i, obj) {
+    $($(obj).closest('.pakettikauppa-metabox-fieldset')).find(".pakettikauppa-pickup-changer").each(function (i, obj) {
       $(this).hide();
     });
 
     $("#pk-admin-additional-services-" + selectedService).show();
-    $("#pickup-changer-" + selectedService).show();
+    $($(obj).closest('.pakettikauppa-metabox-fieldset')).find("#pickup-changer-" + selectedService).show();
     pakettikauppa_trigger_pickup_list(selectedService);
 
     var element = document.querySelector('.prod_select_dropdown .content .quantity');
