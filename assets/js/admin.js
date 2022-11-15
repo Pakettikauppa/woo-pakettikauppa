@@ -76,16 +76,18 @@ jQuery(function( $ ) {
   };
 
   window.pakettikauppa_change_method = function(obj) {
-    var btn_txt = $("#pakettikauppa_metabtn_change").data("txt1");
-    if ($("#wc_pakettikauppa_shipping_method").is(':visible')) {
-      $("#wc_pakettikauppa_shipping_method").slideUp("slow");
-      $("#wc_pakettikauppa_custom_shipping_method").slideDown("slow");
-      btn_txt = $("#pakettikauppa_metabtn_change").data("txt2");
+
+    var btn_txt = $(obj).data("txt1");
+    
+    if ($($(obj).closest('div')).find('#wc_pakettikauppa_shipping_method').is(':visible')) {
+      $($(obj).closest('div')).find('#wc_pakettikauppa_shipping_method').slideUp("slow");
+      $($(obj).closest('div')).find('#wc_pakettikauppa_custom_shipping_method').slideDown("slow");
+      btn_txt = $(obj).data("txt2");
     } else {
-      $("#wc_pakettikauppa_custom_shipping_method").slideUp("slow");
-      $("#wc_pakettikauppa_shipping_method").slideDown("slow");
+      $($(obj).closest('div')).find('#wc_pakettikauppa_custom_shipping_method').slideUp("slow");
+      $($(obj).closest('div')).find('#wc_pakettikauppa_shipping_method').slideDown("slow");
     }
-    $("#pakettikauppa_metabtn_change").html(btn_txt);
+    $(obj).html(btn_txt);
 
     pakettikauppa_change_shipping_method();
   };
