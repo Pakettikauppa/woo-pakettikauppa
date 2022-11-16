@@ -1011,7 +1011,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           $product_variation_id = $item['variation_id'];
 
           // Check if product has variation.
-          if ($product_variation_id) { 
+          if ( $product_variation_id ) {
             $product = $wcpf->get_product($item_data['variation_id']);
           } else {
             $product = $wcpf->get_product($item_data['product_id']);
