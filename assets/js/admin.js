@@ -102,7 +102,8 @@ jQuery(function( $ ) {
 
         var shipping_method = $('#woo-pakettikauppa_'+id+' #pakettikauppa-service').val();
         data['wc_pakettikauppa_service_id'] = shipping_method;
-
+        data['custom_method'] = 1;
+        
         if ($("#woo-pakettikauppa_"+id+" #pickup-changer-" + shipping_method).length) {
           data['custom_pickup'] = $("#woo-pakettikauppa_"+id+" #pickup-changer-" + shipping_method + " .pakettikauppa-pickup-select").find(':selected').data('id');
         }
