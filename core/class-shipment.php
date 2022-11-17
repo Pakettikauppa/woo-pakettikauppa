@@ -1000,7 +1000,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       if ( ! empty($items) ) {
         foreach ( $items as $item ) {
           $item_data = $item->get_data();
-
           if ( empty($item_data) ) {
             continue;
           }
@@ -1009,7 +1008,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             continue;
           }
 
-          $product = $wcpf->get_product($item_data['product_id']);
+          $product_variation_id = $item['variation_id'];
+
+          // Check if product has variation.
+          if ( $product_variation_id ) {
+            $product = $wcpf->get_product($item_data['variation_id']);
+          } else {
+            $product = $wcpf->get_product($item_data['product_id']);
+          }
+
           $selected_product = self::get_selected_product($item_data['product_id'], $selected_products);
 
           if ( empty($product) ) {
