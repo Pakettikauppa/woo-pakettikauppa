@@ -102,6 +102,10 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
+= 3.8.0 =
+* Support for shortcodes
+* Support for variable products SKU on shipping labels
+
 = 3.7.2 =
 * Fix small pickup point search bug
 
