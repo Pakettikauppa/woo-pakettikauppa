@@ -323,7 +323,19 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                         </p>
                       <?php endif; ?>
                     <?php endforeach; ?>
+                    <input type="hidden"
+                      name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . esc_attr($method_code) . '][additional_services][return_label]'; ?>"
+                      value="no">
+                    <p>
+                      <label>
+                        <input type="checkbox"
+                              name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . esc_attr($method_code) . '][additional_services][return_label]'; ?>"
+                              value="yes" <?php echo (! empty($values[ $method_id ][ $method_code ]['additional_services']['return_label']) && $values[ $method_id ][ $method_code ]['additional_services']['return_label'] === 'yes') ? 'checked' : ''; ?>>
+                        <?php echo __('Also create return label', 'woo-pakettikauppa'); ?>
+                      </label>
+                    </p>
                   </div>
+                  
                 <?php endforeach; ?>
                 <?php foreach ( $all_shipping_methods as $service_id => $service_name ) : ?>
                   <?php if ( $this->get_core()->shipment->service_has_pickup_points($service_id) ) : ?>
@@ -341,17 +353,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                     </div>
                   <?php endif; ?>
                 <?php endforeach; ?>
-                <input type="hidden"
-                  name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . esc_attr($method_code) . '][additional_services][return_label]'; ?>"
-                  value="no">
-                <p>
-                  <label>
-                    <input type="checkbox"
-                          name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . esc_attr($method_code) . '][additional_services][return_label]'; ?>"
-                          value="yes" <?php echo (! empty($values[ $method_id ][ $method_code ]['additional_services']['return_label']) && $values[ $method_id ][ $method_code ]['additional_services']['return_label'] === 'yes') ? 'checked' : ''; ?>>
-                    <?php echo __('Also create return label', 'woo-pakettikauppa'); ?>
-                  </label>
-                </p>
+                
               </td>
             </table>
             <script>pkChangeOptions(document.getElementById("<?php echo $method_id; ?>-select"), '<?php echo $method_id; ?>');</script>
