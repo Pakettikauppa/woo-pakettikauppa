@@ -104,6 +104,7 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 == Changelog ==
 = 3.7.2 =
 * Fix small pickup point search bug
+* Tested against wordpress 6.1
 
 = 3.7.1 =
 * Fix for pickup point searches
