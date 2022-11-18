@@ -361,8 +361,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           $order_ids[] = sanitize_text_field($order_id);
       }
 
-      if ($action === $this->core->params_prefix . 'create_custom_shipments') {
-        $redirect_to = add_query_arg('ids', $order_ids, $redirect_to);
+      if ( $action === $this->core->params_prefix . 'create_custom_shipments' ) {
+        $redirect_to = add_query_arg( 'ids', $order_ids, $redirect_to );
         return $redirect_to;
       }
 
@@ -1707,7 +1707,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       }
     }
 
-    function orders_info_modal()
+    public function orders_info_modal()
     {
       if ( ! isset($_REQUEST['ids']) ) {
         return false;
