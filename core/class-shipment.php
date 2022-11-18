@@ -1070,7 +1070,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       if ( ! empty($settings['pickup_points']) ) {
         $pickup_settings = json_decode($settings['pickup_points'], true);
         foreach ( $pickup_settings as $setting ) {
-          if ( $setting['service'] == $service_id ){
+          if ( $setting['service'] == $service_id ) {
             if ( isset($setting[$service_id]['additional_services']) && ! empty($setting[$service_id]['additional_services']) ) {
               $setting_additional_services = $setting[$service_id]['additional_services'];
               if ( isset($setting_additional_services['return_label']) && $setting_additional_services['return_label'] == 'yes' ) {
@@ -1451,7 +1451,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
               if ( $service !== 'yes' ) {
                 continue;
               }
-              if( $service_code == 'return_label' ){
+              if ( $service_code == 'return_label' ) {
                 continue;
               }
               if ( ! in_array($service_code, $check_separately) ) {
