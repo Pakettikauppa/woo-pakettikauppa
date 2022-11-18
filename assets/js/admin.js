@@ -113,7 +113,9 @@ jQuery(function( $ ) {
         data[$(obj).attr('name')] = $(obj).val();
 
         $.post(woocommerce_admin_meta_boxes.ajax_url, data, function(response) {
-          $("#woo-pakettikauppa_"+id+" .inside").html(response);
+          $("#woo-pakettikauppa_"+id+".inside td:last-child").remove();
+          $("#woo-pakettikauppa_"+id+".inside td:last-child").remove();
+          $("#woo-pakettikauppa_"+id+".inside").append(response);
           $('#pakettikauppa-modal').unblock();
         }).fail(function(error) {
           console.log(error);

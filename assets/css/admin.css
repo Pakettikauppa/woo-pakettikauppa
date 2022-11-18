@@ -335,3 +335,16 @@ textarea.pakettikauppa-additional-info {
     margin-bottom: 0;
   }
 }
+#pakettikauppa-modal table{
+  border-collapse: collapse;
+  width: 100%;
+}
+#pakettikauppa-modal td, #pakettikauppa-modal th{
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+#pakettikauppa_metabtn_create_bulk{
+  margin-left: auto;
+  display: table;
+  margin-top: 15px;
+}
