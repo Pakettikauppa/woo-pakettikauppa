@@ -1706,8 +1706,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       }
     }
 
-    public function orders_info_modal()
-    {
+    public function orders_info_modal() {
       if ( ! isset($_REQUEST['ids']) ) {
         return false;
       }
@@ -1734,13 +1733,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
               ?>
                     <tr class="inside" id="woo-pakettikauppa_<?php echo $id; ?>">
                       <td><?php echo $id; ?></td>
-                      <td><?php echo $order->get_formatted_shipping_full_name();; ?></td>
+                      <td><?php echo $order->get_formatted_shipping_full_name(); ?></td>
                       <?php $this->meta_box_custom_shipments(get_post((int) $id)); ?>
                     </tr>
-              <?php
+                <?php
                   }
                 }
-              ?>
+                ?>
             </table>
           </div>
         </div>
@@ -1773,7 +1772,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
      * @param $post
      */
     public function meta_box_custom_shipments( $post ) {
-      $order = wc_get_order( $post->ID );
+      $order = wc_get_order($post->ID);
 
       if ( $order === null ) {
         return;
@@ -1872,7 +1871,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
               $custom_address = empty($custom_address) ? "$order_address, $order_postcode, $order_country" : $custom_address;
               $pickup_points = $this->get_pickup_points_for_method($method_code, $order_postcode, $order_address, $order_country, $custom_address);
               ?>
-              <div id="pickup-changer-<?php echo $method_code; ?>" class="pakettikauppa-pickup-changer" <?php if ( $service_id != $method_code ) : ?>style="display: none;" <?php endif; ?>>
+              <div id="pickup-changer-<?php echo $method_code; ?>" class="pakettikauppa-pickup-changer" <?php echo $service_id != $method_code ? 'style="display: none;"' : ''; ?>>
                 <script>
                   var btn_values_<?php echo $method_code; ?> = {
                     container_id : "pickup-changer-<?php echo $method_code; ?>"
