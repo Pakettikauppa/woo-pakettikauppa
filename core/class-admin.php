@@ -1736,10 +1736,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                       <td><?php echo $order->get_formatted_shipping_full_name(); ?></td>
                       <?php $this->meta_box_custom_shipments(get_post((int) $id)); ?>
                     </tr>
-                <?php
-                  }
-                }
-                ?>
+                    <?php
+                      }
+                    }
+                    ?>
             </table>
           </div>
         </div>
