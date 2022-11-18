@@ -216,7 +216,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       }
       $this->meta_box_custom_shipments(get_post((int) $_POST['post_id']));
       wp_die();
-
     }
 
     /**
@@ -1715,11 +1714,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
       $ids = $_REQUEST['ids'];
 
-    ?>
+      ?>
 
       <div id="pakettikauppa-modal" style="overflow-y: auto; z-index: 9999; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 80%;  max-height: 80%; background-color: white; padding: 10px; border: 1px solid black">
         <div>
-          <h3><?php echo esc_attr__('Pakettikaupa create custom shipments', 'woo-pakettikauppa');?></h3>
+          <h3><?php echo esc_attr__('Pakettikaupa create custom shipments', 'woo-pakettikauppa'); ?></h3>
           <div>
             <table>
               <tr>
@@ -1736,7 +1735,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                     <tr class="inside" id="woo-pakettikauppa_<?php echo $id; ?>">
                       <td><?php echo $id; ?></td>
                       <td><?php echo $order->get_formatted_shipping_full_name();; ?></td>
-                      <?php $this->meta_box_custom_shipments(get_post((int)$id)); ?>
+                      <?php $this->meta_box_custom_shipments(get_post((int) $id)); ?>
                     </tr>
               <?php
                   }
@@ -1746,26 +1745,26 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           </div>
         </div>
         <button id="pakettikauppa-modal-close-button" style="position: absolute; top: 10px; right: 10px;" class="button">
-          <?php echo esc_attr__('Close', 'woo-pakettikauppa');?>
+          <?php echo esc_attr__('Close', 'woo-pakettikauppa'); ?>
         </button>
         <button type="button" value="create" id="pakettikauppa_metabtn_create_bulk" name="wc_pakettikauppa[create]" class="button pakettikauppa_meta_box button-primary" onclick="pakettikauppa_meta_box_bulk_submit(this);">
-          <?php echo __('Create', 'woo-pakettikauppa'); ?>
+          <?php echo esc_attr__('Create', 'woo-pakettikauppa'); ?>
         </button>
       </div>
       <script>
         const modal = document.getElementById('pakettikauppa-modal');
 
         const closeBtn = document.getElementById('pakettikauppa-modal-close-button');
-        if (!!closeBtn) {
+        if ( !!closeBtn ) {
           closeBtn.addEventListener('click', () => {
-            if (!!modal) {
+            if ( !!modal ) {
               modal.style.display = 'none';
             }
-          })
+          });
         }
       </script>
 
-    <?php
+      <?php
     }
 
     /**
