@@ -57,8 +57,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       add_action('wp_ajax_get_pickup_point_by_custom_address', array( $this, 'get_pickup_point_by_custom_address' ));
       add_action('wp_ajax_update_estimated_shipping_price', array( $this, 'update_estimated_shipping_price' ));
       add_action('wp_ajax_check_api', array( $this, 'ajax_check_credentials' ));
-      add_action( 'admin_footer', array( $this, 'orders_info_modal' ) );
-      add_action( 'wp_ajax_pakettikauppa_meta_box_bulk', array( $this, 'ajax_meta_box_bulk' ) );
+      add_action('admin_footer', array( $this, 'orders_info_modal' ));
+      add_action('wp_ajax_pakettikauppa_meta_box_bulk', array( $this, 'ajax_meta_box_bulk' ));
 
       $this->shipment = $this->core->shipment;
     }
@@ -358,11 +358,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
       // instead of array_map we use foreach because array_map is not allowed by sniff rules
       foreach ( $_REQUEST['post'] as $order_id ) {
-          $order_ids[] = sanitize_text_field( $order_id );
+          $order_ids[] = sanitize_text_field($order_id);
       }
 
       if ( $action === $this->core->params_prefix . 'create_custom_shipments' ) {
-        $redirect_to = add_query_arg( 'ids', $order_ids, $redirect_to );
+        $redirect_to = add_query_arg('ids', $order_ids, $redirect_to);
         return $redirect_to;
       }
 
@@ -1822,11 +1822,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       <td>
         <input type="hidden" name="pakettikauppa_nonce" value="<?php echo wp_create_nonce(str_replace('wc_', '', $this->core->prefix) . '-meta-box'); ?>" id="pakettikauppa_metabox_nonce" />
         <fieldset class="pakettikauppa-metabox-fieldset" id="wc_pakettikauppa_shipping_method">
-          <p><?php echo esc_html( $this->shipment->service_title( $default_service_id ) ); ?></p>
+          <p><?php echo esc_html($this->shipment->service_title($default_service_id)); ?></p>
 
           <?php if ( $pickup_point_id ) : ?>
             <?php
-            $labels = $this->shipment->get_labels( $post->ID );
+            $labels = $this->shipment->get_labels($post->ID);
             if ( ! empty($labels) ) {
               $last_label = end($labels);
               $pickpoint_requested = $last_label['pickup_name'];
@@ -1876,7 +1876,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
               $custom_address = empty($custom_address) ? "$order_address, $order_postcode, $order_country" : $custom_address;
               $pickup_points = $this->get_pickup_points_for_method($method_code, $order_postcode, $order_address, $order_country, $custom_address);
               ?>
-              <div id="pickup-changer-<?php echo $method_code; ?>" class="pakettikauppa-pickup-changer" <?php if($service_id != $method_code) : ?>style="display: none;" <?php endif; ?>>
+              <div id="pickup-changer-<?php echo $method_code; ?>" class="pakettikauppa-pickup-changer" <?php if ( $service_id != $method_code ) : ?>style="display: none;" <?php endif; ?>>
                 <script>
                   var btn_values_<?php echo $method_code; ?> = {
                     container_id : "pickup-changer-<?php echo $method_code; ?>"
