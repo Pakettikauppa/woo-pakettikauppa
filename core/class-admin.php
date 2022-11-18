@@ -1378,7 +1378,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           if ( isset($_REQUEST['additional_text']) ) {
             $extra_params['additional_text'] = sanitize_textarea_field($_REQUEST['additional_text']);
           }
-          
+
           $tracking_code = $this->shipment->create_shipment($order, $service_id, $additional_services, $selected_products, $extra_params);
 
           return $tracking_code;
@@ -1729,20 +1729,18 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                 <th><?php echo esc_attr__('New shipping method', 'woo-pakettikauppa'); ?></th>
               </tr>
               <?php
-              foreach ( $ids as $id ) {
-                $order = wc_get_order($id);
-                if ( $order ) {
+                foreach ( $ids as $id ) {
+                  $order = wc_get_order($id);
+                  if ( $order ) {
               ?>
-                  <tr class="inside" id="woo-pakettikauppa_<?php echo $id; ?>">
-                    <td><?php echo $id; ?></td>
-                    <td><?php echo $order->get_formatted_shipping_full_name();; ?></td>
-
-                    <?php $this->meta_box_custom_shipments(get_post((int)$id)); ?>
-
-                  </tr>
+                    <tr class="inside" id="woo-pakettikauppa_<?php echo $id; ?>">
+                      <td><?php echo $id; ?></td>
+                      <td><?php echo $order->get_formatted_shipping_full_name();; ?></td>
+                      <?php $this->meta_box_custom_shipments(get_post((int)$id)); ?>
+                    </tr>
               <?php
+                  }
                 }
-              }
               ?>
             </table>
           </div>
@@ -1784,13 +1782,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
       if ( ! Shipment::validate_order_shipping_receiver($order) ) {
         esc_attr_e('Please add shipping info to the order to manage shipments.', 'woo-pakettikauppa');
-
         return;
       }
-      
+
       $service_id = '';
 
-      $default_service_id = $this->shipment->get_service_id_from_order( $order, false );
+      $default_service_id = $this->shipment->get_service_id_from_order($order, false);
       if ( empty($service_id) ) {
         $service_id = $default_service_id;
       }
@@ -1868,7 +1865,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           <?php endif; ?>
 
           <?php foreach ( $all_additional_services as $method_code => $_additional_services ) : ?>
-  
+
             <?php if ( $this->shipment->service_has_pickup_points($method_code) ) : ?>
               <?php
               $address_override_field_name = $this->core->params_prefix . 'merchant_override_custom_pickup_point_address';
@@ -1883,7 +1880,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                   };
                 </script>
                 <div class="pakettikauppa-pickup-select-block">
-                  <p style="margin-bottom: 5px;;"><?php echo __('Select pickup point', 'woo-pakettikauppa'); ?></p>
+                  <p style="margin-bottom: 5px;"><?php echo __('Select pickup point', 'woo-pakettikauppa'); ?></p>
                   <select class="pakettikauppa_metabox_values pakettikauppa-pickup-select" onchange="pakettikauppa_change_selected_pickup_point(this);">
                     <?php if ( is_array($pickup_points) ) : ?>
                       <?php foreach ( $pickup_points as $point ) : ?>
@@ -1902,13 +1899,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
               </div>
             <?php endif; ?>
           <?php endforeach; ?>
-          <?php $settings = $this->shipment->get_settings(); ?>
-          
         </fieldset>
-          
+
         <input type="hidden" name="pakettikauppa_microtime" value="<?php echo round(microtime(true) * 1000); ?>"/>
         <input type="hidden" name="pakettikauppa_order_id[]" value="<?php echo $order->get_id(); ?>"/>
-        
+
       </td>
       <?php
     }
