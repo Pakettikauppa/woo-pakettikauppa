@@ -85,6 +85,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           if ( $notice['type'] === 'error' ) {
             $this->add_error_notice($notice['msg'], false);
           }
+          if ( $notice['type'] === 'success' ) {
+            $this->add_success_notice($notice['msg'], false);
+          }
         }
         unset($_SESSION['pakettikauppa_notices']);
       }
@@ -496,6 +499,22 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         if ( $show_prefix_text ) {
           /* translators: %s: Error message */
           $print_error = wp_sprintf(__('An error occurred: %s', 'woo-pakettikauppa'), $message);
+        } else {
+          $print_error = $message;
+        }
+        printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($print_error));
+      }
+    }
+
+    /**
+     * Add an admin success notice to wp-admin.
+     */
+    public function add_success_notice( $message, $show_prefix_text = true ) {
+      if ( ! empty($message) ) {
+        $class = 'notice notice-success';
+        if ( $show_prefix_text ) {
+          /* translators: %s: Error message */
+          $print_error = wp_sprintf(__('Succeed: %s', 'woo-pakettikauppa'), $message);
         } else {
           $print_error = $message;
         }
