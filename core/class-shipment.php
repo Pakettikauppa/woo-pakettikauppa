@@ -1072,6 +1072,22 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
       $shipment->setShipmentInfo($info);
 
+      $settings = $this->get_settings();
+
+      if ( ! empty($settings['pickup_points']) ) {
+        $pickup_settings = json_decode($settings['pickup_points'], true);
+        foreach ( $pickup_settings as $setting ) {
+          if ( $setting['service'] == $service_id ) {
+            if ( isset($setting[$service_id]['additional_services']) && ! empty($setting[$service_id]['additional_services']) ) {
+              $setting_additional_services = $setting[$service_id]['additional_services'];
+              if ( isset($setting_additional_services['return_label']) && $setting_additional_services['return_label'] == 'yes' ) {
+                $shipment->includeReturnLabel(true);
+              }
+            }
+          }
+        }
+      }
+
       if ( ! empty($extra_params['return_shipment']) ) {
         return $shipment;
       }
@@ -1440,6 +1456,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             $check_separately = array( '3101', '3143' );
             foreach ( $services as $service_code => $service ) {
               if ( $service !== 'yes' ) {
+                continue;
+              }
+              if ( $service_code == 'return_label' ) {
                 continue;
               }
               if ( ! in_array($service_code, $check_separately) ) {
