@@ -331,7 +331,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                         <input type="checkbox"
                               name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . esc_attr($method_code) . '][additional_services][return_label]'; ?>"
                               value="yes" <?php echo (! empty($values[ $method_id ][ $method_code ]['additional_services']['return_label']) && $values[ $method_id ][ $method_code ]['additional_services']['return_label'] === 'yes') ? 'checked' : ''; ?>>
-                        <?php echo __('Also create return label', 'woo-pakettikauppa'); ?>
+                        <?php echo __('Include return label (if available)', 'woo-pakettikauppa'); ?>
                       </label>
                     </p>
                   </div>
