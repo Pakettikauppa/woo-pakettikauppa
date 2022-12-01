@@ -1348,12 +1348,16 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      */
     public function get_pickup_points( $postcode, $street_address = null, $country = null, $service_provider = null ) {
       $pickup_point_limit = 5; // Default limit value for pickup point search
+      $pickup_points_type = null; // Default pickup points type. null = all.
 
       if ( isset($this->settings['pickup_points_search_limit']) && ! empty($this->settings['pickup_points_search_limit']) ) {
         $pickup_point_limit = intval($this->settings['pickup_points_search_limit']);
       }
+      if ( isset($this->settings['pickup_points_type']) && ! empty($this->settings['pickup_points_type']) && $this->settings['pickup_points_type'] != 'all' ) {
+        $pickup_points_type = esc_attr($this->settings['pickup_points_type']);
+      }
 
-      $pickup_point_data = $this->client->searchPickupPoints(trim($postcode), trim($street_address), trim($country), $service_provider, $pickup_point_limit);
+      $pickup_point_data = $this->client->searchPickupPoints(trim($postcode), trim($street_address), trim($country), $service_provider, $pickup_point_limit, $pickup_points_type);
 
       if ( $pickup_point_data === 'Bad request' ) {
         throw new \Exception($this->core->text->something_went_wrong_while_searching_pickup_points_error());
@@ -1370,12 +1374,16 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
     public function get_pickup_points_by_free_input( $input, $service_provider = null ) {
       $pickup_point_limit = 5; // Default limit value for pickup point search
+      $pickup_points_type = null; // Default pickup points type. null = all.
 
       if ( isset($this->settings['pickup_points_search_limit']) && ! empty($this->settings['pickup_points_search_limit']) ) {
         $pickup_point_limit = intval($this->settings['pickup_points_search_limit']);
       }
+      if ( isset($this->settings['pickup_points_type']) && ! empty($this->settings['pickup_points_type']) && $this->settings['pickup_points_type'] != 'all' ) {
+        $pickup_points_type = esc_attr($this->settings['pickup_points_type']);
+      }
 
-      $pickup_point_data = $this->client->searchPickupPointsByText(trim($input), $service_provider, $pickup_point_limit);
+      $pickup_point_data = $this->client->searchPickupPointsByText(trim($input), $service_provider, $pickup_point_limit, $pickup_points_type);
 
       if ( $pickup_point_data === 'Bad request' ) {
         throw new \Exception($this->core->text->something_went_wrong_while_searching_pickup_points_error());
