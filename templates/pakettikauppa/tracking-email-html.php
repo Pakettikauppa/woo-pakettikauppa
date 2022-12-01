@@ -10,14 +10,26 @@
 
 <h2><?php esc_attr_e('Tracking', 'woo-pakettikauppa'); ?></h2>
 
-<?php 
+<?php
   foreach ( $tracking_codes as $code ) {
-    ?><p><?php
+    ?>
+    <p>
+    <?php
     if ( $add_pickup_point_to_email === 'yes' ) {
       if ( ! empty($code['point']) ) {
-        ?> <b> <?php esc_attr_e('Pickup point', 'woo-pakettikauppa'); ?></b> <?php esc_attr_e($code['point']); ?> <br/><?php
+        ?>
+        <b> 
+        <?php esc_attr_e('Pickup point', 'woo-pakettikauppa'); ?>
+          </b> 
+          <?php esc_attr($code['point']); ?>
+          <br/>
+        <?php
       } else {
-        ?> <b><?php esc_attr_e('Pickup point', 'woo-pakettikauppa'); ?>:</b> —<br/><?php
+        ?>
+        <b>
+        <?php esc_attr_e('Pickup point', 'woo-pakettikauppa'); ?>
+          :</b> —<br/>
+        <?php
       }
     }
     /* translators: 1: Shipment tracking link with text "track your order" 2: Shipment tracking code */

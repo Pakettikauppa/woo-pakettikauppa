@@ -65,10 +65,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       $this->templates = (object) ($config['templates'] ?? array(
         'checkout_pickup' => 'pakettikauppa/checkout-pickup.php',
         'account_order' => 'pakettikauppa/myaccount-order.php',
-        'tracking_email' => [
+        'tracking_email' => array(
           'html' => 'pakettikauppa/tracking-email-html.php',
           'txt' => 'pakettikauppa/tracking-email-txt.php',
-        ],
+        ),
       ));
 
       $this->prefix = $config['prefix'] ?? 'wc_pakettikauppa';
