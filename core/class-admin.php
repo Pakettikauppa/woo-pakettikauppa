@@ -1693,36 +1693,16 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         return;
       }
 
-      if ( $plain_text ) {
-        echo sprintf("%s:\n\n", esc_attr__('Tracking', 'woo-pakettikauppa'));
-      } else {
-        echo sprintf('<h2>%s</h2>', esc_attr__('Tracking', 'woo-pakettikauppa'));
-      }
-      foreach ( $tracking_codes as $code ) {
-        if ( $plain_text ) {
-          if ( $add_pickup_point_to_email === 'yes' ) {
-            /* translators: 1: Name 2: Shipment tracking code */
-            if ( ! empty($code['point']) ) {
-              echo sprintf("%1\$s: %2\$s.\n", __('Pickup point', 'woo-pakettikauppa'), $code['point']);
-            } else {
-              echo sprintf("%1\$s: %2\$s.\n", __('Pickup point', 'woo-pakettikauppa'), '—');
-            }
-          }
-          /* translators: Shipment tracking URL */
-          echo sprintf(__('You can track your order at %1$s.', 'woo-pakettikauppa'), esc_url($code['url'])) . "\n\n";
-        } else {
-          echo '<p>';
-          if ( $add_pickup_point_to_email === 'yes' ) {
-            if ( ! empty($code['point']) ) {
-              echo '<b>' . esc_attr__('Pickup point', 'woo-pakettikauppa') . ':</b> ' . esc_attr($code['point']) . '.<br/>';
-            } else {
-              echo '<b>' . esc_attr__('Pickup point', 'woo-pakettikauppa') . ':</b> —<br/>';
-            }
-          }
-          /* translators: 1: Shipment tracking link with text "track your order" 2: Shipment tracking code */
-          echo sprintf(__('You can %1$s with tracking code %2$s.', 'woo-pakettikauppa'), '<a href="' . esc_url($code['url']) . '">' . __('track your order', 'woo-pakettikauppa') . '</a>', '<b>' . esc_attr($code['code']) . '</b>') . '</p>';
-        }
-      }
+      $template = $plain_text ? $this->core->templates->tracking_email->txt : $this->core->templates->tracking_email->html;
+      wc_get_template(
+        $template,
+        array(
+          'tracking_codes' => $tracking_codes,
+          'add_pickup_point_to_email' => $add_pickup_point_to_email,
+        ),
+        '',
+        $this->core->templates_dir
+      );
     }
 
     public function orders_info_modal() {
