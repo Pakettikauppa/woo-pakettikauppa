@@ -1196,7 +1196,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           continue;
         }
 
-        $product = $wcpf->get_product($item['product_id']);
+        $product_variation_id = $item['variation_id'];
+
+        // Check if product has variation.
+        if ( $product_variation_id ) {
+          $product = $wcpf->get_product($item['variation_id']);
+        } else {
+          $product = $wcpf->get_product($item['product_id']);
+        }
+
         $selected_product = self::get_selected_product($item['product_id'], $selected_products);
 
         if ( $product->is_virtual() ) {
@@ -1236,7 +1244,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           continue;
         }
 
-        $product = $wcpf->get_product($item['product_id']);
+        $product_variation_id = $item['variation_id'];
+
+        // Check if product has variation.
+        if ( $product_variation_id ) {
+          $product = $wcpf->get_product($item['variation_id']);
+        } else {
+          $product = $wcpf->get_product($item['product_id']);
+        }
+
         $selected_product = self::get_selected_product($item['product_id'], $selected_products);
 
         if ( $product->is_virtual() ) {
