@@ -1186,7 +1186,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       $weight = 0;
 
       $wcpf = new \WC_Product_Factory();
-
+     
       foreach ( $order->get_items() as $item ) {
         if ( empty($item['product_id']) ) {
           continue;
@@ -1196,7 +1196,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           continue;
         }
 
-        $product = $wcpf->get_product($item['product_id']);
+        $product_variation_id = $item['variation_id'];
+
+        // Check if product has variation.
+        if ( $product_variation_id ) {
+          $product = $wcpf->get_product($item['variation_id']);
+        } else {
+          $product = $wcpf->get_product($item['product_id']);
+        }
+
         $selected_product = self::get_selected_product($item['product_id'], $selected_products);
 
         if ( $product->is_virtual() ) {
@@ -1236,7 +1244,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           continue;
         }
 
-        $product = $wcpf->get_product($item['product_id']);
+        $product_variation_id = $item['variation_id'];
+
+        // Check if product has variation.
+        if ( $product_variation_id ) {
+          $product = $wcpf->get_product($item['variation_id']);
+        } else {
+          $product = $wcpf->get_product($item['product_id']);
+        }
+
         $selected_product = self::get_selected_product($item['product_id'], $selected_products);
 
         if ( $product->is_virtual() ) {
@@ -1268,7 +1284,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         $quantity = ($selected_product !== false) ? $selected_product['qty'] : $item['qty'];
         $volume += pow($dim_multiplier, 3) * $product->get_width() * $product->get_height() * $product->get_length() * $quantity;
       }
-
+      
       return $volume;
     }
 
