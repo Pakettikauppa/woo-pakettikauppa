@@ -53,15 +53,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
         }
 
         public function add_submenu() {
-            add_submenu_page('woocommerce', 'Manifests', 'Manifests', 'manage_woocommerce', 'edit.php?post_type=pk_manifest');
+            add_submenu_page('woocommerce', 'Pickup orders', 'Pickup orders', 'manage_woocommerce', 'edit.php?post_type=pk_manifest');
         }
 
         public function manifest_post_type() {
             $labels = array(
-              'name' => __('Manifests', 'woo-pakettikauppa'),
-              'singular_name' => __('Manifest', 'woo-pakettikauppa'),
-              'all_items' => __('All Manifests', 'woo-pakettikauppa'),
-              'add_new_item' => __('Create New Manifest', 'woo-pakettikauppa'),
+              'name' => __('Pickup Orders', 'woo-pakettikauppa'),
+              'singular_name' => __('Pickup Order', 'woo-pakettikauppa'),
+              'all_items' => __('All Pickup Orders', 'woo-pakettikauppa'),
+              'add_new_item' => __('Create New Pickup Order', 'woo-pakettikauppa'),
               'add_new' => __('Create', 'woo-pakettikauppa'),
             );
             register_post_type(
@@ -140,9 +140,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
                 if ( ! isset($bulk_actions[$this->core->vendor_name]) ) {
                     $bulk_actions[$this->core->vendor_name] = array();
                 }
-                $bulk_actions[$this->core->vendor_name][str_replace('wc_', '', $this->core->prefix) . '_add_to_manifest'] = __('Add to manifest', 'woo-pakettikauppa');
+                $bulk_actions[$this->core->vendor_name][str_replace('wc_', '', $this->core->prefix) . '_add_to_manifest'] = __('Add to pickup order', 'woo-pakettikauppa');
             } else {
-                $bulk_actions[str_replace('wc_', '', $this->core->prefix) . '_add_to_manifest'] = $this->core->vendor_name . ': ' . __('Add to manifest', 'woo-pakettikauppa');
+                $bulk_actions[str_replace('wc_', '', $this->core->prefix) . '_add_to_manifest'] = $this->core->vendor_name . ': ' . __('Add to pickup order', 'woo-pakettikauppa');
             }
 
             return $bulk_actions;
@@ -158,9 +158,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
             if ( $action === str_replace('wc_', '', $this->core->prefix) . '_add_to_manifest' ) {
                 $manifest = $this->get_current_manifest();
                 $this->add_orders_to_manifest($manifest, $order_ids);
+                wp_redirect(site_url($redirect_to));
+                exit;
             }
-            wp_redirect(site_url($redirect_to));
-            exit;
+            return;
             //return $redirect_to;
         }
 
@@ -172,7 +173,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
             }
 
             // add "mark printed" custom action
-            $actions[ $this->core->prefix . '_add_to_manifest' ] = __('Add to manifest', 'woo-pakettikauppa');
+            $actions[ $this->core->prefix . '_add_to_manifest' ] = __('Add to pickup order', 'woo-pakettikauppa');
             return $actions;
         }
 
@@ -224,7 +225,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
                 if ( ! empty($labels) ) {
                     $allowed_orders[] = $order_id;
                     /* translators: %s: order_number */
-                    $success[] = sprintf(__('Order #%s added to manifest', 'woo-pakettikauppa'), $order_id);
+                    $success[] = sprintf(__('Order #%s added to pickup order', 'woo-pakettikauppa'), $order_id);
                 } else {
                     /* translators: %s: order_number */
                     $errors[] = sprintf(__('Order #%s does not have shipment labels', 'woo-pakettikauppa'), $order_id);
@@ -282,26 +283,28 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
                                 <th><?php _e('Date', 'woo-pakettikauppa'); ?></th>
                                 <th><?php _e('Earliest time', 'woo-pakettikauppa'); ?></th>
                                 <th><?php _e('Latest time', 'woo-pakettikauppa'); ?></th>
+                                <th><?php _e('Additional information', 'woo-pakettikauppa'); ?></th>
                                 <th></th>
                             </tr>
                             <tr>
                                 <td><input type = "text" value = "" class = "manifest-date"/></td>
                                 <td><input type = "text" value = "" class = "manifest-time-from"/></td>
                                 <td><input type = "text" value = "" class = "manifest-time-to"/></td>
-                                <td><input type = "button" class = "button manifest_action" data-id = "<?php echo $manifest->ID; ?>" value = "<?php _e('Call', 'woo-pakettikauppa'); ?>"/></td>
+                                <td><input type = "text" value = "" class = "manifest-additional-info"/></td>
+                                <td><input type = "button" class = "button manifest_action" data-id = "<?php echo $manifest->ID; ?>" value = "<?php _e('Submit', 'woo-pakettikauppa'); ?>"/></td>
                             </tr>
                         </table>
                         </p>
                     </div>
 
-                    <a href="#TB_inline?&width=400&height=200&inlineId=manifest-id-<?php echo $manifest->ID; ?>" class = "button thickbox"><?php echo __('Call for pickup', 'woo-pakettikauppa'); ?></a>
+                    <a href="#TB_inline?&width=600&height=200&inlineId=manifest-id-<?php echo $manifest->ID; ?>" class = "button thickbox"><?php echo __('Place pickup order', 'woo-pakettikauppa'); ?></a>
                     <?php
 
                   } else {
                       echo __('No orders assigned', 'woo-pakettikauppa');
                   }
                 } else if ( $manifest->post_status == 'closed' ) {
-                  echo __('Already called for pickup', 'woo-pakettikauppa');
+                  echo __('Already placed pickup order', 'woo-pakettikauppa');
                 }
                 break;
               case 'status':
@@ -323,6 +326,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
                 $date = sanitize_text_field($_POST['date']);
                 $time_from = sanitize_text_field($_POST['time_from']);
                 $time_to = sanitize_text_field($_POST['time_to']);
+                $additional_info = sanitize_text_field($_POST['additional_info']);
                 $id = sanitize_text_field($_POST['id']);
                 $manifest = get_post($id);
                 if ( ! $date || ! $time_from || ! $time_to || ! $id ) {
@@ -334,7 +338,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
                     if ( empty($order_ids) ) {
                         echo json_encode(array( 'error' => __('Manifest has no orders assigned', 'woo-pakettikauppa') ));
                     } else {
-                        $response = $this->make_call($date, $time_from, $time_to, $manifest, $order_ids);
+                        $response = $this->make_call($date, $time_from, $time_to, $manifest, $order_ids, $additional_info);
                         if ( ! isset($response['status']) ) {
                             throw new \Exception(__('Wrong response.', 'woo-pakettikauppa'));
                         }
@@ -365,7 +369,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
             wp_die();
         }
 
-        private function make_call( $date, $time_from, $time_to, $manifest, $order_ids ) {
+        private function make_call( $date, $time_from, $time_to, $manifest, $order_ids, $additional_info ) {
             $settings = $this->core->shipment->get_settings();
 
             $xml = new \SimpleXMLElement('<Postra/>');
@@ -396,6 +400,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
                     $pickup = $shipment->addChild('PickupDate', $date);
                     $pickup->addAttribute('timeEarliest', gmdate('H:i:sP', strtotime($date . ' ' . $time_from)));
                     $pickup->addAttribute('timeLatest', gmdate('H:i:sP', strtotime($date . ' ' . $time_to)));
+                    $instructions = $shipment->addChild('Instructions');
+                    $instruction = $instructions->addChild('Instruction', $additional_info);
+                    $instruction->addAttribute('type', 'GENERAL');
 
                     $parties = $shipment->addChild('Parties');
 
@@ -426,6 +433,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
             }
 
             $xml_data = $xml->asXML();
+
             $url = $this->core->order_pickup_url;
             if ( ! $url ) {
                 throw new \Exception(__('Order pickup URL not set.', 'woo-pakettikauppa'));

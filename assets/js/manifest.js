@@ -19,6 +19,7 @@ jQuery(document).ready( function($) {
                 date: table.find(".manifest-date" ).val(),
                 time_from: table.find(".manifest-time-from" ).val(),
                 time_to: table.find(".manifest-time-to" ).val(),
+                additional_info: table.find(".manifest-additional-info" ).val(),
                 id: $(this).attr('data-id')
               };
             jQuery.post(ajaxurl, data, function(response) {
@@ -46,7 +47,7 @@ jQuery(document).ready( function($) {
          });
         }
     });
-    
+
     $( ".manifest-time-to" ).datetimepicker({
         datepicker:false,
         format:'H:i',
@@ -56,6 +57,6 @@ jQuery(document).ready( function($) {
           minTime:from_val?from_val:false
          });
         }
-    });    
+    });
     $('.xdsoft_datetimepicker').css('z-index', 999999999);
 } );
