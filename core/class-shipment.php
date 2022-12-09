@@ -1354,7 +1354,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         $pickup_point_limit = intval($this->settings['pickup_points_search_limit']);
       }
       if ( isset($this->settings['pickup_points_type']) && ! empty($this->settings['pickup_points_type']) && $this->settings['pickup_points_type'] != 'all' ) {
-        $pickup_points_type = esc_attr($this->settings['pickup_points_type']);
+        $pickup_points_type = implode(',', $this->settings['pickup_points_type']);
       }
 
       $pickup_point_data = $this->client->searchPickupPoints(trim($postcode), trim($street_address), trim($country), $service_provider, $pickup_point_limit, $pickup_points_type);
@@ -1380,7 +1380,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         $pickup_point_limit = intval($this->settings['pickup_points_search_limit']);
       }
       if ( isset($this->settings['pickup_points_type']) && ! empty($this->settings['pickup_points_type']) && $this->settings['pickup_points_type'] != 'all' ) {
-        $pickup_points_type = esc_attr($this->settings['pickup_points_type']);
+        $pickup_points_type = implode(',', $this->settings['pickup_points_type']);
       }
 
       $pickup_point_data = $this->client->searchPickupPointsByText(trim($input), $service_provider, $pickup_point_limit, $pickup_points_type);
