@@ -196,7 +196,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                 }
             }
         }
-        
+
         function pkChangeOptions(elem, methodId) {
 
             var strUser = elem.options[elem.selectedIndex].value;
@@ -210,11 +210,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                 elements[i].style.display = "none";
                 pkSetInputs(elements[i], true);
             }
-            
-            
-            
+
+
+
             if (strUser == '__PICKUPPOINTS__') {
-              if (pickuppointsElement) { 
+              if (pickuppointsElement) {
                   pickuppointsElement.style.display = "block";
                   pkSetInputs(pickuppointsElement, false);
               }
@@ -598,7 +598,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
 
         'pickup_points_type' => array(
           'title' => $this->get_core()->text->pickup_points_type_title(),
-          'type' => 'select',
+          'type' => 'multiselect',
           'options' => array(
             'all' => $this->get_core()->text->pickup_points_type_all(),
             'PRIVATE_LOCKER' => $this->get_core()->text->pickup_points_type_private_locker(),

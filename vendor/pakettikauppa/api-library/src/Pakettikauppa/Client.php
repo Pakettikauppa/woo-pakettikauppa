@@ -189,7 +189,7 @@ class Client
         if($draft) {
             throw new \Exception("Creating draft shipment is deprecated");
         }
-        
+
         $id             = str_replace('.', '', microtime(true));
         $shipment_xml   = $shipment->asSimpleXml();
 
@@ -214,7 +214,7 @@ class Client
         }
 
         $response = $this->doPost("/prinetti/create-shipment?lang={$language}", null, $shipment_xml->asXML());
-        
+
         $response_xml = simplexml_load_string($response);
 
         if(!$response_xml) {
@@ -293,11 +293,11 @@ class Client
 
         $label = $xml->addChild('PrintLabel');
         $label['responseFormat'] = 'File';
-        
+
         if ($size && in_array($size, ['A5', '107x225'])) {
             $label['size'] = $size;
         }
-        
+
         $rules = array();
         if ($labels_count !== null) {
             $rules[] = "label:{$labels_count}";
@@ -446,11 +446,11 @@ class Client
             'service_provider'  => (string) $service_provider,
             'limit'             => (int) $limit
         );
-        
+
         if ( $type !== null ) {
-            $post_params['type'] = (string) trim($type);
+            $post_params['type'] = is_array($type) ? implode(',', $type) : (string) trim($type);
         }
-        
+
         return json_decode($this->doPost('/pickup-points/search', $post_params));
     }
 
@@ -474,9 +474,9 @@ class Client
             'service_provider'  => (string) $service_provider,
             'limit'             => (int) $limit
         );
-        
+
         if ( $type !== null ) {
-            $post_params['type'] = (string) trim($type);
+            $post_params['type'] = $type;
         }
 
         return json_decode($this->doPost('/pickup-points/search', $post_params));
@@ -565,7 +565,6 @@ class Client
 
                 $post_params['hash'] = hash_hmac('sha256', join('&', $post_params), $this->secret);
             }
-
             $post_data = http_build_query($post_params);
         }
 
@@ -595,7 +594,7 @@ class Client
           json_encode($headers),
           json_encode($post_data)
         ));
-        
+
         $ch = curl_init();
         curl_setopt_array($ch, $options);
         $response = curl_exec($ch);
