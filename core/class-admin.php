@@ -1111,7 +1111,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                   $pickup_points = $this->get_pickup_points_for_method($method_code, $order_postcode, $order_address, $order_country, $custom_address);
                   $select_first_option = '- ' . __('Select', 'woo-pakettikauppa') . ' -';
                   $settings = $this->shipment->get_settings();
-                  $pickup_points_type = [];
+                  $pickup_points_type = array();
                   if ( isset($settings['pickup_points_type']) && ! empty($settings['pickup_points_type']) && ! in_array('all', $settings['pickup_points_type']) ) {
                     $pickup_points_type = $settings['pickup_points_type'];
                   }
@@ -1144,7 +1144,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                                     name="wc_pakettikauppa_search_filter"
                                     value="all"
                                     />
-                            <label for="search_filter_all"><?php echo  __('No filter', 'woo-pakettikauppa'); ?></label>
+                            <label for="search_filter_all"><?php echo __('No filter', 'woo-pakettikauppa'); ?></label>
                           </li>
                           <?php foreach ( $pickup_points_type as $type ) { ?>
                             <li>
