@@ -39,13 +39,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
                 add_action('admin_enqueue_scripts', array( $this, 'manifest_enqueue_scripts' ));
                 add_action('wp_ajax_pk_manifest_call_courier', array( $this, 'pk_manifest_call_courier' ));
                 add_action('add_meta_boxes', array( $this, 'register_meta_boxe' ));
-                add_filter( 'bulk_actions-edit-pk_manifest', array( $this, 'remove_from_bulk_actions') );
+                add_filter('bulk_actions-edit-pk_manifest', array( $this, 'remove_from_bulk_actions' ));
             }
         }
 
-        public function remove_from_bulk_actions( $actions ){
-            unset( $actions[ 'edit' ] );
-            unset( $actions[ 'trash' ] );
+        public function remove_from_bulk_actions( $actions ) {
+            unset($actions[ 'edit' ]);
+            unset($actions[ 'trash' ]);
             return $actions;
         }
 
