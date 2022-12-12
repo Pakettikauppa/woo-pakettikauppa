@@ -34,7 +34,7 @@ jQuery(function( $ ) {
       data['custom_method'] = 1;
       data['custom_pickup'] = null;
       data['additional_text'] = $('textarea.pakettikauppa-additional-info').val();
-      
+
       if ($("#pickup-changer-" + shipping_method).length) {
         data['custom_pickup'] = $("#pickup-changer-" + shipping_method + " .pakettikauppa-pickup-select").find(':selected').data('id');
       }
@@ -103,7 +103,7 @@ jQuery(function( $ ) {
         var shipping_method = $('#woo-pakettikauppa_'+id+' #pakettikauppa-service').val();
         data['wc_pakettikauppa_service_id'] = shipping_method;
         data['custom_method'] = 1;
-        
+
         if ($("#woo-pakettikauppa_"+id+" #pickup-changer-" + shipping_method).length) {
           data['custom_pickup'] = $("#woo-pakettikauppa_"+id+" #pickup-changer-" + shipping_method + " .pakettikauppa-pickup-select").find(':selected').data('id');
         }
@@ -128,7 +128,7 @@ jQuery(function( $ ) {
   window.pakettikauppa_change_method = function(obj) {
 
     var btn_txt = $(obj).data("txt1");
-    
+
     if ($($(obj).closest('div')).find('#wc_pakettikauppa_shipping_method').is(':visible')) {
       $($(obj).closest('div')).find('#wc_pakettikauppa_shipping_method').slideUp("slow");
       $($(obj).closest('div')).find('#wc_pakettikauppa_custom_shipping_method').slideDown("slow");
@@ -163,6 +163,7 @@ jQuery(function( $ ) {
     var address = $("#"+values.container_id).find(".pakettikauppa-pickup-search-field").val();
     var method = $("#"+values.container_id).find(".pakettikauppa-pickup-method").val();
     var select_field = $("#"+values.container_id).find(".pakettikauppa-pickup-select");
+    var pickup_point_type = $("#"+values.container_id).find('input[name="wc_pakettikauppa_search_filter"]:checked').val();
 
     $("#"+values.container_id).find(".error-pickup-search").hide();
 
@@ -173,7 +174,8 @@ jQuery(function( $ ) {
       action: 'get_pickup_point_by_custom_address',
       security: $("#pakettikauppa_metabox_nonce").val(),
       address: address,
-      method: method
+      method: method,
+      type: pickup_point_type
     }
 
     jQuery.post(ajaxurl, data, function(response) {
@@ -190,7 +192,7 @@ jQuery(function( $ ) {
         $.each(pickup_points, function (i, point) {
           var option_value = "" + point.provider + ": " + point.name + " (#" + point.pickup_point_id + ")";
           var option_name = "" + point.provider + ": " + point.name + " (" + point.street_address + ")";
-          var option = $('<option>', { 
+          var option = $('<option>', {
             value: option_value,
             text : option_name
           });
@@ -333,7 +335,7 @@ function update_estimated_price(list, quantity) {
   var additional_services = [];
   if ( ! jQuery("#wc_pakettikauppa_shipping_method").is(':visible') ) {
     selected_method = document.getElementById("pakettikauppa-service").value;
-    
+
     var all_services = document.getElementById("pk-admin-additional-services-" + selected_method).getElementsByTagName("input");
     for ( var i = 0; i < all_services.length; i++ ) {
       if ( all_services[i].checked ) {

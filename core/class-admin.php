@@ -1110,6 +1110,19 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                   $custom_address = empty($custom_address) ? "$order_address, $order_postcode, $order_country" : $custom_address;
                   $pickup_points = $this->get_pickup_points_for_method($method_code, $order_postcode, $order_address, $order_country, $custom_address);
                   $select_first_option = '- ' . __('Select', 'woo-pakettikauppa') . ' -';
+                  $settings = $this->shipment->get_settings();
+                  $pickup_points_type = [];
+                  if ( isset($settings['pickup_points_type']) && ! empty($settings['pickup_points_type']) && ! in_array('all', $settings['pickup_points_type']) ) {
+                    $pickup_points_type = $settings['pickup_points_type'];
+                  }
+                  $pickpoint_type_labels = array(
+                    'all' => $this->core->text->pickup_points_type_all(),
+                    'PRIVATE_LOCKER' => $this->core->text->pickup_points_type_private_locker(),
+                    'OUTDOOR_LOCKER' => $this->core->text->pickup_points_type_outdoor_locker(),
+                    'PARCEL_LOCKER' => $this->core->text->pickup_points_type_parcel_locker(),
+                    'PICKUP_POINT' => $this->core->text->pickup_points_type_pickup_point(),
+                    'AGENCY' => $this->core->text->pickup_points_type_agency(),
+                  );
                   ?>
                   <div id="pickup-changer-<?php echo $method_code; ?>" class="pakettikauppa-pickup-changer" style="display: none;">
                     <script>
@@ -1121,6 +1134,32 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                       <h4><?php echo __('Search pickup points', 'woo-pakettikauppa'); ?></h4>
                       <input class="pakettikauppa-pickup-method" type="hidden" value="<?php echo $method_code; ?>">
                       <textarea class="pakettikauppa-pickup-search-field" rows="2" onchange="pakettikauppa_change_element_value('.pakettikauppa-pickup-search-field',this.value);"><?php echo $custom_address; ?></textarea>
+                      <?php if ( $pickup_points_type ) { ?>
+                        <ol style="list-style:circle;">
+                          <li>
+                            <input
+                                    type="radio"
+                                    id="search_filter_all"
+                                    class="pakettikauppa_metabox_array_values"
+                                    name="wc_pakettikauppa_search_filter"
+                                    value="all"
+                                    />
+                            <label for="search_filter_all"><?php echo  __('No filter', 'woo-pakettikauppa'); ?></label>
+                          </li>
+                          <?php foreach ( $pickup_points_type as $type ) { ?>
+                            <li>
+                              <input
+                                      type="radio"
+                                      id="search_filter_<?php echo $type; ?>"
+                                      class="pakettikauppa_metabox_array_values"
+                                      name="wc_pakettikauppa_search_filter"
+                                      value="<?php echo $type; ?>"
+                                      />
+                              <label for="search_filter_<?php echo $type; ?>"><?php echo $pickpoint_type_labels[$type]; ?></label>
+                            </li>
+                          <?php } ?>
+                        </ol>
+                       <?php } ?>
                       <button type="button" value="search" class="button button-small btn-search" onclick="pakettikauppa_pickup_points_by_custom_address(btn_values_<?php echo $method_code; ?>);"><?php echo __('Search', 'woo-pakettikauppa'); ?></button>
                       <span class="pakettikauppa-msg-error error-pickup-search" style="display:none;"><?php echo __('No pickup points were found', 'woo-pakettikauppa'); ?></span>
                     </div>
@@ -1188,7 +1227,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
     public function get_pickup_point_by_custom_address() {
       $method_code = $_POST['method'];
       $custom_address = $_POST['address'];
-      $pickup_points = $this->get_pickup_points_for_method($method_code, null, null, null, $custom_address);
+      $type = $_POST['type'];
+      $pickup_points = $this->get_pickup_points_for_method($method_code, null, null, null, $custom_address, $type);
       if ( $pickup_points == 'error-zip' ) {
         echo $pickup_points;
       } else {
@@ -1197,14 +1237,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       wp_die();
     }
 
-    private function get_pickup_points_for_method( $method_code, $postcode, $address = null, $country = null, $custom_address = null ) {
+    private function get_pickup_points_for_method( $method_code, $postcode, $address = null, $country = null, $custom_address = null, $type = null ) {
       $pickup_points = array();
       try {
         $settings = $this->shipment->get_settings();
         if ( $custom_address && $settings['show_pickup_point_override_query'] === 'yes' ) {
-          $pickup_points = $this->shipment->get_pickup_points_by_free_input($custom_address, $method_code);
+          $pickup_points = $this->shipment->get_pickup_points_by_free_input($custom_address, $method_code, $type);
         } elseif ( ! empty($postcode) ) {
-          $pickup_points = $this->shipment->get_pickup_points($postcode, $address, $country, $method_code);
+          $pickup_points = $this->shipment->get_pickup_points($postcode, $address, $country, $method_code, $type);
         }
       } catch ( \Exception $e ) {
         $pickup_points = 'error-zip';

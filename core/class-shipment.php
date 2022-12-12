@@ -1346,15 +1346,17 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      * @return array The pickup points based on the parameters, or empty array if none were found
      * @throws Exception
      */
-    public function get_pickup_points( $postcode, $street_address = null, $country = null, $service_provider = null ) {
+    public function get_pickup_points( $postcode, $street_address = null, $country = null, $service_provider = null, $type = null ) {
       $pickup_point_limit = 5; // Default limit value for pickup point search
       $pickup_points_type = null; // Default pickup points type. null = all.
 
       if ( isset($this->settings['pickup_points_search_limit']) && ! empty($this->settings['pickup_points_search_limit']) ) {
         $pickup_point_limit = intval($this->settings['pickup_points_search_limit']);
       }
-      if ( isset($this->settings['pickup_points_type']) && ! empty($this->settings['pickup_points_type']) && $this->settings['pickup_points_type'] != 'all' ) {
+      if ( ! $type && isset($this->settings['pickup_points_type']) && ! empty($this->settings['pickup_points_type']) && ! in_array('all', $this->settings['pickup_points_type']) ) {
         $pickup_points_type = implode(',', $this->settings['pickup_points_type']);
+      } else {
+        $pickup_points_type = $type;
       }
 
       $pickup_point_data = $this->client->searchPickupPoints(trim($postcode), trim($street_address), trim($country), $service_provider, $pickup_point_limit, $pickup_points_type);
@@ -1372,15 +1374,17 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       return $pickup_point_data;
     }
 
-    public function get_pickup_points_by_free_input( $input, $service_provider = null ) {
+    public function get_pickup_points_by_free_input( $input, $service_provider = null, $type = null ) {
       $pickup_point_limit = 5; // Default limit value for pickup point search
       $pickup_points_type = null; // Default pickup points type. null = all.
 
       if ( isset($this->settings['pickup_points_search_limit']) && ! empty($this->settings['pickup_points_search_limit']) ) {
         $pickup_point_limit = intval($this->settings['pickup_points_search_limit']);
       }
-      if ( isset($this->settings['pickup_points_type']) && ! empty($this->settings['pickup_points_type']) && $this->settings['pickup_points_type'] != 'all' ) {
+      if ( ! $type && isset($this->settings['pickup_points_type']) && ! empty($this->settings['pickup_points_type']) && ! in_array('all', $this->settings['pickup_points_type']) ) {
         $pickup_points_type = implode(',', $this->settings['pickup_points_type']);
+      } else {
+        $pickup_points_type = $type;
       }
 
       $pickup_point_data = $this->client->searchPickupPointsByText(trim($input), $service_provider, $pickup_point_limit, $pickup_points_type);
