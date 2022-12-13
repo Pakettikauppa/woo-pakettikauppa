@@ -750,7 +750,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             <strong><?php echo esc_attr($label['tracking_code']); ?></strong><br />
             <span><?php echo esc_attr($this->shipment->service_title($label['service_id'])); ?></span><br />
             <br />
-            <?php if ( $manifest_id = get_post_meta($post_id, $this->core->prefix . '_manifest', true) ) : ?>
+            <?php $manifest_id = get_post_meta($post_id, $this->core->prefix . '_manifest', true); ?>
+            <?php if ( $manifest_id ) : ?>
               <strong><?php echo __('Pickup order', 'woo-pakettikauppa'); ?>:</strong> <span>#<?php echo $manifest_id; ?></span><br />
               <?php
                 $manifest = get_post($manifest_id);
@@ -1339,7 +1340,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       }
 
       if ( isset($_REQUEST['add_to_manifest']) ) {
-        (new Manifest($this->core))->add_manifest_orders( null, str_replace('wc_', '', $this->core->prefix) . '_add_to_manifest', array( $order->get_id() ));
+        (new Manifest($this->core))->add_manifest_orders(null, str_replace('wc_', '', $this->core->prefix) . '_add_to_manifest', array( $order->get_id() ));
       }
 
       $command = sanitize_key(key($_POST['wc_pakettikauppa']));
@@ -1435,7 +1436,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           $this->delete_return_label($order, $tracking_code);
           break;
         case 'add_to_manifest':
-          (new Manifest($this->core))->add_manifest_orders( null, str_replace('wc_', '', $this->core->prefix) . '_add_to_manifest', array( $order->get_id() ));
+          (new Manifest($this->core))->add_manifest_orders(null, str_replace('wc_', '', $this->core->prefix) . '_add_to_manifest', array( $order->get_id() ));
           break;
       }
     }
