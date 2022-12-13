@@ -139,17 +139,17 @@ table .pakettikauppa-notice p {
 
 .pakettikauppa-metabox-footer {
   margin: 0;
-  padding-top: 10px;  
+  padding-top: 10px;
   border-top: 1px solid #ddd;
 }
 
-.pakettikauppa-metabox-footer .button { 
-  width: 100%;  
-  margin-bottom: 7px; 
-} 
-    
-.pakettikauppa-metabox-footer .button:last-child {  
-  margin-bottom: 0; 
+.pakettikauppa-metabox-footer .button {
+  width: 100%;
+  margin-bottom: 7px;
+}
+
+.pakettikauppa-metabox-footer .button:last-child {
+  margin-bottom: 0;
 }
 
 #order_data .order_data_column p.pakettikauppa-field {
@@ -347,4 +347,10 @@ textarea.pakettikauppa-additional-info {
   margin-left: auto;
   display: table;
   margin-top: 15px;
+}
+#custom_add_to_manifest{
+  display: block;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 10px;
 }

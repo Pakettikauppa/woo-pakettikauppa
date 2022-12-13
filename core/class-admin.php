@@ -738,7 +738,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
      *
      * @param array $label Label information
      */
-    private function tpl_shipping_label( $label ) {
+    private function tpl_shipping_label( $label, $post_id ) {
       ?>
       <?php if ( ! empty($label['tracking_code']) ) : ?>
         <div class="pakettikauppa-shiplabel pakettikauppa-design-foldedcorner">
@@ -750,6 +750,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             <strong><?php echo esc_attr($label['tracking_code']); ?></strong><br />
             <span><?php echo esc_attr($this->shipment->service_title($label['service_id'])); ?></span><br />
             <br />
+            <?php if ( $manifest_id = get_post_meta($post_id, $this->core->prefix . '_manifest', true) ) : ?>
+              <strong><?php echo __('Pickup order', 'woo-pakettikauppa'); ?>:</strong> <span>#<?php echo $manifest_id; ?></span><br />
+              <?php
+                $manifest = get_post($manifest_id);
+                $pickup_order_status = get_post_status_object(get_post_status($manifest))->label;
+              ?>
+              <strong><?php echo __('Pickup order status', 'woo-pakettikauppa'); ?>:</strong> <span><?php echo $pickup_order_status; ?></span><br />
+            <?php endif; ?>
             <strong><?php echo __('Status', 'woo-pakettikauppa'); ?>:</strong> <span><?php echo esc_attr(Shipment::get_status_text($label['shipment_status'])); ?></span><br />
             <?php if ( ! empty($label['label_code']) ) : ?>
               <strong><?php echo __('Label code', 'woo-pakettikauppa'); ?>:</strong> <span><?php echo $label['label_code']; ?></span><br />
@@ -791,6 +799,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
               <a href="<?php echo esc_url($label['tracking_url']); ?>" target="_blank" class="tracking"><?php esc_attr_e('Track', 'woo-pakettikauppa'); ?></a> -
             <?php endif; ?>
             <a href="javascript:void(0)" class="status" name="wc_pakettikauppa[get_status]" data-value="<?php echo esc_attr($label['tracking_code']); ?>" onclick="pakettikauppa_meta_box_submit(this);"><?php echo __('Refresh', 'woo-pakettikauppa'); ?></a> -
+            <a href="javascript:void(0)" class="manifest" name="wc_pakettikauppa[add_to_manifest]" data-value="<?php echo esc_attr($label['tracking_code']); ?>" onclick="pakettikauppa_meta_box_submit(this);"><?php echo __('Add to pickup order', 'woo-pakettikauppa'); ?></a> -
             <a href="javascript:void(0)" class="delete" name="wc_pakettikauppa[delete_shipping_label]" data-value="<?php echo esc_attr($label['tracking_code']); ?>" onclick="pakettikauppa_meta_box_submit(this);"><?php echo __('Delete', 'woo-pakettikauppa'); ?></a>
           </p>
         </div>
@@ -983,7 +992,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         if ( ! empty($labels) ) {
           $this->tpl_section_title(__('Shipping labels', 'woo-pakettikauppa'));
           foreach ( $labels as $label ) {
-            $this->tpl_shipping_label($label);
+            $this->tpl_shipping_label($label, $post->ID);
           }
         }
         if ( (! empty($labels) || ! empty($return_shipments)) && ! empty($service_id) ) {
@@ -1170,6 +1179,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             <?php endif; ?>
           </div>
           <p class="pakettikauppa-metabox-footer">
+            <label for="wc_pakettikauppa_add_to_manifest" id="custom_add_to_manifest">
+              <input type="checkbox" id="wc_pakettikauppa_add_to_manifest" class="pakettikauppa_metabox_array_values" name="wc_pakettikauppa_add_to_manifest" value="1">
+              <?php echo esc_html__('Add to pickup order', 'woo-pakettikauppa'); ?>
+            </label>
             <?php if ( ! empty($service_id) ) : ?>
               <?php $button_text = __('Custom shipping...', 'woo-pakettikauppa'); ?>
               <button type="button" value="change" id="pakettikauppa_metabtn_change" class="button pakettikauppa_meta_box" onclick="pakettikauppa_change_method(this);" data-txt1="<?php echo $button_text; ?>" data-txt2="<?php echo __('Original shipping...', 'woo-pakettikauppa'); ?>">
@@ -1325,6 +1338,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         update_post_meta($order->get_id(), '_' . $this->core->params_prefix . 'request_id', $_REQUEST['request_id']);
       }
 
+      if ( isset($_REQUEST['add_to_manifest']) ) {
+        (new Manifest($this->core))->add_manifest_orders( null, str_replace('wc_', '', $this->core->prefix) . '_add_to_manifest', array( $order->get_id() ));
+      }
+
       $command = sanitize_key(key($_POST['wc_pakettikauppa']));
 
       $service_id = null;
@@ -1415,8 +1432,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           break;
         case 'delete_return_label':
           $tracking_code = sanitize_text_field($_POST['wc_pakettikauppa'][$command]);
-
           $this->delete_return_label($order, $tracking_code);
+          break;
+        case 'add_to_manifest':
+          (new Manifest($this->core))->add_manifest_orders( null, str_replace('wc_', '', $this->core->prefix) . '_add_to_manifest', array( $order->get_id() ));
           break;
       }
     }
