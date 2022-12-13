@@ -330,10 +330,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
             }
         }
 
-        public function generate_orders_links($current_orders) {
+        public function generate_orders_links( $current_orders ) {
             $html = '';
             foreach ( $current_orders as $order_id ) {
-                $html .= '<a href="'. admin_url( 'post.php?post=' . absint( $order_id ) . '&action=edit' ) .'" >#'. $order_id .'&nbsp;';
+                $html .= '<a href="' . admin_url('post.php?post=' . absint($order_id) . '&action=edit') . '" >#' . $order_id . '&nbsp;';
                 $labels = get_post_meta($order_id, '_' . $this->core->prefix . '_labels', true);
                 if ( ! empty($labels) ) {
                     foreach ( $labels as $label ) {
