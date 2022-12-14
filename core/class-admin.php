@@ -66,18 +66,18 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
     public function add_submenu() {
       $submenu = add_submenu_page('', 'Create custom shipments', 'Custom shipments', 'manage_woocommerce', 'bulk-create-custom-shipment', array( $this, 'create_custom_shipment_table' ));
-      add_action('load-' . $submenu, array($this, 'load_admin_custom_shipment_js'));
+      add_action('load-' . $submenu, array( $this, 'load_admin_custom_shipment_js' ));
     }
 
-    function load_admin_custom_shipment_js() {
+    public function load_admin_custom_shipment_js() {
       add_action('admin_enqueue_scripts', array( $this, 'enqueue_admin_js' ));
     }
 
-    function enqueue_admin_js() {
+    public function enqueue_admin_js() {
       wp_enqueue_script($this->core->prefix . '_admin_custom_shipment_js', $this->core->dir_url . 'assets/js/admin_custom_shipment.js', array( 'jquery' ), $this->core->version, true);
     }
 
-    function create_custom_shipment_table() {
+    public function create_custom_shipment_table() {
       echo '<div class="wrap">';
       echo $this->get_custom_shipment_table();
       echo '</div>';
@@ -1803,7 +1803,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                 ?>
                       <tr class="inside" id="woo-pakettikauppa_<?php echo $id; ?>">
                         <td>#<?php echo $id; ?> <?php echo $order->get_formatted_shipping_full_name(); ?></td>
-                        <?php $this->meta_box_custom_shipments( $order ); ?>
+                        <?php $this->meta_box_custom_shipments($order); ?>
                       </tr>
                       <?php
                         }
@@ -1924,7 +1924,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       <?php
     }
 
-    public function get_pickup_points_html($id) {
+    public function get_pickup_points_html( $id ) {
       $order = wc_get_order($id);
 
       if ( $order === null ) {
@@ -1989,7 +1989,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
               </select>
             </div>
           </div>
-        <?php }
+          <?php
+        }
       }
     }
   }
