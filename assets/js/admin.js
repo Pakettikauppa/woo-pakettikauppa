@@ -51,6 +51,10 @@ jQuery(function( $ ) {
       });
     }
 
+    if($('#wc_pakettikauppa_add_to_manifest').is(':checked')){
+      data['add_to_manifest'] = 1;
+    }
+
     data['for_products'] = [];
     $('.prod_select_dropdown .item_cb').each(function (i, obj) {
       if ($(this).is(':checked')) {
