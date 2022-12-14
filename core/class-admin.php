@@ -757,7 +757,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
      *
      * @param array $label Label information
      */
-    private function tpl_shipping_label( $label ) {
+    private function tpl_shipping_label( $label, $post_id ) {
       ?>
       <?php if ( ! empty($label['tracking_code']) ) : ?>
         <div class="pakettikauppa-shiplabel pakettikauppa-design-foldedcorner">
@@ -769,6 +769,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             <strong><?php echo esc_attr($label['tracking_code']); ?></strong><br />
             <span><?php echo esc_attr($this->shipment->service_title($label['service_id'])); ?></span><br />
             <br />
+            <?php $manifest_id = get_post_meta($post_id, $this->core->prefix . '_manifest', true); ?>
+            <?php if ( $manifest_id ) : ?>
+              <strong><?php echo __('Pickup order', 'woo-pakettikauppa'); ?>:</strong> <span>#<?php echo $manifest_id; ?></span><br />
+              <?php
+                $manifest = get_post($manifest_id);
+                $pickup_order_status = get_post_status_object(get_post_status($manifest))->label;
+              ?>
+              <strong><?php echo __('Pickup order status', 'woo-pakettikauppa'); ?>:</strong> <span><?php echo $pickup_order_status; ?></span><br />
+            <?php endif; ?>
             <strong><?php echo __('Status', 'woo-pakettikauppa'); ?>:</strong> <span><?php echo esc_attr(Shipment::get_status_text($label['shipment_status'])); ?></span><br />
             <?php if ( ! empty($label['label_code']) ) : ?>
               <strong><?php echo __('Label code', 'woo-pakettikauppa'); ?>:</strong> <span><?php echo $label['label_code']; ?></span><br />
@@ -810,6 +819,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
               <a href="<?php echo esc_url($label['tracking_url']); ?>" target="_blank" class="tracking"><?php esc_attr_e('Track', 'woo-pakettikauppa'); ?></a> -
             <?php endif; ?>
             <a href="javascript:void(0)" class="status" name="wc_pakettikauppa[get_status]" data-value="<?php echo esc_attr($label['tracking_code']); ?>" onclick="pakettikauppa_meta_box_submit(this);"><?php echo __('Refresh', 'woo-pakettikauppa'); ?></a> -
+            <a href="javascript:void(0)" class="manifest" name="wc_pakettikauppa[add_to_manifest]" data-value="<?php echo esc_attr($label['tracking_code']); ?>" onclick="pakettikauppa_meta_box_submit(this);"><?php echo __('Add to pickup order', 'woo-pakettikauppa'); ?></a> -
             <a href="javascript:void(0)" class="delete" name="wc_pakettikauppa[delete_shipping_label]" data-value="<?php echo esc_attr($label['tracking_code']); ?>" onclick="pakettikauppa_meta_box_submit(this);"><?php echo __('Delete', 'woo-pakettikauppa'); ?></a>
           </p>
         </div>
@@ -1002,7 +1012,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         if ( ! empty($labels) ) {
           $this->tpl_section_title(__('Shipping labels', 'woo-pakettikauppa'));
           foreach ( $labels as $label ) {
-            $this->tpl_shipping_label($label);
+            $this->tpl_shipping_label($label, $post->ID);
           }
         }
         if ( (! empty($labels) || ! empty($return_shipments)) && ! empty($service_id) ) {
@@ -1129,6 +1139,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                   $custom_address = empty($custom_address) ? "$order_address, $order_postcode, $order_country" : $custom_address;
                   $pickup_points = $this->get_pickup_points_for_method($method_code, $order_postcode, $order_address, $order_country, $custom_address);
                   $select_first_option = '- ' . __('Select', 'woo-pakettikauppa') . ' -';
+                  $settings = $this->shipment->get_settings();
+                  $pickup_points_type = array();
+                  if ( isset($settings['pickup_points_type']) && ! empty($settings['pickup_points_type']) && ! in_array('all', $settings['pickup_points_type']) ) {
+                    $pickup_points_type = $settings['pickup_points_type'];
+                  }
                   ?>
                   <div id="pickup-changer-<?php echo $method_code; ?>" class="pakettikauppa-pickup-changer" style="display: none;">
                     <script>
@@ -1140,6 +1155,30 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                       <h4><?php echo __('Search pickup points', 'woo-pakettikauppa'); ?></h4>
                       <input class="pakettikauppa-pickup-method" type="hidden" value="<?php echo $method_code; ?>">
                       <textarea class="pakettikauppa-pickup-search-field" rows="2" onchange="pakettikauppa_change_element_value('.pakettikauppa-pickup-search-field',this.value);"><?php echo $custom_address; ?></textarea>
+                      <?php if ( $pickup_points_type ) { ?>
+                        <ol style="list-style:circle;">
+                          <li>
+                            <input
+                                    type="radio"
+                                    id="search_filter_all_<?php echo $method_code; ?>"
+                                    class="pakettikauppa_metabox_array_values"
+                                    name="wc_pakettikauppa_search_filter"
+                                    value="all"
+                                    />
+                            <label for="search_filter_all_<?php echo $method_code; ?>"><?php echo __('Without filters', 'woo-pakettikauppa'); ?></label>
+                          </li>
+                          <li>
+                            <input
+                                    type="radio"
+                                    id="search_filter_filters_<?php echo $method_code; ?>"
+                                    class="pakettikauppa_metabox_array_values"
+                                    name="wc_pakettikauppa_search_filter"
+                                    value="<?php echo implode(',', $pickup_points_type); ?>"
+                                    />
+                            <label for="search_filter_filters_<?php echo $method_code; ?>"><?php echo __('With filters', 'woo-pakettikauppa'); ?></label>
+                          </li>
+                        </ol>
+                       <?php } ?>
                       <button type="button" value="search" class="button button-small btn-search" onclick="pakettikauppa_pickup_points_by_custom_address(btn_values_<?php echo $method_code; ?>);"><?php echo __('Search', 'woo-pakettikauppa'); ?></button>
                       <span class="pakettikauppa-msg-error error-pickup-search" style="display:none;"><?php echo __('No pickup points were found', 'woo-pakettikauppa'); ?></span>
                     </div>
@@ -1189,6 +1228,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             <?php endif; ?>
           </div>
           <p class="pakettikauppa-metabox-footer">
+            <label for="wc_pakettikauppa_add_to_manifest" id="custom_add_to_manifest">
+              <input type="checkbox" id="wc_pakettikauppa_add_to_manifest" class="pakettikauppa_metabox_array_values" name="wc_pakettikauppa_add_to_manifest" value="1">
+              <?php echo esc_html__('Add to pickup order', 'woo-pakettikauppa'); ?>
+            </label>
             <?php if ( ! empty($service_id) ) : ?>
               <?php $button_text = __('Custom shipping...', 'woo-pakettikauppa'); ?>
               <button type="button" value="change" id="pakettikauppa_metabtn_change" class="button pakettikauppa_meta_box" onclick="pakettikauppa_change_method(this);" data-txt1="<?php echo $button_text; ?>" data-txt2="<?php echo __('Original shipping...', 'woo-pakettikauppa'); ?>">
@@ -1207,7 +1250,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
     public function get_pickup_point_by_custom_address() {
       $method_code = $_POST['method'];
       $custom_address = $_POST['address'];
-      $pickup_points = $this->get_pickup_points_for_method($method_code, null, null, null, $custom_address);
+      $type = $_POST['type'];
+      $pickup_points = $this->get_pickup_points_for_method($method_code, null, null, null, $custom_address, $type);
       if ( $pickup_points == 'error-zip' ) {
         echo $pickup_points;
       } else {
@@ -1216,14 +1260,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       wp_die();
     }
 
-    private function get_pickup_points_for_method( $method_code, $postcode, $address = null, $country = null, $custom_address = null ) {
+    private function get_pickup_points_for_method( $method_code, $postcode, $address = null, $country = null, $custom_address = null, $type = null ) {
       $pickup_points = array();
       try {
         $settings = $this->shipment->get_settings();
         if ( $custom_address && $settings['show_pickup_point_override_query'] === 'yes' ) {
-          $pickup_points = $this->shipment->get_pickup_points_by_free_input($custom_address, $method_code);
+          $pickup_points = $this->shipment->get_pickup_points_by_free_input($custom_address, $method_code, $type);
         } elseif ( ! empty($postcode) ) {
-          $pickup_points = $this->shipment->get_pickup_points($postcode, $address, $country, $method_code);
+          $pickup_points = $this->shipment->get_pickup_points($postcode, $address, $country, $method_code, $type);
         }
       } catch ( \Exception $e ) {
         $pickup_points = 'error-zip';
@@ -1344,6 +1388,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         update_post_meta($order->get_id(), '_' . $this->core->params_prefix . 'request_id', $_REQUEST['request_id']);
       }
 
+      if ( isset($_REQUEST['add_to_manifest']) ) {
+        (new Manifest($this->core))->add_manifest_orders(null, str_replace('wc_', '', $this->core->prefix) . '_add_to_manifest', array( $order->get_id() ));
+      }
+
       $command = sanitize_key(key($_POST['wc_pakettikauppa']));
 
       $service_id = null;
@@ -1434,8 +1482,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           break;
         case 'delete_return_label':
           $tracking_code = sanitize_text_field($_POST['wc_pakettikauppa'][$command]);
-
           $this->delete_return_label($order, $tracking_code);
+          break;
+        case 'add_to_manifest':
+          (new Manifest($this->core))->add_manifest_orders(null, str_replace('wc_', '', $this->core->prefix) . '_add_to_manifest', array( $order->get_id() ));
           break;
       }
     }

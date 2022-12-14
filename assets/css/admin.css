@@ -348,6 +348,7 @@ textarea.pakettikauppa-additional-info {
   display: table;
   margin-top: 15px;
 }
+
 .loader-wrapper{
   width: calc(100% + 20px);
   height: 100%;
@@ -377,4 +378,11 @@ textarea.pakettikauppa-additional-info {
   100% {
       transform: rotate(360deg);
   }
+}
+
+#custom_add_to_manifest{
+  display: block;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 10px;
 }

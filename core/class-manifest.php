@@ -38,8 +38,14 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
                 add_action('admin_menu', array( $this, 'add_submenu' ));
                 add_action('admin_enqueue_scripts', array( $this, 'manifest_enqueue_scripts' ));
                 add_action('wp_ajax_pk_manifest_call_courier', array( $this, 'pk_manifest_call_courier' ));
-                add_action('add_meta_boxes', array( $this, 'register_meta_boxe' ));
+                add_filter('bulk_actions-edit-pk_manifest', array( $this, 'remove_from_bulk_actions' ));
             }
+        }
+
+        public function remove_from_bulk_actions( $actions ) {
+            unset($actions[ 'edit' ]);
+            unset($actions[ 'trash' ]);
+            return $actions;
         }
 
         public function manifest_enqueue_scripts( $hook ) {
@@ -158,8 +164,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
             if ( $action === str_replace('wc_', '', $this->core->prefix) . '_add_to_manifest' ) {
                 $manifest = $this->get_current_manifest();
                 $this->add_orders_to_manifest($manifest, $order_ids);
-                wp_redirect(site_url($redirect_to));
-                exit;
+                if ( $redirect_to ) {
+                    wp_redirect(site_url($redirect_to));
+                    exit;
+                }
             }
             return;
             //return $redirect_to;
@@ -263,8 +271,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
             switch ( $column ) {
               case 'orders':
                 $current_orders = get_post_meta($post_id, $this->core->prefix . '_manifest_orders', true);
+
                 if ( ! empty($current_orders) ) {
-                  echo implode(', ', $current_orders);
+                  echo $this->generate_orders_links($current_orders);
                 } else {
                   echo '-';
                 }
@@ -319,6 +328,21 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
                 }
                 break;
             }
+        }
+
+        public function generate_orders_links( $current_orders ) {
+            $html = '';
+            foreach ( $current_orders as $order_id ) {
+                $html .= '<a href="' . admin_url('post.php?post=' . absint($order_id) . '&action=edit') . '" >#' . $order_id . '&nbsp;';
+                $labels = get_post_meta($order_id, '_' . $this->core->prefix . '_labels', true);
+                if ( ! empty($labels) ) {
+                    foreach ( $labels as $label ) {
+                        $html .= $label['tracking_code'] . ' ' ?? '';
+                    }
+                }
+                $html .= '</a> <br>';
+            }
+            return $html;
         }
 
         public function pk_manifest_call_courier() {
@@ -509,24 +533,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Manifest') ) {
 
             return false !== $doc && empty($errors) ? $doc : false;
 
-        }
-
-        /**
-        * Register meta box for WooCommerce order page.
-        */
-        public function register_meta_boxe() {
-            add_meta_box(
-              'woo-pakettikauppa-manifest', // Using a variable WILL BREAK JS
-              // $this->core->prefix,
-              __('Manifest', 'woo-pakettikauppa'),
-              array(
-                $this,
-                'order_meta_box',
-              ),
-              null,
-              'side',
-              'default'
-            );
         }
 
         public function order_meta_box( $post ) {
