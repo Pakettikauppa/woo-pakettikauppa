@@ -160,7 +160,10 @@ jQuery(function( $ ) {
     pakettikauppa_trigger_pickup_list(selectedService);
 
     var element = document.querySelector('.prod_select_dropdown .content .quantity');
-    element.dispatchEvent(new Event('input', {bubbles:true}));
+    if(element){
+      element.dispatchEvent(new Event('input', {bubbles:true}));
+    }
+
   };
 
   window.pakettikauppa_pickup_points_by_custom_address = function(values) {
