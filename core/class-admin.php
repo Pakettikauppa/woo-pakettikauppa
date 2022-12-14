@@ -1125,14 +1125,6 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                   if ( isset($settings['pickup_points_type']) && ! empty($settings['pickup_points_type']) && ! in_array('all', $settings['pickup_points_type']) ) {
                     $pickup_points_type = $settings['pickup_points_type'];
                   }
-                  $pickpoint_type_labels = array(
-                    'all' => $this->core->text->pickup_points_type_all(),
-                    'PRIVATE_LOCKER' => $this->core->text->pickup_points_type_private_locker(),
-                    'OUTDOOR_LOCKER' => $this->core->text->pickup_points_type_outdoor_locker(),
-                    'PARCEL_LOCKER' => $this->core->text->pickup_points_type_parcel_locker(),
-                    'PICKUP_POINT' => $this->core->text->pickup_points_type_pickup_point(),
-                    'AGENCY' => $this->core->text->pickup_points_type_agency(),
-                  );
                   ?>
                   <div id="pickup-changer-<?php echo $method_code; ?>" class="pakettikauppa-pickup-changer" style="display: none;">
                     <script>
@@ -1149,25 +1141,23 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
                           <li>
                             <input
                                     type="radio"
-                                    id="search_filter_all"
+                                    id="search_filter_all_<?php echo $method_code; ?>"
                                     class="pakettikauppa_metabox_array_values"
                                     name="wc_pakettikauppa_search_filter"
                                     value="all"
                                     />
-                            <label for="search_filter_all"><?php echo __('No filter', 'woo-pakettikauppa'); ?></label>
+                            <label for="search_filter_all_<?php echo $method_code; ?>"><?php echo __('Without filters', 'woo-pakettikauppa'); ?></label>
                           </li>
-                          <?php foreach ( $pickup_points_type as $type ) { ?>
-                            <li>
-                              <input
-                                      type="radio"
-                                      id="search_filter_<?php echo $type; ?>"
-                                      class="pakettikauppa_metabox_array_values"
-                                      name="wc_pakettikauppa_search_filter"
-                                      value="<?php echo $type; ?>"
-                                      />
-                              <label for="search_filter_<?php echo $type; ?>"><?php echo $pickpoint_type_labels[$type]; ?></label>
-                            </li>
-                          <?php } ?>
+                          <li>
+                            <input
+                                    type="radio"
+                                    id="search_filter_filters_<?php echo $method_code; ?>"
+                                    class="pakettikauppa_metabox_array_values"
+                                    name="wc_pakettikauppa_search_filter"
+                                    value="<?php echo implode(',', $pickup_points_type); ?>"
+                                    />
+                            <label for="search_filter_filters_<?php echo $method_code; ?>"><?php echo __('With filters', 'woo-pakettikauppa'); ?></label>
+                          </li>
                         </ol>
                        <?php } ?>
                       <button type="button" value="search" class="button button-small btn-search" onclick="pakettikauppa_pickup_points_by_custom_address(btn_values_<?php echo $method_code; ?>);"><?php echo __('Search', 'woo-pakettikauppa'); ?></button>
