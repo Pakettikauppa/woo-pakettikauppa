@@ -1,0 +1,10 @@
+.call-courier-table .manifest-date {
+    width: 100%;
+}
+.call-courier-table .manifest-time-from,
+.call-courier-table .manifest-time-to {
+    width: 100%;
+}
+.call-courier-table input.error {
+    border-color: red;
+}

@@ -1072,6 +1072,22 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
       $shipment->setShipmentInfo($info);
 
+      $settings = $this->get_settings();
+
+      if ( ! empty($settings['pickup_points']) ) {
+        $pickup_settings = json_decode($settings['pickup_points'], true);
+        foreach ( $pickup_settings as $setting ) {
+          if ( $setting['service'] == $service_id ) {
+            if ( isset($setting[$service_id]['additional_services']) && ! empty($setting[$service_id]['additional_services']) ) {
+              $setting_additional_services = $setting[$service_id]['additional_services'];
+              if ( isset($setting_additional_services['return_label']) && $setting_additional_services['return_label'] == 'yes' ) {
+                $shipment->includeReturnLabel(true);
+              }
+            }
+          }
+        }
+      }
+
       if ( ! empty($extra_params['return_shipment']) ) {
         return $shipment;
       }
@@ -1180,7 +1196,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           continue;
         }
 
-        $product = $wcpf->get_product($item['product_id']);
+        $product_variation_id = $item['variation_id'];
+
+        // Check if product has variation.
+        if ( $product_variation_id ) {
+          $product = $wcpf->get_product($item['variation_id']);
+        } else {
+          $product = $wcpf->get_product($item['product_id']);
+        }
+
         $selected_product = self::get_selected_product($item['product_id'], $selected_products);
 
         if ( $product->is_virtual() ) {
@@ -1220,7 +1244,15 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
           continue;
         }
 
-        $product = $wcpf->get_product($item['product_id']);
+        $product_variation_id = $item['variation_id'];
+
+        // Check if product has variation.
+        if ( $product_variation_id ) {
+          $product = $wcpf->get_product($item['variation_id']);
+        } else {
+          $product = $wcpf->get_product($item['product_id']);
+        }
+
         $selected_product = self::get_selected_product($item['product_id'], $selected_products);
 
         if ( $product->is_virtual() ) {
@@ -1314,14 +1346,20 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      * @return array The pickup points based on the parameters, or empty array if none were found
      * @throws Exception
      */
-    public function get_pickup_points( $postcode, $street_address = null, $country = null, $service_provider = null ) {
+    public function get_pickup_points( $postcode, $street_address = null, $country = null, $service_provider = null, $type = null ) {
       $pickup_point_limit = 5; // Default limit value for pickup point search
+      $pickup_points_type = null; // Default pickup points type. null = all.
 
       if ( isset($this->settings['pickup_points_search_limit']) && ! empty($this->settings['pickup_points_search_limit']) ) {
         $pickup_point_limit = intval($this->settings['pickup_points_search_limit']);
       }
+      if ( ! $type && isset($this->settings['pickup_points_type']) && ! empty($this->settings['pickup_points_type']) && ! in_array('all', $this->settings['pickup_points_type']) ) {
+        $pickup_points_type = implode(',', $this->settings['pickup_points_type']);
+      } else {
+        $pickup_points_type = $type;
+      }
 
-      $pickup_point_data = $this->client->searchPickupPoints(trim($postcode), trim($street_address), trim($country), $service_provider, $pickup_point_limit);
+      $pickup_point_data = $this->client->searchPickupPoints(trim($postcode), trim($street_address), trim($country), $service_provider, $pickup_point_limit, $pickup_points_type);
 
       if ( $pickup_point_data === 'Bad request' ) {
         throw new \Exception($this->core->text->something_went_wrong_while_searching_pickup_points_error());
@@ -1336,14 +1374,20 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
       return $pickup_point_data;
     }
 
-    public function get_pickup_points_by_free_input( $input, $service_provider = null ) {
+    public function get_pickup_points_by_free_input( $input, $service_provider = null, $type = null ) {
       $pickup_point_limit = 5; // Default limit value for pickup point search
+      $pickup_points_type = null; // Default pickup points type. null = all.
 
       if ( isset($this->settings['pickup_points_search_limit']) && ! empty($this->settings['pickup_points_search_limit']) ) {
         $pickup_point_limit = intval($this->settings['pickup_points_search_limit']);
       }
+      if ( ! $type && isset($this->settings['pickup_points_type']) && ! empty($this->settings['pickup_points_type']) && ! in_array('all', $this->settings['pickup_points_type']) ) {
+        $pickup_points_type = implode(',', $this->settings['pickup_points_type']);
+      } else {
+        $pickup_points_type = $type;
+      }
 
-      $pickup_point_data = $this->client->searchPickupPointsByText(trim($input), $service_provider, $pickup_point_limit);
+      $pickup_point_data = $this->client->searchPickupPointsByText(trim($input), $service_provider, $pickup_point_limit, $pickup_points_type);
 
       if ( $pickup_point_data === 'Bad request' ) {
         throw new \Exception($this->core->text->something_went_wrong_while_searching_pickup_points_error());
@@ -1440,6 +1484,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
             $check_separately = array( '3101', '3143' );
             foreach ( $services as $service_code => $service ) {
               if ( $service !== 'yes' ) {
+                continue;
+              }
+              if ( $service_code == 'return_label' ) {
                 continue;
               }
               if ( ! in_array($service_code, $check_separately) ) {

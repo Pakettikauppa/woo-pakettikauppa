@@ -196,7 +196,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                 }
             }
         }
-        
+
         function pkChangeOptions(elem, methodId) {
 
             var strUser = elem.options[elem.selectedIndex].value;
@@ -210,11 +210,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                 elements[i].style.display = "none";
                 pkSetInputs(elements[i], true);
             }
-            
-            
-            
+
+
+
             if (strUser == '__PICKUPPOINTS__') {
-              if (pickuppointsElement) { 
+              if (pickuppointsElement) {
                   pickuppointsElement.style.display = "block";
                   pkSetInputs(pickuppointsElement, false);
               }
@@ -323,6 +323,17 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
                         </p>
                       <?php endif; ?>
                     <?php endforeach; ?>
+                    <input type="hidden"
+                      name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . esc_attr($method_code) . '][additional_services][return_label]'; ?>"
+                      value="no">
+                    <p>
+                      <label>
+                        <input type="checkbox"
+                              name="<?php echo esc_html($field_key) . '[' . esc_attr($method_id) . '][' . esc_attr($method_code) . '][additional_services][return_label]'; ?>"
+                              value="yes" <?php echo (! empty($values[ $method_id ][ $method_code ]['additional_services']['return_label']) && $values[ $method_id ][ $method_code ]['additional_services']['return_label'] === 'yes') ? 'checked' : ''; ?>>
+                        <?php echo __('Include return label (if available)', 'woo-pakettikauppa'); ?>
+                      </label>
+                    </p>
                   </div>
                 <?php endforeach; ?>
                 <?php foreach ( $all_shipping_methods as $service_id => $service_name ) : ?>
@@ -459,6 +470,35 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           'desc_tip' => true,
         ),
 
+        'order_pickup'              => array(
+          'title' => $this->get_core()->text->order_pickup_title(),
+          'type'  => 'title',
+        ),
+
+        'order_pickup_customer_id'                 => array(
+          'title'    => $this->get_core()->text->customer_id_title(),
+          'desc'     => '',
+          'type'     => 'text',
+          'default'  => '',
+          'desc_tip' => true,
+        ),
+
+        'order_pickup_invoice_id'                 => array(
+          'title'    => $this->get_core()->text->invoice_id_title(),
+          'desc'     => '',
+          'type'     => 'text',
+          'default'  => '',
+          'desc_tip' => true,
+        ),
+
+        'order_pickup_sender_id'                 => array(
+          'title'    => $this->get_core()->text->sender_id_title(),
+          'desc'     => '',
+          'type'     => 'text',
+          'default'  => '',
+          'desc_tip' => true,
+        ),
+
         'pickup_points'              => array(
           'title' => $this->get_core()->text->pickup_points_title(),
           'type'  => 'pickuppoints',
@@ -554,6 +594,21 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
             'no'  => __('No'),
             'yes'  => __('Yes'),
           ),
+        ),
+
+        'pickup_points_type' => array(
+          'title' => $this->get_core()->text->pickup_points_type_title(),
+          'type' => 'multiselect',
+          'options' => array(
+            'all' => $this->get_core()->text->pickup_points_type_all(),
+            'PRIVATE_LOCKER' => $this->get_core()->text->pickup_points_type_private_locker(),
+            'OUTDOOR_LOCKER' => $this->get_core()->text->pickup_points_type_outdoor_locker(),
+            'PARCEL_LOCKER' => $this->get_core()->text->pickup_points_type_parcel_locker(),
+            'PICKUP_POINT,AGENCY' => $this->get_core()->text->pickup_points_type_pickup_point(),
+          ),
+          'default' => 'all',
+          'description' => $this->get_core()->text->pickup_points_type_desc(),
+          'desc_tip'    => true,
         ),
 
         'pickup_points_search_limit' => array(
@@ -667,6 +722,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           ),
         ),
       );
+      //unset order pickup settings if feature is disabled
+      if ( ! $this->get_core()->order_pickup ) {
+          unset($fields['order_pickup']);
+          unset($fields['order_pickup_customer_id']);
+          unset($fields['order_pickup_invoice_id']);
+          unset($fields['order_pickup_sender_id']);
+      }
       if ( get_option($this->get_core()->prefix . '_wizard_done') == 1 ) {
         $fields['setup_wizard'] = array(
           'title'   => $this->get_core()->text->setup_wizard(),

@@ -38,6 +38,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
     public $api_config; // Used by Pakettikauppa\Client
     public $api_comment; // Used by ^
 
+    public $order_pickup;
+    public $order_pickup_url;
+
     public static $instance; // The class is a singleton.
 
     /**
@@ -65,6 +68,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       $this->templates = (object) ($config['templates'] ?? array(
         'checkout_pickup' => 'pakettikauppa/checkout-pickup.php',
         'account_order' => 'pakettikauppa/myaccount-order.php',
+        'tracking_email' => array(
+          'html' => 'pakettikauppa/tracking-email-html.php',
+          'txt' => 'pakettikauppa/tracking-email-txt.php',
+        ),
       ));
 
       $this->prefix = $config['prefix'] ?? 'wc_pakettikauppa';
@@ -85,6 +92,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
 
       $this->api_config = $config['pakettikauppa_api_config'] ?? array();
       $this->api_comment = $config['pakettikauppa_api_comment'] ?? 'From WooCommerce';
+
+      $this->order_pickup = $config['order_pickup'] ?? false;
+      $this->order_pickup_url = $config['order_pickup_callback_url'] ?? false;
 
       self::$instance = $this;
 
@@ -187,6 +197,11 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
         }
         //load check tool class
         $this->load_check_tool_class();
+
+        if ( $this->order_pickup ) {
+          //load manifest class
+          $this->load_manifest_class();
+        }
       }
 
       // Always load classes
@@ -276,6 +291,17 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       require_once 'class-check-tool.php';
 
       $check_tool = new Check_Tool($this);
+
+      return $check_tool;
+    }
+
+    /**
+     * Override this method to load a custom Manifest class
+     */
+    protected function load_manifest_class() {
+      require_once 'class-manifest.php';
+
+      $check_tool = new Manifest($this);
 
       return $check_tool;
     }

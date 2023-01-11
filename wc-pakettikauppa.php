@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: WooCommerce Pakettikauppa
- * Version: 3.8.0
+ * Version: 3.9.0
  * Plugin URI: https://github.com/Seravo/woo-pakettikauppa
  * Description: Pakettikauppa shipping service for WooCommerce. Integrates Posti, Smartship, Matkahuolto, DB Schenker and others.
  * Author: Pakettikauppa
@@ -63,6 +63,9 @@ $instance = new Wc_Pakettikauppa(
       ),
     ),
     'tracking_base_url' => 'https://www.pakettikauppa.fi/seuranta/?',
+    'order_pickup' => false, //enable or disable order pickup feature
+    'order_pickup_callback_url' => 'https://connect.ja.posti.fi/kasipallo/transportation/v1/orders', // TEST
+    // 'order_pickup_callback_url' => 'https://connect.posti.fi/transportation/v1/orders', // PROD
     // 'pakettikauppa_api_comment' => 'From WooCommerce', // Overrides default
   )
 );
