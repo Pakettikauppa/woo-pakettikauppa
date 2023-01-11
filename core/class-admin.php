@@ -819,7 +819,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
               <a href="<?php echo esc_url($label['tracking_url']); ?>" target="_blank" class="tracking"><?php esc_attr_e('Track', 'woo-pakettikauppa'); ?></a> -
             <?php endif; ?>
             <a href="javascript:void(0)" class="status" name="wc_pakettikauppa[get_status]" data-value="<?php echo esc_attr($label['tracking_code']); ?>" onclick="pakettikauppa_meta_box_submit(this);"><?php echo __('Refresh', 'woo-pakettikauppa'); ?></a> -
+            <?php if ( $this->core->order_pickup ) : ?>
             <a href="javascript:void(0)" class="manifest" name="wc_pakettikauppa[add_to_manifest]" data-value="<?php echo esc_attr($label['tracking_code']); ?>" onclick="pakettikauppa_meta_box_submit(this);"><?php echo __('Add to pickup order', 'woo-pakettikauppa'); ?></a> -
+            <?php endif; ?>
             <a href="javascript:void(0)" class="delete" name="wc_pakettikauppa[delete_shipping_label]" data-value="<?php echo esc_attr($label['tracking_code']); ?>" onclick="pakettikauppa_meta_box_submit(this);"><?php echo __('Delete', 'woo-pakettikauppa'); ?></a>
           </p>
         </div>
@@ -1228,10 +1230,12 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
             <?php endif; ?>
           </div>
           <p class="pakettikauppa-metabox-footer">
+            <?php if ( $this->core->order_pickup ) : ?>
             <label for="wc_pakettikauppa_add_to_manifest" id="custom_add_to_manifest">
               <input type="checkbox" id="wc_pakettikauppa_add_to_manifest" class="pakettikauppa_metabox_array_values" name="wc_pakettikauppa_add_to_manifest" value="1">
               <?php echo esc_html__('Add to pickup order', 'woo-pakettikauppa'); ?>
             </label>
+            <?php endif; ?>
             <?php if ( ! empty($service_id) ) : ?>
               <?php $button_text = __('Custom shipping...', 'woo-pakettikauppa'); ?>
               <button type="button" value="change" id="pakettikauppa_metabtn_change" class="button pakettikauppa_meta_box" onclick="pakettikauppa_change_method(this);" data-txt1="<?php echo $button_text; ?>" data-txt2="<?php echo __('Original shipping...', 'woo-pakettikauppa'); ?>">
