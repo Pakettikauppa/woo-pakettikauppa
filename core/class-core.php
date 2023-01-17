@@ -68,7 +68,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
       $this->templates = (object) ($config['templates'] ?? array(
         'checkout_pickup' => 'pakettikauppa/checkout-pickup.php',
         'account_order' => 'pakettikauppa/myaccount-order.php',
-        'tracking_email' => array(
+        'tracking_email' => (object) array(
           'html' => 'pakettikauppa/tracking-email-html.php',
           'txt' => 'pakettikauppa/tracking-email-txt.php',
         ),

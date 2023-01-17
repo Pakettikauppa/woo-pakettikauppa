@@ -102,6 +102,10 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 4. Setup wizard
 
 == Changelog ==
+= 3.9.1 =
+* WP compatibility update
+* Bug fix: Attach tracking info to email
+
 = 3.9.0 =
 * New feature: Support for order pickups
 * New feature: Pickup point filtering
