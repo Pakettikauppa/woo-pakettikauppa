@@ -1528,6 +1528,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           $return_service_id = '80020';
           break;
         case 'Matkahuolto':
+          $return_service_id = '90280';
+          break;
         default:
           $order->add_order_note(__('Unable to create return label for this shipment type.', 'woo-pakettikauppa'));
           return;
