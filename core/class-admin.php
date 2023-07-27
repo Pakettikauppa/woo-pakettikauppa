@@ -100,7 +100,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       if ( ! session_id() ) {
         session_start();
       }
-      if ( array_key_exists('pakettikauppa_notices', $_SESSION) ) {
+      if ( $_SESSION !== null && array_key_exists('pakettikauppa_notices', $_SESSION) ) {
         foreach ( $_SESSION['pakettikauppa_notices'] as $notice ) {
           if ( $notice['type'] === 'error' ) {
             $this->add_error_notice($notice['msg'], false);
