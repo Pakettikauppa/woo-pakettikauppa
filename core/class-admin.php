@@ -1287,6 +1287,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         wp_die();
       }
 
+      if ( empty($method_code) ) {
+        wp_die();
+      }
+
       $order = new \WC_Order((int) $order_id);
 
       if ( ! Shipment::validate_order_shipping_receiver($order) ) {
