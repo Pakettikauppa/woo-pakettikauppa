@@ -47,6 +47,11 @@ class Client
      */
     private $access_token       = null;
 
+    /**
+     * @var string max of 14 chars
+     */
+    private $sender_system_name = null;
+
     public $http_response_code;
     public $http_error;
     public $http_response;
@@ -189,11 +194,15 @@ class Client
         if($draft) {
             throw new \Exception("Creating draft shipment is deprecated");
         }
-
+        
         $id             = str_replace('.', '', microtime(true));
         $shipment_xml   = $shipment->asSimpleXml();
 
         $shipment_xml->{"ROUTING"}->{"Routing.Id"}          = $id;
+
+        if ($this->sender_system_name !== null) {
+            $shipment_xml->{"ROUTING"}->{"Routing.Client"} = $this->sender_system_name;
+        }
 
         if($this->use_posti_auth === true)
         {
@@ -214,7 +223,7 @@ class Client
         }
 
         $response = $this->doPost("/prinetti/create-shipment?lang={$language}", null, $shipment_xml->asXML());
-
+        
         $response_xml = simplexml_load_string($response);
 
         if(!$response_xml) {
@@ -278,6 +287,9 @@ class Client
         $routing = $xml->addChild('ROUTING');
 
         $routing->addChild('Routing.Id', $id);
+        if ($this->sender_system_name !== null) {
+            $routing->{"Routing.Client"} = $this->sender_system_name;
+        }
 
         if($this->use_posti_auth === true) {
             if(empty($this->access_token)) {
@@ -293,11 +305,11 @@ class Client
 
         $label = $xml->addChild('PrintLabel');
         $label['responseFormat'] = 'File';
-
+        
         if ($size && in_array($size, ['A5', '107x225'])) {
             $label['size'] = $size;
         }
-
+        
         $rules = array();
         if ($labels_count !== null) {
             $rules[] = "label:{$labels_count}";
@@ -446,11 +458,11 @@ class Client
             'service_provider'  => (string) $service_provider,
             'limit'             => (int) $limit
         );
-
+        
         if ( $type !== null ) {
-            $post_params['type'] = is_array($type) ? implode(',', $type) : (string) trim($type);
+            $post_params['type'] = (string) trim($type);
         }
-
+        
         return json_decode($this->doPost('/pickup-points/search', $post_params));
     }
 
@@ -474,9 +486,9 @@ class Client
             'service_provider'  => (string) $service_provider,
             'limit'             => (int) $limit
         );
-
+        
         if ( $type !== null ) {
-            $post_params['type'] = $type;
+            $post_params['type'] = (string) trim($type);
         }
 
         return json_decode($this->doPost('/pickup-points/search', $post_params));
@@ -565,6 +577,7 @@ class Client
 
                 $post_params['hash'] = hash_hmac('sha256', join('&', $post_params), $this->secret);
             }
+
             $post_data = http_build_query($post_params);
         }
 
@@ -676,7 +689,23 @@ class Client
     return $this->logClosure;
   }
 
-  /**
+    /**
+     * @param string $sender_system_name
+     */
+    public function setSenderSystemName($sender_system_name)
+    {
+        $this->sender_system_name = $sender_system_name;
+    }
+
+    /**
+     * return string sender_system_name
+     */
+    public function getSenderSystemName()
+    {
+        return $this->sender_system_name;
+    }
+
+    /**
    * @param ?\Closure $logClosure
    * @return static
    * @throws \ReflectionException

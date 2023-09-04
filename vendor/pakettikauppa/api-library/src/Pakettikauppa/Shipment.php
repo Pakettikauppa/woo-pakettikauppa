@@ -200,7 +200,6 @@ class Shipment
         $this->reference = $reference;
     }
 
-
     /**
      * Builds the xml from given data
      *
