@@ -838,6 +838,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
       $this->client = new \Pakettikauppa\Client($configs, $mode);
       $this->client->setComment($this->core->api_comment);
+      $this->client->setSenderSystemName('Woocommerce');
 
       if ( $configs[$mode]['use_posti_auth'] ) {
         $transient_name = $this->core->prefix . '_access_token';
