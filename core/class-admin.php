@@ -100,7 +100,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       if ( ! session_id() ) {
         session_start();
       }
-      if ( array_key_exists('pakettikauppa_notices', $_SESSION) ) {
+      if ( $_SESSION !== null && array_key_exists('pakettikauppa_notices', $_SESSION) ) {
         foreach ( $_SESSION['pakettikauppa_notices'] as $notice ) {
           if ( $notice['type'] === 'error' ) {
             $this->add_error_notice($notice['msg'], false);
@@ -1287,6 +1287,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
         wp_die();
       }
 
+      if ( empty($method_code) ) {
+        wp_die();
+      }
+
       $order = new \WC_Order((int) $order_id);
 
       if ( ! Shipment::validate_order_shipping_receiver($order) ) {
@@ -1528,6 +1532,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           $return_service_id = '80020';
           break;
         case 'Matkahuolto':
+          $return_service_id = '90280';
+          break;
         default:
           $order->add_order_note(__('Unable to create return label for this shipment type.', 'woo-pakettikauppa'));
           return;

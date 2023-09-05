@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: WooCommerce Pakettikauppa
- * Version: 3.9.1
+ * Version: 3.9.2
  * Plugin URI: https://github.com/Seravo/woo-pakettikauppa
  * Description: Pakettikauppa shipping service for WooCommerce. Integrates Posti, Smartship, Matkahuolto, DB Schenker and others.
  * Author: Pakettikauppa
@@ -11,12 +11,12 @@
  * License: GPL v3 or later
  *
  * Requires at least: 5.0
- * Tested up to: 6.1
+ * Tested up to: 6.3.1
  * WC requires at least: 3.4
- * WC tested up to: 6.6.1
+ * WC tested up to: 8.0.3
  * Requires PHP: 7.1
  *
- * Copyright: © 2017-2020 Seravo Oy, 2020-2022 Posti Oy
+ * Copyright: © 2017-2020 Seravo Oy, 2020-2023 Posti Oy
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  */

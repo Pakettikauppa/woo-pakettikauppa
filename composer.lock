@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "pakettikauppa/api-library",
-            "version": "2.0.5",
+            "version": "2.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Pakettikauppa/api-library.git",
-                "reference": "6ba538d45abac262b4a38eafb200104e76e0e264"
+                "reference": "2e8971ca61b21130b390d6146e131e4ca33479a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Pakettikauppa/api-library/zipball/6ba538d45abac262b4a38eafb200104e76e0e264",
-                "reference": "6ba538d45abac262b4a38eafb200104e76e0e264",
+                "url": "https://api.github.com/repos/Pakettikauppa/api-library/zipball/2e8971ca61b21130b390d6146e131e4ca33479a0",
+                "reference": "2e8971ca61b21130b390d6146e131e4ca33479a0",
                 "shasum": ""
             },
             "require": {
@@ -25,10 +25,14 @@
                 "ext-json": "*",
                 "ext-simplexml": "*"
             },
+            "require-dev": {
+                "phpunit/phpunit": "^9"
+            },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Pakettikauppa\\": "src/Pakettikauppa"
+                    "Pakettikauppa\\": "src/Pakettikauppa",
+                    "Tests\\Pakettikauppa\\": "src/Tests/Pakettikauppa"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -59,9 +63,9 @@
             "support": {
                 "email": "integration@pakettikauppa.fi",
                 "issues": "https://github.com/Pakettikauppa/api-library/issues",
-                "source": "https://github.com/Pakettikauppa/api-library/tree/2.0.5"
+                "source": "https://github.com/Pakettikauppa/api-library/tree/2.0.7"
             },
-            "time": "2022-02-01T12:58:16+00:00"
+            "time": "2023-06-19T08:39:09+00:00"
         }
     ],
     "packages-dev": [],
@@ -72,5 +76,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }

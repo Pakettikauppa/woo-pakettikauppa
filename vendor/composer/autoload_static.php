@@ -7,6 +7,10 @@ namespace Composer\Autoload;
 class ComposerStaticInitc0379f4a7e60de0a37707981e28ca684
 {
     public static $prefixLengthsPsr4 = array (
+        'T' => 
+        array (
+            'Tests\\Pakettikauppa\\' => 20,
+        ),
         'P' => 
         array (
             'Pakettikauppa\\' => 14,
@@ -14,6 +18,10 @@ class ComposerStaticInitc0379f4a7e60de0a37707981e28ca684
     );
 
     public static $prefixDirsPsr4 = array (
+        'Tests\\Pakettikauppa\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pakettikauppa/api-library/src/Tests/Pakettikauppa',
+        ),
         'Pakettikauppa\\' => 
         array (
             0 => __DIR__ . '/..' . '/pakettikauppa/api-library/src/Pakettikauppa',
