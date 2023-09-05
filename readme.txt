@@ -103,7 +103,7 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 
 == Changelog ==
 = 3.9.2 =
-* WP compatibility update
+* WP and Woo compatibility update
 * Update to latest API library
 * Various small fixes
 
