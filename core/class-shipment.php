@@ -41,7 +41,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
      */
     public $client = null;
     protected $settings = null;
-
+    public $id;
+    public $config;
     private $errors = array();
 
     public function __construct( Core $plugin ) {
