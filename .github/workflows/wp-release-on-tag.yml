@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
+# https://github.com/actions/checkout/issues/766
+    - name: Add workspace to safe.directory
+      run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
     - name: WordPress Plugin Deploy
       uses: 10up/action-wordpress-plugin-deploy@master
       env:
