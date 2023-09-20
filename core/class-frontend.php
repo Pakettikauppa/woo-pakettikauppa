@@ -397,6 +397,8 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
         if ( ! $error_msg ) {
           $list_type = 'select';
 
+          $settings = $this->shipment->get_settings();
+
           if ( isset($settings['pickup_point_list_type']) && $settings['pickup_point_list_type'] === 'list' ) {
             $list_type = 'radio';
 
@@ -446,6 +448,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Frontend') ) {
             'value' => null,
           );
         }
+
         // Moved this section below select, issue #163
         $show_pickup_point_override_query = $this->core->shipping_method_instance->get_option('show_pickup_point_override_query');
 
