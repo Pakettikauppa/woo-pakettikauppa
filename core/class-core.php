@@ -21,8 +21,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Core') ) {
 
     public $shippingmethod; // Name of the shipping method. Not to be confused with $shipping_method_instance!
     public $vendor_name;
+    public $vendor_fullname;
     public $vendor_url;
     public $vendor_logo;
+    public $tracking_base_url;
     public $setup_background;
     public $setup_page;
 
