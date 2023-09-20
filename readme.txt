@@ -104,6 +104,7 @@ You can use plugin (f.ex. Polylang) to translate shipping method names.
 == Changelog ==
 = 3.9.3 =
 * Fix missing variable preventing list type of pickup points showing at checkout
+* Fix PHP 8.2 related fixes
 
 = 3.9.2 =
 * WP and Woo compatibility update
