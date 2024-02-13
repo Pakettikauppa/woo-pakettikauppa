@@ -21,7 +21,7 @@
         <b> 
         <?php esc_attr_e('Pickup point', 'woo-pakettikauppa'); ?>
           </b> 
-          <?php esc_attr($code['point']); ?>
+          <?php echo esc_attr($code['point']); ?>
           <br/>
         <?php
       } else {
