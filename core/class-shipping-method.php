@@ -511,6 +511,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           'description' => $this->get_core()->text->shipping_settings_desc(),
         ),
 
+        'ignore_product_weight'      => array(
+          'title'   => $this->get_core()->text->ignore_product_weight(),
+          'type'    => 'checkbox',
+          'default' => 'no',
+          'class'   => 'mode_react',
+        ),
+
         'add_tracking_to_email'      => array(
           'title'   => $this->get_core()->text->add_tracking_link_to_email(),
           'type'    => 'checkbox',

@@ -65,6 +65,15 @@ jQuery(function( $ ) {
       }
     });
 
+    data['additional_params'] = {};
+    $("[name='wc_pakettikauppa_additional_params']").each(function (i, obj) {
+      let value = false;
+      if ($(this).is(':checked')) {
+        value = true;
+      }
+      data['additional_params'][$(this).val()] = value;
+    });
+
     if ($(obj).prop('tagName') == 'A') {
       data[$(obj).attr('name')] = $(obj).data('value');
     } else {

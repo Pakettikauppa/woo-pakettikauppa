@@ -294,6 +294,10 @@ table .pakettikauppa-notice p {
   display: block
 }
 
+.pakettikauppa-metabox-additional-params {
+  margin-bottom: 10px;
+}
+
 #order_data .order_data_column .edit_address.pakettikauppa {
   overflow: hidden;
 }
