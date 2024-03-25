@@ -308,6 +308,10 @@ if ( ! class_exists(__NAMESPACE__ . '\Text') ) {
       );
     }
 
+    public function ignore_product_weight() {
+      return __('Ignore product weight information', 'woo-pakettikauppa');
+    }
+
     public function add_tracking_link_to_email() {
       return __('Add tracking link to the order completed email', 'woo-pakettikauppa');
     }

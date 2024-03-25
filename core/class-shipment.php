@@ -978,8 +978,20 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
         $shipment->addAdditionalService($additional_service);
       }
 
+      $total_selected_products = 0;
+      foreach ( $selected_products as $prod ) {
+        if ( ! isset($prod['qty']) ) {
+          continue;
+        }
+        $total_selected_products += (int) $prod['qty'];
+      }
+
       $order_total_weight = self::order_weight($order, $selected_products);
       $order_total_volume = self::order_volume($order, $selected_products);
+
+      if ( ! empty($extra_params['ignore_product_weight']) && $total_selected_products > 0 ) {
+        $order_total_weight = $total_selected_products;
+      }
 
       for ( $i = 0; $i < $parcel_total_count; $i++ ) {
         $parcel = new Parcel();
@@ -1048,6 +1060,9 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipment') ) {
 
           if ( ! empty($product->get_weight()) ) {
             $content_line->netweight = wc_get_weight($product->get_weight() * $quantity, 'g');
+          }
+          if ( ! empty($extra_params['ignore_product_weight']) ) {
+            $content_line->netweight = wc_get_weight(1 * $quantity, 'g', 'kg');
           }
 
           $content_line->value = round($item_data['total'] + $item_data['total_tax'], 2);

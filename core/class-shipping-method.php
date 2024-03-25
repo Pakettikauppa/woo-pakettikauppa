@@ -525,6 +525,13 @@ if ( ! class_exists(__NAMESPACE__ . '\Shipping_Method') ) {
           'class'   => 'mode_react',
         ),
 
+        'ignore_product_weight'      => array(
+          'title'   => $this->get_core()->text->ignore_product_weight(),
+          'type'    => 'checkbox',
+          'default' => 'no',
+          'class'   => 'mode_react',
+        ),
+
         'change_order_status_to'      => array(
           'title'   => $this->get_core()->text->change_order_status_to(),
           'type'    => 'select',

@@ -918,6 +918,20 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
       <?php
     }
 
+    private function tpl_additional_params( $order )
+    {
+      $settings = $this->shipment->get_settings();
+      ?>
+      <div class="pakettikauppa-metabox-additional-params">
+        <div>
+          <?php $checked = (isset($settings['ignore_product_weight']) && $settings['ignore_product_weight'] == 'yes') ? 'checked' : ''; ?>
+          <input type="checkbox" id="pk_additional_param_ignore_weight" class="pakettikauppa_metabox_array_values" name="wc_pakettikauppa_additional_params" value="ignore_weight" <?php echo $checked; ?>/>
+          <label for="pk_additional_order_param_ignore_weight"><?php _e('Ignore product weight information', 'woo-pakettikauppa'); ?></label>
+        </div>
+      </div>
+      <?php
+    }
+
     /**
      * Meta box for managing shipments.
      *
@@ -1217,6 +1231,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           </div>
           <div class="pakettikauppa-general">
             <?php $this->tpl_products_selector($order); ?>
+            <?php $this->tpl_additional_params($order); ?>
             <?php if ( $this->core->shippingmethod == 'pakettikauppa_shipping_method' ) : ?>
               <div class="pakettikauppa-estimated-price">
                 <span class="title">
@@ -1412,6 +1427,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
 
           $pickup_point_id = $order->get_meta('_' . $this->core->params_prefix . 'pickup_point_id');
           $selected_products = (! empty($_REQUEST['for_products'])) ? $_REQUEST['for_products'] : array();
+          $additional_order_params = (! empty($_REQUEST['additional_params'])) ? $_REQUEST['additional_params'] : array();
 
           if ( empty($_REQUEST['custom_method']) ) {
             $additional_services = null;
@@ -1471,6 +1487,7 @@ if ( ! class_exists(__NAMESPACE__ . '\Admin') ) {
           if ( isset($_REQUEST['additional_text']) ) {
             $extra_params['additional_text'] = sanitize_textarea_field($_REQUEST['additional_text']);
           }
+          $extra_params['ignore_product_weight'] = (isset($additional_order_params['ignore_weight']) && filter_var($additional_order_params['ignore_weight'], FILTER_VALIDATE_BOOLEAN));
 
           $tracking_code = $this->shipment->create_shipment($order, $service_id, $additional_services, $selected_products, $extra_params);
 
